@@ -13,7 +13,7 @@ del sys
 
 # Project imports
 import config
-from lib import kothScoreboard
+from lib.kothScoreboard import kothScoreboard
 
 import tornado.web
 import tornado.ioloop
