@@ -64,6 +64,8 @@ SELECT addFlag('Test 4.2', 'agres', 2::smallint, 'poc01.hf', 'rev', 1::smallint,
                 'echo $FLAG > /root/flag4.2.txt', 'wget http://dathost/test');
 SELECT addFlag('Test 4.3', 'noob', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
                 'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
+SELECT addFlag('Test 4.4', ':|!+"/_"!$)("/%*%$?&', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+                'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
 
 SELECT addKingFlagFromName('Test 1.1', random_32(), 1::smallint);
 -- Testing erronous and disabled flags
