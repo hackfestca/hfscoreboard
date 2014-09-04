@@ -95,9 +95,9 @@ class kothClient():
         
     def submitFlag(self,flagValue):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc('submitFlag(char(32))'),flagValue)
+            return self._benchmark(self._oDB.proc('submitFlag(varchar)'),flagValue)
         else:
-            return self._oDB.proc('submitFlag(char(32))')(flagValue)
+            return self._oDB.proc('submitFlag(varchar)')(flagValue)
 
     def submitRandomFlag(self):
         if self._bDebug:

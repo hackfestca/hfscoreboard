@@ -1,3 +1,8 @@
+SELECT 'DROP FUNCTION ' || ns.nspname || '.' || proname 
+       || '(' || oidvectortypes(proargtypes) || ');'
+FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
+WHERE ns.nspname = 'mon2k14'  order by proname;
+
 /*
     sha256()
 */
@@ -456,7 +461,7 @@ RETURNS integer AS $$
         STATUS_CODE_OK integer := 1;
     BEGIN
         -- Logging
-        raise notice 'submitFlagFromIp(%,%s)',$1,$2;
+        raise notice 'submitFlagFromIp(%,%)',$1,$2;
     
         _playerIp := _playerIpStr::inet;
 

@@ -89,7 +89,7 @@ CREATE TABLE flagAuthor(
 CREATE TABLE flag(
     id serial primary key,
     name varchar(50) not null,
-    value char(32) not null unique,
+    value varchar(32) not null unique,
     pts integer not null,
     host integer not null references host(id),
     category integer not null references category(id),
