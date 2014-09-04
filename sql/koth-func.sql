@@ -456,7 +456,7 @@ RETURNS integer AS $$
         STATUS_CODE_OK integer := 1;
     BEGIN
         -- Logging
-        raise notice 'submitFlagFromIp(%,%)',$1,$2;
+        raise notice 'submitFlagFromIp(%,%s)',$1,$2;
     
         _playerIp := _playerIpStr::inet;
 
