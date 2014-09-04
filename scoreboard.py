@@ -74,13 +74,10 @@ class IndexHandler(BaseHandler):
             submit_message = "Flag already submitted"
             flag_is_valid = False
         except postgresql.exceptions.PLPGSQLRaiseError as e:
-            if e.code == "P0001":
-                submit_message = "Invalid Flag"
-            else:
-                submit_message = "Error"
+            submit_message = e.message
             flag_is_valid = False
         except Exception:
-            submit_flag = "Error"
+            submit_message = "Error"
             flag_is_valid = False
         else:
             submit_message = "Flag successfully submitted"
