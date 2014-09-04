@@ -13,7 +13,7 @@ del sys
 
 # Project imports
 import config
-from lib import kothScoreboard 
+from lib import kothScoreboard
 
 import tornado.web
 import tornado.ioloop
@@ -93,7 +93,7 @@ class IndexHandler(BaseHandler):
 
 class DashboardHandler(BaseHandler):
     def get(self):
-        client = kothScoreboard()
+        client = kothScoreboard.kothScoreboard()
         jsArray = client.getJsDataScoreProgress()
         client.close()
         self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
