@@ -146,6 +146,8 @@ except postgresql.exceptions.InsufficientPrivilegeError:
     print('[-] Insufficient privileges')
 except postgresql.exceptions.UniqueError:
     print('[-] Flag already submitted')
+except postgresql.exceptions.StringRightTruncationError as e:
+    print('[-] Input is too big ('+e.message+')')
 except postgresql.exceptions.UndefinedFunctionError:
     print('[-] The specified function does not exist. Please contact an admin')
 except postgresql.message.Message as m:
