@@ -1,0 +1,88 @@
+
+body {
+  padding-top: 100px;
+  padding-bottom: 30px;
+  background-color: #000000;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #FFFFFF;
+}
+
+.nav, .navbar {
+    background: rgba(0, 0, 0, 1);
+    border-color: #FFFFFF;
+}
+
+.navbar-nav {
+    background: rgba(255, 255, 255, 0);
+}
+
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus {
+    background-color: #080808;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus {
+    background-color: #080808;
+}
+
+/* Change the highlighting color */
+.table tbody tr:hover td {
+    background-color: #323232;
+}
+
+
+.jumbotron {
+   background-color: #000000;
+   border-style: solid; 
+   border-width: 1px;
+   border-color: #FFFFFF;
+   padding-top: 24px;
+   padding-bottom: 24px;
+}
+
+/* Style for the challenges bages */
+.challs {
+    margin-left: 23%;
+    margin-right:23%;
+}
+
+.challs:hover {
+    background-color: #242424;
+}
+
+.challs > .container > p {
+    font-size: 14px;
+    text-align: justify;
+}
+
+.challs > .container > h3 {
+    margin-top: 0px;
+}
+
+.challs > .container > h3 > a {
+    font-weight: bold;
+    color: #808080;
+}
+
+.score {
+    text-align: right;
+    font-size: 20px;
+}
+
+.row {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.news, .score_panel {
+    height: 512px;
+    overflow: auto;
+}
+
+dl {
+    word-wrap: break-word;
+}

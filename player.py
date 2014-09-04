@@ -24,6 +24,7 @@ This script is the main interface for players to submit flags and display score
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
+
 # Python version validation
 import sys
 if sys.version_info < (3,2,0):

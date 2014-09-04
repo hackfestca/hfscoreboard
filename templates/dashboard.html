@@ -1,0 +1,44 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="container">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+          {% raw jsArray %}
+
+      var options = {
+          title: 'Score',
+          backgroundColor: '#000000',
+          baselineColor: '#FFFFFF',
+          hAxis: { textStyle: { color: '#FFFFFF' } },
+          vAxis: { textStyle: { color: '#FFFFFF' } },
+          legend: { textStyle: { color: '#FFFFFF' } },
+          titleTextStyle: { color: '#FFFFFF' }
+      };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    <div id="chart_div" style="height: 700px;"></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="jumbotron">
+    <div class="container">
+      <h3>Sponsors</h3>
+      {% for sponsor in sponsors %}
+      <img src="{{ sponsor }}">
+      {% end %}
+    </div>
+  </div>
+</div>
+{% end %}
