@@ -49,9 +49,7 @@ class BaseHandler(tornado.web.RequestHandler):
                 
 class ScoreHandler(BaseHandler):
     def get(self):
-        client = kothScoreboard()
-        score = client.getScore()
-        client.close()
+        score = self.client.getScore()
         self.render('templates/score.html',
                            table=score
                        )
