@@ -21,8 +21,35 @@ import tornado.httpserver
 
 # System imports
 import os
+import logging
 from postgresql.exceptions import *
 
+class Logger(logging.getLoggerClass()):
+
+    def __init__(self):
+        super().__init__()
+        self.logger = logging.getLogger("scoreboard_logger")
+        self.logger.setLevel(logging.ERROR)
+
+        error_file = logging.FileHandler("logs/errors.log", encoding="utf-8", )
+        error_file.setLevel(logging.ERROR)
+        error_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        error_file.setFormatter(error_formatter)
+
+        info_file = logging.FileHandler("logs/infos.log", encoding="utf-8", )
+        info_file.setLevel(logging.ERROR)
+        info_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        info_file.setFormatter(info_formatter)        
+
+        self.logger.addHandler(error_file)
+        self.logger.addHandler(info_file)
+
+    def error(self):
+        pass
+        
+    def info(self):
+        pass
+    
 class BaseHandler(tornado.web.RequestHandler):
 
     def __init__(self, *args):
@@ -45,7 +72,6 @@ class BaseHandler(tornado.web.RequestHandler):
         try:
             self.client.close()
         except:
-            # TODO LOG ON EXCEPTION
             pass
             
     @property
@@ -55,21 +81,35 @@ class BaseHandler(tornado.web.RequestHandler):
                 
 class ScoreHandler(BaseHandler):
     def get(self):
-        score = self.client.getScore()
+        try:
+            score = self.client.getScore()
+        except PLPGSQLRaiseError as e:
+            self.render('templates/error.html', error_msg=e.message)
+        except:
+            self.render('templates/error.html', error_msg="Error")
+            
         self.render('templates/score.html',
                            table=score
                        )
 
 class ChallengesHandler(BaseHandler):
     def get(self):
-        categories = self.client.getCatProgressFromIp("192.168.9.22")
-        challenges = self.client.getFlagProgressFromIp("192.168.9.22")
+        try:
+            categories = self.client.getCatProgressFromIp("192.168.9.22")
+            challenges = self.client.getFlagProgressFromIp("192.168.9.22")
+        except PLPGSQLRaiseError as e:
+            self.render('templates/error.html', error_msg="Error")
+            
         self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
 class IndexHandler(BaseHandler):
     def get(self):
-        score = self.client.getScore(top=9)
-        valid_news = self.client.getValidNews()
+        try:
+            score = self.client.getScore(top=9)
+            valid_news = self.client.getValidNews()
+        except:
+            pass #TODO
+
 
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
 
@@ -98,7 +138,13 @@ class IndexHandler(BaseHandler):
 
 class DashboardHandler(BaseHandler):
     def get(self):
-        jsArray = self.client.getJsDataScoreProgress()
+        try:
+            jsArray = self.client.getJsDataScoreProgress()
+        except PLPGSQLRaiseError as e:
+            self.render('templates/error.html', error_msg=e.message)
+        except:
+            self.render('templates/error.html', error_msg="Error")
+            
         self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
 if __name__ == '__main__':
