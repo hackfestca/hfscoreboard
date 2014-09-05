@@ -21,7 +21,7 @@ import tornado.httpserver
 
 # System imports
 import os
-import postgresql.exceptions
+from postgresql.exceptions import *
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -36,12 +36,18 @@ class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         try:
             self.client = kothScoreboard()
-        except Exception as e:
+        except ClientCannotConnectError as e:
             self.render('templates/error.html', error_msg=e.message)
+        except Exception as e:
+            self.render('templates/error.html', error_msg=e)
             
     def on_finish(self):
-        self.client.close()
-                
+        try:
+            self.client.close()
+        except:
+            # TODO LOG ON EXCEPTION
+            pass
+            
     @property
     def sponsors(self):
         return self._sponsors
@@ -74,10 +80,10 @@ class IndexHandler(BaseHandler):
 
         try:
             client.submitFlagFromIp("192.168.9.22", flag)
-        except postgresql.exceptions.UniqueError:
+        except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
-        except postgresql.exceptions.PLPGSQLRaiseError as e:
+        except PLPGSQLRaiseError as e:
             submit_message = e.message
             flag_is_valid = False
         except Exception:
