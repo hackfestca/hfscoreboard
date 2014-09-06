@@ -95,7 +95,8 @@ class ScoreHandler(BaseHandler):
 
         # Weird behaviour from PGSQL
         try:
-            self.render('templates/score.html', table=score)
+            self.render('templates/score.html', table=score,
+                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
         except PLPGSQLRaiseError as e:
             self.render('templates/error.html', error_msg=e.message)
             
@@ -110,7 +111,8 @@ class ChallengesHandler(BaseHandler):
         except Exception as e:
             self.logger.error(e)
         else:    
-            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
+            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges),
+                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
 
 class IndexHandler(BaseHandler):
     def get(self):
@@ -123,7 +125,8 @@ class IndexHandler(BaseHandler):
         except Exception as e: 
             self.logger.error(e)
         else:
-            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
+            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors,
+                         team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
 
     def post(self):
         flag = self.get_argument("flag")
@@ -147,7 +150,8 @@ class IndexHandler(BaseHandler):
             flag_is_valid = True
             
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
-                    flag_is_valid=flag_is_valid, submit_message=submit_message)        
+                    flag_is_valid=flag_is_valid, submit_message=submit_message,
+                    team_name="Team _eko", team_ip="192.168.0.1", team_score="99")        
 
 class DashboardHandler(BaseHandler):
     def get(self):
@@ -160,7 +164,8 @@ class DashboardHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
+            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray,
+                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
 
 if __name__ == '__main__':
     # For the CSS
