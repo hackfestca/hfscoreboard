@@ -170,7 +170,7 @@ class ScoreHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/score.html', score_table=score)
+            self.render('templates/score.html', score_table = score)
 
             
 class ChallengesHandler(BaseHandler):

@@ -7,6 +7,7 @@
     <table class="table table-hover">
       <thead>
 	<tr>
+	  <th>Position</th>
           <th>Team</th>
           <th>Flags</th>
 	  <th>King Flags</th>
@@ -14,12 +15,13 @@
 	</tr>
       </thead>
       <tbody>
-	{% for row in score_table %}
+	{% for index, row in enumerate(score_table, start=1) %}
 	{% if team_name == row[1] %}
 	<tr class="team-highlight">
 	{% else %}
 	<tr>
 	{% end %}
+	  <td>{{ index  }}</td>
           <td>{{ row[1] }}</td>
 	  <td>{{ row[2] }}</td>
 	  <td>{{ row[3] }}</td>
