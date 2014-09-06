@@ -4,7 +4,12 @@
 {% block content %}
 
 <div class="container">
-  <div class="alert alert-danger" role="alert">{{ error_msg }}</div>
+  <div class="alert alert-danger" role="alert">
+    <strong>
+      <i class="fa fa-times-circle" style="color: red;"></i>
+      {{ error_msg }}
+    </strong>
+  </div>
 </div>
 
 {% end %}
