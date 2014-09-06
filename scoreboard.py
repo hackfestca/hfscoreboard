@@ -33,12 +33,12 @@ class Logger(logging.getLoggerClass()):
 
         error_file = logging.FileHandler("logs/errors.log", encoding="utf-8", )
         error_file.setLevel(logging.ERROR)
-        error_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        error_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
         error_file.setFormatter(error_formatter)
 
         info_file = logging.FileHandler("logs/infos.log", encoding="utf-8", )
-        info_file.setLevel(logging.ERROR)
-        info_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        info_file.setLevel(logging.INFO)
+        info_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
         info_file.setFormatter(info_formatter)        
 
         self.logger.addHandler(error_file)
@@ -92,11 +92,13 @@ class ScoreHandler(BaseHandler):
         except Exception as e:
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-            
-        self.render('templates/score.html',
-                           table=score
-                       )
 
+        # Weird behaviour from PGSQL
+        try:
+            self.render('templates/score.html', table=score)
+        except PLPGSQLRaiseError as e:
+            self.render('templates/error.html', error_msg=e.message)
+            
 class ChallengesHandler(BaseHandler):
     def get(self):
         try:
@@ -104,7 +106,7 @@ class ChallengesHandler(BaseHandler):
             challenges = self.client.getFlagProgressFromIp("192.168.9.22")
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.logger.error(e)
             
