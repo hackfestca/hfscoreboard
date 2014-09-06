@@ -610,45 +610,45 @@ RETURNS TABLE (
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
                             (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal 
-                     FROM team AS t
-                     LEFT OUTER JOIN (
-                        SELECT tf2.teamId,
-                               sum(tf2.pts) AS sum
-                        FROM (
-                            SELECT tf.flagId,
-                                   tf.teamId,
-                                   tf.ts,
-                                   f.pts
-                            FROM team_flag as tf
-                            LEFT OUTER JOIN (
-                                SELECT flag.id,
-                                       flag.pts
-                                FROM flag
-                                ) as f ON tf.flagId = f.id
-                            ) AS tf2
-                            WHERE tf2.ts <= _ts
-                        GROUP BY tf2.teamId
-                        ) AS tf3 ON t.id = tf3.teamId
-                     LEFT OUTER JOIN (
-                        SELECT tfi2.teamId,
-                               sum(tfi2.pts) AS sum
-                        FROM (
-                            SELECT tfi.kingFlagId,
-                                   tfi.teamId,
-                                   tfi.ts,
-                                   fi.pts
-                            FROM team_kingFlag as tfi
-                            LEFT OUTER JOIN (
-                                SELECT kingFlag.id,
-                                       kingFlag.pts
-                                FROM kingFlag
-                                ) as fi ON tfi.kingFlagId = fi.id
-                            ) AS tfi2
-                            WHERE tfi2.ts <= _ts
-                        GROUP BY tfi2.teamId
-                        ) AS tfi3 ON t.id = tfi3.teamId
-                     ORDER BY flagTotal DESC
-                     LIMIT _top;
+                         FROM team AS t
+                         LEFT OUTER JOIN (
+                            SELECT tf2.teamId,
+                                   sum(tf2.pts) AS sum
+                            FROM (
+                                SELECT tf.flagId,
+                                       tf.teamId,
+                                       tf.ts,
+                                       f.pts
+                                FROM team_flag as tf
+                                LEFT OUTER JOIN (
+                                    SELECT flag.id,
+                                           flag.pts
+                                    FROM flag
+                                    ) as f ON tf.flagId = f.id
+                                ) AS tf2
+                                WHERE tf2.ts <= _ts
+                            GROUP BY tf2.teamId
+                            ) AS tf3 ON t.id = tf3.teamId
+                         LEFT OUTER JOIN (
+                            SELECT tfi2.teamId,
+                                   sum(tfi2.pts) AS sum
+                            FROM (
+                                SELECT tfi.kingFlagId,
+                                       tfi.teamId,
+                                       tfi.ts,
+                                       fi.pts
+                                FROM team_kingFlag as tfi
+                                LEFT OUTER JOIN (
+                                    SELECT kingFlag.id,
+                                           kingFlag.pts
+                                    FROM kingFlag
+                                    ) as fi ON tfi.kingFlagId = fi.id
+                                ) AS tfi2
+                                WHERE tfi2.ts <= _ts
+                            GROUP BY tfi2.teamId
+                            ) AS tfi3 ON t.id = tfi3.teamId
+                         ORDER BY flagTotal DESC
+                         LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1085,7 +1085,7 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar;
                      --ORDER BY 1;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getTeamInfo()
