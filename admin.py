@@ -116,6 +116,7 @@ parser_graph.add_argument('-t', '--top', action='store', dest='top', default=con
                                 help='Use to specify number of rows to display. Default is 30.')
 parser_stats = subparsers.add_parser('stats', help='Display game stats.')
 parser_bench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
+parser_conbench = subparsers.add_parser('conbench', help='Benchmark some db stored procedure using multiple connections.')
 parser_matrix = subparsers.add_parser('matrix', help='Display the progress matrix.')
 parser_matrix.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
@@ -213,6 +214,9 @@ try:
     elif args.action == 'bench':
         print("Benchmarking database")
         c.benchmarkDB()
+    elif args.action == 'conbench':
+        print("Benchmarking database connections")
+        c.benchmarkDBCon()
     elif args.action == 'matrix':
         print("Displaying progression matrix")
         print(c.getFormatScoreProgress())

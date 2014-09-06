@@ -27,7 +27,17 @@ King of the hill admin class
 
 import config
 import kothClient
+import threading
 from prettytable import PrettyTable 
+
+# Used for benchmark test only
+class kothThread(threading.Thread):
+    def __init__(self,con,callLimit=100):
+        threading.Thread.__init__(self)
+        self.con = con
+        self.callLimit = callLimit
+    def run(self):
+        self.con.benchScore(self.callLimit)
 
 class kothAdmin(kothClient.kothClient):
     """
@@ -40,11 +50,29 @@ class kothAdmin(kothClient.kothClient):
     def __init__(self):
         super().__init__()
     
-    def benchmarkDB(self):
+    def benchmarkDB(self,callLimit=100):
         print('Testing getScore()')
-        self._benchmarkMany(100,self._oDB.proc('getScore(integer)'),config.KOTH_DEFAULT_TOP_VALUE)
+        self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer)'),config.KOTH_DEFAULT_TOP_VALUE)
         print('Testing getValidNews()')
-        self._benchmarkMany(100,self._oDB.proc('getValidNews()'))
+        self._benchmarkMany(callLimit,self._oDB.proc('getValidNews()'))
+
+    def benchmarkDBCon(self,conLimit=30,callLimit=100):
+        aThreads = []
+
+        print('Opening %i connections' % conLimit)
+        for i in range(0,conLimit):
+            if i%10 == 0 and i != 0:
+                print('Nb of connections opened: %i' % i)
+            aThreads.append(kothThread(kothClient.kothClient()))
+        
+        for i in range(0,conLimit):
+            t = aThreads[i]
+            print('Running getScore() %i times on instance #%i' % (callLimit,i))
+            t.start()
+
+        # Wait for all threads to complete
+        for t in aThreads:
+            t.join()
 
     def addTeam(self,name,net):
         if self._bDebug:

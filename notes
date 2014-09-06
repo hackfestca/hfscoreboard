@@ -7,3 +7,7 @@ Remove passwords and use certs instead
 Code a function that tells which flags remain to be displayed
 Print all submitted flags
 Add team positions in getScore()
+Increase connections limit (currently 30)
+http://www.postgresql.org/docs/8.3/static/kernel-resources.html#SYSVIPC
+
+
