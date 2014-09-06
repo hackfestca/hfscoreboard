@@ -91,11 +91,12 @@ class BaseHandler(tornado.web.RequestHandler):
             self.client.close()
         except (AttributeError, Exception, RuntimeError) as e:
             self.logger.error(e)
-            
+
     def prepare(self):
         self._connect()
         self._getTeamInfo()
-                    
+        
+                            
     def on_finish(self):
         self._disconnect()
 
@@ -151,6 +152,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self._team_score = arg
         
 class ScoreHandler(BaseHandler):
+    @tornado.web.addslash
     def get(self):
         try:
             score = self.client.getScore()
@@ -172,6 +174,7 @@ class ScoreHandler(BaseHandler):
             self.render('templates/error.html', error_msg=e.message)
             
 class ChallengesHandler(BaseHandler):
+    @tornado.web.addslash
     def get(self):
         try:
             categories = self.client.getCatProgressFromIp(self.request.remote_ip)
@@ -188,6 +191,7 @@ class ChallengesHandler(BaseHandler):
             self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
 class IndexHandler(BaseHandler):
+    @tornado.web.addslash
     def get(self):
         try:
             score = self.client.getScore(top=9)
@@ -235,6 +239,7 @@ class IndexHandler(BaseHandler):
                     flag_is_valid=flag_is_valid, submit_message=submit_message)
 
 class DashboardHandler(BaseHandler):
+    @tornado.web.addslash
     def get(self):
         try:
             jsArray = self.client.getJsDataScoreProgress()
