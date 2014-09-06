@@ -33,12 +33,12 @@ class Logger(logging.getLoggerClass()):
 
         error_file = logging.FileHandler("logs/errors.log", encoding="utf-8", )
         error_file.setLevel(logging.ERROR)
-        error_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
+        error_formatter = logging.Formatter('%(asctime)s - %(message)s')
         error_file.setFormatter(error_formatter)
 
         info_file = logging.FileHandler("logs/infos.log", encoding="utf-8", )
         info_file.setLevel(logging.INFO)
-        info_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
+        info_formatter = logging.Formatter('%(asctime)s - %(message)s')
         info_file.setFormatter(info_formatter)        
 
         self.logger.addHandler(error_file)
@@ -65,16 +65,23 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def write_error(self, status_code, **kwargs):
         # Handler for all the internals Error (500)
+        # Handle every exception thrown by any BaseHadler
+        import traceback
+
+        exc_type, exc_obj, exc_tb = kwargs["exc_info"]
+
+        if issubclass(exc_type, ConnectionError):
+            msg = "{} - {}".format(status_code, exc_obj.message)
+        elif isinstance(exc_type, PLPGSQLRaiseError):
+            msg = "{} - {}".format(status_code, exc_obj.message)
+        else:
+            msg = status_code
+
+        self.logger.error("{}:{}:{}".format(self.team_ip, exc_type.__name__, exc_obj.message))
+        self.render("templates/error.html", error_msg=msg)
         
     def _connect(self):
-#        try:
-            self.client = kothScoreboard()
-#        except ClientCannotConnectError as e:
-#            self.logger.error(e.message)
-#            self.render('templates/error.html', error_msg=e.message)
-#        except Exception as e:
-#            self.logger.error(e)
-#            self.render('templates/error.html', error_msg=e)
+        self.client = kothScoreboard()
 
     def _getTeamInfo(self):
         try:
@@ -82,19 +89,16 @@ class BaseHandler(tornado.web.RequestHandler):
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
             self.team_score = team_info[6][1]
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.render('templates/error.html', error_msg=e)
         except Exception as e:
-            self.logger.error(e.message)
+            self.logger.error(e)
             self.render('templates/error.html', error_msg=e)
 
     def _disconnect(self):
         try:
             self.client.close()
-        except (AttributeError, Exception, RuntimeError) as e:
-            self.logger.error(e)
-
+        except AttributeError:
+            pass # The connection was never established
+            
     def prepare(self):
         self._connect()
         self._getTeamInfo()
@@ -159,22 +163,13 @@ class ScoreHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore()
-        except PLPGSQLRaiseError as e:
-            self.set_status(500)
-            self.logger.error(e.message)
-            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-
-        # Weird behaviour from PGSQL
-        try:
+        else:
             self.render('templates/score.html', score_table=score)
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
+
             
 class ChallengesHandler(BaseHandler):
     @tornado.web.addslash
@@ -182,10 +177,6 @@ class ChallengesHandler(BaseHandler):
         try:
             categories = self.client.getCatProgressFromIp(self.request.remote_ip)
             challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -200,22 +191,12 @@ class IndexHandler(BaseHandler):
         try:
             score = self.client.getScore(top=9)
             valid_news = self.client.getValidNews()
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-
-        # This weird thing again
-        try:
+        else:
             self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
             
     def post(self):
         flag = self.get_argument("flag")
@@ -248,21 +229,12 @@ class DashboardHandler(BaseHandler):
     def get(self):
         try:
             jsArray = self.client.getJsDataScoreProgress()
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-
-        try:
+        else:
             self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
-        except PLPGSQLRaiseError as e:
-            self.logger.error(e.message)
-            self.set_status(500)
-            self.render('templates/error.html', error_msg=e.message)
 
 
 class Error404Handler(BaseHandler):
