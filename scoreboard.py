@@ -92,11 +92,13 @@ class ScoreHandler(BaseHandler):
         except Exception as e:
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-            
-        self.render('templates/score.html',
-                           table=score
-                       )
 
+        # Weird behaviour from PGSQL
+        try:
+            self.render('templates/score.html', table=score)
+        except PLPGSQLRaiseError as e:
+            self.render('templates/error.html', error_msg=e.message)
+            
 class ChallengesHandler(BaseHandler):
     def get(self):
         try:
@@ -104,7 +106,7 @@ class ChallengesHandler(BaseHandler):
             challenges = self.client.getFlagProgressFromIp("192.168.9.22")
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.logger.error(e)
             
