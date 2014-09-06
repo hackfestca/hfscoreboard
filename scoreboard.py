@@ -102,15 +102,15 @@ class ScoreHandler(BaseHandler):
 class ChallengesHandler(BaseHandler):
     def get(self):
         try:
-            categories = self.client.getCatProgressFromIp("192.168.9.22")
-            challenges = self.client.getFlagProgressFromIp("192.168.9.22")
+            categories = self.client.getCatProgressFromIp(self.request.remote_ip)
+            challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
             self.logger.error(e)
-            
-        self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
+        else:    
+            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
 class IndexHandler(BaseHandler):
     def get(self):
@@ -131,7 +131,7 @@ class IndexHandler(BaseHandler):
         valid_news = self.client.getValidNews()
 
         try:
-            self.client.submitFlagFromIp("192.168.9.22", flag)
+            self.client.submitFlagFromIp(self.request.remote_ip, flag)
         except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
@@ -159,8 +159,8 @@ class DashboardHandler(BaseHandler):
         except Exception as e:
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-            
-        self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
+        else:
+            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
 if __name__ == '__main__':
     # For the CSS
