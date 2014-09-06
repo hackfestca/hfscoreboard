@@ -256,9 +256,8 @@ if __name__ == '__main__':
             (r"/scoreboard/?", ScoreHandler),
             (r"/dashboard/?", DashboardHandler)
         ],
-         debug=False,
+         debug=True,
          static_path=os.path.join(root, 'static'),
-         autoreload=True,
          default_handler_class=Error404Handler # 404 Handling
          )
 

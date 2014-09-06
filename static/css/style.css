@@ -21,12 +21,7 @@ body {
 
 .navbar-inverse .navbar-nav>li>a:hover,
 .navbar-inverse .navbar-nav>li>a:focus {
-    background-color: #080808;
-}
-
-.navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>li>a:focus {
-    background-color: #080808;
+    color: #009c00;
 }
 
 /* Change the highlighting color */
@@ -143,4 +138,13 @@ body {
 
 dl {
     word-wrap: break-word;
+}
+
+.footer {
+    text-align: center;
+}
+
+.footer > a:link,
+.footer > a:visited {
+    color: #009c00;
 }
