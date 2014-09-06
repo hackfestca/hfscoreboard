@@ -122,9 +122,8 @@ class IndexHandler(BaseHandler):
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e: 
             self.logger.error(e)
-
-
-        self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
+        else:
+            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
 
     def post(self):
         flag = self.get_argument("flag")
@@ -132,7 +131,7 @@ class IndexHandler(BaseHandler):
         valid_news = self.client.getValidNews()
 
         try:
-            client.submitFlagFromIp("192.168.9.22", flag)
+            self.client.submitFlagFromIp("192.168.9.22", flag)
         except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
