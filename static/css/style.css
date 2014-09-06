@@ -91,6 +91,13 @@ body {
     background-color: #009a00;
 }
 
+@media (min-width: 768px) {
+    .table-score {
+	margin-left: 20%;
+	margin-right: 20%;
+    }
+}
+
 dl {
     word-wrap: break-word;
 }
