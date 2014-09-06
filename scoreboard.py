@@ -57,11 +57,11 @@ class BaseHandler(tornado.web.RequestHandler):
         _sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
         self._sponsors = [ "/static/sponsors/" + f for f in os.listdir(_sponsors_imgs_path) \
                 if os.path.isfile(os.path.join(_sponsors_imgs_path, f)) ]
-        self.client = None
-        self.logger = Logger("HF2k14_Logger")
-        self.team_name = None
-        self.team_ip = None
-        self.team_score = None
+        self._client = None
+        self._logger = Logger("HF2k14_Logger")
+        self._team_name = None
+        self._team_ip = None
+        self._team_score = None
 
     def _connect(self):
         try:
@@ -110,8 +110,47 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def sponsors(self):
         return self._sponsors
-    
-                
+
+    @property
+    def client(self):
+        return self._client
+
+    @client.setter
+    def client(self, arg):
+        self._client = arg
+
+    @property
+    def logger(self):
+        return self._logger
+
+    @logger.setter
+    def logger(self, arg):
+        self._logger = arg
+        
+    @property
+    def team_name(self):
+        return self._team_name
+
+    @team_name.setter
+    def team_name(self, arg):
+        self._team_name = arg
+
+    @property
+    def team_ip(self):
+        return self._team_ip
+
+    @team_ip.setter
+    def team_ip(self, arg):
+        self._team_ip = arg
+
+    @property
+    def team_score(self):
+        return self._team_score
+
+    @team_score.setter
+    def team_score(self, arg):
+        self._team_score = arg
+        
 class ScoreHandler(BaseHandler):
     def get(self):
         try:
