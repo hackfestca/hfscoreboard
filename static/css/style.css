@@ -83,6 +83,14 @@ body {
     overflow: auto;
 }
 
+.team-info {
+    color: #ec9900;
+}
+
+#challenge-pb {
+    background-color: #009a00;
+}
+
 dl {
     word-wrap: break-word;
 }
