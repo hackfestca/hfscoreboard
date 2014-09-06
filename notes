@@ -3,6 +3,7 @@ Let players submit their nick (optional)
 Code the getCreds on client.py
 Put displayInterval on flags. Print flags only at that time.
 Print number of functions and tables in stats
-Faire fonctionner flagUpdater en permanence
 Benchmark multiple connections
 Remove passwords and use certs instead
+Code a function that tells which flags remain to be displayed
+Print all submitted flags

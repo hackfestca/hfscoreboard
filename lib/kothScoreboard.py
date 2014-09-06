@@ -63,6 +63,12 @@ class kothScoreboard(kothClient.kothClient):
         else:
             return self._oDB.proc('getScoreProgress(integer)')(None)
 
+    def getTeamInfo(self,playerIp):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getTeamInfoFromIp(varchar)'),playerIp)
+        else:
+            return self._oDB.proc('getTeamInfoFromIp(varchar)')(playerIp)
+
     def getJsDataScoreProgress(self,varname='data'):
         s ="var data = google.visualization.arrayToDataTable([\n"
         teams = self.getScore(10)

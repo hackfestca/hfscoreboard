@@ -1005,6 +1005,7 @@ RETURNS TABLE (
         _activePlayerCt integer;
         _teamFlagSubmitCt integer;
         _playerFlagSubmitCt integer;
+        _teamScore flag.pts%TYPE;
     BEGIN
         -- Logging
         raise notice 'getTeamInfoFromIp(%)',$1;
@@ -1040,6 +1041,39 @@ RETURNS TABLE (
         INTO _playerFlagSubmitCt
         FROM submit_history 
         WHERE playerip = _playerIp;
+
+        -- Get team score
+        SELECT sum(sum) AS total
+        INTO _teamScore
+        FROM (
+                SELECT sum(tf2.pts) AS sum
+                FROM (
+                    SELECT tf.flagId,
+                           tf.teamId,
+                           f.pts
+                    FROM team_flag as tf
+                    LEFT OUTER JOIN (
+                        SELECT flag.id,
+                               flag.pts
+                        FROM flag
+                        ) as f ON tf.flagId = f.id
+                    ) AS tf2
+                    WHERE tf2.teamId = _teamRec.id
+                UNION
+                SELECT sum(tfi2.pts) AS sum
+                FROM (
+                    SELECT tfi.kingFlagId,
+                           tfi.teamId,
+                           fi.pts
+                    FROM team_kingFlag as tfi
+                    LEFT OUTER JOIN (
+                        SELECT kingFlag.id,
+                               kingFlag.pts
+                        FROM kingFlag
+                        ) as fi ON tfi.kingFlagId = fi.id
+                    ) AS tfi2
+                    WHERE tfi2.teamId = _teamRec.id
+                ) as score;
         
         -- Return
         RETURN QUERY SELECT 'ID'::varchar, _teamRec.id::varchar
@@ -1047,7 +1081,8 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Net'::varchar, _teamRec.net::varchar
                      UNION ALL SELECT 'Active Players'::varchar, _activePlayerCt::varchar
                      UNION ALL SELECT 'Team Submit Attempts'::varchar, _teamFlagSubmitCt::varchar
-                     UNION ALL SELECT 'Player Submit Attempts'::varchar, _playerFlagSubmitCt::varchar;
+                     UNION ALL SELECT 'Player Submit Attempts'::varchar, _playerFlagSubmitCt::varchar
+                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar;
                      --ORDER BY 1;
     END;
 $$ LANGUAGE plpgsql;
@@ -1410,6 +1445,8 @@ RETURNS integer AS $$
         PLAYER_IP_MAX           integer := 200;
         SUBMIT_HIST_COUNT       integer := 1000;
         SUBMIT_HIST_TS_MIN      integer := 960;
+        FLAG_SUBMIT_RATE        real := 0.11;
+        KINGFLAG_SUBMIT_RATE    real := 0.11;
         _teamId team.id%TYPE;
         _net team.net%TYPE;
     BEGIN
@@ -1466,7 +1503,7 @@ RETURNS integer AS $$
                        flag.id,
                        current_timestamp - (random() * FLAG_TS_MIN || ' minutes')::interval
                 FROM flag
-                WHERE random() < 0.01 
+                WHERE random() < FLAG_SUBMIT_RATE
                 LIMIT FLAG_ASSIGN_LIMIT;
             INSERT INTO submit_history(teamId,playerIp,value,ts)
                 SELECT  _teamId,
@@ -1488,7 +1525,7 @@ RETURNS integer AS $$
                        kingFlag.id,
                        current_timestamp - (random() * KINGFLAG_TS_MIN || ' minutes')::interval
                 FROM kingFlag
-                WHERE random() < 0.01 
+                WHERE random() < KINGFLAG_SUBMIT_RATE 
                 LIMIT KINGFLAG_ASSIGN_LIMIT;
             INSERT INTO submit_history(teamId,playerIp,value,ts)
                 SELECT  _teamId,

@@ -49,6 +49,7 @@ GRANT EXECUTE ON FUNCTION mon2k14.getScoreProgress(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION mon2k14.getCatProgressFromIp(varchar) TO hfscore;
 --GRANT EXECUTE ON FUNCTION mon2k14.getFlagProgressFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION mon2k14.submitFlagFromIp(varchar,flag.value%TYPE) TO hfscore;
+GRANT EXECUTE ON FUNCTION mon2k14.getTeamInfoFromIp(varchar) TO hfscore;
 
 -- Grants for flagUpdater
 GRANT EXECUTE ON FUNCTION mon2k14.getAllKingFlags() TO hfflagupdater;
