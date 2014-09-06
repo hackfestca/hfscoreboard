@@ -1,0 +1,12 @@
+ERROR:2014-09-05 19:59:52,302:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:52,305:l.48 - 'NoneType' object has no attribute 'close'
+ERROR:2014-09-05 19:59:53,829:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:53,829:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:53,832:l.48 - 'NoneType' object has no attribute 'close'
+ERROR:2014-09-05 19:59:53,832:l.48 - 'NoneType' object has no attribute 'close'
+ERROR:2014-09-05 19:59:54,080:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:54,080:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:54,080:l.48 - could not establish connection to server
+ERROR:2014-09-05 19:59:54,083:l.48 - 'NoneType' object has no attribute 'close'
+ERROR:2014-09-05 19:59:54,083:l.48 - 'NoneType' object has no attribute 'close'
+ERROR:2014-09-05 19:59:54,083:l.48 - 'NoneType' object has no attribute 'close'

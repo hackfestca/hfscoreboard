@@ -26,8 +26,8 @@ from postgresql.exceptions import *
 
 class Logger(logging.getLoggerClass()):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name):
+        super().__init__(name)
         self.logger = logging.getLogger("scoreboard_logger")
         self.logger.setLevel(logging.ERROR)
 
@@ -44,11 +44,11 @@ class Logger(logging.getLoggerClass()):
         self.logger.addHandler(error_file)
         self.logger.addHandler(info_file)
 
-    def error(self):
-        pass
+    def error(self, msg):
+        self.logger.error(msg)
         
-    def info(self):
-        pass
+    def info(self, msg):
+        self.logger.info(msg)
     
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -58,22 +58,25 @@ class BaseHandler(tornado.web.RequestHandler):
         self._sponsors = [ "/static/sponsors/" + f for f in os.listdir(_sponsors_imgs_path) \
                 if os.path.isfile(os.path.join(_sponsors_imgs_path, f)) ]
         self.client = None
+        self.logger = Logger("HF2k14_Logger")
 
                 
     def prepare(self):
         try:
             self.client = kothScoreboard()
         except ClientCannotConnectError as e:
+            self.logger.error(e.message)
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
+            self.logger.error(e)
             self.render('templates/error.html', error_msg=e)
             
     def on_finish(self):
         try:
             self.client.close()
-        except:
-            pass
-            
+        except (AttributeError, Exception, RuntimeError) as e:
+            self.logger.error(e)
+
     @property
     def sponsors(self):
         return self._sponsors
@@ -84,8 +87,10 @@ class ScoreHandler(BaseHandler):
         try:
             score = self.client.getScore()
         except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
             self.render('templates/error.html', error_msg=e.message)
-        except:
+        except Exception as e:
+            self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
             
         self.render('templates/score.html',
@@ -98,7 +103,10 @@ class ChallengesHandler(BaseHandler):
             categories = self.client.getCatProgressFromIp("192.168.9.22")
             challenges = self.client.getFlagProgressFromIp("192.168.9.22")
         except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
             self.render('templates/error.html', error_msg="Error")
+        except Exception as e:
+            self.logger.error(e)
             
         self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
@@ -107,8 +115,11 @@ class IndexHandler(BaseHandler):
         try:
             score = self.client.getScore(top=9)
             valid_news = self.client.getValidNews()
-        except:
-            pass #TODO
+        except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
+            self.render('templates/error.html', error_msg=e.message)
+        except Exception as e: 
+            self.logger.error(e)
 
 
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
@@ -126,7 +137,8 @@ class IndexHandler(BaseHandler):
         except PLPGSQLRaiseError as e:
             submit_message = e.message
             flag_is_valid = False
-        except Exception:
+        except Exception as e:
+            self.logger.error(e)
             submit_message = "Error"
             flag_is_valid = False
         else:
@@ -141,8 +153,10 @@ class DashboardHandler(BaseHandler):
         try:
             jsArray = self.client.getJsDataScoreProgress()
         except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
             self.render('templates/error.html', error_msg=e.message)
-        except:
+        except Exception as e:
+            self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
             
         self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
