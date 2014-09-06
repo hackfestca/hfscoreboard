@@ -33,12 +33,12 @@ class Logger(logging.getLoggerClass()):
 
         error_file = logging.FileHandler("logs/errors.log", encoding="utf-8", )
         error_file.setLevel(logging.ERROR)
-        error_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        error_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
         error_file.setFormatter(error_formatter)
 
         info_file = logging.FileHandler("logs/infos.log", encoding="utf-8", )
-        info_file.setLevel(logging.ERROR)
-        info_formatter = logging.Formatter('%(levelname)s:%(asctime)s:l.%(lineno)s - %(message)s')
+        info_file.setLevel(logging.INFO)
+        info_formatter = logging.Formatter('%(asctime)s:l.%(lineno)s - %(message)s')
         info_file.setFormatter(info_formatter)        
 
         self.logger.addHandler(error_file)
