@@ -63,15 +63,18 @@ class BaseHandler(tornado.web.RequestHandler):
         self._team_ip = None
         self._team_score = None
 
+    def write_error(self, status_code, **kwargs):
+        # Handler for all the internals Error (500)
+        
     def _connect(self):
-        try:
+#        try:
             self.client = kothScoreboard()
-        except ClientCannotConnectError as e:
-            self.logger.error(e.message)
-            self.render('templates/error.html', error_msg=e.message)
-        except Exception as e:
-            self.logger.error(e)
-            self.render('templates/error.html', error_msg=e)
+#        except ClientCannotConnectError as e:
+#            self.logger.error(e.message)
+#            self.render('templates/error.html', error_msg=e.message)
+#        except Exception as e:
+#            self.logger.error(e)
+#            self.render('templates/error.html', error_msg=e)
 
     def _getTeamInfo(self):
         try:
@@ -191,6 +194,7 @@ class ChallengesHandler(BaseHandler):
             self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
 class IndexHandler(BaseHandler):
+
     @tornado.web.addslash
     def get(self):
         try:
@@ -239,6 +243,7 @@ class IndexHandler(BaseHandler):
                     flag_is_valid=flag_is_valid, submit_message=submit_message)
 
 class DashboardHandler(BaseHandler):
+
     @tornado.web.addslash
     def get(self):
         try:
@@ -258,7 +263,13 @@ class DashboardHandler(BaseHandler):
             self.logger.error(e.message)
             self.set_status(500)
             self.render('templates/error.html', error_msg=e.message)
-            
+
+
+class Error404Handler(BaseHandler):
+    def get(self):
+        self.set_status(404)
+        self.render('templates/error.html', error_msg="404 - Not Found")
+                        
 if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
@@ -268,7 +279,12 @@ if __name__ == '__main__':
             (r"/challenges/?", ChallengesHandler),
             (r"/scoreboard/?", ScoreHandler),
             (r"/dashboard/?", DashboardHandler)
-        ], debug=True, static_path=os.path.join(root, 'static'))
+        ],
+         debug=False,
+         static_path=os.path.join(root, 'static'),
+         autoreload=True,
+         default_handler_class=Error404Handler # 404 Handling
+         )
 
     server = tornado.httpserver.HTTPServer(app,
                         ssl_options = {
