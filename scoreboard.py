@@ -99,14 +99,13 @@ class BaseHandler(tornado.web.RequestHandler):
     def on_finish(self):
         self._disconnect()
 
-    # Some python voodoo
     def render(self, template_name, **kwargs):
         super().render(template_name,
-                       team_name=self.team_name,
-                       team_ip=self.team_ip,
-                       team_score=self.team_score,
-                       **kwargs)
-        
+                        team_name=self.team_name,
+                        team_ip=self.team_ip,
+                        team_score=self.team_score,
+                        **kwargs)
+
     @property
     def sponsors(self):
         return self._sponsors
@@ -156,9 +155,11 @@ class ScoreHandler(BaseHandler):
         try:
             score = self.client.getScore()
         except PLPGSQLRaiseError as e:
+            self.set_status(500)
             self.logger.error(e.message)
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
+            self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
 
@@ -167,6 +168,7 @@ class ScoreHandler(BaseHandler):
             self.render('templates/score.html', score_table=score)
         except PLPGSQLRaiseError as e:
             self.logger.error(e)
+            self.set_status(500)
             self.render('templates/error.html', error_msg=e.message)
             
 class ChallengesHandler(BaseHandler):
@@ -176,9 +178,12 @@ class ChallengesHandler(BaseHandler):
             challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
+            self.set_status(500)
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
+            self.set_status(500)
             self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
         else:    
             self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
@@ -189,12 +194,21 @@ class IndexHandler(BaseHandler):
             valid_news = self.client.getValidNews()
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
+            self.set_status(500)
             self.render('templates/error.html', error_msg=e.message)
-        except Exception as e: 
+        except Exception as e:
+            self.set_status(500)
             self.logger.error(e)
-        else:
-            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
+            self.render('templates/error.html', error_msg="Error")
 
+        # This weird thing again
+        try:
+            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
+        except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
+            self.set_status(500)
+            self.render('templates/error.html', error_msg=e.message)
+            
     def post(self):
         flag = self.get_argument("flag")
         score = self.client.getScore(top=9)
@@ -212,6 +226,7 @@ class IndexHandler(BaseHandler):
             self.logger.error(e)
             submit_message = "Error"
             flag_is_valid = False
+            self.set_status(500)
         else:
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
@@ -225,13 +240,20 @@ class DashboardHandler(BaseHandler):
             jsArray = self.client.getJsDataScoreProgress()
         except PLPGSQLRaiseError as e:
             self.logger.error(e.message)
+            self.set_status(500)
             self.render('templates/error.html', error_msg=e.message)
         except Exception as e:
+            self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-        else:
-            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
+        try:
+            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
+        except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
+            self.set_status(500)
+            self.render('templates/error.html', error_msg=e.message)
+            
 if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
