@@ -59,9 +59,11 @@ class BaseHandler(tornado.web.RequestHandler):
                 if os.path.isfile(os.path.join(_sponsors_imgs_path, f)) ]
         self.client = None
         self.logger = Logger("HF2k14_Logger")
+        self.team_name = None
+        self.team_ip = None
+        self.team_score = None
 
-                
-    def prepare(self):
+    def _connect(self):
         try:
             self.client = kothScoreboard()
         except ClientCannotConnectError as e:
@@ -70,13 +72,41 @@ class BaseHandler(tornado.web.RequestHandler):
         except Exception as e:
             self.logger.error(e)
             self.render('templates/error.html', error_msg=e)
-            
-    def on_finish(self):
+
+    def _getTeamInfo(self):
+        try:
+            team_info = list(self.client.getTeamInfo(self.request.remote_ip))
+            self.team_name = team_info[1][1]
+            self.team_ip = team_info[2][1]
+            self.team_score = team_info[6][1]
+        except PLPGSQLRaiseError as e:
+            self.logger.error(e.message)
+            self.render('templates/error.html', error_msg=e)
+        except Exception as e:
+            self.logger.error(e.message)
+            self.render('templates/error.html', error_msg=e)
+
+    def _disconnect(self):
         try:
             self.client.close()
         except (AttributeError, Exception, RuntimeError) as e:
             self.logger.error(e)
+            
+    def prepare(self):
+        self._connect()
+        self._getTeamInfo()
+                    
+    def on_finish(self):
+        self._disconnect()
 
+    # Some python voodoo
+    def render(self, template_name, **kwargs):
+        super().render(template_name,
+                       team_name=self.team_name,
+                       team_ip=self.team_ip,
+                       team_score=self.team_score,
+                       **kwargs)
+        
     @property
     def sponsors(self):
         return self._sponsors
@@ -95,9 +125,9 @@ class ScoreHandler(BaseHandler):
 
         # Weird behaviour from PGSQL
         try:
-            self.render('templates/score.html', table=score,
-                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
+            self.render('templates/score.html', score_table=score)
         except PLPGSQLRaiseError as e:
+            self.logger.error(e)
             self.render('templates/error.html', error_msg=e.message)
             
 class ChallengesHandler(BaseHandler):
@@ -111,8 +141,7 @@ class ChallengesHandler(BaseHandler):
         except Exception as e:
             self.logger.error(e)
         else:    
-            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges),
-                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
+            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
 
 class IndexHandler(BaseHandler):
     def get(self):
@@ -125,8 +154,7 @@ class IndexHandler(BaseHandler):
         except Exception as e: 
             self.logger.error(e)
         else:
-            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors,
-                         team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
+            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
 
     def post(self):
         flag = self.get_argument("flag")
@@ -150,8 +178,7 @@ class IndexHandler(BaseHandler):
             flag_is_valid = True
             
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
-                    flag_is_valid=flag_is_valid, submit_message=submit_message,
-                    team_name="Team _eko", team_ip="192.168.0.1", team_score="99")        
+                    flag_is_valid=flag_is_valid, submit_message=submit_message)
 
 class DashboardHandler(BaseHandler):
     def get(self):
@@ -164,8 +191,7 @@ class DashboardHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray,
-                        team_name="Team _eko", team_ip="192.168.0.1", team_score="99")
+            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
 if __name__ == '__main__':
     # For the CSS
