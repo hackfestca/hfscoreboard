@@ -79,7 +79,9 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             msg = status_code
 
-        self.logger.error("{}:{}:{}".format(self.team_ip, exc_type.__name__, exc_obj.message))
+        self.logger.error("{}:{}:{}".format(self.request.remote_ip,
+                                            exc_type.__name__,
+                                            exc_obj.message))
         self.render("templates/error.html", error_msg=msg)
         
     def _connect(self):
