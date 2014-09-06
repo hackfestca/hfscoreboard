@@ -162,7 +162,7 @@ class ScoreHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            score = self.client.getScore()
+            score = self.client.getScore(top=200)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
