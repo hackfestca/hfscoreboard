@@ -18,6 +18,7 @@
       <dl>
 	{% for challenge in chal %}
 	{% if challenge[4] == category[0] %}
+
 	<dt>
 	  {% if challenge[6] %} 
 	  <i class="fa fa-check" style="color: green;"></i>
@@ -26,7 +27,8 @@
 	  {% end %}
 	  {{ challenge[1] }} - {{ challenge[3] }} points
 	</dt>
-	<dd>{% raw challenge[2] %}</dd>
+	<dd>{% raw challenge[2] %}</dd><br>
+
 	{% end %}
 	{% end %}
       </dl> 
