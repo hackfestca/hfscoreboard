@@ -1,9 +1,9 @@
 
-google.load("visualization", "1", {packages:["corechart"]});
+google.load("visualization", "1", {packages:["corechart", "controls"]});
 function drawChart(data_array) {
 
     var data = google.visualization.arrayToDataTable(data_array);
-    
+
     var options = {
 	title: 'Score',
 	backgroundColor: '#000000',
@@ -11,11 +11,15 @@ function drawChart(data_array) {
 	hAxis: { textStyle: { color: '#FFFFFF' } },
 	vAxis: { textStyle: { color: '#FFFFFF' } },
 	legend: { textStyle: { color: '#FFFFFF' } },
-	explorer: { actions: ['dragToPan', 'rightClickToReset'] },
 	titleTextStyle: { color: '#FFFFFF' }
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    
-    chart.draw(data, options);
+    var chart = new google.visualization.ChartWrapper({
+	'chartType': 'LineChart',
+	'containerId': 'chart_div',
+	'options': options,
+	'dataTable': data
+    }); 
+
+    chart.draw();
 }
