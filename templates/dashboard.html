@@ -10,7 +10,9 @@
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
+      var data = google.visualization.arrayToDataTable(
           {% raw jsArray %}
+      );
 
       var options = {
           title: 'Score',
@@ -19,7 +21,7 @@
           hAxis: { textStyle: { color: '#FFFFFF' } },
           vAxis: { textStyle: { color: '#FFFFFF' } },
           legend: { textStyle: { color: '#FFFFFF' } },
-          explorer: {},
+          explorer: { actions: ['dragToPan', 'rightClickToReset'] },
           titleTextStyle: { color: '#FFFFFF' }
       };
 

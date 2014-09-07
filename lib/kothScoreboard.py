@@ -70,13 +70,16 @@ class kothScoreboard(kothClient.kothClient):
             return self._oDB.proc('getTeamInfoFromIp(varchar)')(playerIp)
 
     def getJsDataScoreProgress(self,varname='data'):
-        s ="var data = google.visualization.arrayToDataTable([\n"
+        s = "[\n"
         teams = self.getScore(10)
         newTeams = [x[1] for x in teams]
         score = list(self.getScoreProgress())
         newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
-        s += '[\'Time\',\'' + '\', \''.join(newTeams) + '\']' + "\n"
+        s += "['Time', '{}']\n".format("', '".join(newTeams))
         for line in newScore:
-            s += ',[\'' + line[0].strftime("%H:%M") + '\',' + ','.join(line[1:]) + ']' + "\n"
-        s += "]);"
+            s += ",['{}', {}]\n".format(
+                line[0].strftime("%H:%M"),
+                ','.join(line[1:])
+                )
+        s += "]"
         return s
