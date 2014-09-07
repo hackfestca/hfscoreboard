@@ -6,31 +6,11 @@
 <div class="row">
   <div class="container">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-      var data = google.visualization.arrayToDataTable(
-          {% raw jsArray %}
-      );
-
-      var options = {
-          title: 'Score',
-          backgroundColor: '#000000',
-          baselineColor: '#FFFFFF',
-          hAxis: { textStyle: { color: '#FFFFFF' } },
-          vAxis: { textStyle: { color: '#FFFFFF' } },
-          legend: { textStyle: { color: '#FFFFFF' } },
-          explorer: { actions: ['dragToPan', 'rightClickToReset'] },
-          titleTextStyle: { color: '#FFFFFF' }
-      };
-
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
-        chart.draw(data, options);
-      }
-    </script>
     <div id="chart_div" style="height: 700px;"></div>
+    <script type="text/javascript" src="/static/js/dashboard.js"></script>
+    <script type="text/javascript">
+      google.setOnLoadCallback(drawChart({% raw jsArray %}));
+    </script>
   </div>
 </div>
 
