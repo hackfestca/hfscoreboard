@@ -1,7 +1,7 @@
 /*
     Set default schema
 */
-SET search_path TO mon2k14;
+SET search_path TO scoreboard;
 
 /*
     Delete existing data

@@ -34,7 +34,7 @@ class kothOwner(kothClient.kothClient):
 
     """
     _sUser = 'hfowner'
-    _sHost = 'mon2k14.hf'
+    _sHost = 'scoreboard.hf'
     _sPass = ''
     _sCrtFile = 'certs/cli.psql.mon2k14.crt'
     _sKeyFile = 'certs/cli.psql.mon2k14.key'

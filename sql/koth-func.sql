@@ -1,7 +1,7 @@
 SELECT 'DROP FUNCTION ' || ns.nspname || '.' || proname 
        || '(' || oidvectortypes(proargtypes) || ');'
 FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
-WHERE ns.nspname = 'mon2k14'  order by proname;
+WHERE ns.nspname = 'scoreboard'  order by proname;
 
 /*
     sha256()

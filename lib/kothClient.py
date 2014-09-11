@@ -37,8 +37,8 @@ class kothClient():
     """
     _sVersion = '0.01'
     _bDebug = False
-    _sSchema = 'mon2k14'
-    _sDatabase = 'mon2k14'
+    _sSchema = 'scoreboard'
+    _sDatabase = 'scoreboard'
     _sHost = '192.168.6.29'
     _sUser = 'player'
     _sPass = 'player'
