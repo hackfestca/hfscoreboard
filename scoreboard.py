@@ -76,6 +76,8 @@ class BaseHandler(tornado.web.RequestHandler):
             msg = "{} - {}".format(status_code, exc_obj.message)
         elif isinstance(exc_type, InsufficientPrivilegeError):
             msg = "{} - {}".format(status_code, exc_obj.message)
+        elif isinstance(exc_type, OSError):
+            self.logger.error("OSERROR")
         else:
             msg = status_code
 
