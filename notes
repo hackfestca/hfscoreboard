@@ -10,4 +10,6 @@ Add team positions in getScore()
 Increase connections limit (currently 30)
 http://www.postgresql.org/docs/8.3/static/kernel-resources.html#SYSVIPC
 
-
+Configure on nginx (priority #1)
+Stat post hackfest: what was successfuly done. Stats per challenges/track
+Code a feature in admin.py where it simulate many users submitting flags every x minutes

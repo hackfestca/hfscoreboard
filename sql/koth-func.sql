@@ -1436,7 +1436,7 @@ RETURNS integer AS $$
         TEAM_COUNT              integer := 30;
         FLAG_COUNT              integer := 100;
         FLAG_IS_KING_COUNT      integer := 100;
-        KINGFLAG_PER_FLAG_COUNT integer := 10;
+        KINGFLAG_PER_FLAG_COUNT integer := 3;
         FLAG_ASSIGN_LIMIT       integer := 100;
         FLAG_TS_MIN             integer := 960;
         KINGFLAG_ASSIGN_LIMIT   integer := 100;
@@ -1492,7 +1492,7 @@ RETURNS integer AS $$
         INSERT INTO kingFlag(flagId,value,pts) 
         SELECT flag.id,
                 random_32(),
-                random() * 9 + 1
+                1           --random() * 9 + 1
         FROM flag,generate_series(1,KINGFLAG_PER_FLAG_COUNT)
         WHERE flag.isKing = True;
 
