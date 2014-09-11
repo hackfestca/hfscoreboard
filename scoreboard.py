@@ -52,17 +52,15 @@ class Logger(logging.getLoggerClass()):
     
 class BaseHandler(tornado.web.RequestHandler):
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def initialize(self, sponsors_imgs):
+#        super().__init__(*args)
         self._client = None
         self._logger = Logger("HF2k14_Logger")
         self._team_name = None
         self._team_ip = None
         self._team_score = None
+        self._sponsors = sponsors_imgs
 
-    def initialize(self, sponsors):
-        self._sponsors = sponsors
-        
     def write_error(self, status_code, **kwargs):
         # Handler for all the internals Error (500)
         # Handle every exception thrown by any BaseHadler
@@ -251,14 +249,14 @@ if __name__ == '__main__':
     root = os.path.dirname(__file__)
 
     sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
-    sponsors = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
+    sponsors_imgs = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
                         if os.path.isfile(os.path.join(sponsors_imgs_path, f)) ]
     
     app = tornado.web.Application([
-            (r"/", IndexHandler, dict(sponsors=sponsors)),
-            (r"/challenges/?", ChallengesHandler, dict(sponsors=sponsors)),
-            (r"/scoreboard/?", ScoreHandler, dict(sponsors=sponsors)),
-            (r"/dashboard/?", DashboardHandler, dict(sponsors=sponsors))
+            (r"/", IndexHandler, dict(sponsors_imgs=sponsors_imgs)),
+            (r"/challenges/?", ChallengesHandler, dict(sponsors_imgs=sponsors_imgs)),
+            (r"/scoreboard/?", ScoreHandler, dict(sponsors_imgs=sponsors_imgs)),
+            (r"/dashboard/?", DashboardHandler, dict(sponsors_imgs=sponsors_imgs))
         ],
          debug=True,
          static_path=os.path.join(root, 'static'),
