@@ -76,8 +76,6 @@ class BaseHandler(tornado.web.RequestHandler):
             msg = "{} - {}".format(status_code, exc_obj.message)
         elif isinstance(exc_type, InsufficientPrivilegeError):
             msg = "{} - {}".format(status_code, exc_obj.message)
-        elif isinstance(exc_type, OSError):
-            self.logger.error("OSERROR")
         else:
             msg = status_code
 
@@ -263,11 +261,11 @@ if __name__ == '__main__':
          default_handler_class=Error404Handler # 404 Handling
          )
 
-    server = tornado.httpserver.HTTPServer(app,
-                        ssl_options = {
-                            "certfile": "./certs/scoreboard-web.crt",
-                            "keyfile": "./certs/scoreboard-web-key.pem",
-                            }
+    server = tornado.httpserver.HTTPServer(app#,
+#                        ssl_options = {
+#                            "certfile": "./certs/scoreboard-web.crt",
+#                            "keyfile": "./certs/scoreboard-web-key.pem",
+#                            }
                     )
         
     server.listen(5000)
