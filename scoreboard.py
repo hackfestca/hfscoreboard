@@ -52,10 +52,10 @@ class Logger(logging.getLoggerClass()):
     
 class BaseHandler(tornado.web.RequestHandler):
 
-    def initialize(self, sponsors_imgs):
+    def initialize(self, sponsors_imgs, logger):
 #        super().__init__(*args)
         self._client = None
-        self._logger = Logger("HF2k14_Logger")
+        self._logger = logger
         self._team_name = None
         self._team_ip = None
         self._team_score = None
@@ -259,12 +259,16 @@ if __name__ == '__main__':
     sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
     sponsors_imgs = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
                         if os.path.isfile(os.path.join(sponsors_imgs_path, f)) ]
+
+    logger = Logger("HF2k14_Logger")
+
+    args = dict(logger=logger, sponsors_imgs=sponsors_imgs)
     
     app = tornado.web.Application([
-            (r"/", IndexHandler, dict(sponsors_imgs=sponsors_imgs)),
-            (r"/challenges/?", ChallengesHandler, dict(sponsors_imgs=sponsors_imgs)),
-            (r"/scoreboard/?", ScoreHandler, dict(sponsors_imgs=sponsors_imgs)),
-            (r"/dashboard/?", DashboardHandler, dict(sponsors_imgs=sponsors_imgs))
+            (r"/", IndexHandler, args),
+            (r"/challenges/?", ChallengesHandler, args),
+            (r"/scoreboard/?", ScoreHandler, args),
+            (r"/dashboard/?", DashboardHandler, args)
         ],
          debug=True,
          static_path=os.path.join(root, 'static'),
