@@ -240,6 +240,14 @@ class DashboardHandler(BaseHandler):
 
 
 class Error404Handler(BaseHandler):
+
+    def initialize(self):
+        self._client = None
+        self._logger = Logger("HF2k14_Logger")
+        self._team_name = None
+        self._team_ip = None
+        self._team_score = None
+    
     def get(self):
         self.set_status(404)
         self.render('templates/error.html', error_msg="404 - Not Found")
