@@ -39,7 +39,7 @@ class kothClient():
     _bDebug = False
     _sSchema = 'scoreboard'
     _sDatabase = 'scoreboard'
-    _sHost = '192.168.6.29'
+    _sHost = '172.28.71.11'
     _sUser = 'player'
     _sPass = 'player'
     _sslRootCrt = 'certs/mon2k14-root-ca.crt'
