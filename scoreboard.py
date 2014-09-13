@@ -275,7 +275,8 @@ if __name__ == '__main__':
          default_handler_class=Error404Handler # 404 Handling
          )
 
-    server = tornado.httpserver.HTTPServer(app#,
+    server = tornado.httpserver.HTTPServer(app,
+                                           xheaders=True
 #                        ssl_options = {
 #                            "certfile": "./certs/scoreboard-web.crt",
 #                            "keyfile": "./certs/scoreboard-web-key.pem",
