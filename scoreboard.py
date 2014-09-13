@@ -31,12 +31,12 @@ class Logger(logging.getLoggerClass()):
         self.logger = logging.getLogger("scoreboard_logger")
         self.logger.setLevel(logging.ERROR)
 
-        error_file = logging.FileHandler("logs/errors.log", encoding="utf-8", )
+        error_file = logging.FileHandler("logs/errors.log", encoding="utf-8")
         error_file.setLevel(logging.ERROR)
         error_formatter = logging.Formatter('%(asctime)s - %(message)s')
         error_file.setFormatter(error_formatter)
 
-        info_file = logging.FileHandler("logs/infos.log", encoding="utf-8", )
+        info_file = logging.FileHandler("logs/infos.log", encoding="utf-8")
         info_file.setLevel(logging.INFO)
         info_formatter = logging.Formatter('%(asctime)s - %(message)s')
         info_file.setFormatter(info_formatter)        
@@ -53,7 +53,6 @@ class Logger(logging.getLoggerClass()):
 class BaseHandler(tornado.web.RequestHandler):
 
     def initialize(self, sponsors_imgs, logger):
-#        super().__init__(*args)
         self._client = None
         self._logger = logger
         self._team_name = None
