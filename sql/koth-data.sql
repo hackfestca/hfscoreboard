@@ -59,11 +59,11 @@ SELECT addRandomFlag('Test 3', 7::smallint, 'poc01.hf', 'expl', 3::smallint, Nul
 -- Testing invalid pts
 --SELECT addFlag('Flag 1', random_32(), 11, 'dathost', 'ssh root@$HOST "echo $FLAG > /root/flag.txt"', 'wget http://dathost/test');
 
-SELECT addFlag('Test 4.1', 'prepuce', 1::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.1', 'prepuce', 1::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.1.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.2', 'agres', 2::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.2', 'agres', 2::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.2.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.3', 'noob', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.3', 'noob', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
 --SELECT addFlag('Test 4.4', ':|!+"/_"!$)("/%*%$?&', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
 --                'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
