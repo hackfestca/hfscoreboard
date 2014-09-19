@@ -31,6 +31,7 @@ SELECT addHost('poc07.hf', 'Test box for scoreboard development (does not exist)
 SELECT addHost('poc08.hf', 'Test box for scoreboard development (does not exist)');
 SELECT addHost('poc09.hf', 'Test box for scoreboard development (does not exist)');
 SELECT addHost('poc10.hf', 'Test box for scoreboard development (does not exist)');
+SELECT addHost('172.28.72.110', 'Nose Bleeding Track');
 
 SELECT addCategory('web', 'Web challenges', 'Description des web chals');
 SELECT addCategory('bin', 'Binary challenges', 'Description des bin chals');
@@ -59,11 +60,11 @@ SELECT addRandomFlag('Test 3', 7::smallint, 'poc01.hf', 'expl', 3::smallint, Nul
 -- Testing invalid pts
 --SELECT addFlag('Flag 1', random_32(), 11, 'dathost', 'ssh root@$HOST "echo $FLAG > /root/flag.txt"', 'wget http://dathost/test');
 
-SELECT addFlag('Test 4.1', 'prepuce', 1::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.1', 'prepuce', 1::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.1.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.2', 'agres', 2::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.2', 'agres', 2::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.2.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.3', 'noob', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
+SELECT addFlag('Test 4.3', 'noob', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
 --SELECT addFlag('Test 4.4', ':|!+"/_"!$)("/%*%$?&', 3::smallint, 'poc01.hf', 'rev', 1::smallint, Null, Null, True, '', ''
 --                'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
@@ -100,3 +101,11 @@ SELECT insertRandomData();
     Settings
 */
 INSERT INTO settings(gameStartTs) VALUES('2013-11-07 10:00'::timestamp);
+
+/*
+    FLR Stuff
+*/
+
+SELECT addRandomFlag('Nose Bleeding KOTH', 5::smallint, '172.28.72.110', 'web', 1::smallint, Null, Null, True, '', '', 
+                'echo $FLAG > /opt/cs/frontend/config/flag.txt && chown root:csservice /opt/cs/frontend/config/flag.txt', 
+                '');

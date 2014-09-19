@@ -99,8 +99,8 @@ CREATE TABLE flag(
     description text default null,
     hint text default null,
     isKing boolean not null default False,  -- For king flags only
-    updateCmd varchar(100) default null,    -- For king flags only
-    monitorCmd varchar(100) default null,   -- For king flags only
+    updateCmd varchar(255) default null,    -- For king flags only
+    monitorCmd varchar(255) default null,   -- For king flags only
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
