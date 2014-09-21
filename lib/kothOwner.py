@@ -7,7 +7,7 @@ King of the hill client class
 @author: Martin Dubé
 @organization: Hackfest Communications
 @license: GNU GENERAL PUBLIC LICENSE Version 3
-@contact: martin.dube@hackfest.com
+@contact: martin.dube@hackfest.ca
 
     Copyright (C) 2014  Martin Dubé
 
