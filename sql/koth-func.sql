@@ -1447,6 +1447,9 @@ RETURNS integer AS $$
         SUBMIT_HIST_TS_MIN      integer := 960;
         FLAG_SUBMIT_RATE        real := 0.11;
         KINGFLAG_SUBMIT_RATE    real := 0.11;
+        MAX_PTS                 integer := 10;
+        MAX_HOST                integer := 9;
+        MAX_CAT                 integer := 9;
         _teamId team.id%TYPE;
         _net team.net%TYPE;
     BEGIN
@@ -1462,9 +1465,9 @@ RETURNS integer AS $$
         INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
         SELECT 'Flag '||id,
                 random_32(),
-                random() * 9 + 1,
-                random() * 9 + 1,
-                random() * 5 + 1,
+                random() * (MAX_PTS - 1) + 1,
+                random() * (MAX_HOST - 1) + 1,
+                random() * (MAX_CAT - 1) + 1,
                 'echo $FLAG > /root/flag'||id||'.txt',
                 'bla',
                 1,
@@ -1477,9 +1480,9 @@ RETURNS integer AS $$
         INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
         SELECT 'Flag '||id,
                 random_32(),
-                random() * 9 + 1,
-                random() * 9 + 1,
-                random() * 5 + 1,
+                random() * (MAX_PTS - 1) + 1,
+                random() * (MAX_HOST - 1) + 1,
+                random() * (MAX_CAT - 1) + 1,
                 'echo $FLAG > /root/flag'||id||'.txt',
                 'bla',
                 1,
