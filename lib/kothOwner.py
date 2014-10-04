@@ -34,11 +34,9 @@ class kothOwner(kothClient.kothClient):
 
     """
     _sUser = 'hfowner'
-    _sHost = 'scoreboard.hf'
     _sPass = None
     _sCrtFile = 'certs/cli.psql.scoreboard.hfowner.crt'
     _sKeyFile = 'certs/cli.psql.scoreboard.hfowner.key'
-    _sslRootCrt = 'certs/scoreboard-root-ca.crt'
     _sSqlFolder = 'sql'
 
     def __init__(self):

@@ -39,7 +39,7 @@ class kothClient():
     _bDebug = False
     _sSchema = 'scoreboard'
     _sDatabase = 'scoreboard'
-    _sHost = 'scoreboard.hf'
+    _sHost = 'db.hf'
     _sUser = 'player'
     _sPass = None
     _sCrtFile = 'certs/cli.psql.scoreboard.player.crt'

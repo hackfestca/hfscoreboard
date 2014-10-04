@@ -1,2 +1,2 @@
 #!/bin/bash
-psql "sslmode=require host=scoreboard.hf dbname=scoreboard user=hfowner sslcert=../certs/cli.psql.mon2k14.crt sslkey=../certs/cli.psql.mon2k14.key"
+psql "sslmode=require host=db.hf dbname=scoreboard user=hfowner sslcert=../certs/cli.psql.scoreboard.hfowner.crt sslkey=../certs/cli.psql.scoreboard.hfowner.key"
