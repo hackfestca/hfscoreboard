@@ -35,23 +35,14 @@ class kothOwner(kothClient.kothClient):
     """
     _sUser = 'hfowner'
     _sHost = 'scoreboard.hf'
-    _sPass = ''
-    _sCrtFile = 'certs/cli.psql.mon2k14.crt'
-    _sKeyFile = 'certs/cli.psql.mon2k14.key'
+    _sPass = None
+    _sCrtFile = 'certs/cli.psql.scoreboard.hfowner.crt'
+    _sKeyFile = 'certs/cli.psql.scoreboard.hfowner.key'
+    _sslRootCrt = 'certs/scoreboard-root-ca.crt'
     _sSqlFolder = 'sql'
 
-
     def __init__(self):
-        self._oDB = postgresql.open( \
-                    user = self._sUser, \
-                    host = self._sHost, \
-                    database = self._sDatabase, \
-                    connect_timeout = self._iTimeout, \
-                    sslmode = 'require', \
-                    sslcrtfile = self._sCrtFile, \
-                    sslkeyfile = self._sKeyFile, \
-                    sslrootcrtfile = self._sslRootCrt)
-        self._oDB.settings['search_path'] = self._sSchema
+        super().__init__()
         
     def __del__(self):
         if self._oDB:

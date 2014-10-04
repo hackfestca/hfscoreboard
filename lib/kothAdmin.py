@@ -46,6 +46,8 @@ class kothAdmin(kothClient.kothClient):
     _sVersion = '0.01'
     _sUser = 'martin'
     _sPass = 'h9N)kv1*H!3(|<eASR1^]Iwql;fsDIDc6h.?o\,IS[v?4:~}J0'
+    _sCrtFile = None
+    _sKeyFile = None
 
     def __init__(self):
         super().__init__()

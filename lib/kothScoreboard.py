@@ -34,7 +34,9 @@ class kothScoreboard(kothClient.kothClient):
     """
     _sVersion = '0.01'
     _sUser = 'scoreboard'
-    _sPass = 'scoreboard'
+    _sPass = None
+    _sCrtFile = 'certs/cli.psql.scoreboard.scoreboard.crt'
+    _sKeyFile = 'certs/cli.psql.scoreboard.scoreboard.key'
 
     def __init__(self):
         super().__init__()

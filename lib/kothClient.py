@@ -39,13 +39,14 @@ class kothClient():
     _bDebug = False
     _sSchema = 'scoreboard'
     _sDatabase = 'scoreboard'
-    _sHost = '172.28.71.10'
+    _sHost = 'scoreboard.hf'
     _sUser = 'player'
-    _sPass = 'player'
-    _sslRootCrt = 'certs/mon2k14-root-ca.crt'
+    _sPass = None
+    _sCrtFile = 'certs/cli.psql.scoreboard.player.crt'
+    _sKeyFile = 'certs/cli.psql.scoreboard.player.key'
+    _sslRootCrt = 'certs/scoreboard-root-ca.crt'
     _iTimeout = 2
     _oDB = None
-
 
     def __init__(self):
         self._oDB = postgresql.open( \
@@ -55,7 +56,10 @@ class kothClient():
                             database = self._sDatabase, \
                             connect_timeout = self._iTimeout, \
                             sslmode = 'require',
+                            sslcrtfile = self._sCrtFile, \
+                            sslkeyfile = self._sKeyFile, \
                             sslrootcrtfile = self._sslRootCrt)
+        self._oDB.settings['search_path'] = self._sSchema
 #        self._oDB.settings['search_path'] = self._sSchema
 #        self._oDB.settings['client_min_messages'] = 'NOTICE'
 

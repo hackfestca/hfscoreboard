@@ -37,7 +37,9 @@ class kothUpdater(kothClient.kothClient):
     """
     _sVersion = '0.01'
     _sUser = 'flagupdater'
-    _sPass = 'flagUpdater'
+    _sPass = None
+    _sCrtFile = 'certs/cli.psql.scoreboard.flagupdater.crt'
+    _sKeyFile = 'certs/cli.psql.scoreboard.flagupdater.key'
 
     STATUS_OK = 1
     STATUS_ERROR = 2
