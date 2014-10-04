@@ -79,7 +79,9 @@ actGrp.add_argument('--version', '-v', action='store_true', dest='version', defa
               help='Display client version')
 
 optGrp.add_argument('--top', '-t', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
-              type=int, help='Limit --score result')
+              type=int, help='Limit --score number of result')
+optGrp.add_argument('--cat', action='store', dest='cat', default=None, \
+              type=str, help='Print results only for this category name')
 args = parser.parse_args()
 
 # Validate args
@@ -122,7 +124,7 @@ try:
         pts = c.submitFlag(args.flag)
     elif args.score:
         print('Displaying score')
-        print(c.getFormatScore(args.top))
+        print(c.getFormatScore(args.top,None,args.cat))
     elif args.catProgress:
         print('Displaying category progression')
         print(c.getFormatCatProgress())

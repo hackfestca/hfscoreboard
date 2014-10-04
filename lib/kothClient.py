@@ -108,15 +108,15 @@ class kothClient():
         else:
             return self._oDB.proc('submitRandomFlag()')()
 
-    def getScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None):
+    def getScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None,cat=None):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc('getScore(integer,varchar)'),top,ts)
+            return self._benchmark(self._oDB.proc('getScore(integer,varchar,varchar)'),top,ts,cat)
         else:
-            return self._oDB.proc('getScore(integer,varchar)')(top,ts)
+            return self._oDB.proc('getScore(integer,varchar,varchar)')(top,ts,cat)
 
-    def getFormatScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None):
+    def getFormatScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None,cat=None):
         title = ['ID','TeamName','FlagPts','FlagInstPts','Total'] 
-        score = self.getScore(top,ts)
+        score = self.getScore(top,ts,cat)
         x = PrettyTable(title)
         x.align['TeamName'] = 'l'
         x.padding_width = 1

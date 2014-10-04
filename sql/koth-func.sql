@@ -1,7 +1,21 @@
-SELECT 'DROP FUNCTION ' || ns.nspname || '.' || proname 
-       || '(' || oidvectortypes(proargtypes) || ');'
-FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
-WHERE ns.nspname = 'scoreboard'  order by proname;
+CREATE OR REPLACE FUNCTION dropFunctions() returns integer AS $$
+    DECLARE
+        _f varchar;
+    BEGIN
+
+        FOR _f IN 
+                SELECT 'DROP FUNCTION ' || ns.nspname || '.' || proname 
+                       || '(' || oidvectortypes(proargtypes) || ');'
+                FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
+                WHERE ns.nspname = 'scoreboard'  order by proname
+        LOOP
+            EXECUTE _f;
+        END LOOP;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+SELECT dropFunctions();
 
 /*
     sha256()
@@ -571,7 +585,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: getScore(top = 30)
 */
 CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
-                                    _timestamp varchar(20) default Null)
+                                    _timestamp varchar(20) default Null,
+                                    _category category.name%TYPE default Null)
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
@@ -582,6 +597,9 @@ RETURNS TABLE (
     DECLARE
         _settings settings%ROWTYPE;
         _ts timestamp;
+        -- _aCat category.id%TYPE[];    -- This doesn't work :(
+        _aCat integer[];
+        _rowCount integer;
     BEGIN
         -- Logging
         raise notice 'getScore(%,%)',$1,$2;
@@ -599,10 +617,21 @@ RETURNS TABLE (
             raise exception '_top argument cannot be a negative value. _top=%',_top;
         end if;
 
+        -- Prepare filters
         if _timestamp is Null then
             _ts := current_timestamp;
         else
             _ts := _timestamp::timestamp;
+        end if;
+
+        if _category is Null then
+            SELECT array(select category.id from category) INTO _aCat;
+        else
+            SELECT array[category.id] INTO _aCat FROM category WHERE name = _category;
+            GET DIAGNOSTICS _rowCount = ROW_COUNT;
+            if _rowCount <> 1 then
+                raise exception 'Category "%" not found',_category;
+            end if;
         end if;
 
         return QUERY SELECT t.id AS id,
@@ -622,9 +651,11 @@ RETURNS TABLE (
                                 FROM team_flag as tf
                                 LEFT OUTER JOIN (
                                     SELECT flag.id,
-                                           flag.pts
+                                           flag.pts,
+                                           flag.category
                                     FROM flag
                                     ) as f ON tf.flagId = f.id
+                                    WHERE f.category = ANY (_aCat)
                                 ) AS tf2
                                 WHERE tf2.ts <= _ts
                             GROUP BY tf2.teamId
@@ -639,9 +670,16 @@ RETURNS TABLE (
                                        fi.pts
                                 FROM team_kingFlag as tfi
                                 LEFT OUTER JOIN (
-                                    SELECT kingFlag.id,
-                                           kingFlag.pts
-                                    FROM kingFlag
+                                    SELECT kf.id,
+                                           kf.flagId,
+                                           kf.pts
+                                    FROM kingFlag as kf
+                                    LEFT OUTER JOIN (
+                                        SELECT flag.id,
+                                               flag.category
+                                        FROM flag 
+                                        ) as ff ON kf.flagId = ff.id
+                                        WHERE ff.category = ANY (_aCat)
                                     ) as fi ON tfi.kingFlagId = fi.id
                                 ) AS tfi2
                                 WHERE tfi2.ts <= _ts

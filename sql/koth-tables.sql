@@ -131,6 +131,7 @@ CREATE TABLE team_flag(
     ts timestamp not null default current_timestamp,
     constraint u_flag_constraint UNIQUE (teamId,flagId)
     );
+
 /*
     Represent a team's successfuly submitted flag instances.
 */
