@@ -128,6 +128,7 @@ CREATE TABLE team_flag(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
     flagId integer not null references flag(id) on delete cascade,
+    playerIp inet not null,
     ts timestamp not null default current_timestamp,
     constraint u_flag_constraint UNIQUE (teamId,flagId)
     );
@@ -139,6 +140,7 @@ CREATE TABLE team_kingFlag(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
     kingFlagId integer not null references kingFlag(id) on delete cascade,
+    playerIp inet not null,
     ts timestamp not null default current_timestamp,
     constraint u_kingFlag_constraint UNIQUE (teamId,kingFlagId)
     );

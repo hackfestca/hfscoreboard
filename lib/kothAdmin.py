@@ -179,4 +179,18 @@ class kothAdmin(kothClient.kothClient):
             x.add_row(row)
         return x
 
-    
+    def getSubmitHistory(self,top=config.KOTH_DEFAULT_TOP_VALUE,type=None):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getSubmitHistory(integer,integer)'),top,type)
+        else:
+            return self._oDB.proc('getSubmitHistory(integer,integer)')(top,type)
+
+    def getFormatSubmitHistory(self,top=config.KOTH_DEFAULT_TOP_VALUE,type=None):
+        title = ['Timestamp', 'TeamName', 'FlagName', 'Pts', 'Category', 'Type']
+        history = self.getSubmitHistory(top,type)
+        x = PrettyTable(title)
+        x.padding_width = 1
+        for row in history:
+            x.add_row(row)
+        return x
+

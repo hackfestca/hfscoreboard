@@ -44,6 +44,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getSubmitHistory(integer,integer) TO hfadmins;
 
 -- Grants for scoreboard
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
@@ -66,7 +67,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfo() TO hfplayers;
 
 -- Grants for multiple groups
 --GRANT EXECUTE ON FUNCTION pgcrypto.digest(text,text) TO hfowner,hfadmins,hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar) TO hfplayers,hfscore,hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,category.name%TYPE) TO hfplayers,hfscore,hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getValidNews() TO hfplayers,hfscore,hfadmins;
 
 /*

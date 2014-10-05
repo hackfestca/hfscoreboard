@@ -110,6 +110,13 @@ parser_score.add_argument('-t', '--top', action='store', dest='top', default=con
 parser_score.add_argument('-s', '--ts', action='store', dest='ts', default=None, \
                                 type=str, metavar='TIMESTAMP', \
                                 help='Use to get the score at a specific time. Default is now.')
+parser_history = subparsers.add_parser('history', help='Print Submit History.')
+parser_history.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
+                                type=int, metavar='NUM', \
+                                help='Use to specify number of rows to display. Default is 30.')
+parser_history.add_argument('--type', action='store', dest='type', default=None, \
+                                type=int, metavar='NUM', \
+                                help='Specify flag type to display (None=all, 1=Flag, 2=KingFlag).')
 parser_graph = subparsers.add_parser('graph', help='Print score graph.')
 parser_graph.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
@@ -208,6 +215,9 @@ try:
     elif args.action == 'graph':
         print('Displaying graph (top '+str(args.top)+')')
         print(c.getGraphScore(args.top))
+    elif args.action == 'history':
+        print('Displaying submit history(top '+str(args.top)+', type '+str(args.type)+')')
+        print(c.getFormatSubmitHistory(args.top,args.type))
     elif args.action == 'stats':
         print("Displaying stats")
         print(c.getFormatGameStats())

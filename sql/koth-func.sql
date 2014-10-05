@@ -18,6 +18,35 @@ $$ LANGUAGE plpgsql;
 SELECT dropFunctions();
 
 /*
+    Stored Proc: emptyTables()
+*/
+CREATE OR REPLACE FUNCTION emptyTables() 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'emptyTables()';
+
+        TRUNCATE team,
+                 status,
+                 host,
+                 category,
+                 flagAuthor,
+                 flag,
+                 kingFlag,
+                 team_flag,
+                 team_kingFlag,
+                 news,
+                 submit_history,
+                 status_history,
+                 settings
+            RESTART IDENTITY
+            CASCADE;
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+
+/*
     sha256()
 */
 CREATE OR REPLACE FUNCTION sha256(text) returns text AS $$
@@ -328,7 +357,7 @@ RETURNS integer AS $$
         end if;
 
         -- Get author id from name
-        if _author != Null then
+        if _author is not Null then
             SELECT id INTO _authorId FROM flagAuthor WHERE name = _author;
             if not FOUND then
                 raise exception 'Could not find author "%"',_author;
@@ -338,11 +367,12 @@ RETURNS integer AS $$
         end if;
 
         -- Get author id from name
-        if _displayInterval != Null then
+        if _displayInterval is not Null then
             _display = _displayInterval::interval;
         else
             _display = _displayInterval;
         end if;
+
         
         -- Insert a new row
         INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,
@@ -1145,6 +1175,88 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: getSubmitHistory()
+    _typeFilter: Null=Flag+KingFlag, 1=Flag only, 2=KingFlag only
+*/
+CREATE OR REPLACE FUNCTION getSubmitHistory(_top integer DEFAULT 10, _typeFilter integer DEFAULT Null)
+RETURNS TABLE (
+                ts timestamp,
+                teamName team.name%TYPE,
+                flagName flag.name%TYPE,
+                flagPts flag.pts%TYPE,
+                flagCat category.name%TYPE,
+                flagType integer
+              ) AS $$
+    BEGIN
+        RETURN QUERY SELECT r.timestamp,
+                            r.TeamName,
+                            r.FlagName,
+                            r.FlagPts,
+                            r.FlagCategory,
+                            r.type
+                     FROM (
+                         SELECT tf.ts AS timestamp,
+                                t.name AS TeamName,
+                                f.name AS FlagName,
+                                f.pts AS FlagPts,
+                                c.name AS FlagCategory,
+                                1 AS type
+                         FROM team_flag as tf
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   name
+                            FROM team
+                         ) AS t ON tf.teamId = t.id
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   pts,
+                                   name,
+                                   category
+                            FROM flag
+                         ) AS f ON tf.flagId = f.id
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   name
+                            FROM category
+                         ) AS c ON f.category = c.id
+                         UNION ALL
+                         SELECT tkf.ts AS timestamp,
+                                t2.name AS TeamName,
+                                f2.name AS FlagName,
+                                kf.pts AS FlagPts,
+                                c2.name AS FlagCategory,
+                                2 AS type
+                         FROM team_kingFlag as tkf
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   name
+                            FROM team
+                         ) AS t2 ON tkf.teamId = t2.id
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   flagId,
+                                   pts
+                            FROM kingFlag
+                         ) AS kf ON tkf.kingFlagId = kf.id
+                         LEFT OUTER JOIN (
+                             SELECT id,
+                                    name,
+                                    category
+                             FROM flag
+                         ) AS f2 ON kf.flagId = f2.id
+                         LEFT OUTER JOIN (
+                            SELECT id,
+                                   name
+                            FROM category
+                         ) AS c2 ON f2.category = c2.id
+                    ) AS r
+                    ORDER BY r.timestamp DESC
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+                
+
+/*
     Stored Proc: getGameStats()
 */
 CREATE OR REPLACE FUNCTION getGameStats()
@@ -1434,34 +1546,6 @@ RETURNS flag.value%TYPE AS $$
         end if;
 
         RETURN _flagValue;
-    END;
-$$ LANGUAGE plpgsql;
-
-/*
-    Stored Proc: emptyTables()
-*/
-CREATE OR REPLACE FUNCTION emptyTables() 
-RETURNS integer AS $$
-    BEGIN
-        -- Logging
-        raise notice 'emptyTables()';
-
-        TRUNCATE team,
-                 status,
-                 host,
-                 category,
-                 flagAuthor,
-                 flag,
-                 kingFlag,
-                 team_flag,
-                 team_kingFlag,
-                 news,
-                 submit_history,
-                 status_history,
-                 settings
-            RESTART IDENTITY
-            CASCADE;
-        RETURN 0;
     END;
 $$ LANGUAGE plpgsql;
 
