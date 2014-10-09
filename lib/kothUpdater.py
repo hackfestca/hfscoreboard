@@ -53,7 +53,7 @@ class kothUpdater(kothClient.kothClient):
         super().__init__()
 
     def _substituteCmd(self,cmd,flag):
-        return cmd.replace('$FLAG', flag)
+        return cmd.replace('$FLAG', 'KOTH-'+flag)
     
     def _getAllKingFlags(self):
         if self._bDebug:
@@ -73,7 +73,7 @@ class kothUpdater(kothClient.kothClient):
         else:
             return list(self._oDB.proc('getKingableFlagsFromName(varchar)')(name))
 
-    def _addRandomFlagFromId(self,flagId):
+    def _addRandomKingFlagFromId(self,flagId):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('addRandomKingFlagFromId(integer,integer)'),flagId,self.KING_FLAG_VALUE)
         else:
@@ -81,21 +81,26 @@ class kothUpdater(kothClient.kothClient):
         
     
     def _remoteExec(self,host,cmd):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((host, 22))
-        
-        session = libssh2.Session()
-        session.startup(sock)
-        #session.userauth_password('john', '******')
-        session.userauth_publickey_fromfile('root', \
-                                            'certs/id_rsa.hf2014.pub',  
-                                            'certs/id_rsa.hf2014', '')
-        
-        channel = session.channel()
-        channel.execute(cmd)
-        
-        if self._bDebug:
-            print('[+] Debug: SSH cmd output: '+str(channel.read(1024)))
+        try:
+            print('[+] Connecting to %s' % host)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((host, 22))
+            
+            session = libssh2.Session()
+            session.startup(sock)
+            #session.userauth_password('john', '******')
+
+            session.userauth_publickey_fromfile('root', \
+                                                'certs/id_rsa.hf2014.pub', \
+                                                'certs/id_rsa.hf2014', '')
+            channel = session.channel()
+            channel.execute(cmd)
+            if self._bDebug:
+                print('[+] Debug: SSH cmd output: '+str(channel.read(1024)))
+        except socket.error as e:
+            print('[-] Error: %s' % e)
+        except libssh2.Error as e:
+            print('[-] Error: %s' % e)
 
         return 0
 
@@ -112,7 +117,7 @@ class kothUpdater(kothClient.kothClient):
                
                 # if statusCode is ok, generate and update the flag
                 if statusCode == self.STATUS_OK:
-                    flagValue = self._addRandomFlagFromId(flagId)
+                    flagValue = self._addRandomKingFlagFromId(flagId)
         
                     # Updating cmd and pushing the new flag
                     cmd = self._substituteCmd(updateCmd,flagValue)

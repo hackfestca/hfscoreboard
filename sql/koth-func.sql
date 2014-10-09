@@ -50,21 +50,23 @@ $$ LANGUAGE plpgsql;
     sha256()
 */
 CREATE OR REPLACE FUNCTION sha256(text) returns text AS $$
-    SELECT encode(pgcrypto.digest($1, 'sha256'), 'hex')
+    SELECT encode(pgcrypto.digest($1, 'sha256'), 'hex');
 $$ LANGUAGE SQL STRICT IMMUTABLE;
 
 /*
     random_64()
 */
 CREATE OR REPLACE FUNCTION random_64() returns text AS $$
-    SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'sha256'), 'hex')
+    SELECT encode(pgcrypto.digest(random()::text, 'sha256'), 'hex');
+    --SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'sha256'), 'hex')
 $$ LANGUAGE SQL;
 
 /*
     random_32()
 */
 CREATE OR REPLACE FUNCTION random_32() returns text AS $$
-    SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'md5'), 'hex')
+    SELECT encode(pgcrypto.digest(random()::text, 'md5'), 'hex');
+    --SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'md5'), 'hex')
 $$ LANGUAGE SQL;
 
 /*
@@ -473,15 +475,21 @@ RETURNS kingFlag.value%TYPE AS $$
     BEGIN
         -- Logging
         raise notice 'addRandomKingFlagFromId(%,%)',$1,$2;
-    
-        -- Generate a king flag
-        SELECT random_32() INTO _flagValue;
-
-        -- Add king flag 
-        PERFORM addKingFlagFromId(_flagId,_flagValue,_pts);
+   
+        -- Loop just to be sure that  
+        LOOP
+            BEGIN
+                -- Generate a king flag
+                SELECT random_32() INTO _flagValue;
         
-        -- Return flag
-        RETURN _flagValue;
+                -- Add king flag 
+                PERFORM addKingFlagFromId(_flagId,_flagValue,_pts);
+
+                RETURN _flagValue;
+            EXCEPTION WHEN unique_violation THEN
+                -- Do nothing, and loop to try the addKingFlag again.
+            END;
+        END LOOP;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1570,7 +1578,7 @@ RETURNS integer AS $$
         FLAG_SUBMIT_RATE        real := 0.11;
         KINGFLAG_SUBMIT_RATE    real := 0.11;
         MAX_PTS                 integer := 10;
-        MAX_HOST                integer := 9;
+        MAX_HOST                integer := 7;
         MAX_CAT                 integer := 9;
         _teamId team.id%TYPE;
         _net team.net%TYPE;
