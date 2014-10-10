@@ -1,5 +1,5 @@
 /*
-    Set default schema
+Set default schema
 */
 SET search_path TO scoreboard;
 
@@ -15,6 +15,7 @@ SELECT addTeam('Team Dube', '192.168.1.0/24');
 SELECT addTeam('Team fuckedup', '192.168.6.0/24');
 SELECT addTeam('Team VPN', '192.168.9.0/24');
 SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+SELECT addTeam('Porku Pie', '192.168.13.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 SELECT addStatus(1::smallint,'Enabled','The flag is functionnal');
