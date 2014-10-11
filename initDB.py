@@ -61,6 +61,8 @@ actGrp.add_argument('--functions','-f', action='store_true', dest='functions', d
               help='Import structure only (tables and functions)')
 actGrp.add_argument('--data','-d', action='store_true', dest='data', default=False, \
               help='Import data only')
+actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=False, \
+              help='Import flags only (from csv file: flags.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
 actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
@@ -74,6 +76,7 @@ args = parser.parse_args()
 if  not args.tables and \
     not args.functions and \
     not args.data and \
+    not args.flags and \
     not args.security and \
     not args.all and \
     not args.version:
@@ -110,6 +113,9 @@ try:
     elif args.data:
         print('Importing data')
         c.importData()
+    elif args.flags:
+        print('Importing flags')
+        c.importFlags()
     elif args.security:
         print('Importing database security')
         c.importSecurity()
@@ -126,8 +132,10 @@ except postgresql.exceptions.UniqueError:
     print('[-] Flag already submitted')
 except postgresql.exceptions.UndefinedFunctionError:
     print('[-] The specified function does not exist. Please contact an admin')
-except postgresql.message.Message as m:
-    print(m)
+except IOError as e:
+    print('[-] '+str(e))
+except postgresql.message.Message as e:
+    print(e)
 #except Exception as e:
 #    print(e)
 #    dump(e)

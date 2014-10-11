@@ -28,6 +28,7 @@ King of the hill client class
 import config
 import kothClient
 import postgresql
+import csv
 
 class kothOwner(kothClient.kothClient):
     """
@@ -38,6 +39,7 @@ class kothOwner(kothClient.kothClient):
     _sCrtFile = 'certs/cli.psql.scoreboard.hfowner.crt'
     _sKeyFile = 'certs/cli.psql.scoreboard.hfowner.key'
     _sSqlFolder = 'sql'
+    _flagsFile = 'flags.csv'
 
     def __init__(self):
         super().__init__()
@@ -45,7 +47,16 @@ class kothOwner(kothClient.kothClient):
     def __del__(self):
         if self._oDB:
             self.close()
+    
+    def _sanitize(self,data,t):
+        if type(data) == str and data.lower() == 'null':
+            return None
 
+        options = {'str' : str, \
+                   'int': int, \
+                   'bool': lambda x: True if type(x) == str and x.lower() == 'true' else False}
+        return options[t](data)
+                   
     def importTables(self):
         sql = ''.join(open(self._sSqlFolder+'/koth-tables.sql', 'r').readlines())
         self._oDB.execute(sql)
@@ -58,6 +69,68 @@ class kothOwner(kothClient.kothClient):
         sql = ''.join(open(self._sSqlFolder+'/koth-data.sql', 'r').readlines())
         self._oDB.execute(sql)
 
+
+#CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE, 
+#                                    _value flag.value%TYPE, 
+#                                    _pts flag.pts%TYPE,
+#                                    _host host.name%TYPE,
+#                                    _category category.name%TYPE,
+#                                    _statusCode status.code%TYPE default 1,
+#                                    _displayInterval varchar(20) default Null,
+#                                    _author flagAuthor.name%TYPE  default Null,
+#                                    _isKing flag.isKing%TYPE default false,
+#                                    _description flag.description%TYPE default '',
+#                                    _hint flag.hint%TYPE default '',
+#                                    _updateCmd flag.updateCmd%TYPE default '',
+#                                    _monitorCmd flag.monitorCmd%TYPE default ''
+    def importFlags(self):
+        with open(self._flagsFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            addFlag = self._oDB.proc('addFlag(varchar, \
+                                    varchar, \
+                                    integer, \
+                                    varchar, \
+                                    varchar, \
+                                    integer, \
+                                    varchar, \
+                                    varchar, \
+                                    boolean, \
+                                    text,    \
+                                    text,    \
+                                    varchar, \
+                                    varchar)')
+            with self._oDB.xact():
+                for row in reader:
+                    print('|'.join(row))
+                    fname = row[0]
+                    fvalue = row[1]
+                    fpts = row[2]
+                    fhost = row[3]
+                    fcat = row[4]
+                    fstatus = 1
+                    fdispint = row[5]
+                    fauthor = row[6]
+                    fisking = row[7]
+                    fdesc = row[8]
+                    fhint = None
+                    fupdcmd = row[9]
+                    fmoncmd = None
+                    
+                    if fname != 'Flag Name':
+                        addFlag(self._sanitize(fname,'str'), \
+                                self._sanitize(fvalue,'str'), \
+                                self._sanitize(fpts,'int'), \
+                                self._sanitize(fhost,'str'), \
+                                self._sanitize(fcat,'str'), \
+                                self._sanitize(fstatus,'int'), \
+                                self._sanitize(fdispint,'str'), \
+                                self._sanitize(fauthor,'str'), \
+                                self._sanitize(fisking,'bool'), \
+                                self._sanitize(fdesc,'str'), \
+                                self._sanitize(fhint,'str'), \
+                                self._sanitize(fupdcmd,'str'), \
+                                self._sanitize(fmoncmd,'str'))
+
     def importSecurity(self):
         sql = ''.join(open(self._sSqlFolder+'/koth-sec.sql', 'r').readlines())
         self._oDB.execute(sql)
@@ -66,5 +139,6 @@ class kothOwner(kothClient.kothClient):
         self.importTables()
         self.importFunctions()
         self.importData()
+        self.importFlags()
         self.importSecurity()
 

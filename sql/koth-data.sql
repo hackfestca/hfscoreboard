@@ -22,18 +22,20 @@ SELECT addStatus(1::smallint,'Enabled','The flag is functionnal');
 SELECT addStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
 SELECT addStatus(3::smallint,'Disabled','The flag is removed by admins');
 
-SELECT addHost('172.28.72.4', 'Test box for scoreboard development (misc01.ctf.hf)');
-SELECT addHost('172.28.72.5', 'Chroot Challenges by _eko - Debian 7 x64 - chroot02.ctf.hf');
-SELECT addHost('172.28.72.6', 'Misc Challenges by Mart - Debian 7 x64 - misc02.ctf.hf');
-SELECT addHost('172.28.72.10', 'Chroot & PHP Challenges by Mart - OpenBSD 5.5 x64 - chroot01.ctf.hf');
-SELECT addHost('172.28.72.11', 'Data mining Challenges by vn & Pat - Openbsd 5.5 x64 - dm01.ctf.hf');
-SELECT addHost('172.28.72.12', 'Prog Challenges by _eko - OpenBSD5.5 x64 - prog01.ctf.hf)');
-SELECT addHost('172.28.72.100', 'Ubuntu Forensics by Ced - Ubuntu 14.04LTS - wakinsun.ctf.hf');
-SELECT addHost('172.28.72.101', 'Windows 2012 Challenges by Ced - Windows 2012 - windfeu.ctf.hf');
-SELECT addHost('172.28.72.110', 'Nose Bleeding Track by FLR - CentOS 6 x64 - nosebleeding.ctf.hf');
+SELECT addHost('172.28.71.10', 'OpenBSD5.5 x64', 'Scoreboard (scoreboard.hf)');
+SELECT addHost('172.28.72.4', 'Debian 7 x32', 'Test box for scoreboard development (misc01.ctf.hf)');
+SELECT addHost('172.28.72.5', 'Debian 7 x64', 'Chroot Challenges by _eko (chroot02.ctf.hf)');
+SELECT addHost('172.28.72.6', 'Debian 7 x64', 'Misc Challenges by Mart (misc02.ctf.hf)');
+SELECT addHost('172.28.72.7', 'Debian 7 x64', 'Exploit Challenges by _eko (expl01.ctf.hf)');
+SELECT addHost('172.28.72.10', 'OpenBSD5.5 x64', 'Chroot & PHP Challenges by Mart (chroot01.ctf.hf)');
+SELECT addHost('172.28.72.11', 'Debian 7 x64', 'Data mining Challenges by vn & Pat (dm01.ctf.hf)');
+SELECT addHost('172.28.72.12', 'OpenBSD5.5 x64', 'Prog Challenges by _eko (prog01.ctf.hf)');
+SELECT addHost('172.28.72.100', 'Ubuntu 14.04LTS', 'Ubuntu Forensics by Ced (wakinsun.ctf.hf)');
+SELECT addHost('172.28.72.101', 'Windows 2012', 'Windows 2012 Challenges by Ced (windfeu.ctf.hf)');
+SELECT addHost('172.28.72.110', 'CentOS 6 x64', 'Nose Bleeding Track by FLR (nosebleeding.ctf.hf)');
 
 SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
-SELECT addCategory('rev', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs, ..., ...');
+SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs, ..., ...');
 SELECT addCategory('for', 'Forensics', 'Ubuntu, Windows 2012 and Virus Analysis');
 SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. Chroot escape & abuse');
 SELECT addCategory('prog', 'Programming', 'Programming challenges');
@@ -50,7 +52,8 @@ SELECT addAuthor('Franck Desert', 'hiddenman');
 SELECT addAuthor('Francois Lajeunesse-Robert', 'FLR');
 SELECT addAuthor('Martin Lemay', 'Do.Z10');
 SELECT addAuthor('Vincent & Patrick', 'vn & pat');
-SELECT addAuthor('Stephane Sigmens', 'sigmens');
+SELECT addAuthor('Stephane Sigmen', 'sigmens');
+SELECT addAuthor('HF Crew', 'HFCrew');
 
 SELECT addRandomFlag('Test 1.1', 3, '172.28.72.4', 'web', 1::smallint, Null, Null, True, '', '',
                      'echo $FLAG > /root/flag.txt', 'wget http://dathost/test');
@@ -117,6 +120,7 @@ INSERT INTO settings(gameStartTs) VALUES('2013-11-07 10:00'::timestamp);
     FLR Stuff
 */
 
+/*
 SELECT addFlag('nose01', 'FLAG-OIPL9CKSV2DH9X1SAQGQ', 1, '172.28.72.110', 'web',
                     1, Null, 'Francois Lajeunesse-Robert', False, '', '', '', '');
 SELECT addFlag('nose02', 'FLAG-7G27Y966ACQO9MSUGICP', 2, '172.28.72.110', 'web',
@@ -126,4 +130,4 @@ SELECT addFlag('nose03', 'FLAG-7AYV63FG19UCCD8ACBAO', 3, '172.28.72.110', 'web',
 SELECT addFlag('nose04', 'KOTH-NOSEBLEEDING', 5, '172.28.72.110', 'web',
                     1, Null, 'Francois Lajeunesse-Robert', True, '', '', 
                     'echo $FLAG > /opt/cs/frontend/config/flag.txt && chown root:csservice /opt/cs/frontend/config/flag.txt', '');
-
+*/

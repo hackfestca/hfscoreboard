@@ -54,9 +54,11 @@ CREATE TABLE status(
 CREATE TABLE host(
     id serial primary key,
     name varchar(20) not null unique,
+    os varchar(20) not null,
     description text,
     ts timestamp not null default current_timestamp,
-    constraint valid_host_name check (name != '')
+    constraint valid_host_name check (name != ''),
+    constraint valid_host_os check (os != '')
     );
 
 /*
@@ -89,7 +91,7 @@ CREATE TABLE flagAuthor(
 CREATE TABLE flag(
     id serial primary key,
     name varchar(50) not null,
-    value varchar(32) not null unique,
+    value varchar(64) not null unique,
     pts integer not null,
     host integer not null references host(id),
     category integer not null references category(id),
@@ -114,7 +116,7 @@ CREATE TABLE flag(
 CREATE TABLE kingFlag(
     id serial primary key,
     flagId integer not null references flag(id),
-    value char(32) not null unique,
+    value char(64) not null unique,
     pts integer not null,
     ts timestamp not null default current_timestamp,
     constraint valid_kingFlag_value check (value != ''),

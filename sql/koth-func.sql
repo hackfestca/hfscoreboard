@@ -284,16 +284,17 @@ $$ LANGUAGE plpgsql;
     Stored Proc: addHost(name,description)
 */
 CREATE OR REPLACE FUNCTION addHost(_name host.name%TYPE, 
+                                   _os host.os%TYPE,
                                     _description text default ''
                                     ) 
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'addHost(%,%)',$1,$2;
+        raise notice 'addHost(%,%,%)',$1,$2,$3;
 
         -- Insert a new row
-        INSERT INTO host(name,description)
-                VALUES(_name,_description);
+        INSERT INTO host(name,os,description)
+                VALUES(_name,_os,_description);
 
         RETURN 0;
     END;
@@ -562,11 +563,11 @@ RETURNS integer AS $$
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount = 1 then
             if _flagRec.category = 1 then
-                INSERT INTO team_flag(teamId,flagId)
-                        VALUES(_teamRec.id, _flagRec.id);
+                INSERT INTO team_flag(teamId,flagId,playerIp)
+                        VALUES(_teamRec.id, _flagRec.id,_playerIp);
             elsif _flagRec.category = 2 then
-                INSERT INTO team_kingFlag(teamId,kingFlagId)
-                        VALUES(_teamRec.id, _flagRec.id);
+                INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp)
+                        VALUES(_teamRec.id, _flagRec.id,_playerIp);
             end if;
             RETURN _flagRec.pts;
         else
@@ -1631,9 +1632,10 @@ RETURNS integer AS $$
 
         -- Assign flags to team randomly
         FOR _teamId,_net IN SELECT id,net FROM team LOOP
-            INSERT INTO team_flag(teamId,flagId,ts)
+            INSERT INTO team_flag(teamId,flagId,playerIp,ts)
                 SELECT _teamId,
                        flag.id,
+                        (_net + (random() * PLAYER_IP_MIN + PLAYER_IP_MAX)::integer),
                        current_timestamp - (random() * FLAG_TS_MIN || ' minutes')::interval
                 FROM flag
                 WHERE random() < FLAG_SUBMIT_RATE
@@ -1653,9 +1655,10 @@ RETURNS integer AS $$
 
         -- Assign king flags to teams randomly
         FOR _teamId IN SELECT id FROM team LOOP
-            INSERT INTO team_kingFlag(teamId,kingFlagId,ts)
+            INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp,ts)
                 SELECT _teamId,
                        kingFlag.id,
+                       (_net + (random() * PLAYER_IP_MIN + PLAYER_IP_MAX)::integer),
                        current_timestamp - (random() * KINGFLAG_TS_MIN || ' minutes')::interval
                 FROM kingFlag
                 WHERE random() < KINGFLAG_SUBMIT_RATE 
