@@ -2,6 +2,8 @@ CREATE OR REPLACE FUNCTION dropFunctions() returns integer AS $$
     DECLARE
         _f varchar;
     BEGIN
+        -- Logging
+        raise notice 'dropFunctions()';
 
         FOR _f IN 
                 SELECT 'DROP FUNCTION ' || ns.nspname || '.' || proname 
@@ -109,7 +111,7 @@ RETURNS integer AS $$
         _inet inet;
     BEGIN
         -- Logging
-        raise notice 'modTeam(%,%)',$1,$2;
+        raise notice 'modTeam(%,%,%)',$1,$2,$3;
 
         _inet := _net::inet;
 
@@ -409,17 +411,24 @@ RETURNS flag.value%TYPE AS $$
     BEGIN
         -- Logging
         raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
-    
-        -- Generate a flag
-        SELECT random_32() INTO _flagValue;
 
-        -- addFlag
-        PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
-                        _statusCode,_displayInterval,_author,_isKing,_description,
-                        _hint,_updateCmd,_monitorCmd);
-        
-        -- Return the flag value
-        RETURN _flagValue;
+        -- Loop just to be sure that we get no collision with random_32()
+        LOOP
+            BEGIN
+                -- Generate a king flag
+                SELECT random_32() INTO _flagValue;
+
+                -- addFlag
+                PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
+                                _statusCode,_displayInterval,_author,_isKing,_description,
+                                _hint,_updateCmd,_monitorCmd);
+
+                RETURN _flagValue;
+            EXCEPTION WHEN unique_violation THEN
+                -- Do nothing, and loop to try the addKingFlag again.
+                raise notice 'A collision occured';
+            END;
+        END LOOP;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -477,7 +486,7 @@ RETURNS kingFlag.value%TYPE AS $$
         -- Logging
         raise notice 'addRandomKingFlagFromId(%,%)',$1,$2;
    
-        -- Loop just to be sure that  
+        -- Loop just to be sure that we get no collision with random_32()
         LOOP
             BEGIN
                 -- Generate a king flag
@@ -489,6 +498,7 @@ RETURNS kingFlag.value%TYPE AS $$
                 RETURN _flagValue;
             EXCEPTION WHEN unique_violation THEN
                 -- Do nothing, and loop to try the addKingFlag again.
+                raise notice 'A collision occured';
             END;
         END LOOP;
     END;
@@ -1197,6 +1207,9 @@ RETURNS TABLE (
                 flagType integer
               ) AS $$
     BEGIN
+        -- Logging
+        raise notice 'getSubmitHistory(%,%)',$1,$2;
+
         RETURN QUERY SELECT r.timestamp,
                             r.TeamName,
                             r.FlagName,
@@ -1292,6 +1305,8 @@ RETURNS TABLE (
         _firstFlag varchar(100);
         _firstKingFlag varchar(100);
         _gameStartTs timestamp;
+        _fnctCt integer;
+        _tblCt integer;
     BEGIN
         -- Logging
         raise notice 'getGameStats()';
@@ -1385,6 +1400,17 @@ RETURNS TABLE (
         -- Get game start date&time
         SELECT gameStartTs into _gameStartTs FROM settings;
 
+        -- Get function count in scoreboard schema
+        SELECT count(*) INTO _fnctCt
+        FROM pg_proc 
+        INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid) 
+        WHERE ns.nspname = 'scoreboard';
+
+        -- Get table count in scoreboard schema
+        SELECT count(*) INTO _tblCt
+        FROM pg_tables 
+        WHERE schemaname = 'scoreboard';
+
         -- Return
         RETURN QUERY SELECT 'Team count'::varchar, _teamCt::varchar
                      UNION ALL SELECT 'Host count'::varchar, _hostCt::varchar
@@ -1403,7 +1429,9 @@ RETURNS TABLE (
                                                                       ' (1min, 5min, 15min, 60min)'
                      UNION ALL SELECT 'First Flag'::varchar, _firstFlag::varchar
                      UNION ALL SELECT 'First King Flag'::varchar, _firstKingFlag::varchar
-                     UNION ALL SELECT 'Game Start at:'::varchar, _gameStartTs::varchar;
+                     UNION ALL SELECT 'Game Start at:'::varchar, _gameStartTs::varchar
+                     UNION ALL SELECT 'Function count:'::varchar, _fnctCt::varchar
+                     UNION ALL SELECT 'Table count:'::varchar, _tblCt::varchar;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1433,7 +1461,7 @@ RETURNS TABLE (
         _topTeams integer[10];
     BEGIN
         -- Logging
-        raise notice 'getScoreProgress(%)',_intLimit;
+        raise notice 'getScoreProgress(%)',$1;
         
         if _intLimit is null then
             _intLimit := 21;        -- Kinda redundant...
@@ -1503,7 +1531,7 @@ CREATE OR REPLACE FUNCTION setSetting(_attr text, _value text, _type varchar(10)
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'setSetting(%,%,%)',_attr,_value,_type;
+        raise notice 'setSetting(%,%,%)',$1,$2,$3;
 
         -- Safe update using format()
         -- TODO: See if %s is vulnerable to sqli
