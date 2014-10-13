@@ -40,6 +40,7 @@ class kothOwner(kothClient.kothClient):
     _sKeyFile = 'certs/cli.psql.scoreboard.hfowner.key'
     _sSqlFolder = 'sql'
     _flagsFile = 'flags.csv'
+    _teamsFile = 'teams.csv'
 
     def __init__(self):
         super().__init__()
@@ -69,20 +70,6 @@ class kothOwner(kothClient.kothClient):
         sql = ''.join(open(self._sSqlFolder+'/koth-data.sql', 'r').readlines())
         self._oDB.execute(sql)
 
-
-#CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE, 
-#                                    _value flag.value%TYPE, 
-#                                    _pts flag.pts%TYPE,
-#                                    _host host.name%TYPE,
-#                                    _category category.name%TYPE,
-#                                    _statusCode status.code%TYPE default 1,
-#                                    _displayInterval varchar(20) default Null,
-#                                    _author flagAuthor.name%TYPE  default Null,
-#                                    _isKing flag.isKing%TYPE default false,
-#                                    _description flag.description%TYPE default '',
-#                                    _hint flag.hint%TYPE default '',
-#                                    _updateCmd flag.updateCmd%TYPE default '',
-#                                    _monitorCmd flag.monitorCmd%TYPE default ''
     def importFlags(self):
         with open(self._flagsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -101,7 +88,7 @@ class kothOwner(kothClient.kothClient):
                                     varchar)')
             with self._oDB.xact():
                 for row in reader:
-                    print('|'.join(row))
+                    #print('|'.join(row))
                     fname = row[0]
                     fvalue = row[1]
                     fpts = row[2]
@@ -131,6 +118,20 @@ class kothOwner(kothClient.kothClient):
                                 self._sanitize(fupdcmd,'str'), \
                                 self._sanitize(fmoncmd,'str'))
 
+    def importTeams(self):
+        with open(self._teamsFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            addTeam = self._oDB.proc('addTeam(varchar,varchar)')
+            with self._oDB.xact():
+                for row in reader:
+                    #print('|'.join(row))
+                    tname = row[0]
+                    tnet = row[1]
+                    
+                    if tname != 'Team Name':
+                        addTeam(self._sanitize(tname,'str'), \
+                                self._sanitize(tnet,'str'))
+
     def importSecurity(self):
         sql = ''.join(open(self._sSqlFolder+'/koth-sec.sql', 'r').readlines())
         self._oDB.execute(sql)
@@ -140,5 +141,6 @@ class kothOwner(kothClient.kothClient):
         self.importFunctions()
         self.importData()
         self.importFlags()
+        self.importTeams()
         self.importSecurity()
 

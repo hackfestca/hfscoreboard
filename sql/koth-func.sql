@@ -1564,7 +1564,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION insertRandomData() 
 RETURNS integer AS $$
     DECLARE
-        TEAM_COUNT              integer := 30;
+        TEAM_COUNT              integer := 0;
         FLAG_COUNT              integer := 100;
         FLAG_IS_KING_COUNT      integer := 100;
         KINGFLAG_PER_FLAG_COUNT integer := 3;

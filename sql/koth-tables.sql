@@ -107,7 +107,7 @@ CREATE TABLE flag(
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
     constraint valid_flag_pts check (pts >= 1 and pts <= 10),
-    constraint valid_flag_displayTs check (displayInterval < '16 hours'::interval)
+    constraint valid_flag_displayTs check (displayInterval > '0 hours'::interval)
     );
 
 /*

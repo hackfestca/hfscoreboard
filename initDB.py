@@ -63,6 +63,8 @@ actGrp.add_argument('--data','-d', action='store_true', dest='data', default=Fal
               help='Import data only')
 actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=False, \
               help='Import flags only (from csv file: flags.csv)')
+actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=False, \
+              help='Import teams only (from csv file: teams.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
 actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
@@ -77,6 +79,7 @@ if  not args.tables and \
     not args.functions and \
     not args.data and \
     not args.flags and \
+    not args.teams and \
     not args.security and \
     not args.all and \
     not args.version:
@@ -116,6 +119,9 @@ try:
     elif args.flags:
         print('Importing flags')
         c.importFlags()
+    elif args.teams:
+        print('Importing teams')
+        c.importTeams()
     elif args.security:
         print('Importing database security')
         c.importSecurity()
