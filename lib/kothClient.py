@@ -155,9 +155,9 @@ class kothClient():
 
     def getNews(self):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc('getValidNews()'))
+            return self._benchmark(self._oDB.proc('getNews()'))
         else:
-            return self._oDB.proc('getValidNews()')()
+            return self._oDB.proc('getNews()')()
 
     def getFormatNews(self):
         title = ['id','Release date&time', 'News']

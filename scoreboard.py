@@ -191,7 +191,7 @@ class IndexHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore(top=9)
-            valid_news = self.client.getValidNews()
+            valid_news = self.client.getNews()
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -202,7 +202,7 @@ class IndexHandler(BaseHandler):
     def post(self):
         flag = self.get_argument("flag")
         score = self.client.getScore(top=9)
-        valid_news = self.client.getValidNews()
+        valid_news = self.client.getNews()
 
         try:
             self.client.submitFlagFromIp(self.request.remote_ip, flag)

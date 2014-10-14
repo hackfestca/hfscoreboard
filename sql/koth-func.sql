@@ -1023,9 +1023,9 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getValidNews()
+    Stored Proc: getNews()
 */
-CREATE OR REPLACE FUNCTION getValidNews() 
+CREATE OR REPLACE FUNCTION getNews() 
 RETURNS TABLE (
                 id news.id%TYPE,
                 displayTs news.displayTs%TYPE,
@@ -1035,7 +1035,7 @@ RETURNS TABLE (
         _settings settings%ROWTYPE;
     BEGIN
         -- Logging
-        raise notice 'getValidNews()';
+        raise notice 'getNews()';
 
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
