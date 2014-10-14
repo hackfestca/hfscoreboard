@@ -36,7 +36,7 @@ class kothPlayer():
     """
 
     """
-    _sHost = '172.28.72.11'
+    _sHost = '172.28.71.11'
     _sPort = 8000
     _oRPC = None
 
