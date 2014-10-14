@@ -62,9 +62,9 @@ actGrp.add_argument('--functions','-f', action='store_true', dest='functions', d
 actGrp.add_argument('--data','-d', action='store_true', dest='data', default=False, \
               help='Import data only')
 actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=False, \
-              help='Import flags only (from csv file: flags.csv)')
+              help='Import flags only (from csv file: import/flags.csv)')
 actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=False, \
-              help='Import teams only (from csv file: teams.csv)')
+              help='Import teams only (from csv file: import/teams.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
 actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \

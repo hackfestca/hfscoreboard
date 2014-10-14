@@ -26,6 +26,8 @@ SELECT addHost('172.28.72.12', 'OpenBSD5.5 x64', 'Prog Challenges by _eko (prog0
 SELECT addHost('172.28.72.100', 'Ubuntu 14.04LTS', 'Ubuntu Forensics by Ced (wakinsun.ctf.hf)');
 SELECT addHost('172.28.72.101', 'Windows 2012', 'Windows 2012 Challenges by Ced (windfeu.ctf.hf)');
 SELECT addHost('172.28.72.110', 'CentOS 6 x64', 'Nose Bleeding Track by FLR (nosebleeding.ctf.hf)');
+SELECT addHost('172.28.72.120', 'CentOS 6 x32', 'Monopoly Jail Escape Track by Martin L. (mono01.ctf.hf)');
+SELECT addHost('172.28.72.121', 'CentOS 6 x32', 'VOIP Challenges by Martin L. (voip01.ctf.hf)');
 
 SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
 SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs, ..., ...');

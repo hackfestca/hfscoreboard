@@ -59,14 +59,12 @@ GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromName(varchar) TO hfflagupda
 GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO hfflagupdater;
 
 -- Grants for players only
-GRANT EXECUTE ON FUNCTION scoreboard.submitFlag(flag.value%TYPE) TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.submitRandomFlag() TO hfplayers;  -- TEMPORARY
-GRANT EXECUTE ON FUNCTION scoreboard.getCatProgress() TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgress() TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfo() TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.submitFlagFromIp(varchar,flag.value%TYPE) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
 
 -- Grants for multiple groups
---GRANT EXECUTE ON FUNCTION pgcrypto.digest(text,text) TO hfowner,hfadmins,hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,category.name%TYPE) TO hfplayers,hfscore,hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getValidNews() TO hfplayers,hfscore,hfadmins;
 

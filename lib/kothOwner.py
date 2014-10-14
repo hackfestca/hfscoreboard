@@ -39,8 +39,8 @@ class kothOwner(kothClient.kothClient):
     _sCrtFile = 'certs/cli.psql.scoreboard.hfowner.crt'
     _sKeyFile = 'certs/cli.psql.scoreboard.hfowner.key'
     _sSqlFolder = 'sql'
-    _flagsFile = 'flags.csv'
-    _teamsFile = 'teams.csv'
+    _flagsFile = 'import/flags.csv'
+    _teamsFile = 'import/teams.csv'
 
     def __init__(self):
         super().__init__()
@@ -86,6 +86,18 @@ class kothOwner(kothClient.kothClient):
                                     text,    \
                                     varchar, \
                                     varchar)')
+            addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
+                                    integer, \
+                                    varchar, \
+                                    varchar, \
+                                    integer, \
+                                    varchar, \
+                                    varchar, \
+                                    boolean, \
+                                    text,    \
+                                    text,    \
+                                    varchar, \
+                                    varchar)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
@@ -104,19 +116,33 @@ class kothOwner(kothClient.kothClient):
                     fmoncmd = None
                     
                     if fname != 'Flag Name':
-                        addFlag(self._sanitize(fname,'str'), \
-                                self._sanitize(fvalue,'str'), \
-                                self._sanitize(fpts,'int'), \
-                                self._sanitize(fhost,'str'), \
-                                self._sanitize(fcat,'str'), \
-                                self._sanitize(fstatus,'int'), \
-                                self._sanitize(fdispint,'str'), \
-                                self._sanitize(fauthor,'str'), \
-                                self._sanitize(fisking,'bool'), \
-                                self._sanitize(fdesc,'str'), \
-                                self._sanitize(fhint,'str'), \
-                                self._sanitize(fupdcmd,'str'), \
-                                self._sanitize(fmoncmd,'str'))
+                        if fvalue != '':
+                            addFlag(self._sanitize(fname,'str'), \
+                                    self._sanitize(fvalue,'str'), \
+                                    self._sanitize(fpts,'int'), \
+                                    self._sanitize(fhost,'str'), \
+                                    self._sanitize(fcat,'str'), \
+                                    self._sanitize(fstatus,'int'), \
+                                    self._sanitize(fdispint,'str'), \
+                                    self._sanitize(fauthor,'str'), \
+                                    self._sanitize(fisking,'bool'), \
+                                    self._sanitize(fdesc,'str'), \
+                                    self._sanitize(fhint,'str'), \
+                                    self._sanitize(fupdcmd,'str'), \
+                                    self._sanitize(fmoncmd,'str'))
+                        else:
+                            addRandomFlag(self._sanitize(fname,'str'), \
+                                    self._sanitize(fpts,'int'), \
+                                    self._sanitize(fhost,'str'), \
+                                    self._sanitize(fcat,'str'), \
+                                    self._sanitize(fstatus,'int'), \
+                                    self._sanitize(fdispint,'str'), \
+                                    self._sanitize(fauthor,'str'), \
+                                    self._sanitize(fisking,'bool'), \
+                                    self._sanitize(fdesc,'str'), \
+                                    self._sanitize(fhint,'str'), \
+                                    self._sanitize(fupdcmd,'str'), \
+                                    self._sanitize(fmoncmd,'str'))
 
     def importTeams(self):
         with open(self._teamsFile) as csvfile:

@@ -27,23 +27,21 @@ King of the hill client class
 
 from prettytable import PrettyTable 
 import postgresql
-import time
-import math
 import config
+import time
 
 class kothClient():
     """
 
     """
-    _sVersion = '0.01'
     _bDebug = False
     _sSchema = 'scoreboard'
     _sDatabase = 'scoreboard'
     _sHost = 'db.hf'
-    _sUser = 'player'
+    _sUser = None
     _sPass = None
-    _sCrtFile = 'certs/cli.psql.scoreboard.player.crt'
-    _sKeyFile = 'certs/cli.psql.scoreboard.player.key'
+    _sCrtFile = None
+    _sKeyFile = None
     _sslRootCrt = 'certs/scoreboard-root-ca.crt'
     _iTimeout = 2
     _oDB = None
@@ -94,9 +92,6 @@ class kothClient():
     def benchScore(self,callLimit=100):
         self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer,varchar)'),config.KOTH_DEFAULT_TOP_VALUE,None)
 
-    def getVersion(self):
-        return self._sVersion
-
     def setDebug(self,debug):
         self._bDebug = debug
         
@@ -105,12 +100,6 @@ class kothClient():
             return self._benchmark(self._oDB.proc('submitFlag(varchar)'),flagValue)
         else:
             return self._oDB.proc('submitFlag(varchar)')(flagValue)
-
-    def submitRandomFlag(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('submitRandomFlag()'))
-        else:
-            return self._oDB.proc('submitRandomFlag()')()
 
     def getScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None,cat=None):
         if self._bDebug:
@@ -164,15 +153,15 @@ class kothClient():
             x.add_row(row)
         return x
 
-    def getValidNews(self):
+    def getNews(self):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('getValidNews()'))
         else:
             return self._oDB.proc('getValidNews()')()
 
-    def getFormatValidNews(self):
+    def getFormatNews(self):
         title = ['id','Release date&time', 'News']
-        score = self.getValidNews()
+        score = self.getNews()
         x = PrettyTable(title)
         x.align['News'] = 'l'
         x.padding_width = 1

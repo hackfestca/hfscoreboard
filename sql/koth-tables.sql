@@ -162,7 +162,7 @@ CREATE TABLE submit_history(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
     playerIp inet not null,
-    value varchar(32) not null,
+    value varchar(64) not null,
     ts timestamp not null default current_timestamp
     );
 

@@ -606,30 +606,6 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-/* 
-    Stored Proc: submitRandomFlag()
-*/ 
-CREATE OR REPLACE FUNCTION submitRandomFlag() 
-RETURNS integer AS $$
-    DECLARE
-        _ret integer;
-    BEGIN
-        -- Logging
-        raise notice 'submitRandomFlag()';
-    
-        SELECT submitFlag(getRandomFlag()) INTO _ret;
-        return _ret;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getTeamScoreFromName(name)
-*/
-
-/*
-    Stored Proc: getTeamScoreFromId(id)
-*/
-
 /*
     Stored Proc: getScore(top = 30)
 */
