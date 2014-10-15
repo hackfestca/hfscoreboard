@@ -276,11 +276,7 @@ if __name__ == '__main__':
 
     server = tornado.httpserver.HTTPServer(app,
                                            xheaders=True
-#                        ssl_options = {
-#                            "certfile": "./certs/scoreboard-web.crt",
-#                            "keyfile": "./certs/scoreboard-web-key.pem",
-#                            }
-                    )
+                        )
         
     server.listen(5000)
     tornado.ioloop.IOLoop.instance().start()
