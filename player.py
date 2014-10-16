@@ -109,6 +109,7 @@ try:
     elif args.info:
         print("Displaying team informations")
         print(c.getTeamInfo())
+
 except socket.error as e:
     print('[-] %s' % e)
 except Fault as err:
@@ -126,4 +127,3 @@ else:
         print('[+] News sucessfuly displayed')
     elif args.info:
         print('[+] Team info sucessfuly displayed')
-

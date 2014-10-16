@@ -53,7 +53,7 @@ class kothPlayer():
         return self._oRPC.getCatProgress()
 
     def getFlagProgress(self):
-        return self._oRPC.getFlagProgress()
+        return str(self._oRPC.getFlagProgress())
 
     def getNews(self):
         return self._oRPC.getNews()

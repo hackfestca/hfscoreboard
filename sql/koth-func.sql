@@ -851,6 +851,7 @@ RETURNS TABLE (
                 catId category.id%TYPE,
                 catName category.name%TYPE,
                 isDone boolean,
+                author flagAuthor.nick%TYPE,
                 displayInterval flag.displayInterval%TYPE
               ) AS $$
     DECLARE 
@@ -884,8 +885,13 @@ RETURNS TABLE (
                             f.category AS catId,
                             c.name AS catName,
                             tf2.teamId IS NOT Null AS isDone,
+                            a.nick as author,
                             f.displayInterval
                      FROM flag AS f
+                     LEFT OUTER JOIN (
+                        SELECT a.id, a.nick
+                        FROM flagAuthor AS a
+                        ) AS a ON f.author = a.id
                      LEFT OUTER JOIN (
                         SELECT c.id, c.name
                         FROM category AS c

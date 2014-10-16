@@ -54,7 +54,7 @@ class kothPlayerApi(kothScoreboard.kothScoreboard):
         return x
 
     def getFormatFlagProgressFromIp(self,playerIp):
-        title = ['id','Name','Description','pts','CatId','CatName','isDone','DisplayInterval'] 
+        title = ['id','Name','Description','pts','CatId','CatName','isDone','Author','DisplayInterval'] 
         score = self.getFlagProgressFromIp(playerIp)
         x = PrettyTable(title)
         x.align['Name'] = 'l'

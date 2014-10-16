@@ -66,7 +66,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
 
 -- Grants for multiple groups
 GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,category.name%TYPE) TO hfplayers,hfscore,hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.getValidNews() TO hfplayers,hfscore,hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getNews() TO hfplayers,hfscore,hfadmins;
 
 /*
     For other types, the default privileges granted to PUBLIC are as follows: 
