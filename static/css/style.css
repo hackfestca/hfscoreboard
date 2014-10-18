@@ -66,17 +66,16 @@ body {
     margin-top: 0px;
 }
 
-.challs > .container > h3 > a {
+.category-title > a {
     font-weight: bold;
     color: #808080;
 }
 
 .score {
     text-align: right;
-    font-size: 20px;
 }
 
-.row {
+.main-row {
     margin-left: 15%;
     margin-right: 15%;
 }

@@ -76,9 +76,9 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             msg = status_code
 
-        self.logger.error("{}:{}:{}".format(self.request.remote_ip,
-                                            exc_type.__name__,
-                                            exc_obj.message))
+        #self.logger.error("{}:{}:{}".format(self.request.remote_ip,
+        #                                    exc_type.__name__,
+        #                                    exc_obj.message))
         self.render("templates/error.html", error_msg=msg)
         
     def _connect(self):
@@ -102,13 +102,12 @@ class BaseHandler(tornado.web.RequestHandler):
             
     def prepare(self):
         self._connect()
-        self._getTeamInfo()
-        
                             
     def on_finish(self):
         self._disconnect()
 
     def render(self, template_name, **kwargs):
+        self._getTeamInfo()
         super().render(template_name,
                         team_name=self.team_name,
                         team_ip=self.team_ip,
@@ -201,7 +200,6 @@ class IndexHandler(BaseHandler):
             
     def post(self):
         flag = self.get_argument("flag")
-        score = self.client.getScore(top=9)
         valid_news = self.client.getNews()
 
         try:
@@ -220,9 +218,11 @@ class IndexHandler(BaseHandler):
         else:
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
-            
+
+        score = self.client.getScore(top=9)            
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
                     flag_is_valid=flag_is_valid, submit_message=submit_message)
+
 
 class DashboardHandler(BaseHandler):
 
