@@ -27,21 +27,37 @@
       <div class="row col-md-12 col-md-offset-2" style="font-size: 15px;">{{ category[3] }}</div>
 
       <div id="{{ category[1] }}" class="collapse row">
-	<dl>
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
 	  {% for challenge in chal %}
 	  {% if challenge[4] == category[0] %}
-	  <dt>
+	  <tr>
+	    <td>
 	    {% if challenge[6] %} 
 	    <i class="fa fa-check" style="color: green;"></i>
 	    {% else %}
 	    <i class="fa fa-times" style="color: red;"></i>
 	    {% end %}
-	    {{ challenge[1] }} - {{ challenge[3] }} points - {{ challenge[7] }}
-	  </dt>
-	  <dd>{% raw challenge[2] %}</dd>
+	    </td>
+	    <td>{{ challenge[1] }}</td>
+	    <td>{{ challenge[3] }} points</td>
+	    <td>{{ challenge[7] }}</td>
+
+	    <td>{% raw challenge[2] %}</td>
+	  </tr>
 	  {% end %}
 	  {% end %}
-	</dl>
+</tbody>
+	</table>
       </div><!--category -->
     </div><!-- container -->
   </div><!-- jombo -->
