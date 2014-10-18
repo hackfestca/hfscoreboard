@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="row">
+<div class="main-row">
   <div class="jumbotron">
     <div class="container">
       {% try %}
@@ -14,19 +14,19 @@
       {% end %}
       {% except %}
       {% end %}
-
+      
       <form method="POST">
 	<div class="col-md-1">
 	  <h3>Flag</h3>
 	</div>
 	<div class="col-md-11">
 	  <h3>
-	  <div class="input-group">
-	    <input type="text" name="flag" class="form-control">
-	    <span class="input-group-btn">
-              <button class="btn btn-default" type="submit">Submit</button>
-	    </span>
-	  </div><!-- /input-group -->
+	    <div class="input-group">
+	      <input type="text" name="flag" class="form-control">
+	      <span class="input-group-btn">
+		<button class="btn btn-default" type="submit">Submit</button>
+	      </span>
+	    </div><!-- /input-group -->
 	  </h3>
 	</div>    
       </form>
@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row main-row">
   <div class="col-md-4">
     <div class="jumbotron news">
       <div class="container">
@@ -88,7 +88,7 @@
 
 
 
-<div class="row">
+<div class="main-row">
   <div class="jumbotron">
     <div class="container">
       <h3>Sponsors</h3>
