@@ -4,6 +4,7 @@
 {% block content %}
 
 <div class="main-row">
+  <div class="jumbotron">
   <div class="container">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <div id="chart_div" style="height: 700px;"></div>
@@ -12,6 +13,7 @@
       google.setOnLoadCallback(drawChart({% raw jsArray %}));
     </script>
   </div>
+</div>
 </div>
 
 <div class="main-row">
