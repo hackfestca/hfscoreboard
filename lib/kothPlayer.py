@@ -36,7 +36,7 @@ class kothPlayer():
     """
 
     """
-    _sHost = '172.28.71.11'
+    _sHost = '172.28.71.11'  # Should be scoreboard.hf
     _sPort = 8000
     _oRPC = None
 

@@ -37,7 +37,7 @@ class kothClient():
     _bDebug = False
     _sSchema = 'scoreboard'
     _sDatabase = 'scoreboard'
-    _sHost = 'db.hf'
+    _sHost = '172.28.70.20'     # Should be db.hf
     _sUser = None
     _sPass = None
     _sCrtFile = None
