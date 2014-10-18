@@ -22,6 +22,8 @@ import tornado.httpserver
 # System imports
 import os
 import logging
+import re
+import random
 from postgresql.exceptions import *
 
 class Logger(logging.getLoggerClass()):
@@ -59,6 +61,20 @@ class BaseHandler(tornado.web.RequestHandler):
         self._team_ip = None
         self._team_score = None
         self._sponsors = sponsors_imgs
+        self._insults = [
+            "Just what do you think you're doing Dave?",
+            "It can only be attributed to human error.",
+            "That's something I cannot allow to happen.",
+            "Take a stress pill and think things over.",
+            "This mission is too important for me to allow you to jeopardize it.",
+            "Wrong!  You cheating scum!",
+            "Are you on drugs?",
+            "You type like i drive.",
+            "Listen, broccoli brains, I don't have time to listen to this trash.",
+            "I've seen penguins that can type better than that.",
+            "What, what, what, what, what, what, what, what, what, what?",
+            "I think ... err ... I think ... I think I'll go home"
+        ]
 
     def write_error(self, status_code, **kwargs):
         # Handler for all the internals Error (500)
@@ -113,6 +129,9 @@ class BaseHandler(tornado.web.RequestHandler):
                         team_ip=self.team_ip,
                         team_score=self.team_score,
                         **kwargs)
+
+    def getInsult(self, index):
+        return self._insults[index]
 
     @property
     def sponsors(self):
@@ -202,22 +221,29 @@ class IndexHandler(BaseHandler):
         flag = self.get_argument("flag")
         valid_news = self.client.getNews()
 
+
         try:
             self.client.submitFlagFromIp(self.request.remote_ip, flag)
         except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
         except PLPGSQLRaiseError as e:
-            submit_message = e.message
+            rand = random.randint(0, len(self._insults)-1)
+            submit_message = e.message + "!  " + self.getInsult(rand)
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
-            submit_message = "Error"
+            rand = random.randint(0, len(self._insults)-1)
+            submit_message = "Invalid flag" + "!  " + self.getInsult(rand)
             flag_is_valid = False
             self.set_status(500)
         else:
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
+
+        match = re.search("^(FLAG-*|flag-*)", flag)
+        if match:
+            submit_message = "Are you fucking kidding me ? \"Your flag without 'FLAG-'\""
 
         score = self.client.getScore(top=9)            
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
