@@ -248,8 +248,8 @@ class Error404Handler(BaseHandler):
         self._team_score = None
     
     def get(self):
-        self.set_status(404)
-        self.render('templates/error.html', error_msg="404 - Not Found")
+        # Cedrick Chaput don't want me to tell you when you're wrong
+        self.redirect('/')
                         
 if __name__ == '__main__':
     # For the CSS
