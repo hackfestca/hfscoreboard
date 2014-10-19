@@ -1439,7 +1439,12 @@ RETURNS TABLE (
                 t6_score flag.pts%TYPE,
                 t7_score flag.pts%TYPE,
                 t8_score flag.pts%TYPE,
-                t9_score flag.pts%TYPE
+                t9_score flag.pts%TYPE,
+                t10_score flag.pts%TYPE,
+                t11_score flag.pts%TYPE,
+                t12_score flag.pts%TYPE,
+                t13_score flag.pts%TYPE,
+                t14_score flag.pts%TYPE
               ) AS $$
     DECLARE
         INTERVAL interval := '45 minute';
@@ -1448,7 +1453,8 @@ RETURNS TABLE (
         _ts timestamp;
         _minTs timestamp;
         _maxTs timestamp;
-        _topTeams integer[10];
+        _maxTeams integer := 15;
+        _topTeams integer[15];
     BEGIN
         -- Logging
         raise notice 'getScoreProgress(%)',$1;
@@ -1482,7 +1488,7 @@ RETURNS TABLE (
         -- http://www.postgresql.org/docs/9.1/static/functions-srf.html
         -- SELECT * FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL);
 
-        -- foreach timestamp: SELECT team,flagTotal FROM getScore(10,timestamp)
+        -- foreach timestamp: SELECT team,flagTotal FROM getScore(15,timestamp)
 
         -- Create temporary table for all this data
         CREATE TEMPORARY TABLE scoreProgress(
@@ -1491,13 +1497,13 @@ RETURNS TABLE (
             name varchar(50),
             total integer) ON COMMIT DROP;
 
-        -- Get top 10 teams
-        SELECT array(SELECT id FROM getScore(10) ORDER BY id) INTO _topTeams; 
+        -- Get top 15 teams
+        SELECT array(SELECT id FROM getScore(_maxTeams) ORDER BY id) INTO _topTeams; 
 
         -- For each checkpoint, append a score checkpoint to the temporary table
                    --FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL) 
         FOR _ts IN SELECT generate_series 
-                   FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / 10) 
+                   FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / _intLimit) 
         LOOP
             INSERT INTO scoreProgress(ts,id,name,total)
                    SELECT  _ts,
@@ -1506,13 +1512,13 @@ RETURNS TABLE (
                            s.flagTotal
                    FROM getScore(MAX_TEAM_NUMBER,_ts::varchar) AS s
                    WHERE s.id = ANY(_topTeams)
-                   ORDER BY s.id LIMIT 10;
+                   ORDER BY s.id;
         END LOOP;
 
         -- Return a crosstab of the temporary table 
         RETURN QUERY SELECT * FROM tablefunc.crosstab(
             'SELECT ts,name,total FROM scoreProgress ORDER BY ts',
-            'SELECT team from getScore(10) ORDER BY id'
+            'SELECT team from getScore(15)'
                      ) as ct(
                         ts timestamp,
                         t0_score integer,
@@ -1524,7 +1530,12 @@ RETURNS TABLE (
                         t6_score integer,
                         t7_score integer,
                         t8_score integer,
-                        t9_score integer
+                        t9_score integer,
+                        t10_score integer,
+                        t11_score integer,
+                        t12_score integer,
+                        t13_score integer,
+                        t14_score integer
                         );
                         
     END;
@@ -1598,13 +1609,13 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION insertRandomData() 
 RETURNS integer AS $$
     DECLARE
-        TEAM_COUNT              integer := 0;
-        FLAG_COUNT              integer := 100;
-        FLAG_IS_KING_COUNT      integer := 100;
+        TEAM_COUNT              integer := 50;
+        FLAG_COUNT              integer := 1000;
+        FLAG_IS_KING_COUNT      integer := 1000;
         KINGFLAG_PER_FLAG_COUNT integer := 3;
-        FLAG_ASSIGN_LIMIT       integer := 100;
+        FLAG_ASSIGN_LIMIT       integer := 500;
         FLAG_TS_MIN             integer := 960;
-        KINGFLAG_ASSIGN_LIMIT   integer := 100;
+        KINGFLAG_ASSIGN_LIMIT   integer := 500;
         KINGFLAG_TS_MIN         integer := 960;
         PLAYER_IP_MIN           integer := 100;
         PLAYER_IP_MAX           integer := 200;

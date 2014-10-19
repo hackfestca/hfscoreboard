@@ -72,7 +72,7 @@ class kothScoreboard(kothClient.kothClient):
 
     def getJsDataScoreProgress(self,varname='data'):
         s = "[\n"
-        teams = self.getScore(10)
+        teams = self.getScore(15)
         newTeams = [x[1] for x in teams]
         score = list(self.getScoreProgress())
         newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
