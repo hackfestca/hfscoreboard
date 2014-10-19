@@ -1447,9 +1447,7 @@ RETURNS TABLE (
                 t14_score flag.pts%TYPE
               ) AS $$
     DECLARE
-        INTERVAL interval := '45 minute';
         MAX_TEAM_NUMBER integer := 200;
-        _intervalTotal interval;
         _ts timestamp;
         _minTs timestamp;
         _maxTs timestamp;
@@ -1467,9 +1465,6 @@ RETURNS TABLE (
             raise exception 'Interval Limit cannot be null or lower than 1';
         end if;
 
-        -- Determine the total range to select   
-        _intervalTotal := _intLimit * INTERVAL;
-
         -- Determine minimum timestamp
         SELECT * INTO _minTs FROM (
             SELECT team_flag.ts FROM team_flag 
@@ -1484,9 +1479,14 @@ RETURNS TABLE (
             SELECT team_kingFlag.ts FROM team_kingFlag 
         ) AS x ORDER BY ts LIMIT 1;
 
+        -- if min = max, throw an exception
+        if _minTs is null or _minTs = _maxTs then
+            _minTs = NOW()::timestamp - '1 minute'::interval;
+            _maxTs = NOW()::timestamp;           
+        end if;
+
         -- Generate a serie of all checkpoint
         -- http://www.postgresql.org/docs/9.1/static/functions-srf.html
-        -- SELECT * FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL);
 
         -- foreach timestamp: SELECT team,flagTotal FROM getScore(15,timestamp)
 
@@ -1501,7 +1501,6 @@ RETURNS TABLE (
         SELECT array(SELECT id FROM getScore(_maxTeams) ORDER BY id) INTO _topTeams; 
 
         -- For each checkpoint, append a score checkpoint to the temporary table
-                   --FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL) 
         FOR _ts IN SELECT generate_series 
                    FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / _intLimit) 
         LOOP

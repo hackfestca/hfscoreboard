@@ -76,7 +76,7 @@ SELECT addTeam('Team Eko8', '1.1.1.8/32');
 /*
     Insert random data (for scoreboard development)
 */
-SELECT insertRandomData();
+--SELECT insertRandomData();
 
 
 /*
