@@ -72,6 +72,19 @@ CREATE OR REPLACE FUNCTION random_32() returns text AS $$
 $$ LANGUAGE SQL;
 
 /*
+    idx: Used in some ORDER BY
+*/
+CREATE OR REPLACE FUNCTION idx(anyarray, anyelement)
+  RETURNS int AS 
+$$
+  SELECT i FROM (
+     SELECT generate_series(array_lower($1,1),array_upper($1,1))
+  ) g(i)
+  WHERE $1[i] = $2
+  LIMIT 1;
+$$ LANGUAGE sql IMMUTABLE;
+
+/*
     Stored Proc: addTeam(name,net)
 */
 CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
@@ -1466,18 +1479,18 @@ RETURNS TABLE (
         end if;
 
         -- Determine minimum timestamp
-        SELECT * INTO _minTs FROM (
-            SELECT team_flag.ts FROM team_flag 
+        SELECT x.ts INTO _minTs FROM (
+            SELECT team_flag.ts as ts FROM team_flag 
             UNION ALL
-            SELECT team_kingFlag.ts FROM team_kingFlag 
-        ) AS x ORDER BY ts DESC LIMIT 1;
+            SELECT team_kingFlag.ts as ts FROM team_kingFlag 
+        ) AS x ORDER BY ts LIMIT 1;
 
         -- Determine maximum timestamp
-        SELECT * INTO _maxTs FROM (
-            SELECT team_flag.ts FROM team_flag 
+        SELECT x.ts INTO _maxTs FROM (
+            SELECT team_flag.ts as ts FROM team_flag 
             UNION ALL
-            SELECT team_kingFlag.ts FROM team_kingFlag 
-        ) AS x ORDER BY ts LIMIT 1;
+            SELECT team_kingFlag.ts as ts FROM team_kingFlag 
+        ) AS x ORDER BY ts DESC LIMIT 1;
 
         -- if min = max, throw an exception
         if _minTs is null or _minTs = _maxTs then
@@ -1498,12 +1511,26 @@ RETURNS TABLE (
             total integer) ON COMMIT DROP;
 
         -- Get top 15 teams
-        SELECT array(SELECT id FROM getScore(_maxTeams) ORDER BY id) INTO _topTeams; 
+        SELECT array(SELECT id FROM getScore(_maxTeams) ORDER BY flagTotal DESC) INTO _topTeams; 
+
+        raise notice '%',_minTs;
+        raise notice '%',_maxTs;
+
+        -- Insert a blank line 
+        INSERT INTO scoreProgress(ts,id,name,total)
+               SELECT  (_minTs - '1 minute'::interval)::timestamp,
+                       s.id,
+                       s.team,
+                       0 
+               FROM getScore(MAX_TEAM_NUMBER) AS s
+               WHERE s.id = ANY(_topTeams)
+               ORDER BY idx(_topTeams, s.id);
 
         -- For each checkpoint, append a score checkpoint to the temporary table
         FOR _ts IN SELECT generate_series 
-                   FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / _intLimit) 
+            FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / _intLimit) 
         LOOP
+            raise notice '%',_ts;
             INSERT INTO scoreProgress(ts,id,name,total)
                    SELECT  _ts,
                            s.id,
@@ -1511,13 +1538,23 @@ RETURNS TABLE (
                            s.flagTotal
                    FROM getScore(MAX_TEAM_NUMBER,_ts::varchar) AS s
                    WHERE s.id = ANY(_topTeams)
-                   ORDER BY s.id;
+                   ORDER BY idx(_topTeams, s.id);
         END LOOP;
 
+        -- Insert current score
+        INSERT INTO scoreProgress(ts,id,name,total)
+               SELECT  _maxTs,
+                       s.id,
+                       s.team,
+                       s.flagTotal 
+               FROM getScore(MAX_TEAM_NUMBER,_maxTs::varchar) AS s
+               WHERE s.id = ANY(_topTeams)
+               ORDER BY idx(_topTeams, s.id);
+        
         -- Return a crosstab of the temporary table 
         RETURN QUERY SELECT * FROM tablefunc.crosstab(
             'SELECT ts,name,total FROM scoreProgress ORDER BY ts',
-            'SELECT team from getScore(15)'
+            'SELECT name FROM team WHERE id = ANY(array[' || array_to_string(_topTeams,',') ||']) ORDER BY scoreboard.idx(array['||array_to_string(_topTeams,',')||'],id)'
                      ) as ct(
                         ts timestamp,
                         t0_score integer,
