@@ -1,0 +1,12 @@
+<div class="main-row">
+  <div class="jumbotron">
+    <div class="container">
+      <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <div id="chart_div" style="height: 650px;"></div>
+      <script type="text/javascript" src="/static/js/dashboard.js"></script>
+      <script type="text/javascript">
+	google.setOnLoadCallback(drawChart({% raw jsArray %}));
+      </script>
+    </div>
+  </div>
+</div>
