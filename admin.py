@@ -190,13 +190,17 @@ try:
             parser.print_help()
             print('No subaction choosen')
     elif args.action == 'news':
-        if args.add:
-            pass
+        if args.add != '':
+            if args.timestamp != '':
+                rc = c.addNews(args.add,args.timestamp)
+            else:
+                rc = c.addNews(args.add,None)
+                print('Return Code: '+str(rc))
         elif args.mod:
             pass
         elif args.list:
             print("Displaying news")
-            print(c.getFormatValidNews())
+            print(c.getFormatNews())
         else: 
             print('No subaction choosen')
             raise Exception('test')
@@ -244,6 +248,8 @@ except postgresql.exceptions.TextRepresentationError as e:
     print('[-] '+e.message)
 except postgresql.exceptions.UndefinedFunctionError:
     print('[-] The specified function does not exist. Please contact an admin')
+except postgresql.exceptions.DateTimeFormatError:
+    print('[-] Date&Time format error')
 except postgresql.message.Message as m:
     print(m)
 except Exception as e:

@@ -163,6 +163,7 @@ class kothClient():
         title = ['id','Release date&time', 'News']
         score = self.getNews()
         x = PrettyTable(title)
+        x.align['Release date&time'] = 'l'
         x.align['News'] = 'l'
         x.padding_width = 1
         for row in score:

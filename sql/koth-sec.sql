@@ -43,6 +43,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.addNews(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getSubmitHistory(integer,integer) TO hfadmins;
 

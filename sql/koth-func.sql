@@ -274,13 +274,18 @@ RETURNS integer AS $$
         -- Logging
         raise notice 'addNews(%,%)',$1,$2;
 
+        -- Some validations
+        if _displayTs is null then
+            _displayTs := NOW();        -- Kinda redundant...
+        end if;
+
         -- Insert a new row
         INSERT INTO news(title,displayTs)
                 VALUES(_title,_displayTs::timestamp);
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: addHost(name,description)
@@ -610,7 +615,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: getScore(top = 30)
 */
 CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
-                                    _timestamp varchar(20) default Null,
+                                    _timestamp varchar(30) default Null,
                                     _category category.name%TYPE default Null)
 RETURNS TABLE (
                 id team.id%TYPE,
@@ -1055,7 +1060,8 @@ RETURNS TABLE (
                             news.displayTs,
                             news.title
                      FROM news
-                     WHERE news.displayTs < NOW();
+                     WHERE news.displayTs < NOW()
+                     ORDER BY news.id DESC;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1440,6 +1446,8 @@ RETURNS TABLE (
         MAX_TEAM_NUMBER integer := 200;
         _intervalTotal interval;
         _ts timestamp;
+        _minTs timestamp;
+        _maxTs timestamp;
         _topTeams integer[10];
     BEGIN
         -- Logging
@@ -1456,6 +1464,20 @@ RETURNS TABLE (
         -- Determine the total range to select   
         _intervalTotal := _intLimit * INTERVAL;
 
+        -- Determine minimum timestamp
+        SELECT * INTO _minTs FROM (
+            SELECT team_flag.ts FROM team_flag 
+            UNION ALL
+            SELECT team_kingFlag.ts FROM team_kingFlag 
+        ) AS x ORDER BY ts DESC LIMIT 1;
+
+        -- Determine maximum timestamp
+        SELECT * INTO _maxTs FROM (
+            SELECT team_flag.ts FROM team_flag 
+            UNION ALL
+            SELECT team_kingFlag.ts FROM team_kingFlag 
+        ) AS x ORDER BY ts LIMIT 1;
+
         -- Generate a serie of all checkpoint
         -- http://www.postgresql.org/docs/9.1/static/functions-srf.html
         -- SELECT * FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL);
@@ -1470,25 +1492,27 @@ RETURNS TABLE (
             total integer) ON COMMIT DROP;
 
         -- Get top 10 teams
-        SELECT array(SELECT id FROM getScore(10) ORDER BY id LIMIT 10) INTO _topTeams; 
+        SELECT array(SELECT id FROM getScore(10) ORDER BY id) INTO _topTeams; 
 
         -- For each checkpoint, append a score checkpoint to the temporary table
-        FOR _ts IN SELECT generate_series AS time 
-                   FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL) 
+                   --FROM generate_series(current_timestamp-_intervalTotal,current_timestamp,INTERVAL) 
+        FOR _ts IN SELECT generate_series 
+                   FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / 10) 
         LOOP
             INSERT INTO scoreProgress(ts,id,name,total)
                    SELECT  _ts,
-                           id,
-                           team,
-                           flagTotal
+                           s.id,
+                           s.team,
+                           s.flagTotal
                    FROM getScore(MAX_TEAM_NUMBER,_ts::varchar) AS s
-                   WHERE id = ANY(_topTeams);
-
+                   WHERE s.id = ANY(_topTeams)
+                   ORDER BY s.id LIMIT 10;
         END LOOP;
 
         -- Return a crosstab of the temporary table 
         RETURN QUERY SELECT * FROM tablefunc.crosstab(
-            'SELECT ts,name,total FROM scoreProgress ORDER BY ts'
+            'SELECT ts,name,total FROM scoreProgress ORDER BY ts',
+            'SELECT team from getScore(10) ORDER BY id'
                      ) as ct(
                         ts timestamp,
                         t0_score integer,

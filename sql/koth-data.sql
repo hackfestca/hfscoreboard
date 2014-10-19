@@ -64,6 +64,14 @@ SELECT addTeam('Team VPN 2', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
+SELECT addTeam('Team Eko1', '1.1.1.1/32');
+SELECT addTeam('Team Eko2', '1.1.1.2/32');
+SELECT addTeam('Team Eko3', '1.1.1.3/32');
+SELECT addTeam('Team Eko4', '1.1.1.4/32');
+SELECT addTeam('Team Eko5', '1.1.1.5/32');
+SELECT addTeam('Team Eko6', '1.1.1.6/32');
+SELECT addTeam('Team Eko7', '1.1.1.7/32');
+SELECT addTeam('Team Eko8', '1.1.1.8/32');
 
 /*
     Insert random data (for scoreboard development)

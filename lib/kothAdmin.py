@@ -55,8 +55,8 @@ class kothAdmin(kothClient.kothClient):
     def benchmarkDB(self,callLimit=100):
         print('Testing getScore()')
         self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer)'),config.KOTH_DEFAULT_TOP_VALUE)
-        print('Testing getValidNews()')
-        self._benchmarkMany(callLimit,self._oDB.proc('getValidNews()'))
+        print('Testing getNews()')
+        self._benchmarkMany(callLimit,self._oDB.proc('getNews()'))
 
     def benchmarkDBCon(self,conLimit=30,callLimit=100):
         aThreads = []
@@ -104,6 +104,13 @@ class kothAdmin(kothClient.kothClient):
         for row in score:
             x.add_row(row)
         return x
+
+    def addNews(self,desc,ts):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('addNews(varchar,varchar)'),desc,ts)
+        else:
+            return self._oDB.proc('addNews(varchar,varchar)')(desc,ts)
+
 
     def getGraphScore(self,top=config.KOTH_DEFAULT_TOP_VALUE):
         try:
