@@ -107,9 +107,10 @@ class BaseHandler(tornado.web.RequestHandler):
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
             self.team_score = team_info[6][1]
-        except Exception as e:
-            self.logger.error(e)
-            self.render('templates/error.html', error_msg=e)
+        except:
+            self.team_name = "None"
+            self.team_ip = "None"
+            self.team_score = "None"
 
     def _disconnect(self):
         try:
