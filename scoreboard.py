@@ -84,13 +84,14 @@ class BaseHandler(tornado.web.RequestHandler):
         exc_type, exc_obj, exc_tb = kwargs["exc_info"]
 
         if issubclass(exc_type, ConnectionError):
-            msg = "{} - {}".format(status_code, exc_obj.message)
+            msg = "{}".format(exc_obj.message)
         elif isinstance(exc_type, PLPGSQLRaiseError):
-            msg = "{} - {}".format(status_code, exc_obj.message)
+            msg = "{}".format(exc_obj.message)
         elif isinstance(exc_type, InsufficientPrivilegeError):
-            msg = "{} - {}".format(status_code, exc_obj.message)
+            msg = "{}".format(exc_obj.message)
         else:
-            msg = status_code
+            msg = "{}".format(exc_obj.message)
+
 
         #self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
@@ -182,12 +183,15 @@ class ScoreHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore(top=200)
-        except Exception as e:
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/score.html', score_table = score)
+            self.render('templates/score.html', score_table = list(score))
 
             
 class ChallengesHandler(BaseHandler):
@@ -196,6 +200,9 @@ class ChallengesHandler(BaseHandler):
         try:
             categories = self.client.getCatProgressFromIp(self.request.remote_ip)
             challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -210,7 +217,10 @@ class IndexHandler(BaseHandler):
         try:
             score = self.client.getScore(top=15)
             valid_news = self.client.getNews()
-        except Exception as e:
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -231,7 +241,7 @@ class IndexHandler(BaseHandler):
             rand = random.randint(0, len(self._insults)-1)
             submit_message = e.message + "!  " + self.getInsult(rand)
             flag_is_valid = False
-        except Exception as e:
+        except:
             self.logger.error(e)
             self.set_status(500)
             self.render('templates/error.html', error_msg="Error")
@@ -254,7 +264,10 @@ class DashboardHandler(BaseHandler):
     def get(self):
         try:
             jsArray = self.client.getJsDataScoreProgress()
-        except Exception as e:
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -287,7 +300,10 @@ class IndexProjectorHandler(BaseHandler):
         try:
             score = self.client.getScore(top=15)
             valid_news = self.client.getNews()
-        except Exception as e:
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message) 
+        except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -301,7 +317,10 @@ class DashboardProjectorHandler(BaseHandler):
     def get(self):
         try:
             jsArray = self.client.getJsDataScoreProgress()
-        except Exception as e:
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
