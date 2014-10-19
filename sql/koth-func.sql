@@ -540,6 +540,7 @@ RETURNS integer AS $$
         ANTI_BF_INT interval := '10 second';
         ANTI_BF_LIMIT integer := 4;
         STATUS_CODE_OK integer := 1;
+        FLAG_MAX_LENGTH integer := 64;
     BEGIN
         -- Logging
         raise notice 'submitFlagFromIp(%,%)',$1,$2;
@@ -559,6 +560,11 @@ RETURNS integer AS $$
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount <> 1 then
             raise exception 'Team not found for %. _rowCount=%',_playerIp,_rowCount;
+        end if;
+
+        -- Validate flag max length
+        if length(_flagValue) > FLAG_MAX_LENGTH then
+            raise exception 'Flag too long';
         end if;
 
         -- Anti-bruteforce
@@ -645,7 +651,9 @@ RETURNS TABLE (
         _rowCount integer;
     BEGIN
         -- Logging
-        raise notice 'getScore(%,%)',$1,$2;
+        if _timestamp is null then          -- Tmp bypass because it logs too much
+            raise notice 'getScore(%,%)',$1,$2;
+        end if;
    
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
@@ -1513,9 +1521,6 @@ RETURNS TABLE (
         -- Get top 15 teams
         SELECT array(SELECT id FROM getScore(_maxTeams) ORDER BY flagTotal DESC) INTO _topTeams; 
 
-        raise notice '%',_minTs;
-        raise notice '%',_maxTs;
-
         -- Insert a blank line 
         INSERT INTO scoreProgress(ts,id,name,total)
                SELECT  (_minTs - '1 minute'::interval)::timestamp,
@@ -1530,7 +1535,6 @@ RETURNS TABLE (
         FOR _ts IN SELECT generate_series 
             FROM generate_series(_minTs,_maxTs,(_maxTs-_minTs)::interval / _intLimit) 
         LOOP
-            raise notice '%',_ts;
             INSERT INTO scoreProgress(ts,id,name,total)
                    SELECT  _ts,
                            s.id,
