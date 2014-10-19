@@ -3,102 +3,10 @@
 
 {% block content %}
 
-<div class="main-row">
-  <div class="jumbotron">
-    <div class="container">
-      {% try %}
-      {% if flag_is_valid %}
-      <div class="alert alert-success" role="alert">{{ submit_message }}</div>
-      {% else %}
-      <div class="alert alert-danger" role="alert">{{ submit_message }}</div>
-      {% end %}
-      {% except %}
-      {% end %}
-      
-      <form method="POST">
-	<div class="col-md-1">
-	  <h3>Flag</h3>
-	</div>
-	<div class="col-md-11">
-	  <h3>
-	    <div class="input-group">
-	      <input type="text" name="flag" class="form-control" placeholder="Your flag without 'FLAG-'">
-	      <span class="input-group-btn">
-		<button class="btn btn-default" type="submit">Submit</button>
-	      </span>
-	    </div><!-- /input-group -->
-	  </h3>
-	</div>    
-      </form>
-    </div>
-  </div>
-</div>
+{% include flag.html %}
 
-<div class="row main-row">
-  <div class="col-md-4">
-    <div class="jumbotron news">
-      <div class="container">
-	<h3>News</h3>
-	<dl>
-	  {% for new in news %}
-	  <dt>{{ new[1].now().strftime("%Y-%m-%d %H:%M") }}</dt>
-	  <dd>{{ new[2] }}</dd>
-	  {% end %}
-	</dl>
-      </div>
-    </div>
-  </div>
+{% include news.html %}
 
-  <div class="col-md-8">
-    <div class="jumbotron score_panel">
-      <div class="container">
-	<h3>Scoreboard</h3>
-	<div class="table-responsive">
-	  <table class="table table-hover">
-	    <thead>
-	      <tr>
-		<th>Position</th>
-		<th>Team</th>
-		<th>Flags</th>
-		<th>King Flags</th>
-		<th>Total</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      {% for index, row in enumerate(table, start=1) %}
-	      {% if team_name == row[1] %}
-	      <tr class="team-highlight">
-	      {% else %}
-	      <tr>
-	      {% end %}
-                <td>{{ index }}</td>
-		<td>{{ row[1] }}</td>
-		<td>{{ row[2] }}</td>
-		<td>{{ row[3] }}</td>
-		<td>{{ row[4] }}</td>
-	      </tr>
-	      {% end %}
-	    </tbody>
-	  </table>
-	</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="main-row">
-  <div class="jumbotron">
-    <div class="container">
-      <h3>Sponsors</h3>
-      {% for sponsor in sponsors %}
-      <img src="{{ sponsor }}">
-      {% end %}
-    </div>
-  </div>
-</div>
-
-
+{% include sponsors.html %}
 
 {% end %}

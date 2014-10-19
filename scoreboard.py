@@ -208,7 +208,7 @@ class IndexHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            score = self.client.getScore(top=9)
+            score = self.client.getScore(top=15)
             valid_news = self.client.getNews()
         except Exception as e:
             self.set_status(500)
@@ -233,10 +233,8 @@ class IndexHandler(BaseHandler):
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
-            rand = random.randint(0, len(self._insults)-1)
-            submit_message = "Invalid flag" + "!  " + self.getInsult(rand)
-            flag_is_valid = False
             self.set_status(500)
+            self.render('templates/error.html', error_msg="Error")
         else:
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
@@ -245,7 +243,7 @@ class IndexHandler(BaseHandler):
         if match:
             submit_message = "Are you fucking kidding me ? \"Your flag without 'FLAG-'\""
 
-        score = self.client.getScore(top=9)            
+        score = self.client.getScore(top=15)            
         self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
                     flag_is_valid=flag_is_valid, submit_message=submit_message)
 
@@ -276,7 +274,46 @@ class Error404Handler(BaseHandler):
     def get(self):
         # Cedrick Chaput don't want me to tell you when you're wrong
         self.redirect('/')
+
+class RulesHandler(BaseHandler):
+
+    def get(self):
+        self.render('templates/rules.html')
+
+class IndexProjectorHandler(BaseHandler):
+
+    @tornado.web.addslash
+    def get(self):
+        try:
+            score = self.client.getScore(top=15)
+            valid_news = self.client.getNews()
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
+        else:
+            self.render('templates/projector.html', table=score, news=valid_news)
+
+
+class DashboardProjectorHandler(BaseHandler):
+
+    @tornado.web.addslash
+    def get(self):
+        try:
+            jsArray = self.client.getJsDataScoreProgress()
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
+        else:
+            self.render('templates/projector_js.html', jsArray=jsArray)
                         
+class SponsorsProjectorHandler(BaseHandler):
+
+    @tornado.web.addslash
+    def get(self):
+        self.render('templates/projector_sponsors.html', sponsors=self.sponsors)
+
 if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
@@ -293,7 +330,11 @@ if __name__ == '__main__':
             (r"/", IndexHandler, args),
             (r"/challenges/?", ChallengesHandler, args),
             (r"/scoreboard/?", ScoreHandler, args),
-            (r"/dashboard/?", DashboardHandler, args)
+            (r"/dashboard/?", DashboardHandler, args),
+            (r"/rules/?", RulesHandler, args),
+            (r"/projector/1/?", IndexProjectorHandler, args),
+            (r"/projector/2/?", DashboardProjectorHandler, args),
+            (r"/projector/3/?", SponsorsProjectorHandler, args)
         ],
          debug=True,
          static_path=os.path.join(root, 'static'),

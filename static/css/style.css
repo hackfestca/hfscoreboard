@@ -1,5 +1,5 @@
 
-body {
+.body {
   padding-top: 100px;
   padding-bottom: 30px;
   background-color: #000000;
@@ -9,6 +9,18 @@ body {
   background-size: cover;
   color: #FFFFFF;
 }
+
+.projector {
+  padding-top: 2%;
+  //padding-bottom: 2%;
+  background-color: #000000;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #FFFFFF;
+}
+
 
 .nav, .navbar {
     background: rgba(0, 0, 0, 1);
@@ -75,13 +87,18 @@ body {
     text-align: right;
 }
 
-.main-row {
+.body > .main-row {
     margin-left: 15%;
     margin-right: 15%;
 }
 
+.projector > .main-row {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
 .news, .score_panel {
-    height: 512px;
+    height: 716px;
     overflow: auto;
 }
 
