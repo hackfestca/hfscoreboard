@@ -559,7 +559,7 @@ RETURNS integer AS $$
         SELECT id,net INTO _teamRec FROM team where _playerIp << net;
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount <> 1 then
-            raise exception 'Team not found for %. _rowCount=%',_playerIp,_rowCount;
+            raise exception 'Team not found for %',_playerIp;
         end if;
 
         -- Validate flag max length

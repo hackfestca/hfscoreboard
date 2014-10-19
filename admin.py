@@ -203,7 +203,6 @@ try:
             print(c.getFormatNews())
         else: 
             print('No subaction choosen')
-            raise Exception('test')
     elif args.action == 'settings':
         if args.gameStart:
             c.setSetting('gameStartTs',args.gameStart,'timestamp')
@@ -212,7 +211,6 @@ try:
             print(c.getFormatSettings())
         else: 
             print('No subaction choosen')
-            raise Exception('test')
     elif args.action == 'score':
         print('Displaying score (top '+str(args.top)+')')
         print(c.getFormatScore(args.top,args.ts))
