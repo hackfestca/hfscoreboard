@@ -1,34 +1,43 @@
 Flag Name,Flag Value,Flag PTS,Flag Location,Category (see tab #2),displayInterval,Author,isKing,Description,UpdateCmd,How to
-net01,68f05b6143bf1580868369c3ceec65d4,1,172.28.72.6,net,Null,Martin Dube,FALSE,You might need to negotiate this flag.,Null,"Use mod_negotiation_brute module on msf to identify index.flag.html, which contains flag"
-expl01,TBD,2,172.28.72.6,expl,Null,Martin Dube,FALSE,I use tar for backup.,Null,use tar checkpoints to pop the flag
-php01,ZYfynIT9LvpoiadmmeNAtIOC8v1EPZhJ,1,172.28.72.10,web,Null,Martin Dube,FALSE,Hack the backdoor.,Null,http://www.exploit-db.com/exploits/34025/
-php02,SO3e6n7qpfGTtgGXcDLtLWuDzo3f0kfp,1,172.28.72.10,web,Null,Martin Dube,FALSE,Warmp up.,Null,include('/flag.txt');
-php03,49DnMgcDQNiAaOcwMQGjfc22OrhrMrKK,2,172.28.72.10,web,Null,Martin Dube,FALSE,TBD,Null,"Pop it using opendir,readdir,fopen,fgets"
-php04,fmKqmp6JMWQ6bB2BCTfngSwb9ZGbT0MA,2,172.28.72.10,web,Null,Martin Dube,FALSE,TBD,Null,Pop it using find & cat
-php05,JOeg18eFwC4SrWvyUHY5K5bLIk60PngP,3,172.28.72.10,web,Null,Martin Dube,FALSE,Let's test PHP's consistency,Null,Understand the brainfuck and pop the flag
-php06,0VXHZmp6QDUgn92,3,172.28.72.10,web,Null,Martin Dube,FALSE,Let's play with PHP's consistency,Null,Understand the brainfuck and pop the flag
-ssh01,NlBuBcqlzzEJhsSUSUwUtRNoMdESDqVU,1,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
-ssh02,4lIoz0EtV41IiE5UQfKaNuKDwpP2nDK,2,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
-ssh03,P2nxFor2SKSwDiBOoO1TJf8VEmBdMaNT,3,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
-ssh04,bbbbb,4,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,Exploit it using find
-ssh05,ccccc,5,172.28.72.10,expl,Null,Martin Dube,TRUE,Build your tools.,echo $FLAG > /root/ssh05.flag,Exploit using tcc
-re01,g762eccb925391e2da74c60e0e59747ccd90d872335ac27d55d9d9cfef2,3,172.28.71.10,re,Null,Jessy Campos,FALSE,TBD,Null,LD_PRELOAD
-re02,81184ec68eb875c1920b0fd94a936c76ea42fb5b,4,172.28.71.10,re,Null,Jessy Campos,FALSE,TBD,Null,"chmod 111 so, use ptrace ?"
-re03,156c1179d7961911129e18cdd6e392249dbab57c,5,172.28.71.10,re,Null,Jessy Campos,FALSE,TBD,Null,hardware breakpoint
+for01,1fZwX2bHc53ByXP4ZoNW5FAyespongebob,5,172.28.72.100,for,Null,Cedrick Chaput,FALSE,password HUNT pwd1+pwd2+pwd3+pwd4+pwd5+user hfctf password,Null,
+for02,TBD7,1,172.28.72.100,for,Null,Cedrick Chaput,FALSE,TBD,Null,
+for03,TBD8,1,172.28.72.101,for,Null,Cedrick Chaput,FALSE,TBD,Null,
+MisConfig01,ec3f82fe38c3a3f6280a725ba34f4bcf,4,172.28.72.104,expl,Null,Cedrick Chaput,FALSE,Come near HF crew There is a Ubuntu 14.04 to bypass the lockscreen,Null,
+virus01,TBD9,1,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
+virus02,TBD10,2,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
+virus03,TBD11,3,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
+virus04,TBD12,4,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
+virus05,TBD13,5,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
 nose01,OIPL9CKSV2DH9X1SAQGQ,1,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,TBD,Null,
 nose02,7G27Y966ACQO9MSUGICP,2,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,TBD,Null,
 nose03,7AYV63FG19UCCD8ACBAO,3,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,TBD,Null,
 nose04,KOTH-NOSEBLEEDING,1,172.28.72.110,web,Null,Francois Lajeunesse-Robert,TRUE,TBD,echo $FLAG > /opt/cs/frontend/config/flag.txt && chown root:csservice /opt/cs/frontend/config/flag.txt,
+misc01,yO82whKhkBxTzoP,1,172.28.71.10,misc,Null,HF Crew,FALSE,A flag in the 30 second animation,Null,
+tri01,TBD18,1,172.28.71.10,tri,Null,HF Crew,FALSE,Wait for chuck to ask the question,Null,
+re01,g762eccb925391e2da74c60e0e59747ccd90d872335ac27d55d9d9cfef2,2,172.28.71.10,re,Null,Jessy Campos,FALSE,Don't waste time reversing,Null,LD_PRELOAD
+re03,81184ec68eb875c1920b0fd94a936c76ea42fb5b,4,172.28.71.10,re,Null,Jessy Campos,FALSE,This one is blackbox.,Null,"chmod 111 so, use ptrace ?"
+re02,156c1179d7961911129e18cdd6e392249dbab57c,3,172.28.71.10,re,Null,Jessy Campos,FALSE,AntiDbg,Null,hardware breakpoint
 prog01,c25d5ebf60a8ad20d8ab8b28f6cd8d011b44d3a9,1,172.28.72.12,prog,Null,Jessy Campos,FALSE,"decode the b64, send the sha1",Null,
 prog02,a3bc4422456a5c432bf292a7af49aee98c05e4e8,1,172.28.72.12,prog,Null,Jessy Campos,FALSE,do the math !,Null,
 prog03,c467a735bde653da47c057b986dce68edbf11c7d,2,172.28.72.12,prog,Null,Jessy Campos,FALSE,send a string which match the regex,Null,
 prog04,de272cef6a3d7efc9c5a627df562d99d5f6f534b,3,172.28.72.12,prog,Null,Jessy Campos,FALSE,Bypass the captcha,Null,
-data01,,1,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
-data02,,2,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
-data03,,3,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
-for01,1fZwX2bHc53ByXP4ZoNW5FAyespongebob,5,172.28.72.100,for,Null,Cedrick Chaput,FALSE,password HUNT pwd1+pwd2+pwd3+pwd4+pwd5+user hfctf password,Null,
-for02,,1,172.28.72.100,for,Null,Cedrick Chaput,FALSE,TBD,Null,
-for03,,1,172.28.72.101,for,Null,Cedrick Chaput,FALSE,TBD,Null,
+chroot01,QWWAC8fI01rK1ijCgSfjp9ucdnszKcny,2,172.28.72.5,expl,Null,Jessy Campos,FALSE,"Using ssh://chr01:chr01@chroot02.ctf.hf, read the file /flag.txt. ",Null,Chroot escaping using python
+re04,47ed9186b75ff77d0ed437b7409195e0df8bf58a,5,172.28.72.7,re,Null,Jessy Campos,FALSE,"You stole a TokenGen, Reverse it and access the system IP:PORT",Null,Reverse le dump avr fourni pour générer un token valide
+pwn02,7TFLoWA0Q29uN8EQ1nS9QfQXd1L2zBMX,3,172.28.72.7,expl,Null,Jessy Campos,FALSE,"Good job, you got access to the datacenter, but you're logged in as guest.",,
+pwn01,AzTxYDhq5oK0wRStvmuE1ChAEdJWwMO2,2,172.28.72.7,expl,Null,Jessy Campos,FALSE,Using ssh://pwn01:pwn01@expl01.ctf.hf. This one is easy AND up to date.,Null,
+net01,68f05b6143bf1580868369c3ceec65d4,1,172.28.72.6,net,Null,Martin Dube,FALSE,You might need to negotiate this flag.,Null,"Use mod_negotiation_brute module on msf to identify index.flag.html, which contains flag"
+expl01,k283QjjkBItb8VgJCeLT5hWIvHNREZR0,2,172.28.72.6,expl,Null,Martin Dube,FALSE,I use tar for backup. ssh://expl01:expl01@misc02.ctf.hf,Null,use tar checkpoints to pop the flag
+php01,ZYfynIT9LvpoiadmmeNAtIOC8v1EPZhJ,1,172.28.72.10,web,Null,Martin Dube,FALSE,"Warmp up. <a href=""http://chroot01.ctf.hf/01/index.php"">Chal 0x01</a>",Null,http://www.exploit-db.com/exploits/34025/
+php02,SO3e6n7qpfGTtgGXcDLtLWuDzo3f0kfp,1,172.28.72.10,web,Null,Martin Dube,FALSE,"Easy: A classical. <a href=""http://chroot01.ctf.hf/02/index.php"">Chal 0x02</a>",Null,include('/flag.txt');
+php03,49DnMgcDQNiAaOcwMQGjfc22OrhrMrKK,2,172.28.72.10,web,Null,Martin Dube,FALSE,"Easy: OK Dig a little more. <a href=""http://chroot01.ctf.hf/03/index.php"">Chal 0x03</a>",Null,"Pop it using opendir,readdir,fopen,fgets"
+php04,fmKqmp6JMWQ6bB2BCTfngSwb9ZGbT0MA,2,172.28.72.10,web,Null,Martin Dube,FALSE,"Medium: Find it yourself.  <a href=""http://chroot01.ctf.hf/04/index.php"">Chal 0x04</a>",Null,Pop it using find & cat
+php05,JOeg18eFwC4SrWvyUHY5K5bLIk60PngP,3,172.28.72.10,web,Null,Martin Dube,FALSE,"Medium: PHP Brainfuck. Let's test PHP's consistency. <a href=""http://chroot01.ctf.hf/05/index.php"">Chal 0x05</a>",Null,Understand the brainfuck and pop the flag
+php06,WPXqxGXyJ7vh1gUc5JpXwCZfRK9Du5Lw,4,172.28.72.10,web,Null,Martin Dube,FALSE,"Hard: PHP Brainfuck++. Let's play with PHP's consistency.  <a href=""http://chroot01.ctf.hf/06/index.php"">Chal 0x06</a>",Null,Understand the brainfuck and pop the flag
+ssh01,NlBuBcqlzzEJhsSUSUwUtRNoMdESDqVU,1,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
+ssh02,4lIoz0EtV41IiE5UQfKaNuKDwpP2nDK,2,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
+ssh03,P2nxFor2SKSwDiBOoO1TJf8VEmBdMaNT,3,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,
+ssh04,TBD2,4,172.28.72.10,expl,Null,Martin Dube,FALSE,TBD,Null,Exploit it using find
+ssh05,TBD3,5,172.28.72.10,expl,Null,Martin Dube,TRUE,Build your tools.,echo $FLAG > /root/ssh05.flag,Exploit using tcc
 mono01,QdzlAfCpNv5ysJb55EZjz77UeGz23q1w,2,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
 mono02,gfxfvXpoyhqMivgLC3ab5fNmFQVcSKCG,3,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
 mono03,V35USLFNK1EZnJ00JhNA8NgTr1TWR3R8,4,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
@@ -37,15 +46,9 @@ voip01,zXZDkp67cOyg7rdtFGUY2WfAOvD5PKgD,2,172.28.72.121,net,Null,Martin Lemay,FA
 voip02,FWLd5n25hEUAC7blIRPcG7btxHeyjXvr,3,172.28.72.121,net,Null,Martin Lemay,FALSE,TBD,Null,
 voip03,nw5FKvZf6PNJeVimZxMNyYUSqla7Ttic,4,172.28.72.121,net,Null,Martin Lemay,FALSE,TBD,Null,
 voip04,lAaiI0hpcFHShVim53EsFHex6OXw7bmi,5,172.28.72.121,net,Null,Martin Lemay,TRUE,TBD,echo $FLAG > /root/flag.txt,
-virus01,,1,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
-virus02,,2,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
-virus03,,3,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
-virus04,,4,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
-virus05,,5,172.28.71.10,for,Null,Franck Desert,FALSE,TBD,Null,
-chroot01,,2,172.28.72.5,expl,Null,Jessy Campos,FALSE,TBD,Null,Chroot escaping using python
-win01,,2,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-win02,,3,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-win03,,4,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-misc01,yO82whKhkBxTzoP,1,172.28.71.10,misc,Null,HF Crew,FALSE,A flag in the 30 second animation,Null,
-exp01,47ed9186b75ff77d0ed437b7409195e0df8bf58a,3,172.28.72.7,expl,Null,Jessy Campos,FALSE,"You stole a TokenGen, Reverse it and access the system",Null,Reverse le dump avr fourni pour générer un token valide
-tri01,,1,172.28.71.10,tri,365 days,HF Crew,FALSE,TBD,Null,
+win01,TBD15,2,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
+win02,TBD16,3,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
+win03,TBD17,4,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
+data01,TBD4,1,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
+data02,TBD5,2,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
+data03,TBD6,3,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
