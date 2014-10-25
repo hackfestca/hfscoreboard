@@ -588,7 +588,7 @@ RETURNS integer AS $$
         -- Flag statusCode must be equal 1
         -- category 1 = flag, category 2 = kingFlag
         SELECT * FROM (
-            SELECT id,value,pts,statusCode,1 AS category FROM flag WHERE statusCode = STATUS_CODE_OK and value = _flagValue
+            SELECT id,value,pts,statusCode,1 AS category FROM flag WHERE statusCode = STATUS_CODE_OK and value = _flagValue and isKing = False
             UNION ALL
             SELECT id,value,pts,Null,2 AS category FROM kingFlag WHERE value = _flagValue
         ) AS x INTO _flagRec;
@@ -827,6 +827,7 @@ RETURNS TABLE (
                                        f.category,
                                        f.pts
                                 FROM flag AS f
+                                WHERE f.isKing = False
                                 ) as f ON tf.flagId = f.id
                             WHERE tf.teamId = _teamId
                             ) AS tf2
@@ -836,6 +837,7 @@ RETURNS TABLE (
                          SELECT f2.category,
                                 sum(f2.pts) AS sum
                          FROM flag AS f2
+                         WHERE f2.isKing = False
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category;
     END;
@@ -928,8 +930,10 @@ RETURNS TABLE (
                          FROM team_flag AS tf
                          WHERE tf.teamId = _teamId
                          ) AS tf2 ON f.id = tf2.flagId
-                    WHERE f.displayInterval is null 
-                            or _settings.gameStartTs + f.displayInterval < current_timestamp;
+                    WHERE (f.displayInterval is null 
+                            or _settings.gameStartTs + f.displayInterval < current_timestamp)
+                          and f.isKing = False
+                    ORDER BY f.name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
