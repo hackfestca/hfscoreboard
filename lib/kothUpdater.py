@@ -65,24 +65,25 @@ class kothUpdater(kothClient.kothClient):
         if self._bDebug:
             return list(self._benchmark(self._oDB.proc('getKingFlagsFromHost(varchar)'),host))
         else:
-            return list(self._oDB.proc('getKingableFlagsFromHost(varchar)')(host))
+            return list(self._oDB.proc('getKingFlagsFromHost(varchar)')(host))
 
     def _getKingFlagFromName(self,name):
         if self._bDebug:
             return list(self._benchmark(self._oDB.proc('getKingFlagsFromName(varchar)'),name))
         else:
-            return list(self._oDB.proc('getKingableFlagsFromName(varchar)')(name))
+            return list(self._oDB.proc('getKingFlagsFromName(varchar)')(name))
 
     def _addRandomKingFlagFromId(self,flagId):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('addRandomKingFlagFromId(integer,integer)'),flagId,self.KING_FLAG_VALUE)
         else:
-            return self._oDB.proc('addRandomKingFlagFromId()')(flagId,self.KING_FLAG_VALUE)
+            return self._oDB.proc('addRandomKingFlagFromId(integer,integer)')(flagId,self.KING_FLAG_VALUE)
         
     
     def _remoteExec(self,host,cmd):
         try:
-            print('[+] Connecting to %s' % host)
+            if self._bDebug:
+                print('[+] Connecting to %s' % host)
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((host, 22))
             
@@ -98,11 +99,11 @@ class kothUpdater(kothClient.kothClient):
             if self._bDebug:
                 print('[+] Debug: SSH cmd output: '+str(channel.read(1024)))
         except socket.error as e:
-            print('[-] Error: %s' % e)
+            return (1,e)
         except libssh2.Error as e:
-            print('[-] Error: %s' % e)
+            return (1,e)
 
-        return 0
+        return (0,None)
 
     def _updateFromList(self,flags):
         if len(list(flags)) != 0:
@@ -121,12 +122,15 @@ class kothUpdater(kothClient.kothClient):
         
                     # Updating cmd and pushing the new flag
                     cmd = self._substituteCmd(updateCmd,flagValue)
-                    self._remoteExec(host,cmd)
+                    ret,msg = self._remoteExec(host,cmd)
                     
-                    if self._bDebug:
-                        print('[+] %s Info: "%s" was updated on "%s" using "%s"' % (timestamp,flagName,host,cmd))
+                    if ret == 0:
+                        if self._bDebug:
+                            print('[+] %s Info: "%s" was updated on "%s" using "%s"' % (timestamp,flagName,host,cmd))
+                        else:
+                            print('[+] %s Info: "%s" was updated on "%s" using "%s"' % (timestamp,flagName,host,updateCmd))
                     else:
-                        print('[+] %s Info: "%s" was updated on "%s" using "%s"' % (timestamp,flagName,host,updateCmd))
+                        print('[-] %s Error: Could not update on %s. (%s)' % (timestamp,host,msg))
                 elif statusCode == self.STATUS_ERROR:
                     # Updating cmd and pushing the new error message
                     cmd = self._substituteCmd(updateCmd,self.STATUS_MSG_ERROR)

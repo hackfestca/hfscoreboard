@@ -46,7 +46,7 @@ import argparse
 
 # Some vars and constants
 VERSION = '0.01'
-DEBUG = True
+DEBUG = False
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -124,7 +124,8 @@ except postgresql.exceptions.UndefinedFunctionError:
 #except Exception as e:
 #    print(e)
 else:
-    print('[+] End of update')
+    if DEBUG:
+        print('[+] End of update')
 
 c.close()
 
