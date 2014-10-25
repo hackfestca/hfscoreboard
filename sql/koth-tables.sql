@@ -106,7 +106,7 @@ CREATE TABLE flag(
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
-    constraint valid_flag_pts check (pts >= 1 and pts <= 1000),
+    constraint valid_flag_pts check (pts >= 100 and pts <= 1000),
     constraint valid_flag_displayTs check (displayInterval > '0 hours'::interval)
     );
 

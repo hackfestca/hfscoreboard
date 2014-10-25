@@ -47,7 +47,7 @@ class kothUpdater(kothClient.kothClient):
     STATUS_MSG_ERROR = 'The flag was disabled because the service is not running properly'
     STATUS_MSG_DISABLED = 'The flag was disabled by admins'
 
-    KING_FLAG_VALUE = 1
+    KING_FLAG_VALUE = 2
 
     def __init__(self):
         super().__init__()
