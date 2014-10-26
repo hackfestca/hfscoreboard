@@ -27,20 +27,27 @@ King of the hill client class
 
 # Project imports
 import config
-from prettytable import PrettyTable 
 
 # System imports
+import socket
 from xmlrpc.client import ServerProxy
 
 class kothPlayer():
     """
 
     """
-    _sHost = '172.28.71.11'  # Should be scoreboard.hf
+    _sHost = 'scoreboard.hf'
     _sPort = 8000
     _oRPC = None
 
     def __init__(self):
+        # Quick of host existence in DNS
+        try:
+            ip = socket.gethostbyname(self._sHost)
+        except socket.gaierror as e:
+            print('[-] Could not resolve %s' % (self._sHost))
+            exit(1)
+
         self._oRPC = ServerProxy('http://%s:%i' % (self._sHost,self._sPort),allow_none=True)
 
     def submitFlag(self,flagValue):
