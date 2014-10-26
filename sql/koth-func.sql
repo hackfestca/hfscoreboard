@@ -839,7 +839,8 @@ RETURNS TABLE (
                          FROM flag AS f2
                          WHERE f2.isKing = False
                          GROUP BY f2.category
-                        ) AS tft3 ON c.id = tft3.category;
+                        ) AS tft3 ON c.id = tft3.category
+                     ORDER BY c.name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
