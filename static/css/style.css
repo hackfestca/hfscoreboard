@@ -160,7 +160,24 @@ dl {
     text-align: center;
 }
 
-.footer > a:link,
-.footer > a:visited {
+a:link {
     color: #009c00;
+}
+
+a:visited {
+    color: #009c00;
+}
+
+.hf-green {
+    color: #009C00;
+}
+
+.hf-orange {
+    color: #ec9900;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
