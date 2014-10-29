@@ -54,6 +54,7 @@ SELECT addAuthor('Francois Lajeunesse-Robert', 'FLR');
 SELECT addAuthor('Martin Lemay', 'Do.Z10');
 SELECT addAuthor('Vincent & Patrick', 'vn & pat');
 SELECT addAuthor('Stephane Sigmen', 'sigmens');
+SELECT addAuthor('Philippe Godbout', 'psyker156');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
 SELECT addNews('Welcome to Hackfest CTF 2014', NOW()::timestamp);
