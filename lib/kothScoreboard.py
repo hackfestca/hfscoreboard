@@ -40,6 +40,12 @@ class kothScoreboard(kothClient.kothClient):
     def __init__(self):
         super().__init__()
 
+    def benchScore(self,callLimit=100):
+        self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer,varchar,varchar)'),config.KOTH_DEFAULT_TOP_VALUE,None,None)
+
+    def benchScoreProgress(self,callLimit=100):
+        self._benchmarkMany(callLimit,self._oDB.proc('getScoreProgress(integer)'),None)
+
     def submitFlagFromIp(self,playerIp,flagValue):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('submitFlagFromIp(varchar,varchar)'),playerIp,flagValue)

@@ -692,24 +692,6 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-/* 
-    Stored Proc: submitFlag(flagValue)
-*/ 
-CREATE OR REPLACE FUNCTION submitFlag(_flagValue flag.value%TYPE) 
-RETURNS integer AS $$
-    DECLARE
-        _playerIp inet;
-        _ret flag.pts%TYPE;
-    BEGIN
-        -- Logging
-        raise notice 'submitFlag(%)',$1;
-    
-        _playerIp := inet_client_addr();
-        SELECT submitFlagFromIp(_playerIp::varchar,_flagValue) INTO _ret;
-        return _ret;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
 /*
     Stored Proc: getScore(top = 30)
 */
@@ -928,30 +910,6 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getCatProgress()
-*/
-CREATE OR REPLACE FUNCTION getCatProgress() 
-RETURNS TABLE (
-                id category.id%TYPE,
-                name category.name%TYPE,
-                displayName category.displayName%TYPE,
-                description category.description%TYPE,
-                pts flag.pts%TYPE,
-                total flag.pts%TYPE 
-              ) AS $$
-    DECLARE
-        _playerIp inet;
-    BEGIN
-        -- Logging
-        raise notice 'getCatProgress()';
-    
-        -- Get team ID from client address
-        _playerIp := inet_client_addr();
-        return QUERY SELECT * FROM getCatProgressFromIp(_playerIp::varchar);
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
     Stored Proc: getFlagProgressFromIp(varchar)
 */
 CREATE OR REPLACE FUNCTION getFlagProgressFromIp(_playerIp varchar(20)) 
@@ -1019,31 +977,6 @@ RETURNS TABLE (
                           and f.isKing = False
                           and c.hidden = False
                     ORDER BY f.name;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getFlagProgress()
-*/
-CREATE OR REPLACE FUNCTION getFlagProgress() 
-RETURNS TABLE (
-                id flag.id%TYPE,
-                name flag.name%TYPE,
-                description flag.description%TYPE,
-                pts flag.pts%TYPE,
-                catId category.id%TYPE,
-                catName category.name%TYPE,
-                isDone boolean,
-                displayInterval flag.displayInterval%TYPE
-              ) AS $$
-    DECLARE
-        _playerIp inet;
-    BEGIN
-        -- Logging
-        raise notice 'getFlagProgress()';
-    
-        _playerIp := inet_client_addr();
-        return QUERY SELECT * FROM getFlagProgressFromIp(_playerIp::varchar);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

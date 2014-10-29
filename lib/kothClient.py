@@ -89,9 +89,6 @@ class kothClient():
                   +str((t2-t1).__round__(4))+'ms')
         return ret
 
-    def benchScore(self,callLimit=100):
-        self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer,varchar)'),config.KOTH_DEFAULT_TOP_VALUE,None)
-
     def setDebug(self,debug):
         self._bDebug = debug
         

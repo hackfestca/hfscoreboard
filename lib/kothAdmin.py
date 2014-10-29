@@ -27,23 +27,23 @@ King of the hill admin class
 
 import config
 import kothClient
+import kothScoreboard
 import threading
 from prettytable import PrettyTable 
 
 # Used for benchmark test only
 class kothThread(threading.Thread):
-    def __init__(self,con,callLimit=100):
+    def __init__(self,con,reqNum):
         threading.Thread.__init__(self)
         self.con = con
-        self.callLimit = callLimit
+        self.reqNum = reqNum
     def run(self):
-        self.con.benchScore(self.callLimit)
+        self.con.benchScoreProgress(self.reqNum)
 
 class kothAdmin(kothClient.kothClient):
     """
 
     """
-    _sVersion = '0.01'
     _sUser = 'martin'
     _sPass = 'h9N)kv1*H!3(|<eASR1^]Iwql;fsDIDc6h.?o\,IS[v?4:~}J0'
     _sCrtFile = None
@@ -52,24 +52,24 @@ class kothAdmin(kothClient.kothClient):
     def __init__(self):
         super().__init__()
     
-    def benchmarkDB(self,callLimit=100):
+    def benchmarkDB(self,reqNum=50):
         print('Testing getScore()')
-        self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer)'),config.KOTH_DEFAULT_TOP_VALUE)
+        self._benchmarkMany(reqNum,self._oDB.proc('getScore(integer,varchar,varchar)'),config.KOTH_DEFAULT_TOP_VALUE,None,None)
         print('Testing getNews()')
-        self._benchmarkMany(callLimit,self._oDB.proc('getNews()'))
+        self._benchmarkMany(reqNum,self._oDB.proc('getNews()'))
 
-    def benchmarkDBCon(self,conLimit=30,callLimit=100):
+    def benchmarkDBCon(self,reqNum=50,reqCon=30):
         aThreads = []
 
-        print('Opening %i connections' % conLimit)
-        for i in range(0,conLimit):
+        print('Opening %i connections' % reqCon)
+        for i in range(0,reqCon):
             if i%10 == 0 and i != 0:
                 print('Nb of connections opened: %i' % i)
-            aThreads.append(kothThread(kothClient.kothClient()))
+            aThreads.append(kothThread(kothScoreboard.kothScoreboard(),reqNum))
         
-        for i in range(0,conLimit):
+        for i in range(0,reqCon):
             t = aThreads[i]
-            print('Running getScore() %i times on instance #%i' % (callLimit,i))
+            print('Running getScoreProgress() %i times on instance #%i' % (reqNum,i))
             t.start()
 
         # Wait for all threads to complete
@@ -124,7 +124,7 @@ class kothAdmin(kothClient.kothClient):
         except ImportError:
             print('ascii_graph module is needed for this function. (pip install ascii_graph)')
 
-        score = (row[1::3] for row in list(self.getScore(top)))
+        score = (row[1::3] for row in list(self.getScore(top,None)))
         graph = Pyasciigraph()
         return '\n'.join(graph.graph('', score))
 

@@ -58,7 +58,7 @@ SELECT addAuthor('Stephane Sigmen', 'sigmens');
 SELECT addAuthor('Philippe Godbout', 'psyker156');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
-SELECT addNews('Welcome to Hackfest CTF 2014', NOW()::timestamp);
+SELECT addNews('Welcome to Hackfest CTF 2014 !', NOW()::timestamp);
 
 INSERT INTO settings(gameStartTs) VALUES('2013-11-07 10:00'::timestamp);
 

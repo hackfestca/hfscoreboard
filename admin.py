@@ -127,7 +127,16 @@ parser_graph.add_argument('-t', '--top', action='store', dest='top', default=con
                                 help='Use to specify number of rows to display. Default is 30.')
 parser_stats = subparsers.add_parser('stats', help='Display game stats.')
 parser_bench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
+parser_bench.add_argument('-n', action='store', dest='reqNum', default=100, \
+                                type=int, metavar='NB_OF_REQ', \
+                                help='Use to specify number of requests. Default is 100.')
 parser_conbench = subparsers.add_parser('conbench', help='Benchmark some db stored procedure using multiple connections.')
+parser_conbench.add_argument('-n', action='store', dest='reqNum', default=50, \
+                                type=int, metavar='NB_OF_REQ', \
+                                help='Use to specify number of requests. Default is 100.')
+parser_conbench.add_argument('-c', action='store', dest='reqCon', default=30, \
+                                type=int, metavar='CONCURRENCY', \
+                                help='Use to specify number of multiple requests to make. Default is 30.')
 parser_matrix = subparsers.add_parser('matrix', help='Display the progress matrix.')
 parser_matrix.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
@@ -247,10 +256,10 @@ try:
         print(c.getFormatGameStats())
     elif args.action == 'bench':
         print("Benchmarking database")
-        c.benchmarkDB()
+        c.benchmarkDB(args.reqNum)
     elif args.action == 'conbench':
         print("Benchmarking database connections")
-        c.benchmarkDBCon()
+        c.benchmarkDBCon(args.reqNum,args.reqCon)
     elif args.action == 'matrix':
         print("Displaying progression matrix")
         print(c.getFormatScoreProgress())
@@ -270,6 +279,8 @@ except postgresql.exceptions.UndefinedFunctionError:
     print('[-] The specified function does not exist. Please contact an admin')
 except postgresql.exceptions.DateTimeFormatError:
     print('[-] Date&Time format error')
+except postgresql.exceptions.ClientCannotConnectError:
+    print('[-] Could not connect to server')
 except postgresql.message.Message as m:
     print(m)
 except Exception as e:
