@@ -35,14 +35,15 @@ SELECT addHost('172.28.72.121', 'CentOS 6 x32', 'VOIP Challenges by Martin L. (v
 SELECT addHost('172.28.72.130', 'Debian 7 x32', 'Mostly BOF challenges by P-Y. (expl02.ctf.hf)');
 
 SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
-SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs, ..., ...');
-SELECT addCategory('for', 'Forensics', 'Ubuntu, Windows 2012 and Virus Analysis');
-SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. Chroot escape & abuse');
+SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
+SELECT addCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
+SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
 SELECT addCategory('prog', 'Programming', 'Programming challenges');
 SELECT addCategory('data', 'Data Mining', 'Data mining challenges');
-SELECT addCategory('misc', 'Miscellaneous', 'penis related && ascii port && firewall rule bypass');
-SELECT addCategory('tri', 'Trivia', 'Chuck Norris stuff');
-SELECT addCategory('net', 'Networking', 'VOIP Challenges');
+SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
+SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
+SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
+SELECT addCategory('rand', 'Random Shit', 'Processor analysis');
 
 SELECT addAuthor('Martin Dube', 'mdube');
 SELECT addAuthor('Jessy Campos', '_eko');
