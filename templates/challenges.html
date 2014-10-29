@@ -4,6 +4,7 @@
 {% block content %}
 
 {% for category in cat %}
+{% if category[5] %}
 <div class="main-row">
   <div class="jumbotron">
     <div class="container">
@@ -62,6 +63,7 @@
     </div><!-- container -->
   </div><!-- jombo -->
 </div><!-- row -->
+{% end %}
 {% end %}
 
 {% end %}
