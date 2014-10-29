@@ -38,7 +38,7 @@ SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
 SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
 SELECT addCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
 SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
-SELECT addCategory('prog', 'Programming', 'Programming challenges');
+SELECT addCategory('prog', 'Programming', 'Programming challenges, All the challenges search the answer in the "result" parameter, in the POST request.');
 SELECT addCategory('data', 'Data Mining', 'Data mining challenges');
 SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
 SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
