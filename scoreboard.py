@@ -200,7 +200,6 @@ class ChallengesHandler(BaseHandler):
     def get(self):
         try:
             categories = self.client.getCatProgressFromIp(self.request.remote_ip)
-            print(categories)
             challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
         except PLPGSQLRaiseError as e:
             message = e.message
