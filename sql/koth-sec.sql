@@ -12,16 +12,14 @@ SET search_path TO scoreboard;
 --REVOKE ALL PRIVILEGES ON SCHEMA pgcrypto FROM PUBLIC;   -- 
 --REVOKE ALL PRIVILEGES ON SCHEMA public FROM PUBLIC;     -- Why not...
 
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM PUBLIC;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM PUBLIC;
 --REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM PUBLIC;
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfadmins;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfadmins;
 --REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM hfadmins;
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfplayers;
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM hfplayers;
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM player;
-REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM player;
 REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfplayers;
---REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM player;
+--REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM hfplayers;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfflagupdater;
+REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfscore;
 
 --REVOKE CREATE ON SCHEMA public FROM PUBLIC;             -- From internet
 --REVOKE ALL PRIVILEGES ON SCHEMA scoreboard FROM PUBLIC;    -- 
@@ -44,14 +42,19 @@ GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addNews(varchar,varchar) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.modNews(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getSubmitHistory(integer,integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.setSetting(text,text,varchar) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getSettings() TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.startGame() TO hfadmins;
 
 -- Grants for scoreboard
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
---GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.submitFlagFromIp(varchar,flag.value%TYPE) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfscore;
 
 -- Grants for flagUpdater
 GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;

@@ -69,6 +69,7 @@ CREATE TABLE category(
     name varchar(10) not null unique,
     displayName varchar(20) not null unique,
     description text,
+    hidden boolean not null default false,
     ts timestamp not null default current_timestamp,
     constraint valid_host_name check (name != ''),
     constraint valid_host_dname check (displayName != '')
@@ -82,7 +83,7 @@ CREATE TABLE flagAuthor(
     name varchar(50) not null unique,
     nick varchar(20) not null unique,
     ts timestamp not null default current_timestamp,
-    constraint u_flagAuthor_constraint UNIQUE (name,nick)
+    constraint u_flagAuthor_constraint unique (name,nick)
     );
 
 /* 
@@ -132,7 +133,7 @@ CREATE TABLE team_flag(
     flagId integer not null references flag(id) on delete cascade,
     playerIp inet not null,
     ts timestamp not null default current_timestamp,
-    constraint u_flag_constraint UNIQUE (teamId,flagId)
+    constraint u_flag_constraint unique (teamId,flagId)
     );
 
 /*
@@ -144,7 +145,7 @@ CREATE TABLE team_kingFlag(
     kingFlagId integer not null references kingFlag(id) on delete cascade,
     playerIp inet not null,
     ts timestamp not null default current_timestamp,
-    constraint u_kingFlag_constraint UNIQUE (teamId,kingFlagId)
+    constraint u_kingFlag_constraint unique (teamId,kingFlagId)
     );
 
 /*
@@ -152,12 +153,15 @@ CREATE TABLE team_kingFlag(
 */
 CREATE TABLE news(
     id serial primary key,
-    title varchar(100) not null,
+    title varchar(150) not null unique,
     displayTs timestamp not null default current_timestamp,
     ts timestamp not null default current_timestamp,
     constraint valid_title_name check (title != '')
     );
 
+/*
+    This table contains all relevant submit attempts
+*/
 CREATE TABLE submit_history(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
@@ -165,14 +169,19 @@ CREATE TABLE submit_history(
     value varchar(64) not null,
     ts timestamp not null default current_timestamp
     );
-
+/*
+    This table contains all flag changes (not implemented yet)
+*/
 CREATE TABLE status_history(
     id serial primary key,
     flagId integer not null references flag(id) on delete cascade, 
     status integer not null references status(id) on delete cascade,
     ts timestamp not null default current_timestamp
     );
- 
+
+/*
+    This table contains scoreboard settings
+*/ 
 CREATE TABLE settings(
     id serial primary key,
     gameStartTs timestamp not null,

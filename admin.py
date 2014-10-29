@@ -67,11 +67,14 @@ subparsers = parser.add_subparsers(dest='action')
 parser_team = subparsers.add_parser('team', help='Manage teams.')
 parser_team_action = parser_team.add_argument_group("Action")
 parser_team_option = parser_team.add_argument_group("Option")
-parser_team_action.add_argument('-a', '--add', action='store', dest='add', default='', type=str, metavar='TEAM_INFO', \
-                                help='Add a team. Format: NAME|SUBNET. Example: --add \'TeamName|172.29.23.0/24\'.')
-parser_team_action.add_argument('-m', '--mod', action='store', dest='mod', default='', type=str, metavar='TEAM_INFO', \
+parser_team_action.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NAME|SUBNET\'', \
+                                help='Add a team. Example: --add \'TeamName|172.29.23.0/24\'.')
+parser_team_action.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'NAME|SUBNET\'', \
                                  help='Modify a team. Use with --id to identity which team to update. \
-                                       Format: NAME|SUBNET. Example: --mod \'TeamName|172.29.24.0/24\' --id 4')
+                                       Example: --mod \'TeamName|172.29.24.0/24\' --id 4')
+parser_team_action.add_argument('--reward', action='store', dest='reward', default='', type=str, metavar='\'DESC|PTS\'', \
+                                 help='Reward a team. Use with --id to identity which team to reward. \
+                                       Example: --reward \'For having raised a sqli in the scoreboard|300\' --id 4')
 parser_team_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List teams.')
 parser_team_option.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
@@ -83,24 +86,25 @@ parser_team_option.add_argument('-i', '--id', action='store', dest='id', default
 parser_news = subparsers.add_parser('news', help='Manage news.')
 parser_news_action = parser_news.add_argument_group("action")
 parser_news_option = parser_news.add_argument_group("option")
-parser_news_action.add_argument('-a', '--add', action='store', dest='add', default='', type=str, metavar='NEWS', \
+parser_news_action.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NEWS\'', \
                                 help='Add a news. Example: --add \'Team A is dominating!\'.')
-parser_news_action.add_argument('-m', '--mod', action='store', dest='mod', default='', type=str, 
+parser_news_action.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'NEWS\'', \
                                 help='Modify a news. Use with --id to identify which news to update. \
                                       Example: --mod \'This is another news\' --id 2.')
 parser_news_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List news.')
-parser_news_option.add_argument('-t', '--ts', action='store', dest='timestamp', metavar='TS', default='', type=str, \
+parser_news_option.add_argument('-t', '--ts', action='store', dest='timestamp', metavar='\'TS\'', default='', type=str, \
                                 help='For --add only. Used to specify when to display the news. \
                                       Date and time must be specified. \
                                       Example: --add \'Challenge D is unlocked!\' --ts \'2014-11-08 23:00\'.')
 parser_news_option.add_argument('-i', '--id', action='store', dest='id', default=0, type=int, 
-                                help='For --mod only. Used to identify which news to update. \
-                                      Example: --mod \'Challenge D is unlocked!\' --id 1.')
+                                help='For --mod only. Used to identify which news to update.')
 
 parser_settings = subparsers.add_parser('settings', help='Manage game settings.')
-parser_settings.add_argument('-s', '--gameStart', action='store', dest='gameStart', default='', type=str, \
-                                 metavar='TS', 
-                                help='Set a game start date/time. Example: --gameStart \'2014-11-08 10:00\'')
+parser_settings.add_argument('--startAt', action='store', dest='gameStart', default='', type=str, \
+                                 metavar='TIMESTAMP', 
+                                help='Set a game start date/time. Example: --startAt \'2014-11-08 10:00\'')
+parser_settings.add_argument('--startNow', action='store_true', dest='startNow', default=False, \
+                                help='Start the game now!')
 parser_settings.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List settings.')
 
 parser_score = subparsers.add_parser('score', help='Print score table.')
@@ -183,6 +187,14 @@ try:
                 print('Return Code: '+str(rc))
             except ValueError:
                 print('[-] Invalid input. Please RTFM')
+        elif args.reward:
+            try:
+                desc,pts = args.reward.split('|',2)
+                print('Rewarding team with desc='+desc+', pts='+pts+' where id='+str(args.id))
+                rc = c.rewardTeam(args.id,desc,int(pts))
+                print('Return Code: '+str(rc))
+            except ValueError:
+                print('[-] Invalid input. Please RTFM')
         elif args.list:
             print('Displaying teams informations (top '+str(args.top)+')')
             print(c.getTeamList(args.top))
@@ -197,19 +209,29 @@ try:
                 rc = c.addNews(args.add,None)
                 print('Return Code: '+str(rc))
         elif args.mod:
-            pass
+            try:
+                title = args.mod
+                print('Modifying news with title='+title+' where id='+str(args.id))
+                rc = c.modNews(args.id,title,args.timestamp)
+                print('Return Code: '+str(rc))
+            except ValueError:
+                print('[-] Invalid input. Please RTFM')
         elif args.list:
             print("Displaying news")
             print(c.getFormatNews())
         else: 
+            parser.print_help()
             print('No subaction choosen')
     elif args.action == 'settings':
-        if args.gameStart:
+        if args.startNow:
+            c.startGame()
+        elif args.gameStart:
             c.setSetting('gameStartTs',args.gameStart,'timestamp')
         elif args.list:
             print("Displaying settings")
             print(c.getFormatSettings())
         else: 
+            parser.print_help()
             print('No subaction choosen')
     elif args.action == 'score':
         print('Displaying score (top '+str(args.top)+')')

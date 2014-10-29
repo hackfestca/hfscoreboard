@@ -141,7 +141,7 @@ RETURNS integer AS $$
             raise exception 'Only IPv4 addresses are supported';
         end if;
 
-        -- Insert a new row
+        -- Update
         UPDATE team 
         SET name=_name,net=_inet
         WHERE id=_id;
@@ -218,6 +218,47 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: rewardTeam(teamId,desc,pts)
+*/
+CREATE OR REPLACE FUNCTION rewardTeam(_teamId team.id%TYPE,
+                                   _desc news.title%TYPE,
+                                   _pts flag.pts%TYPE) 
+RETURNS integer AS $$
+    DECLARE
+        _newsMsg news.title%TYPE;
+        _teamNet team.net%TYPE;
+        _teamName team.name%TYPE;
+        _flagId flag.id%TYPE;
+        _flagName flag.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'rewardTeam(%,%,%)',$1,$2,$3;
+
+        SELECT name,net INTO _teamName,_teamNet FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find team "%"',_teamId;
+        end if;
+
+        -- Generate flag
+        _flagName := 'Bug Bounty'||current_timestamp::varchar;
+        PERFORM addRandomFlag(_flagName, _pts, 'scoreboard.hf', 'bug', 
+                 1::smallint, Null, 'HF Crew', False, _desc);
+
+        -- Assign flag
+        SELECT id INTO _flagId FROM flag WHERE name = _flagName LIMIT 1;
+        raise notice 'team net: %s',_teamNet+1;
+        INSERT INTO team_flag(teamId,flagId,playerIp)
+               VALUES(_teamId, _flagId,_teamNet+1);
+
+        -- Create news
+        _newsMsg := 'Thanks to '||_teamName||' for raising an issue to admins ('||_pts||' pts)';
+        PERFORM addNews(_newsMsg,current_timestamp::timestamp);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: addStatus(name,description)
 */
 CREATE OR REPLACE FUNCTION addStatus(_code status.code%TYPE,
@@ -242,16 +283,17 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION addCategory(_name category.name%TYPE, 
                                        _displayName category.displayName%TYPE,
-                                       _description text default ''
+                                       _description text,
+                                       _hidden category.hidden%TYPE default false
                                       ) 
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'addCategory(%,%,%)',$1,$2,$3;
+        raise notice 'addCategory(%,%,%,%)',$1,$2,$3,$4;
 
         -- Insert a new row
-        INSERT INTO category(name,displayName,description)
-                VALUES(_name,_displayName,_description);
+        INSERT INTO category(name,displayName,description,hidden)
+                VALUES(_name,_displayName,_description,_hidden);
 
         RETURN 0;
     END;
@@ -261,7 +303,7 @@ $$ LANGUAGE plpgsql;
     Stored Proc: addNews(title,displayTs)
 */
 CREATE OR REPLACE FUNCTION addNews(_title news.title%TYPE, 
-                                   _displayTs news.displayTs%TYPE default NOW()
+                                   _displayTs news.displayTs%TYPE default current_timestamp
                                    ) 
 RETURNS integer AS $$
     BEGIN
@@ -280,7 +322,7 @@ $$ LANGUAGE plpgsql;
     Stored Proc: addNews(title,displayTs::varchar)
 */
 CREATE OR REPLACE FUNCTION addNews(_title news.title%TYPE, 
-                                   _displayTs varchar default NOW()::varchar
+                                   _displayTs varchar default current_timestamp::varchar
                                    ) 
 RETURNS integer AS $$
     BEGIN
@@ -289,12 +331,50 @@ RETURNS integer AS $$
 
         -- Some validations
         if _displayTs is null then
-            _displayTs := NOW();        -- Kinda redundant...
+            _displayTs := current_timestamp;        -- Kinda redundant...
         end if;
 
         -- Insert a new row
         INSERT INTO news(title,displayTs)
                 VALUES(_title,_displayTs::timestamp);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: modNews(id,title,displayTs::varchar)
+*/
+CREATE OR REPLACE FUNCTION modNews(_id news.id%TYPE,
+                                   _title news.title%TYPE, 
+                                   _displayTs varchar default current_timestamp::varchar
+                                   ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'modNews(%,%,%)',$1,$2,$3;
+
+        -- Some validations
+        if _id is null or _id < 1 then
+            raise exception 'ID cannot be null or lower than 1';
+        end if;
+
+        if _title is null or _title = '' then
+            raise exception 'Title cannot be null';
+        end if;
+
+        if _displayTs is null then
+            _displayTs := current_timestamp;        -- Kinda redundant...
+        end if;
+
+        -- Update
+        UPDATE news 
+        SET title=_title,displayTs=_displayTs
+        WHERE id=_id;
+        IF not found THEN
+            raise exception 'Could not find news with id %i', _id;
+            RETURN 1;
+        END IF;
 
         RETURN 0;
     END;
@@ -781,7 +861,8 @@ RETURNS TABLE (
                 displayName category.displayName%TYPE,
                 description category.description%TYPE,
                 pts flag.pts%TYPE,
-                total flag.pts%TYPE
+                total flag.pts%TYPE,
+                hidden category.hidden%TYPE
               ) AS $$
     DECLARE
         _teamId team.id%TYPE;
@@ -811,7 +892,8 @@ RETURNS TABLE (
                             c.displayName AS displayName,
                             c.description AS description,
                             coalesce(tf3.sum::integer,0) AS pts,
-                            coalesce(tft3.sum::integer,0) AS total
+                            coalesce(tft3.sum::integer,0) AS total,
+                            c.hidden as hidden
                      FROM category AS c
                      LEFT OUTER JOIN (
                         SELECT tf2.category,
@@ -840,6 +922,7 @@ RETURNS TABLE (
                          WHERE f2.isKing = False
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
+                     WHERE c.hidden = False
                      ORDER BY c.name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -922,7 +1005,7 @@ RETURNS TABLE (
                         FROM flagAuthor AS a
                         ) AS a ON f.author = a.id
                      LEFT OUTER JOIN (
-                        SELECT c.id, c.name
+                        SELECT c.id, c.name, c.hidden
                         FROM category AS c
                         ) AS c ON f.category = c.id
                      LEFT OUTER JOIN (
@@ -934,6 +1017,7 @@ RETURNS TABLE (
                     WHERE (f.displayInterval is null 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
                           and f.isKing = False
+                          and c.hidden = False
                     ORDER BY f.name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1086,7 +1170,7 @@ RETURNS TABLE (
                             news.displayTs,
                             news.title
                      FROM news
-                     WHERE news.displayTs < NOW()
+                     WHERE news.displayTs < current_timestamp
                      ORDER BY news.id DESC;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1507,8 +1591,8 @@ RETURNS TABLE (
 
         -- if min = max, throw an exception
         if _minTs is null or _minTs = _maxTs then
-            _minTs = NOW()::timestamp - '1 minute'::interval;
-            _maxTs = NOW()::timestamp;           
+            _minTs = current_timestamp - '1 minute'::interval;
+            _maxTs = current_timestamp;           
         end if;
 
         -- Generate a serie of all checkpoint
@@ -1589,6 +1673,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: setSetting()
 */
+CREATE OR REPLACE FUNCTION startGame() 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'startGame()';
+
+        UPDATE settings SET gameStartTs = current_timestamp;
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: setSetting()
+*/
 CREATE OR REPLACE FUNCTION setSetting(_attr text, _value text, _type varchar(10) default 'text') 
 RETURNS integer AS $$
     BEGIN
@@ -1651,7 +1749,7 @@ $$ LANGUAGE plpgsql;
 /*
     Stored Proc: insertRandomData()
 */
-CREATE OR REPLACE FUNCTION insertRandomData() 
+CREATE OR REPLACE FUNCTION insertRandomDataDISABLED() 
 RETURNS integer AS $$
     DECLARE
         TEAM_COUNT              integer := 50;

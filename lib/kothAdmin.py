@@ -94,6 +94,12 @@ class kothAdmin(kothClient.kothClient):
         else:
             return self._oDB.proc('listTeams(integer)')(top)
 
+    def rewardTeam(self,id,name,pts):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('rewardTeam(integer,varchar,integer)'),id,name,pts)
+        else:
+            return self._oDB.proc('rewardTeam(integer,varchar,integer)')(id,name,pts)
+
     def getTeamList(self,top=config.KOTH_DEFAULT_TOP_VALUE):
         title = ['ID','Name','Net','FlagPts','FlagInstPts','Total'] 
         score = self.listTeams(top)
@@ -164,6 +170,12 @@ class kothAdmin(kothClient.kothClient):
             s += ',[\'' + line[0].strftime("%H:%M") + '\',' + ','.join(line[1:]) + ']' + "\n"
         s += "]);"
         return s
+
+    def startGame(self):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('startGame()'))
+        else:
+            return self._oDB.proc('startGame()')()
 
     def setSetting(self,attr,value,type):
         if self._bDebug:

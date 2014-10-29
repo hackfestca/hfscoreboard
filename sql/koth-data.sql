@@ -44,6 +44,7 @@ SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
 SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
 SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
 SELECT addCategory('rand', 'Random Shit', 'Processor analysis');
+SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
 
 SELECT addAuthor('Martin Dube', 'mdube');
 SELECT addAuthor('Jessy Campos', '_eko');
