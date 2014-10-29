@@ -77,7 +77,7 @@ SELECT addTeam('Team Eko7', '1.1.1.7/32');
 SELECT addTeam('Team Eko8', '1.1.1.8/32');
 
 -- Tests
-SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 3::smallint, '172.28.72.4', 'misc', 
+SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
                 1::smallint, Null, Null, True, '', '',
                 'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 
                 'wget http://dathost/test');
