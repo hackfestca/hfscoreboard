@@ -15,7 +15,7 @@ SELECT addStatus(1::smallint,'Enabled','The flag is functionnal');
 SELECT addStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
 SELECT addStatus(3::smallint,'Disabled','The flag is removed by admins');
 
-SELECT addHost('172.28.71.10', 'OpenBSD5.5 x64', 'Scoreboard (scoreboard.hf)');
+SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
 SELECT addHost('172.28.72.4', 'Debian 7 x32', 'Test box for scoreboard development (misc01.ctf.hf)');
 SELECT addHost('172.28.72.5', 'Debian 7 x64', 'Chroot Challenges by _eko (chroot02.ctf.hf)');
 SELECT addHost('172.28.72.6', 'Debian 7 x64', 'Misc Challenges by Mart (misc02.ctf.hf)');
@@ -33,14 +33,15 @@ SELECT addHost('172.28.72.121', 'CentOS 6 x32', 'VOIP Challenges by Martin L. (v
 SELECT addHost('172.28.72.130', 'Debian 7 x32', 'Mostly BOF challenges by P-Y. (expl02.ctf.hf)');
 
 SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
-SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs, ..., ...');
-SELECT addCategory('for', 'Forensics', 'Ubuntu, Windows 2012 and Virus Analysis');
-SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. Chroot escape & abuse');
+SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
+SELECT addCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
+SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
 SELECT addCategory('prog', 'Programming', 'Programming challenges');
 SELECT addCategory('data', 'Data Mining', 'Data mining challenges');
-SELECT addCategory('misc', 'Miscellaneous', 'penis related && ascii port && firewall rule bypass');
-SELECT addCategory('tri', 'Trivia', 'Chuck Norris stuff');
-SELECT addCategory('net', 'Networking', 'VOIP Challenges');
+SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
+SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
+SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
+SELECT addCategory('rand', 'Random Shit', 'Processor analysis');
 
 SELECT addAuthor('Martin Dube', 'mdube');
 SELECT addAuthor('Jessy Campos', '_eko');
@@ -51,6 +52,7 @@ SELECT addAuthor('Francois Lajeunesse-Robert', 'FLR');
 SELECT addAuthor('Martin Lemay', 'Do.Z10');
 SELECT addAuthor('Vincent & Patrick', 'vn & pat');
 SELECT addAuthor('Stephane Sigmen', 'sigmens');
+SELECT addAuthor('Philippe Godbout', 'psyker156');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
 SELECT addNews('Welcome to Hackfest CTF 2014', NOW()::timestamp);
