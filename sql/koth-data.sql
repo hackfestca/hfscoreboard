@@ -15,7 +15,7 @@ SELECT addStatus(1::smallint,'Enabled','The flag is functionnal');
 SELECT addStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
 SELECT addStatus(3::smallint,'Disabled','The flag is removed by admins');
 
-SELECT addHost('172.28.71.10', 'OpenBSD5.5 x64', 'Scoreboard (scoreboard.hf)');
+SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
 SELECT addHost('172.28.72.4', 'Debian 7 x32', 'Test box for scoreboard development (misc01.ctf.hf)');
 SELECT addHost('172.28.72.5', 'Debian 7 x64', 'Chroot Challenges by _eko (chroot02.ctf.hf)');
 SELECT addHost('172.28.72.6', 'Debian 7 x64', 'Misc Challenges by Mart (misc02.ctf.hf)');
