@@ -112,7 +112,6 @@ class rpcHandler(SimpleXMLRPCRequestHandler):
     def submitFlag(self,clientIP,flagValue):
         ret = ''
         self._dbConnect()
-        ret = self._dbExec(self._oC.logSubmit,clientIP,flagValue)
         ret = self._dbExec(self._oC.submitFlagFromIp,clientIP,flagValue)
         self._dbConnect()
         return ret

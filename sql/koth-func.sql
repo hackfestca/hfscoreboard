@@ -614,12 +614,12 @@ RETURNS integer AS $$
         _teamId team.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'logSubmit(%,%,%)',$1,$2,$3;
+        raise notice 'logSubmit(%,%)',$1,$2;
 
         _playerIp := _playerIpStr::inet;
 
         -- Get team from userIp 
-        SELECT id FROM team WHERE _playerIp << net ORDER BY id DESC LIMIT 1;
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
