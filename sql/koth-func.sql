@@ -646,8 +646,8 @@ RETURNS integer AS $$
         _teamAttempts smallint;
         _playerIp inet;
         _settings settings%ROWTYPE;
-        ANTI_BF_INT interval := '10 second';
-        ANTI_BF_LIMIT integer := 4;
+        ANTI_BF_INT interval := '20 second';
+        ANTI_BF_LIMIT integer := 20;
         STATUS_CODE_OK integer := 1;
         FLAG_MAX_LENGTH integer := 64;
     BEGIN
