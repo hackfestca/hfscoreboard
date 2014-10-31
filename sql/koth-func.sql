@@ -691,7 +691,7 @@ RETURNS integer AS $$
                 AND ts + ANTI_BF_INT > current_timestamp
             ) as hist;
         if _rowCount > ANTI_BF_LIMIT then
-            raise exception 'Anti-Bruteforce: Limit reached! (% attempts every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text;
+            raise exception 'Anti-Bruteforce: Limit reached! (% attempts per team every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text;
         end if;
 
         -- Search for the flag in flag and kingFlag tables
