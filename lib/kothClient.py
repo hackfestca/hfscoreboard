@@ -121,7 +121,7 @@ class kothClient():
             return self._oDB.proc('getCatProgress()')()
 
     def getFormatCatProgress(self):
-        title = ['CatId','Category','DisplayName', 'Description','Score','Total'] 
+        title = ['CatId','Category','DisplayName', 'Description','Score','Total','IsHidden'] 
         score = self.getCatProgress()
         x = PrettyTable(title)
         x.align['Category'] = 'l'
