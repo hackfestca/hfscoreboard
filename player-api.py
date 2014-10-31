@@ -72,5 +72,7 @@ if args.start:
     server = SimpleXMLRPCServer((HOST,PORT),requestHandler=kothRPC.rpcHandler,allow_none=True)
     try:
         server.serve_forever()
+    except Exception as e:
+        print(e)
     except KeyboardInterrupt:
         exit(0)
