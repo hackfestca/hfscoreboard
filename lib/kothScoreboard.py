@@ -48,8 +48,10 @@ class kothScoreboard(kothClient.kothClient):
 
     def submitFlagFromIp(self,playerIp,flagValue):
         if self._bDebug:
+            self._benchmark(self._oDB.proc('logSubmit(varchar,varchar)'),playerIp,flagValue)
             return self._benchmark(self._oDB.proc('submitFlagFromIp(varchar,varchar)'),playerIp,flagValue)
         else:
+            self._oDB.proc('logSubmit(varchar,varchar)')(playerIp,flagValue)
             return self._oDB.proc('submitFlagFromIp(varchar,varchar)')(playerIp,flagValue)
 
     def getCatProgressFromIp(self,playerIp):

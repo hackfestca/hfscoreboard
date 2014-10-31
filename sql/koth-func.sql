@@ -604,6 +604,35 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 /* 
+    Stored Proc: logSubmit(playerip,flagValue)
+*/ 
+CREATE OR REPLACE FUNCTION logSubmit( _playerIpStr varchar(20),
+                                      _flagValue flag.value%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'logSubmit(%,%,%)',$1,$2,$3;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get team from userIp 
+        SELECT id FROM team WHERE _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Save attempt in submit_history table
+        INSERT INTO submit_history(teamId,playerIp,value)
+                VALUES(_teamId,_playerIp,_flagValue);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/* 
     Stored Proc: submitFlagFromIp(userIp,flagValue)
 */ 
 CREATE OR REPLACE FUNCTION submitFlagFromIp( _playerIpStr varchar(20), 
@@ -636,9 +665,8 @@ RETURNS integer AS $$
         end if;
 
         -- Get team from userIp 
-        SELECT id,net INTO _teamRec FROM team where _playerIp << net;
-        GET DIAGNOSTICS _rowCount = ROW_COUNT;
-        if _rowCount <> 1 then
+        SELECT id,net INTO _teamRec FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
 
@@ -646,6 +674,12 @@ RETURNS integer AS $$
         if length(_flagValue) > FLAG_MAX_LENGTH then
             raise exception 'Flag too long';
         end if;
+
+        --Remove because it was rollbacked for invalid flags.
+        -- Save attempt in submit_history table
+        --PERFORM logSubmit(_teamRec.id,_playerIp,_flagValue);
+        --INSERT INTO submit_history(teamId,playerIp,value)
+        --        VALUES(_teamRec.id,_playerIp,_flagValue);
 
         -- Anti-bruteforce
         SELECT count(*)
@@ -659,10 +693,6 @@ RETURNS integer AS $$
         if _rowCount > ANTI_BF_LIMIT then
             raise exception 'Anti-Bruteforce: Limit reached! (% attempts every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text;
         end if;
-
-        -- Save attempt in submit_history table
-        INSERT INTO submit_history(teamId,playerIp,value)
-                VALUES(_teamRec.id,_playerIp,_flagValue);
 
         -- Search for the flag in flag and kingFlag tables
         -- Flag statusCode must be equal 1

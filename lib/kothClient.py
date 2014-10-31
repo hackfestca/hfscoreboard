@@ -92,12 +92,6 @@ class kothClient():
     def setDebug(self,debug):
         self._bDebug = debug
         
-    def submitFlag(self,flagValue):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('submitFlag(varchar)'),flagValue)
-        else:
-            return self._oDB.proc('submitFlag(varchar)')(flagValue)
-
     def getScore(self,top=config.KOTH_DEFAULT_TOP_VALUE,ts=None,cat=None):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('getScore(integer,varchar,varchar)'),top,ts,cat)

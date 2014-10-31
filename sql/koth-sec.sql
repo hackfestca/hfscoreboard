@@ -41,6 +41,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.rewardTeam(integer,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addNews(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modNews(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfadmins;
@@ -52,6 +53,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.startGame() TO hfadmins;
 -- Grants for scoreboard
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.submitFlagFromIp(varchar,flag.value%TYPE) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfscore;
@@ -63,6 +65,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromName(varchar) TO hfflagupda
 GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO hfflagupdater;
 
 -- Grants for players only
+GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.submitFlagFromIp(varchar,flag.value%TYPE) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers;
