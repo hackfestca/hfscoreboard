@@ -101,7 +101,7 @@ try:
         print('Displaying category progression')
         print(c.getCatProgress())
     elif args.flagProgress:
-        print('Displaying category progression')
+        print('Displaying flag progression')
         print(c.getFlagProgress())
     elif args.news:
         print("Displaying news")

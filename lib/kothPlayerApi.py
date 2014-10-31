@@ -42,7 +42,7 @@ class kothPlayerApi(kothScoreboard.kothScoreboard):
         super().__init__()
     
     def getFormatCatProgressFromIp(self,playerIp):
-        title = ['CatId','Category','DisplayName', 'Description','Score','Total'] 
+        title = ['CatId','Category','DisplayName', 'Description','Score','Total','Hidden'] 
         score = self.getCatProgressFromIp(playerIp)
         x = PrettyTable(title)
         x.align['Category'] = 'l'
