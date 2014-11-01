@@ -1,30 +1,31 @@
 Flag Name,Flag Value,Flag PTS,Flag Location,Category (see tab #2),displayInterval,Author,isKing,Description,UpdateCmd,How to
-for01,1fZwX2bHc53ByXP4ZoNW5FAyespongebob,300,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,"One of my spy manage to copy some file from Tessier-Ashpool admin console.<br>
+for01,1fZwX2bHc53ByXP4ZoNW5FAyespongebob,300,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,"One of my spy managed to copy some file from Tessier-Ashpool admin console.<br>
 Find all Password flag-{pwd1+pwd2+pwd3+pwd4+pwd5+user hfctf password}
 <br><a href=""https://scoreboard.hf/public/for01.tar.gz"">for01</a>",Null,remmina +NetworkManager + firefox password ache  + gnome-keyring +xen-tool log + Shadows
-for02,TBD7,100,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,"One of my spy do some war driving around Tessier-Ashpool buildind. Try to find valuable things<br>
+for02,TBD7,100,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,"One of my spy did some war driving around Tessier-Ashpool building. Try to find valuable things<br>
 <a href=""https://scoreboard.hf/public/for02.tar.gz"">for02</a>",Null,
 for03,TBD8,100,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,TBD,Null,
-for04,mysuperadminrdppassword,300,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"Your mission is in the pcap !!!<br>
-<a href=""https://scoreboard.hf/public/rdppcap.zip"">for04</a>",Null,
 miscon01,ec3f82fe38c3a3f6280a725ba34f4bcf,400,scoreboard.hf,misc,Null,Cedrick Chaput,FALSE,Come near HF crew There is a Ubuntu 14.04 to bypass the lockscreen,Null,https://bugs.launchpad.net/ubuntu/+source/unity/+bug/1313885 compiz --replace
 miscon02,788e258e4b36fb00f00cd296813f55b0,200,scoreboard.hf,misc,Null,Cedrick Chaput,FALSE,"We think one of Tessier-Ashpool family member is here. Try to grab is wireless credential.<br>
 flag-{username+password}",Null,use hostapd-wpe to create a ssid securecorp 
-miscon03,2b98451ee84065ec4b9afa7a854eb246,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find Mike AD user description ,Null,find encrypted password on share data and 
-miscon04,6e7bf8dcfc0ad7875eea7e3876a59b42,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find Local Windows Administrator Password :)  ,Null,GPP  https://labs.portcullis.co.uk/blog/are-you-considering-using-microsoft-group-policy-preferences-think-again/
-miscon05,58b0611d3405e1a37bf2efc48c234945,200,172.28.72.103,misc,Null,Cedrick Chaput,FALSE,GIT server,Null,in an other git branch you'll find a leaking document 
-miscon06,KOTH-GITCLIENT,100,172.28.72.100,misc,Null,Cedrick Chaput,TRUE,Git client backdoor script ,echo $FLAG > ,add a backdoor to the ocaml code
-virus01,TBD9,100,scoreboard.hf,for,Null,Franck Desert,FALSE,TBD,Null,
-virus02,TBD10,200,scoreboard.hf,for,Null,Franck Desert,FALSE,TBD,Null,
-virus03,TBD11,300,scoreboard.hf,for,Null,Franck Desert,FALSE,TBD,Null,
-virus04,TBD12,400,scoreboard.hf,for,Null,Franck Desert,FALSE,TBD,Null,
-virus05,TBD13,500,scoreboard.hf,for,Null,Franck Desert,FALSE,TBD,Null,
+miscon03,2b98451ee84065ec4b9afa7a854eb246,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 101<br>Find Mike AD user description \\winfeu.ctf.hf\data,Null,find encrypted password on share data and 
+miscon04,6e7bf8dcfc0ad7875eea7e3876a59b42,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 102<br>Find Local Windows Administrator Password :)  ,Null,GPP  https://labs.portcullis.co.uk/blog/are-you-considering-using-microsoft-group-policy-preferences-think-again/
+miscon05,e7118eac0ba2d1b6fa5e6621cdd22035,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 103<br>Access the the financial secret FiancialRecord.txt,Null,Se creer un compte avec l'utilisateur MIKe avec le département = FIN  (dynamique ACL) Le script est fournis avec des bug. une clé privé avec mot de passe est trouve
+miscon06,9eac5af3a9dc9039f954659dbd5b96f1,200,172.28.72.103,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 104<br>Access the ftp ,Null,Il faut trouver le mot de passe de de lintre dans le syslog et changer le ip du dns client1 pour acceder au ftp en anonymous 
+miscon07,ec02c59dee6faaca3189bace969c22d3,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 105<br>Find future Mysql database password ,Null,"récupérer une version antérieur du document NetworkSchema.odt click droit propriété, version antérieur "
+miscon08,58b0611d3405e1a37bf2efc48c234945,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,HOMEOSTATIE 106<br>GIT server,Null,in an other git branch you'll find a leaking document 
+miscon08,KOTH-GITCLIENT,100,172.28.72.100,misc,Null,Cedrick Chaput,TRUE,HOMEOSTATIE 107<br>Git client backdoor script ,echo $FLAG > ,add a backdoor to the ocaml code
+virus01,bfb48293f13278926e7b6e131a902e04,100,scoreboard.hf,virus,Null,Franck Desert,FALSE,Il etait 1 fois...,Null,
+virus02,3482aa59a335ece37882f78e65a56880,200,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 2 tours jumelles...,Null,
+virus03,66c7fe8ed058cca3b603c64be356da9b,200,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 3 mousquetaires...,Null,
+virus04,bf6092e03e8f8e25bd55ce04b35bfecc,400,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 4 fantastiques...,Null,
+virus05,da9467b040dd711d07b0f463a54e633b,500,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 5 doigts de la main...,Null,
 nose01,OIPL9CKSV2DH9X1SAQGQ,300,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf - Mister fantastic,Null,
 nose02,7G27Y966ACQO9MSUGICP,500,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf  - Pythia,Null,
 nose03,7AYV63FG19UCCD8ACBAO,300,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf - You have the right!,Null,
 nose04,KOTH-NOSEBLEEDING,100,172.28.72.110,web,Null,Francois Lajeunesse-Robert,TRUE,nosebleed.ctf.hf  - RCE,echo $FLAG > /opt/cs/frontend/config/flag.txt && chown root:csservice /opt/cs/frontend/config/flag.txt,
 misc01,yO82whKhkBxTzoP,100,scoreboard.hf,tri,Null,HF Crew,FALSE,A flag somewhere in the conference room,Null,In the 30 second animation
-tri01,TBD18,25,scoreboard.hf,tri,Null,HF Crew,FALSE,Wait for chuck to ask the question,Null,
+tri01,TBD18,100,scoreboard.hf,tri,Null,HF Crew,FALSE,Wait for chuck to ask the question,Null,
 re01,g762eccb925391e2da74c60e0e59747ccd90d872335ac27d55d9d9cfef2,100,scoreboard.hf,re,Null,Jessy Campos,FALSE,"Don't waste time reversing this. <a href=""https://scoreboard.hf/public/re01.tar.xz"">File</a>",Null,LD_PRELOAD
 re02,81184ec68eb875c1920b0fd94a936c76ea42fb5b,200,scoreboard.hf,re,Null,Jessy Campos,FALSE,This one is blackbox. ssh://user@re01.ctf.hf pass:user,Null,"chmod 111 so, use ptrace ?"
 re03,156c1179d7961911129e18cdd6e392249dbab57c,200,scoreboard.hf,re,Null,Jessy Campos,FALSE,"AntiDbg <a href=""https://scoreboard.hf/public/re03.tar.xz"">File</a>",Null,hardware breakpoint
@@ -60,12 +61,14 @@ voip01,zXZDkp67cOyg7rdtFGUY2WfAOvD5PKgD,100,172.28.72.121,net,Null,Martin Lemay,
 voip02,FWLd5n25hEUAC7blIRPcG7btxHeyjXvr,200,172.28.72.121,net,Null,Martin Lemay,FALSE,You are being watched... call 1-777-341-7531  if you dare !,Null,
 voip03,nw5FKvZf6PNJeVimZxMNyYUSqla7Ttic,300,172.28.72.121,net,Null,Martin Lemay,FALSE,CallerCalled back 1-663-423-7766,Null,
 voip04,lAaiI0hpcFHShVim53EsFHex6OXw7bmi,400,172.28.72.121,net,Null,Martin Lemay,FALSE,CRAZSHIP 1-800-777-5555  .... someone must know something !,Null,
-win01,TBD20,200,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-win02,TBD21,300,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-win03,TBD22,400,172.28.72.101,expl,Null,Stephane Sigmen,FALSE,TBD,Null,
-data01,TBD23,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
-data02,TBD24,200,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
-data03,TBD25,300,172.28.72.11,data,Null,Vincent & Patrick,FALSE,TBD,Null,
+win01,d5c63b47767c6d83a54597a8115bc806,100,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"The target is FindmyHashUser. The lowercase NTLM part of his password hash is your prize !<br>
+<a href=""https://scoreboard.hf/public/FindMyHash.zip"">win01</a>",Null,
+win02,mysuperadminrdppassword,400,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.hf/public/rdppcap.zip"">for04</a>",Null,
+win01,ko6mvtjkk20mebo9itw0,100,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,"Pentest 101 <br>B0x 172.28.72.105  <br>A door is wide open … use it, dig it and you'll find what your looking for.<br>PS. Not King of The hill - If you become god dont mess up the box plz",Null,
+win02,q8zfjum5ca6wjuu0r8sx,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 102 <br>B0x 172.28.72.105  <br>The door you found previously. Use it and get c:\Flag.txt  <br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+win03,b7ln0q42ai2764jbtyye,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 103 <br>Already Pwned B0x 172.28.72.105  <br>A Windows Services with a custom user account. Password should be easy to get !<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+win04,fef87f1cea146421509bde91eb2a11dc,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 104 <br>Already Pwned B0x 172.28.72.105 <br>Local user account UserHashNTLMFlag. Give me the lowercase NTLM part of his password hash.,Null,
+win05,49984fa2ac5586cff6d059268c117b9c71fcd382,300,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 105 <br>Already Pwned B0x 172.28.72.105  <br>Extract Remote Desktop Service Private certificate in a pfx file. Lowercase sha1sum of the file is the flag<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
 boff01,ec4cf292f93192dcd84af8bc99a1489f,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
 boff02,98aa608432fBffa4cc715f5d011Gdb17d,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
 boff03,cf2b9969a576daff0d361Dee74B7933089,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
@@ -81,3 +84,8 @@ rndshit3,TBD52,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Data encoding 
 rndshit4,TBD53,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Data encoding 4,Null,
 rndshit5,TBD54,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Hardware Analysis flag 1,Null,
 rndshit6,TBD55,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Processor analysis,Null,
+dm01,99ade2a48c08fd496e405ed4889f7e92,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
+dm02,d2f7657734249e7d47e0b096bbe4b9d0,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
+dm03,355681c8686829e4d2ba0fcc014e940e,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
+dm04,c6703691b639f28585850248c340f2fb,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
+dm05,eb0e26311e1250d87e1473dde9683572,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
