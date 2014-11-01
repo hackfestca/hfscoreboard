@@ -45,12 +45,14 @@ SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
 SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
 SELECT addCategory('rand', 'Random Shit', 'Processor analysis');
 SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
-SELECT addCategory('virus', 'Virus Analysis', 'Hackfest Phenix Virus Analysis <br/><br/>
-You will find a Windows 7 VM in the USB key given to your team. Your mission: boot the VM and find a way to <b>disable</b> the spreaded virus from running.<br/>
-You are admin and your password is HFWPhenix. <br/>
-Use the WPhenixChecker.exe on desktop to verify your cleanup. This binary will pop you up to 5 flags for successful permanent cleanup. <br/>
-Trying to reverse WPhenixChecker.exe might give you headache. The challenge should be done without reversing this binary.<br/>
-We strongly suggest you make a copy of the VM before booting it. <br/>');
+SELECT addCategory('virus', 'Virus Analysis', '<ul>
+<li>You will find a Windows 7 VM in the USB key given to your team. This VM was tested with VirtualBox 4.3.18 r96516. You need Oracle VM VirtualBox Extension Pack ot run the VM. <a href=""https://www.virtualbox.org/wiki/Downloads"">Download here</a></li>
+<li>You need Your mission: boot the VM and find a way to <b>disable</b> the spreaded virus from running.</li>
+<li>You are admin and your password is HFWPhenix. </li>
+<li>Use the WPhenixChecker.exe on desktop to verify your cleanup. This binary will pop you up to 5 flags for successful permanent cleanup. </li>
+<li>Trying to reverse WPhenixChecker.exe might give you headache. The challenge should be done without reversing this binary.</li>
+<li>We strongly suggest you make a copy of the VM before booting it. </li>
+</ul>');
 
 SELECT addAuthor('Martin Dube', 'mdube');
 SELECT addAuthor('Jessy Campos', '_eko');
@@ -80,6 +82,13 @@ SELECT addTeam('Team HF Crew', '172.16.66.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
 SELECT addTeam('Team Eko1', '1.1.1.1/32');
 SELECT addTeam('Team Eko2', '1.1.1.2/32');
+SELECT addTeam('Team Eko3', '1.1.1.3/32');
+SELECT addTeam('Team Eko4', '1.1.1.4/32');
+SELECT addTeam('Team Eko5', '1.1.1.5/32');
+SELECT addTeam('Team Eko6', '1.1.1.6/32');
+SELECT addTeam('Team Eko7', '1.1.1.7/32');
+SELECT addTeam('Team Eko8', '1.1.1.8/32');
+SELECT addTeam('Team Eko9', '1.1.1.9/32');
 
 -- Tests
 SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 

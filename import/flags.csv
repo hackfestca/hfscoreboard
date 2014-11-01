@@ -40,7 +40,6 @@ pwn01,AzTxYDhq5oK0wRStvmuE1ChAEdJWwMO2,200,172.28.72.7,expl,Null,Jessy Campos,FA
 re05,3b6ee3bbcc37641e46a104d86344b6d2da4a4d22,300,172.28.72.7,re,Null,Jessy Campos,FALSE,"I think someone got root. <a href=""https://scoreboard.hf/public/mod1.tar.xz"">File</a> ssh://user@re01.ctf.hf pass:user",Null,"setreuid(1337, 1337);"
 re06,8d5a38fe697c1daeaa4c07f70ff1342aa1181033,400,172.28.72.7,re,Null,Jessy Campos,FALSE,"Another backdoor ? <a href=""https://scoreboard.hf/public/mod1.tar.xz"">File</a> ( same as re05 ) ssh://user@re01.ctf.hf pass:user",Null,
 re07,TqptYBpileeruZjiNosxqJjKaPgtJGRr,500,172.28.72.7,re,Null,Jessy Campos,FALSE,"Am I Evil ? <a href=""https://scoreboard.hf/public/mod2.tar.xz"">File</a> Server : rpi.ctf.hf",Null,
-net01,68f05b6143bf1580868369c3ceec65d4,100,172.28.72.6,net,Null,Martin Dube,FALSE,You might need to negotiate this flag.,Null,"Use mod_negotiation_brute module on msf to identify index.flag.html, which contains flag"
 expl01,k283QjjkBItb8VgJCeLT5hWIvHNREZR0,300,172.28.72.6,expl,Null,Martin Dube,FALSE,I use tar for backup. ssh://expl01:expl01@misc02.ctf.hf,Null,use tar checkpoints to pop the flag
 php01,ZYfynIT9LvpoiadmmeNAtIOC8v1EPZhJ,100,172.28.72.10,web,Null,Martin Dube,FALSE,"Warmp up. <a href=""http://chroot01.ctf.hf/01/index.php"">Chal 0x01</a>",Null,http://www.exploit-db.com/exploits/34025/
 php02,SO3e6n7qpfGTtgGXcDLtLWuDzo3f0kfp,100,172.28.72.10,web,Null,Martin Dube,FALSE,"Easy: A classical. <a href=""http://chroot01.ctf.hf/02/index.php"">Chal 0x02</a>",Null,include('/flag.txt');
@@ -64,7 +63,7 @@ voip04,lAaiI0hpcFHShVim53EsFHex6OXw7bmi,400,172.28.72.121,net,Null,Martin Lemay,
 win01,d5c63b47767c6d83a54597a8115bc806,100,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"The target is FindmyHashUser. The lowercase NTLM part of his password hash is your prize !<br>
 <a href=""https://scoreboard.hf/public/FindMyHash.zip"">win01</a>",Null,
 win02,mysuperadminrdppassword,400,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.hf/public/rdppcap.zip"">for04</a>",Null,
-win01,ko6mvtjkk20mebo9itw0,100,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,"Pentest 101 <br>B0x 172.28.72.105  <br>A door is wide open … use it, dig it and you'll find what your looking for.<br>PS. Not King of The hill - If you become god dont mess up the box plz",Null,
+win01,ko6mvtjkk20mebo9itw0,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,"Pentest 101 <br>B0x 172.28.72.105  <br>A door is wide open … use it, dig it and you'll find what your looking for.<br>PS. Not King of The hill - If you become god dont mess up the box plz",Null,
 win02,q8zfjum5ca6wjuu0r8sx,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 102 <br>B0x 172.28.72.105  <br>The door you found previously. Use it and get c:\Flag.txt  <br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
 win03,b7ln0q42ai2764jbtyye,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 103 <br>Already Pwned B0x 172.28.72.105  <br>A Windows Services with a custom user account. Password should be easy to get !<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
 win04,fef87f1cea146421509bde91eb2a11dc,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Pentest 104 <br>Already Pwned B0x 172.28.72.105 <br>Local user account UserHashNTLMFlag. Give me the lowercase NTLM part of his password hash.,Null,
@@ -84,7 +83,7 @@ rndshit3,TBD52,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Data encoding 
 rndshit4,TBD53,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Data encoding 4,Null,
 rndshit5,TBD54,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Hardware Analysis flag 1,Null,
 rndshit6,TBD55,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Processor analysis,Null,
-dm01,99ade2a48c08fd496e405ed4889f7e92,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
+dm01,99ade2a48c08fd496e405ed4889f7e92,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,,
 dm02,d2f7657734249e7d47e0b096bbe4b9d0,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
 dm03,355681c8686829e4d2ba0fcc014e940e,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
 dm04,c6703691b639f28585850248c340f2fb,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,,,
