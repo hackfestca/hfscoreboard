@@ -20,6 +20,7 @@ SELECT addHost('172.28.72.4', 'Debian 7 x32', 'Test box for scoreboard developme
 SELECT addHost('172.28.72.5', 'Debian 7 x64', 'Chroot Challenges by _eko (chroot02.ctf.hf)');
 SELECT addHost('172.28.72.6', 'Debian 7 x64', 'Misc Challenges by Mart (misc02.ctf.hf)');
 SELECT addHost('172.28.72.7', 'Debian 7 x64', 'Exploit Challenges by _eko (expl01.ctf.hf)');
+SELECT addHost('172.28.72.8', 'Debian 7 x64', 'Exploit Challenges by _eko (expl02.ctf.hf)');
 SELECT addHost('172.28.72.10', 'OpenBSD5.5 x64', 'Chroot & PHP Challenges by Mart (chroot01.ctf.hf)');
 SELECT addHost('172.28.72.11', 'Debian 7 x64', 'Data mining Challenges by vn & Pat (dm01.ctf.hf)');
 SELECT addHost('172.28.72.12', 'OpenBSD5.5 x64', 'Prog Challenges by _eko (prog01.ctf.hf)');
@@ -29,10 +30,12 @@ SELECT addHost('172.28.72.103', 'Ubuntu 14.04LTS', 'Ubuntu server by Ced (alogat
 SELECT addHost('172.28.72.104', 'Ubuntu 14.04LTS', 'Ubuntu lock screen bypass by Ced (lockubuntu.ctf.hf)');
 SELECT addHost('172.28.72.105', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012adm.ctf.hf)');
 SELECT addHost('172.28.72.106', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012usr.ctf.hf)');
+SELECT addHost('172.28.72.107', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012usr.ctf.hf)');
 SELECT addHost('172.28.72.110', 'CentOS 6 x64', 'Nose Bleeding Track by FLR (nosebleeding.ctf.hf)');
 SELECT addHost('172.28.72.120', 'CentOS 6 x32', 'Monopoly Jail Escape Track by Martin L. (mono01.ctf.hf)');
 SELECT addHost('172.28.72.121', 'CentOS 6 x32', 'VOIP Challenges by Martin L. (voip01.ctf.hf)');
 SELECT addHost('172.28.72.130', 'Debian 7 x32', 'Mostly BOF challenges by P-Y. (expl02.ctf.hf)');
+SELECT addHost('172.28.72.140', 'ArchARM', 'Exploit Challenges by _eko (rpi.ctf.hf)');
 
 SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
 SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
