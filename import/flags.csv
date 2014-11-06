@@ -14,7 +14,7 @@ homeostatie106,58b0611d3405e1a37bf2efc48c234945,200,172.28.72.101,misc,Null,Cedr
 homeostatie107,KOTH-GITCLIENT,100,172.28.72.100,misc,Null,Cedrick Chaput,TRUE,Change the git Repo to install backdoor on client computer,echo $FLAG > /home/elleaimeca/flag.txt,add a backdoor to the ocaml code
 virus01,bfb48293f13278926e7b6e131a902e04,100,scoreboard.hf,virus,Null,Franck Desert,FALSE,Il etait 1 fois...,Null,
 virus02,3482aa59a335ece37882f78e65a56880,200,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 2 tours jumelles...,Null,
-virus03,66c7fe8ed058cca3b603c64be356da9b,200,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 3 mousquetaires...,Null,
+virus03,66c7fe8ed058cca3b603c64be356da9b,300,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 3 mousquetaires...,Null,
 virus04,bf6092e03e8f8e25bd55ce04b35bfecc,400,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 4 fantastiques...,Null,
 virus05,da9467b040dd711d07b0f463a54e633b,500,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 5 doigts de la main...,Null,
 nose01,OIPL9CKSV2DH9X1SAQGQ,300,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf - Mister fantastic,Null,
@@ -50,9 +50,7 @@ php05,JOeg18eFwC4SrWvyUHY5K5bLIk60PngP,300,172.28.72.10,web,Null,Martin Dube,FAL
 php06,WPXqxGXyJ7vh1gUc5JpXwCZfRK9Du5Lw,300,172.28.72.10,web,Null,Martin Dube,FALSE,"Hard: PHP Brainfuck++. Let's play with PHP's consistency.  <a href=""http://chroot01.ctf.hf/06/index.php"">Chal 0x06</a>",Null,Understand the brainfuck and pop the flag
 ssh01,NlBuBcqlzzEJhsSUSUwUtRNoMdESDqVU,100,172.28.72.10,for,Null,Martin Dube,FALSE,"Using ssh://ssh01:ssh01@chroot01.ctf.hf, find the flag somewhere on the disk.",Null,
 ssh02,4lIoz0EtV41IiE5UQfKaNuKDwpP2nDK,200,172.28.72.10,for,Null,Martin Dube,FALSE,"Using ssh://ssh02:<PASS_FROM_SSH01>@chroot01.ctf.hf, find a way to get flag located at /flag.txt",Null,
-ssh03,P2nxFor2SKSwDiBOoO1TJf8VEmBdMaNT,300,172.28.72.10,for,Null,Martin Dube,FALSE,"Using ssh://ssh03:<PASS_FROM_SSH02>@chroot01.ctf.hf, find a way to get flag located at /flag.txt",Null,
-ssh04,TBD2,400,172.28.72.10,for,Null,Martin Dube,FALSE,TBD,Null,Exploit it using find
-ssh05,TBD3,100,172.28.72.10,for,Null,Martin Dube,TRUE,Build your tools.,echo $FLAG > /root/ssh05.flag,Exploit using tcc
+ssh03,KOTH-OPENBSD,300,172.28.72.10,for,Null,Martin Dube,TRUE,"Using ssh://ssh03:<PASS_FROM_SSH02>@chroot01.ctf.hf, find a way to get flag located somewhere",echo $FLAG > /var/www/htdocs/ssh03/flag.txt && chown root:www /var/www/htdocs/ssh03/flag.txt,
 mono01,QdzlAfCpNv5ysJb55EZjz77UeGz23q1w,200,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
 mono02,gfxfvXpoyhqMivgLC3ab5fNmFQVcSKCG,300,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
 mono03,V35USLFNK1EZnJ00JhNA8NgTr1TWR3R8,400,172.28.72.120,expl,Null,Martin Lemay,FALSE,TBD,Null,
@@ -79,7 +77,6 @@ boff04,4bGf536c643be3a5de474a206Aa1093ce,100,172.28.72.130,expl,Null,Pierre-Yves
 boff05,6257557cf25212aF9926aea1959fJ5cfbc,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
 boff06,b31Dc26e1c4GFe3a95a5afA6Fbf6c1623c331,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
 boff07,a06SVa6de2cd6SS91ac71S5A24d2Def80b921,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
-boff08,6ab55d094fCFS5cSc402f7a408JGAG87d22165,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
 rndshit0,TOALLWELCOME,50,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,"Find the flag: There was Once A Little man so Little he Would touch the sky Extending his Legs like a Cow Or like Many were saying, like an Eagle.",Null,
 rndshit1,YeahYeahSeamsLikeYouHaveAFlag,100,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag: ZfbiZfbiTfbntMjlfZpvIbwfBGmbh,Null,
 rndshit2,XorIsAClassicalWayOfDoingThis,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x68\x5f\x42\x79\x43\x71\x73\x5c\x51\x43\x43\x59\x53\x51\x5c\x67\x51\x49\x7f\x56\x74\x5f\x59\x5e\x57\x64\x58\x59\x43,Null,
@@ -90,8 +87,12 @@ rndshit6,29 2 22 58 69 67 93 56 11 42,200,scoreboard.hf,rand,Null,Philippe Godbo
 rndshit7,homemadepseudocryptoisnevergood,250,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x20\x3c\x34\x14\x34\x4\x10\x14\x40\x4c\x14\x54\x10\x3c\xc\x48\x64\x40\x50\x3c\x24\x4c\x38\x14\x58\x14\x48\x1c\x3c\x3c\x10,,
 rndshit8,110-000-100-101-111,350,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,"Electronic analysis.<br> <a href=""https://scoreboard.hf/public/Challenge_electronic.pdf"">File</a>",,
 rndshit9,morsecodeisfun,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Eat my pi!,,
-dm01,99ade2a48c08fd496e405ed4889f7e92,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,Null,
-dm02,d2f7657734249e7d47e0b096bbe4b9d0,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,Null,
-dm03,355681c8686829e4d2ba0fcc014e940e,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,Null,
-dm04,c6703691b639f28585850248c340f2fb,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,Null,
-dm05,eb0e26311e1250d87e1473dde9683572,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Find .... on http://dm01.ctf.hf and then the Internet should help you out!,Null,
+dm01,99ade2a48c08fd496e405ed4889f7e92,200,172.28.72.11,data,Null,Vincent & Patrick,FALSE,"Lately, someone has been tampering with our Intranet Database and more.  We have reasons to think we have valid trails now.
+politburo@dm01.ctf.hf>cat /var/log/httpd/intranet.log.25
+034526Z-24072012        WARNING - UID 60143 logged on - NO INSTANCE FOUND IN TABLE
+
+Find the twin city of this person’s PoB - Format md5(City, Country)",Null,
+dm02,d2f7657734249e7d47e0b096bbe4b9d0,300,172.28.72.11,data,Null,Vincent & Patrick,FALSE,"What is that person's Intranet password?  scraping is always good, locally and externally.  Format : md5($password)",Null,
+dm03,355681c8686829e4d2ba0fcc014e940e,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Which business contact _may_ link him our person to the FARC?  Format : md5(Firstname Secondname),Null,
+dm04,c6703691b639f28585850248c340f2fb,350,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Which city was he around on November 9th 2013?  Safe to assume it's been replied same day. Format : md5(City),Null,
+dm05,eb0e26311e1250d87e1473dde9683572,150,172.28.72.11,data,Null,Vincent & Patrick,FALSE,What's his girlfriend's e-mail?  Format : md5(foo@bar.com),Null,
