@@ -46,7 +46,7 @@ SELECT addCategory('data', 'Data Mining', 'Data mining challenges');
 SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
 SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
 SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
-SELECT addCategory('rand', 'Random Shit', 'Processor analysis');
+SELECT addCategory('rand', 'Random Shit', 'Random Shit');
 SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
 SELECT addCategory('virus', 'Virus Analysis', '<ul>
 <li>You will find a Windows 7 VM in the USB key given to your team. This VM was tested with VirtualBox 4.3.18 r96516. You need Oracle VM VirtualBox Extension Pack ot run the VM. <a href=""https://www.virtualbox.org/wiki/Downloads"">Download here</a></li>
@@ -71,24 +71,24 @@ SELECT addAuthor('HF Crew', 'HFCrew');
 
 SELECT addNews('Welcome to Hackfest CTF 2014 !', NOW()::timestamp);
 
-INSERT INTO settings(gameStartTs) VALUES('2013-11-07 10:00'::timestamp);
+INSERT INTO settings(gameStartTs) VALUES('2014-11-07 10:30'::timestamp);
 
 /*
     fake teams for tests
 */
-SELECT addTeam('Team Dube', '192.168.1.0/24');
-SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
-SELECT addTeam('Team VPN', '192.168.9.0/24');
-SELECT addTeam('Team VPN 2', '192.168.10.0/24');
-SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
-SELECT addTeam('Team Eko', '127.0.0.1/8');
+--SELECT addTeam('Team Dube', '192.168.1.0/24');
+--SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+--SELECT addTeam('Team VPN', '192.168.9.0/24');
+--SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+--SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+--SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 -- Tests
-SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
-                1::smallint, Null, Null, True, '', '',
-                'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 
-                'wget http://dathost/test');
+--SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
+--                1::smallint, Null, Null, True, '', '',
+--                'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 
+--                'wget http://dathost/test');
 
 
 /*

@@ -67,21 +67,21 @@ actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=F
               help='Import teams only (from csv file: import/teams.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
-actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
-              help='Import all')
+#actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
+#              help='Import all')
 actGrp.add_argument('--version', '-v', action='store_true', dest='version', default=False, \
               help='Display client version')
 
 args = parser.parse_args()
 
 # Validate args
+#    not args.all and \
 if  not args.tables and \
     not args.functions and \
     not args.data and \
     not args.flags and \
     not args.teams and \
     not args.security and \
-    not args.all and \
     not args.version:
     print('[-] You must specify an action')
     exit(1)

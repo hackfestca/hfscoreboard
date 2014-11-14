@@ -1,0 +1,99 @@
+Flag Name,Flag Value,Flag PTS,Flag Location,Category (see tab #2),displayInterval,Author,isKing,Description,UpdateCmd,How to
+for01,1fZwX2bHc53ByXP4ZoNW5FAyespongebob,300,scoreboard.hf,for,Null,Cedrick Chaput,FALSE,"One of my spy managed to copy some file from Tessier-Ashpool admin console.<br>
+Find all Password flag-{pwd1+pwd2+pwd3+pwd4+pwd5+user hfctf password}
+<br><a href=""https://scoreboard.hf/public/for01.tar.gz"">for01</a>",Null,remmina +NetworkManager + firefox password ache  + gnome-keyring +xen-tool log + Shadows
+miscon01,ec3f82fe38c3a3f6280a725ba34f4bcf,200,scoreboard.hf,misc,Null,Cedrick Chaput,FALSE,Come near HF crew There is a Ubuntu 14.04 to bypass the lockscreen,Null,https://bugs.launchpad.net/ubuntu/+source/unity/+bug/1313885 compiz --replace
+miscon02,788e258e4b36fb00f00cd296813f55b0,200,scoreboard.hf,misc,Null,Cedrick Chaput,FALSE,"We think one of Tessier-Ashpool family member is here. Try to grab is wireless credential.<br>
+flag-{username+password}",Null,use hostapd-wpe to create a ssid securecorp 
+homeostatie101,2b98451ee84065ec4b9afa7a854eb246,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find Mike AD user description \\winfeu.ctf.hf\data,Null,find encrypted password on share data and 
+homeostatie102,6e7bf8dcfc0ad7875eea7e3876a59b42,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find Local Windows Administrator Password for domain computer,Null,GPP  https://labs.portcullis.co.uk/blog/are-you-considering-using-microsoft-group-policy-preferences-think-again/
+homeostatie103,e7118eac0ba2d1b6fa5e6621cdd22035,300,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Access the the financial secret FiancialRecord.txt,Null,Se creer un compte avec l'utilisateur MIKe avec le département = FIN  (dynamique ACL) Le script est fournis avec des bug. une clé privé avec mot de passe est trouve
+homeostatie104,9eac5af3a9dc9039f954659dbd5b96f1,300,172.28.72.103,misc,Null,Cedrick Chaput,FALSE,Access the ftp secret file,Null,Il faut trouver le mot de passe de de lintre dans le syslog et changer le ip du dns client1 pour acceder au ftp en anonymous 
+homeostatie105,ec02c59dee6faaca3189bace969c22d3,100,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find future Mysql database password ,Null,"récupérer une version antérieur du document NetworkSchema.odt click droit propriété, version antérieur "
+homeostatie106,58b0611d3405e1a37bf2efc48c234945,200,172.28.72.101,misc,Null,Cedrick Chaput,FALSE,Find important information on the GIT. ,Null,in an other git branch you'll find a leaking document 
+homeostatie107,KOTH-GITCLIENT,100,172.28.72.100,misc,Null,Cedrick Chaput,TRUE,Change the git Repo to install backdoor on client computer,echo $FLAG > /home/elleaimeca/flag.txt,add a backdoor to the ocaml code
+virus01,bfb48293f13278926e7b6e131a902e04,100,scoreboard.hf,virus,Null,Franck Desert,FALSE,Il etait 1 fois...,Null,
+virus02,3482aa59a335ece37882f78e65a56880,200,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 2 tours jumelles...,Null,
+virus03,66c7fe8ed058cca3b603c64be356da9b,300,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 3 mousquetaires...,Null,
+virus04,bf6092e03e8f8e25bd55ce04b35bfecc,400,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 4 fantastiques...,Null,
+virus05,da9467b040dd711d07b0f463a54e633b,500,scoreboard.hf,virus,Null,Franck Desert,FALSE,Les 5 doigts de la main...,Null,
+nose01,OIPL9CKSV2DH9X1SAQGQ,300,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf - Mister fantastic,Null,
+nose02,7G27Y966ACQO9MSUGICP,500,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf  - Pythia,Null,
+nose03,7AYV63FG19UCCD8ACBAO,300,172.28.72.110,web,Null,Francois Lajeunesse-Robert,FALSE,nosebleed.ctf.hf - You have the right!,Null,
+nose04,KOTH-NOSEBLEEDING,100,172.28.72.110,web,Null,Francois Lajeunesse-Robert,TRUE,nosebleed.ctf.hf  - RCE,echo $FLAG > /opt/cs/frontend/config/flag.txt && chown root:csservice /opt/cs/frontend/config/flag.txt,
+misc01,yO82whKhkBxTzoP,100,scoreboard.hf,tri,Null,HF Crew,FALSE,A flag somewhere in the conference room,Null,In the 30 second animation
+tri01,TBD18,100,scoreboard.hf,tri,Null,HF Crew,FALSE,Wait for chuck to ask the question,Null,
+teaser01,U3C26QQRH4uH5Ij,25,scoreboard.hf,tri,365 days,Cedrick Chaput,FALSE,hackfest 2014 ctf teaser #1,Null,
+teaser02,39c53eb52267089d648666d5a6bc4f74,25,scoreboard.hf,tri,365 days,Cedrick Chaput,FALSE,hackfest 2014 ctf teaser #2,Null,
+re01,g762eccb925391e2da74c60e0e59747ccd90d872335ac27d55d9d9cfef2,100,scoreboard.hf,re,Null,Jessy Campos,FALSE,"Don't waste time reversing this. <a href=""https://scoreboard.hf/public/re01.tar.xz"">File</a>",Null,LD_PRELOAD
+re02,81184ec68eb875c1920b0fd94a936c76ea42fb5b,200,scoreboard.hf,re,Null,Jessy Campos,FALSE,This one is blackbox. ssh://user@re01.ctf.hf pass:user,Null,"chmod 111 so, use ptrace ?"
+re03,156c1179d7961911129e18cdd6e392249dbab57c,200,scoreboard.hf,re,Null,Jessy Campos,FALSE,"AntiDbg <a href=""https://scoreboard.hf/public/re03.tar.xz"">File</a>",Null,hardware breakpoint
+prog01,c25d5ebf60a8ad20d8ab8b28f6cd8d011b44d3a9,100,172.28.72.12,prog,Null,Jessy Campos,FALSE,"decode the b64, send the sha1 <a href=""http://172.28.72.12:8080/sha/"">http://172.28.72.12:8080/sha/</a>",Null,
+prog02,a3bc4422456a5c432bf292a7af49aee98c05e4e8,200,172.28.72.12,prog,Null,Jessy Campos,FALSE,"do the math ! <a href=""http://172.28.72.12:8080/math/"">http://172.28.72.12:8080/math/</a>",Null,
+prog03,c467a735bde653da47c057b986dce68edbf11c7d,200,172.28.72.12,prog,Null,Jessy Campos,FALSE,"send a string which match the regex <a href=""http://172.28.72.12:8080/regex/"">http://172.28.72.12:8080/regex/</a>",Null,
+prog04,de272cef6a3d7efc9c5a627df562d99d5f6f534b,300,172.28.72.12,prog,Null,Jessy Campos,FALSE,"Bypass the captcha <a href=""http://172.28.72.12:8080/captcha/"">http://172.28.72.12:8080/captcha/</a>",Null,
+chroot01,QWWAC8fI01rK1ijCgSfjp9ucdnszKcny,200,172.28.72.5,expl,Null,Jessy Campos,FALSE,"Using ssh://chr01:chr01@chroot02.ctf.hf, read the file /flag.txt. ",Null,Chroot escaping using python
+re04,47ed9186b75ff77d0ed437b7409195e0df8bf58a,500,172.28.72.8,re,Null,Jessy Campos,FALSE,"You stole a TokenGen, Reverse it and access the system re01.ctf.hf:8976 <a href=""https://scoreboard.hf/public/re04.tar.xz"">File</a> ( Seed is in hex )",Null,Reverse le dump avr fourni pour générer un token valide
+re04k,KOTH-RE04,100,172.28.72.8,re,Null,Jessy Campos,TRUE,King of the hill re04,echo $FLAG > /home/re04/koth-flag.txt,
+pwn01,AzTxYDhq5oK0wRStvmuE1ChAEdJWwMO2,100,172.28.72.7,expl,Null,Jessy Campos,FALSE,Using ssh://pwn01:pwn01@expl01.ctf.hf. This one is easy AND up to date.,Null,
+re05,3b6ee3bbcc37641e46a104d86344b6d2da4a4d22,300,172.28.72.8,re,Null,Jessy Campos,FALSE,"I think someone got root. <a href=""https://scoreboard.hf/public/mod1.tar.xz"">File</a> ssh://user@re01.ctf.hf pass:user",Null,"setreuid(1337, 1337);"
+re05k,KOTH-RE05,100,172.28.72.8,re,Null,Jessy Campos,TRUE,King of the hill re05,echo $FLAG > /home/re05/koth-flag.txt,
+re06,8d5a38fe697c1daeaa4c07f70ff1342aa1181033,400,172.28.72.8,re,Null,Jessy Campos,FALSE,"Another backdoor ? <a href=""https://scoreboard.hf/public/mod1.tar.xz"">File</a> ( same as re05 ) ssh://user@re01.ctf.hf pass:user",Null,
+re06k,KOTH-RE06,100,172.28.72.8,re,Null,Jessy Campos,TRUE,King of the hill re06,echo $FLAG > /home/re06/koth-flag.txt,
+re07,TqptYBpileeruZjiNosxqJjKaPgtJGRr,500,172.28.72.140,re,Null,Jessy Campos,FALSE,"Am I Evil ? <a href=""https://scoreboard.hf/public/mod2.tar.xz"">File</a> Server : rpi.ctf.hf",Null,
+expl01,k283QjjkBItb8VgJCeLT5hWIvHNREZR0,300,172.28.72.6,expl,Null,Martin Dube,FALSE,I use tar for backup. ssh://expl01:expl01@misc02.ctf.hf,Null,use tar checkpoints to pop the flag
+php01,ZYfynIT9LvpoiadmmeNAtIOC8v1EPZhJ,100,172.28.72.10,web,Null,Martin Dube,FALSE,"Warmp up. <a href=""http://chroot01.ctf.hf/01/index.php"">Chal 0x01</a>",Null,http://www.exploit-db.com/exploits/34025/
+php02,SO3e6n7qpfGTtgGXcDLtLWuDzo3f0kfp,100,172.28.72.10,web,Null,Martin Dube,FALSE,"Easy: A classical. <a href=""http://chroot01.ctf.hf/02/index.php"">Chal 0x02</a>",Null,include('/flag.txt');
+php03,49DnMgcDQNiAaOcwMQGjfc22OrhrMrKK,200,172.28.72.10,web,Null,Martin Dube,FALSE,"Easy: OK Dig a little more. <a href=""http://chroot01.ctf.hf/03/index.php"">Chal 0x03</a>",Null,"Pop it using opendir,readdir,fopen,fgets"
+php04,fmKqmp6JMWQ6bB2BCTfngSwb9ZGbT0MA,200,172.28.72.10,web,Null,Martin Dube,FALSE,"Medium: Find it yourself.  <a href=""http://chroot01.ctf.hf/04/index.php"">Chal 0x04</a>",Null,Pop it using find & cat
+php05,JOeg18eFwC4SrWvyUHY5K5bLIk60PngP,300,172.28.72.10,web,Null,Martin Dube,FALSE,"Medium: PHP Brainfuck. Let's test PHP's consistency. <a href=""http://chroot01.ctf.hf/05/index.php"">Chal 0x05</a>",Null,Understand the brainfuck and pop the flag
+php06,WPXqxGXyJ7vh1gUc5JpXwCZfRK9Du5Lw,300,172.28.72.10,web,Null,Martin Dube,FALSE,"Hard: PHP Brainfuck++. Let's play with PHP's consistency.  <a href=""http://chroot01.ctf.hf/06/index.php"">Chal 0x06</a>",Null,Understand the brainfuck and pop the flag
+ssh01,NlBuBcqlzzEJhsSUSUwUtRNoMdESDqVU,100,172.28.72.10,for,Null,Martin Dube,FALSE,"Using ssh://ssh01:ssh01@chroot01.ctf.hf, find the flag somewhere on the disk.",Null,
+ssh02,4lIoz0EtV41IiE5UQfKaNuKDwpP2nDK,200,172.28.72.10,for,Null,Martin Dube,FALSE,"Using ssh://ssh02:<PASS_FROM_SSH01>@chroot01.ctf.hf, find a way to get flag located at /flag.txt",Null,
+ssh03,KOTH-OPENBSD,300,172.28.72.10,for,Null,Martin Dube,TRUE,"Using ssh://ssh03:<PASS_FROM_SSH02>@chroot01.ctf.hf, find a way to get flag located somewhere",echo $FLAG > /var/www/htdocs/ssh03/flag.txt && chown root:www /var/www/htdocs/ssh03/flag.txt,
+mono01,QdzlAfCpNv5ysJb55EZjz77UeGz23q1w,200,172.28.72.120,expl,365 days,Martin Lemay,FALSE,TBD,Null,
+mono02,gfxfvXpoyhqMivgLC3ab5fNmFQVcSKCG,300,172.28.72.120,expl,365 days,Martin Lemay,FALSE,TBD,Null,
+mono03,V35USLFNK1EZnJ00JhNA8NgTr1TWR3R8,400,172.28.72.120,expl,365 days,Martin Lemay,FALSE,TBD,Null,
+mono04,6t9PU6xHd55T3pNmKSuHfoHSb58GPHA8,500,172.28.72.120,expl,366 days,Martin Lemay,TRUE,TBD,echo $FLAG > /root/flag.txt,
+voip01,zXZDkp67cOyg7rdtFGUY2WfAOvD5PKgD,100,172.28.72.121,net,Null,Martin Lemay,FALSE,Make a long distance call to 1-666-345-7531... shouldn't be THAT hard right ? ;) voip01.ctf.hf,Null,
+voip02,FWLd5n25hEUAC7blIRPcG7btxHeyjXvr,200,172.28.72.121,net,Null,Martin Lemay,FALSE,You are being watched... call 1-777-341-7531  if you dare ! voip01.ctf.hf,Null,
+voip03,nw5FKvZf6PNJeVimZxMNyYUSqla7Ttic,300,172.28.72.121,net,Null,Martin Lemay,FALSE,CallerCalled back 1-663-423-7766 voip01.ctf.hf,Null,
+voip04,lAaiI0hpcFHShVim53EsFHex6OXw7bmi,400,172.28.72.121,net,Null,Martin Lemay,FALSE,CRAZSHIP 1-800-777-5555  .... someone must know something ! voip01.ctf.hf,Null,
+win01,d5c63b47767c6d83a54597a8115bc806,100,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"The target is FindmyHashUser. The lowercase NTLM part of his password hash is your prize !<br>
+<a href=""https://scoreboard.hf/public/FindMyHash.zip"">win01</a>",Null,
+win02,mysuperadminrdppassword,400,scoreboard.hf,for,Null,Stephane Sigmen,FALSE,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.hf/public/rdppcap.zip"">for04</a>",Null,
+win01,tajhnybo8p6n05qrsdxs,100,172.28.72.106,misc,Null,Stephane Sigmen,FALSE,ssh: w2012usr.ctf.hf - User: Findme Pass: FindQwerty123<br>Find the flag !,Null,
+win02,o208vy4bn786r5k8vduh,100,172.28.72.106,misc,Null,Stephane Sigmen,FALSE,User: ShareUser<br> Pwd:  aad3b435b51404eeaad3b435b51404ee:2327188d50b4f76f9365e16d28e6f004 <br> Got get the flag    \\w2012usr.ctf.hf\Share\flag.txt,,
+pentest101,ko6mvtjkk20mebo9itw0,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,"B0x w2012adm.ctf.hf  <br>A door is wide open … use it, dig it and you'll find what your looking for.<br>PS. Not King of The hill - If you become god dont mess up the box plz",Null,
+pentest102,q8zfjum5ca6wjuu0r8sx,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,B0x w2012adm.ctf.hf  <br>The door you found previously. Use it and get c:\Flag.txt  <br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+pentest103,b7ln0q42ai2764jbtyye,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Already Pwned B0x w2012adm.ctf.hf  <br>A Windows Services with a custom user account. Password should be easy to get !<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+pentest104,fef87f1cea146421509bde91eb2a11dc,200,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Already Pwned B0x w2012adm.ctf.hf <br>Local user account UserHashNTLMFlag. Give me the lowercase NTLM part of his password hash.<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+pentest105,c40db055ed87444a69e95cb614a72a8f31fc086e,300,172.28.72.105,misc,Null,Stephane Sigmen,FALSE,Already Pwned B0x w2012adm.ctf.hf <br>Extract Remote Desktop Service Private certificate. The flag is lowercase sha1sum of the private key (between BEGIN CERTIFICATE and END CERTIFICATE)<br>PS. Not King of The hill - If you become god dont mess up the box plz,Null,
+shock01,ib1n4gi4lhjeohlnrj5m,100,172.28.72.107,misc,Null,Stephane Sigmen,FALSE,ssh: shellshock.ctf.hf - User: shockme   Pass: Qwerty123<br>Get the flag !,Null,
+boff01,ec4cf292f93192dcd84af8bc99a1489f,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff02,98aa608432fBffa4cc715f5d011Gdb17d,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff03,cf2b9969a576daff0d361Dee74B7933089,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff04,4bGf536c643be3a5de474a206Aa1093ce,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff05,6257557cf25212aF9926aea1959fJ5cfbc,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff06,b31Dc26e1c4GFe3a95a5afA6Fbf6c1623c331,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff07,a06SVa6de2cd6SS91ac71S5A24d2Def80b921,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+boff08,6ab55d094fCFS5cSc402f7a408JGAG87d22165,100,172.28.72.130,expl,Null,Pierre-Yves Tremblay,FALSE,C programming related challenges using ssh://hf:hf@expl02.ctf.hf - Including (but not limited to) buffer overflow challenges on 32bit debian box,Null,
+rndshit0,TOALLWELCOME,50,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,"Find the flag: There was Once A Little man so Little he Would touch the sky Extending his Legs like a Cow Or like Many were saying, like an Eagle.",Null,
+rndshit1,YeahYeahSeamsLikeYouHaveAFlag,100,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag: ZfbiZfbiTfbntMjlfZpvIbwfBGmbh,Null,
+rndshit2,XorIsAClassicalWayOfDoingThis,150,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x68\x5f\x42\x79\x43\x71\x73\x5c\x51\x43\x43\x59\x53\x51\x5c\x67\x51\x49\x7f\x56\x74\x5f\x59\x5e\x57\x64\x58\x59\x43,Null,
+rndshit3,ThisFeelsLikeWeReBackToHighSchool,200,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\168\624\735\1035\210\202\606\756\1035\228\210\642\707\783\303\164\606\462\873\297\214\504\777\648\315\206\624\581\891\312\222\666\756,Null,
+rndshit4,XorAgain?YeahThatKindOfStuffCanBeFrustrating,200,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x70\x5d\x5a\x73\x4f\x53\x41\x5c\x17\x6b\x4d\x53\x40\x66\x40\x53\x5c\x79\x41\x5c\x4c\x7d\x4e\x61\x5c\x47\x4e\x54\x6b\x53\x46\x70\x4d\x74\x5a\x47\x5b\x46\x5a\x53\x5c\x5b\x46\x55,Null,
+rndshit5,IRotateYouRotateHeRotateButNotInCProgramming,200,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x25\x49\xbd\xd1\x85\xd1\x95\x65\xbd\xd5\x49\xbd\xd1\x85\xd1\x95\x21\x95\x49\xbd\xd1\x85\xd1\x95\x9\xd5\xd1\x39\xbd\xd1\x25\xb9\xd\x41\xc9\xbd\x9d\xc9\x85\xb5\xb5\xa5\xb9\x9d,Null,
+rndshit6,29 2 22 58 69 67 93 56 11 42,200,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,What are the 10 numbers following those? : 83   86   77   15   93   35   86   92   49   21   62   27   90   59   63   26   40   26   72   36   11   68   67   29   82   30   62   23   67   35,,
+rndshit7,homemadepseudocryptoisnevergood,250,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Coded Flag:\x20\x3c\x34\x14\x34\x4\x10\x14\x40\x4c\x14\x54\x10\x3c\xc\x48\x64\x40\x50\x3c\x24\x4c\x38\x14\x58\x14\x48\x1c\x3c\x3c\x10,,
+rndshit8,110-000-100-101-111,350,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,"Electronic analysis.<br> <a href=""https://scoreboard.hf/public/Challenge_electronic.pdf"">File</a>",,
+rndshit9,morsecodeisfun,300,scoreboard.hf,rand,Null,Philippe Godbout,FALSE,Eat my pi!,,
+dm01,99ade2a48c08fd496e405ed4889f7e92,200,172.28.72.11,data,Null,Vincent & Patrick,FALSE,"Lately, someone has been tampering with our Intranet Database and more.  We have reasons to think we have valid trails now.
+politburo@dm01.ctf.hf>cat /var/log/httpd/intranet.log.25
+034526Z-24072012        WARNING - UID 60143 logged on - NO INSTANCE FOUND IN TABLE
+
+Find the twin city of this person’s PoB - Format md5(City, Country)",Null,
+dm02,d2f7657734249e7d47e0b096bbe4b9d0,300,172.28.72.11,data,Null,Vincent & Patrick,FALSE,"What is that person's Intranet password?  scraping is always good, locally and externally.  Format : md5($password)",Null,
+dm03,355681c8686829e4d2ba0fcc014e940e,100,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Which business contact _may_ link him our person to the FARC?  Format : md5(Firstname Secondname),Null,
+dm04,c6703691b639f28585850248c340f2fb,350,172.28.72.11,data,Null,Vincent & Patrick,FALSE,Which city was he around on November 9th 2013?  Safe to assume it's been replied same day. Format : md5(City),Null,
+dm05,eb0e26311e1250d87e1473dde9683572,150,172.28.72.11,data,Null,Vincent & Patrick,FALSE,What's his girlfriend's e-mail?  Format : md5(foo@bar.com),Null,
