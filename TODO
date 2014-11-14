@@ -10,3 +10,7 @@ Code a feature in admin.py where it simulate many users submitting flags every x
 
 Check score order by when 2 teams are even.
 Anti-bruteforce doesn't work when submitting invalid flags.
+Add a endGame field in settings so people cannot submit flags after this time.
+Create and assign a flag on the fly (useful for lock picking)
+
+

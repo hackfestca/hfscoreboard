@@ -91,7 +91,7 @@ CREATE TABLE flagAuthor(
 */
 CREATE TABLE flag(
     id serial primary key,
-    name varchar(50) not null,
+    name varchar(50) not null unique,
     value varchar(64) not null unique,
     pts integer not null,
     host integer not null references host(id),
@@ -107,7 +107,7 @@ CREATE TABLE flag(
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
-    constraint valid_flag_pts check (pts >= 1 and pts <= 1000),
+    constraint valid_flag_pts check (pts >= 1 and pts <= 700),
     constraint valid_flag_displayTs check (displayInterval > '0 hours'::interval)
     );
 
@@ -185,5 +185,6 @@ CREATE TABLE status_history(
 CREATE TABLE settings(
     id serial primary key,
     gameStartTs timestamp not null,
+    gameEndTs timestamp not null,
     ts timestamp not null default current_timestamp
     ); 

@@ -77,12 +77,12 @@ INSERT INTO settings(gameStartTs) VALUES('2014-11-07 10:30'::timestamp);
     fake teams for tests
 */
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
---SELECT addTeam('Team Dube', '192.168.1.0/24');
---SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
---SELECT addTeam('Team VPN', '192.168.9.0/24');
---SELECT addTeam('Team VPN 2', '192.168.10.0/24');
---SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
---SELECT addTeam('Team Eko', '127.0.0.1/8');
+SELECT addTeam('Team Dube', '192.168.1.0/24');
+SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+SELECT addTeam('Team VPN', '192.168.9.0/24');
+SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 -- Tests
 --SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 

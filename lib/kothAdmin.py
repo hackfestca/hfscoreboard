@@ -128,6 +128,23 @@ class kothAdmin(kothClient.kothClient):
         graph = Pyasciigraph()
         return '\n'.join(graph.graph('', score))
 
+    def getFlagsSubmitCount(self,nameFilter):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getFlagsSubmitCount(varchar)'),nameFilter)
+        else:
+            return self._oDB.proc('getFlagsSubmitCount(varchar)')(nameFilter)
+
+    def getFormatFlagsSubmitCount(self,nameFilter):
+        title = ['Flag','Submit Count']
+        info = self.getFlagsSubmitCount(nameFilter)
+        x = PrettyTable(title)
+        x.align['Flag'] = 'l'
+        x.align['Submit Count'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
     def getGameStats(self):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('getGameStats()'))
@@ -140,6 +157,23 @@ class kothAdmin(kothClient.kothClient):
         x = PrettyTable(title)
         x.align['Info'] = 'l'
         x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getTeamProgress(self,teamId):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getTeamProgress(integer)'),teamId)
+        else:
+            return self._oDB.proc('getTeamProgress(integer)')(teamId)
+
+    def getFormatTeamProgress(self,teamId):
+        title = ['Flag','isDone','Submit timestamp']
+        info = self.getTeamProgress(teamId)
+        x = PrettyTable(title)
+        x.align['Flag'] = 'l'
+        x.align['Submit timestamp'] = 'l'
         x.padding_width = 1
         for row in info:
             x.add_row(row)

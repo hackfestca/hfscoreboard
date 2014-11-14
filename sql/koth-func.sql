@@ -1337,7 +1337,34 @@ RETURNS TABLE (
                     LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+/*
+    Stored Proc: getFlagsSubmitCount()
+*/
+CREATE OR REPLACE FUNCTION getFlagsSubmitCount(_flagNameFilter varchar(20) DEFAULT '%')
+RETURNS TABLE (
+                flagName flag.name%TYPE,
+                submitCount bigint
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getFlagsSubmitCount(%)',$1;
+
+        return QUERY SELECT ff.fname,count(ff.fname) 
+                FROM (  SELECT flag.name as fname, 
+                               team.name as tname 
+                        FROM team_flag 
+                        INNER JOIN flag ON flag.id = team_flag.flagId 
+                                           AND team_flag.flagId IN (SELECT id 
+                                                                    FROM flag 
+                                                                    WHERE name like _flagNameFilter)
+                        INNER JOIN team ON team.id = team_flag.teamid 
+                        ORDER BY flag.name
+                ) as ff GROUP BY ff.fname;
                 
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getGameStats()
@@ -1419,7 +1446,7 @@ RETURNS TABLE (
             LEFT OUTER JOIN (
                 SELECT id,name FROM team
             ) AS t ON t.id = tf.teamId
-            ORDER BY tf.ts DESC
+            ORDER BY tf.ts 
             LIMIT 1
         ) AS t;
         GET DIAGNOSTICS _rowCt = ROW_COUNT;
@@ -1450,7 +1477,7 @@ RETURNS TABLE (
             LEFT OUTER JOIN (
                 SELECT id,name FROM team
             ) AS t ON t.id = tf.teamId
-            ORDER BY tf.ts DESC
+            ORDER BY tf.ts 
             LIMIT 1
         ) AS t;
         GET DIAGNOSTICS _rowCt = ROW_COUNT;
@@ -1493,6 +1520,40 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Game Start at:'::varchar, _gameStartTs::varchar
                      UNION ALL SELECT 'Function count:'::varchar, _fnctCt::varchar
                      UNION ALL SELECT 'Table count:'::varchar, _tblCt::varchar;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamProgress()
+*/
+CREATE OR REPLACE FUNCTION getTeamProgress(_teamId team.id%TYPE)
+RETURNS TABLE (
+                flagName flag.name%TYPE,
+                isDone boolean,
+                submitTs team_flag.ts%TYPE
+              ) AS $$
+    DECLARE
+        _ret team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamProgress(%)',$1;
+
+        SELECT id INTO _ret FROM team WHERE id = _teamId;
+        IF not found THEN
+            raise exception 'Could not find team with id %', _teamId;
+        END IF;
+
+        return QUERY SELECT name,
+                            tf.ts IS NOT Null,
+                            tf.ts 
+                     FROM flag 
+                     LEFT OUTER JOIN (
+                        SELECT id,flagId,ts 
+                        FROM team_flag 
+                        WHERE teamId=_teamId
+                     ) AS tf ON flag.id = tf.flagId 
+                     ORDER BY tf.ts,name;
+                
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

@@ -105,13 +105,26 @@ parser_settings.add_argument('--startAt', action='store', dest='gameStart', defa
                                 help='Set a game start date/time. Example: --startAt \'2014-11-08 10:00\'')
 parser_settings.add_argument('--startNow', action='store_true', dest='startNow', default=False, \
                                 help='Start the game now!')
+parser_settings.add_argument('--endAt', action='store', dest='gameEnd', default='', type=str, \
+                                 metavar='TIMESTAMP', 
+                                help='Set a game end date/time. Example: --endAt \'2014-11-08 10:00\'')
+parser_settings.add_argument('--endNow', action='store_true', dest='endNow', default=False, \
+                                help='End the game now!')
 parser_settings.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List settings.')
 
-parser_score = subparsers.add_parser('score', help='Print score table.')
-parser_score.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
+parser_score = subparsers.add_parser('score', help='Print score table (table, matrix).')
+parser_score_action = parser_score.add_argument_group("action")
+parser_score_option = parser_score.add_argument_group("option")
+parser_score_action.add_argument('--table', action='store_true', dest='table', default=False, \
+                                help='Print score table (classic).')
+parser_score_action.add_argument('--graph', action='store_true', dest='graph', default=False, \
+                                help='Print score graph.')
+parser_score_action.add_argument('--matrix', action='store_true', dest='matrix', default=False, \
+                                help='Print progression matrix.')
+parser_score_option.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
                                 help='Use to specify number of rows to display. Default is 30.')
-parser_score.add_argument('-s', '--ts', action='store', dest='ts', default=None, \
+parser_score_option.add_argument('-s', '--ts', action='store', dest='ts', default=None, \
                                 type=str, metavar='TIMESTAMP', \
                                 help='Use to get the score at a specific time. Default is now.')
 parser_history = subparsers.add_parser('history', help='Print Submit History.')
@@ -121,11 +134,21 @@ parser_history.add_argument('-t', '--top', action='store', dest='top', default=c
 parser_history.add_argument('--type', action='store', dest='type', default=None, \
                                 type=int, metavar='NUM', \
                                 help='Specify flag type to display (None=all, 1=Flag, 2=KingFlag).')
-parser_graph = subparsers.add_parser('graph', help='Print score graph.')
-parser_graph.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
-                                type=int, metavar='NUM', \
-                                help='Use to specify number of rows to display. Default is 30.')
 parser_stats = subparsers.add_parser('stats', help='Display game stats.')
+parser_stats_action = parser_stats.add_argument_group("action")
+parser_stats_option = parser_stats.add_argument_group("option")
+parser_stats_action.add_argument('--general', action='store_true', dest='general', default=False, \
+                                help='Print general stats about the game (flags qty, submit attempts, etc.)')
+parser_stats_action.add_argument('--flagsSubmitCount', action='store_true', dest='flagsSubmitCount', default=False, \
+                                help='Print number of successful submit per challenge.')
+parser_stats_action.add_argument('--teamProgress', action='store_true', dest='teamProgress', default=False, \
+                                help='Print all submitted flags of a specific team.')
+parser_stats_action.add_argument('--flagProgress', action='store_true', dest='flagProgress', default=False, \
+                                help='Print all teams who successfuly submitted a specific flag (TODO).')
+parser_stats_option.add_argument('--flagFilter', action='store', dest='flagFilter', default='%', type=str, metavar='SQL FILTER', \
+                                help='For --flagsSubmitCount only. Use to specify which flags to search for. Example: --flagFilter \'ssh%%\'')
+parser_stats_option.add_argument('--id', action='store', dest='id', default=0, type=int, metavar='TEAM ID', \
+                                help='For --teamProgress only. Use to specify which team to print progression for. Example: --id 14')
 parser_bench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
 parser_bench.add_argument('-n', action='store', dest='reqNum', default=100, \
                                 type=int, metavar='NB_OF_REQ', \
@@ -137,10 +160,6 @@ parser_conbench.add_argument('-n', action='store', dest='reqNum', default=50, \
 parser_conbench.add_argument('-c', action='store', dest='reqCon', default=30, \
                                 type=int, metavar='CONCURRENCY', \
                                 help='Use to specify number of multiple requests to make. Default is 30.')
-parser_matrix = subparsers.add_parser('matrix', help='Display the progress matrix.')
-parser_matrix.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
-                                type=int, metavar='NUM', \
-                                help='Use to specify number of teams to display. Default is 30.')
 parser_sec = subparsers.add_parser('security', help='Test database security.')
 
 args = parser.parse_args()
@@ -236,6 +255,10 @@ try:
             c.startGame()
         elif args.gameStart:
             c.setSetting('gameStartTs',args.gameStart,'timestamp')
+        if args.endNow:
+            c.endGame()
+        elif args.gameEnd:
+            c.setSetting('gameEndTs',args.gameEnd,'timestamp')
         elif args.list:
             print("Displaying settings")
             print(c.getFormatSettings())
@@ -243,26 +266,40 @@ try:
             parser.print_help()
             print('No subaction choosen')
     elif args.action == 'score':
-        print('Displaying score (top '+str(args.top)+')')
-        print(c.getFormatScore(args.top,args.ts))
-    elif args.action == 'graph':
-        print('Displaying graph (top '+str(args.top)+')')
-        print(c.getGraphScore(args.top))
+        if args.table:
+            print('Displaying score (top '+str(args.top)+')')
+            print(c.getFormatScore(args.top,args.ts))
+        elif args.graph:
+            print('Displaying graph (top '+str(args.top)+')')
+            print(c.getGraphScore(args.top))
+        elif args.matrix:
+            print("Displaying progression matrix")
+            print(c.getFormatScoreProgress())
+        else:
+            print('Displaying score (top '+str(args.top)+')')
+            print(c.getFormatScore(args.top,args.ts))
     elif args.action == 'history':
         print('Displaying submit history(top '+str(args.top)+', type '+str(args.type)+')')
         print(c.getFormatSubmitHistory(args.top,args.type))
     elif args.action == 'stats':
-        print("Displaying stats")
-        print(c.getFormatGameStats())
+        if args.general:
+            print("Displaying games stats")
+            print(c.getFormatGameStats())
+        elif args.flagsSubmitCount:
+            print("Displaying flags submit count")
+            print(c.getFormatFlagsSubmitCount(args.flagFilter))
+        elif args.teamProgress:
+            print("Displaying team progression")
+            print(c.getFormatTeamProgress(args.id))
+        else:
+            print("Displaying stats")
+            print(c.getFormatGameStats())
     elif args.action == 'bench':
         print("Benchmarking database")
         c.benchmarkDB(args.reqNum)
     elif args.action == 'conbench':
         print("Benchmarking database connections")
         c.benchmarkDBCon(args.reqNum,args.reqCon)
-    elif args.action == 'matrix':
-        print("Displaying progression matrix")
-        print(c.getFormatScoreProgress())
     else:
         parser.print_help()
 except postgresql.exceptions.PLPGSQLRaiseError as e:
