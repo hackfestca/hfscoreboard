@@ -293,7 +293,7 @@ try:
     elif args.action == 'history':
         print('Displaying submit history(top '+str(args.top)+', type '+str(args.type)+')')
         print(c.getFormatSubmitHistory(args.top,args.type))
-    elif args.action == 'stats':
+    elif args.action == 'stat':
         if args.general:
             print("Displaying games stats")
             print(c.getFormatGameStats())
