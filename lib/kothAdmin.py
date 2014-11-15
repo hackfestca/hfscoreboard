@@ -117,6 +117,24 @@ class kothAdmin(kothClient.kothClient):
         else:
             return self._oDB.proc('addNews(varchar,varchar)')(desc,ts)
 
+    def listFlags(self,top=config.KOTH_DEFAULT_TOP_VALUE):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('listFlags(integer)'),top)
+        else:
+            return self._oDB.proc('listFlags(integer)')(top)
+
+    def getFlagList(self,top=config.KOTH_DEFAULT_TOP_VALUE):
+        title = ['ID','Name','Pts','Category','Author','Display Interval','Description'] 
+        score = self.listFlags(top)
+        x = PrettyTable(title)
+        x.align['Name'] = 'l'
+        x.align['Category'] = 'l'
+        x.align['Author'] = 'l'
+        x.align['Description'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x
 
     def getGraphScore(self,top=config.KOTH_DEFAULT_TOP_VALUE):
         try:
@@ -173,6 +191,23 @@ class kothAdmin(kothClient.kothClient):
         info = self.getTeamProgress(teamId)
         x = PrettyTable(title)
         x.align['Flag'] = 'l'
+        x.align['Submit timestamp'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFlagProgress(self,flagName):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getFlagProgress(varchar)'),flagName)
+        else:
+            return self._oDB.proc('getFlagProgress(varchar)')(flagName)
+
+    def getFormatFlagProgress(self,flagName):
+        title = ['Team','isDone','Submit timestamp']
+        info = self.getFlagProgress(flagName)
+        x = PrettyTable(title)
+        x.align['Team'] = 'l'
         x.align['Submit timestamp'] = 'l'
         x.padding_width = 1
         for row in info:

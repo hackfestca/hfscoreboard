@@ -45,10 +45,6 @@ import logging
 import postgresql.exceptions
 import argparse
 
-# Some vars and constants
-VERSION = '0.01'
-DEBUG = True
-
 # Some functions
 def dump(obj):
     for attr in dir(obj):
@@ -59,10 +55,9 @@ usage = 'usage: %prog action [options]'
 description = 'King of the Hill admin client. Use this tool to manage the King of the Hill game'
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument('-v','--version', action='version', version='%(prog)s 2.0')
+parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
+                    help='Run the tool in debug mode')
 subparsers = parser.add_subparsers(dest='action')
-
-#actGrp = parser.add_argument_group("Action", "Select one of these action")
-#optGrp = parser.add_argument_group("Option", "Use any depending on choosen action")
 
 parser_team = subparsers.add_parser('team', help='Manage teams.')
 parser_team_action = parser_team.add_argument_group("Action")
@@ -99,6 +94,14 @@ parser_news_option.add_argument('-t', '--ts', action='store', dest='timestamp', 
 parser_news_option.add_argument('-i', '--id', action='store', dest='id', default=0, type=int, 
                                 help='For --mod only. Used to identify which news to update.')
 
+parser_flag = subparsers.add_parser('flag', help='Manage flags.')
+parser_flag_action = parser_flag.add_argument_group("action")
+parser_flag_option = parser_flag.add_argument_group("option")
+parser_flag_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List flags.')
+parser_flag_option.add_argument('-t', '--top', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
+                                type=int, metavar='NUM', \
+                                help='For --list only. Use to specify number of rows to display. Default is 30.')
+
 parser_settings = subparsers.add_parser('settings', help='Manage game settings.')
 parser_settings.add_argument('--startAt', action='store', dest='gameStart', default='', type=str, \
                                  metavar='TIMESTAMP', 
@@ -134,7 +137,7 @@ parser_history.add_argument('-t', '--top', action='store', dest='top', default=c
 parser_history.add_argument('--type', action='store', dest='type', default=None, \
                                 type=int, metavar='NUM', \
                                 help='Specify flag type to display (None=all, 1=Flag, 2=KingFlag).')
-parser_stats = subparsers.add_parser('stats', help='Display game stats.')
+parser_stats = subparsers.add_parser('stat', help='Display game stats.')
 parser_stats_action = parser_stats.add_argument_group("action")
 parser_stats_option = parser_stats.add_argument_group("option")
 parser_stats_action.add_argument('--general', action='store_true', dest='general', default=False, \
@@ -145,10 +148,12 @@ parser_stats_action.add_argument('--teamProgress', action='store_true', dest='te
                                 help='Print all submitted flags of a specific team.')
 parser_stats_action.add_argument('--flagProgress', action='store_true', dest='flagProgress', default=False, \
                                 help='Print all teams who successfuly submitted a specific flag (TODO).')
-parser_stats_option.add_argument('--flagFilter', action='store', dest='flagFilter', default='%', type=str, metavar='SQL FILTER', \
+parser_stats_option.add_argument('--flagFilter', action='store', dest='flagFilter', default='%', type=str, metavar='SQL_FILTER', \
                                 help='For --flagsSubmitCount only. Use to specify which flags to search for. Example: --flagFilter \'ssh%%\'')
-parser_stats_option.add_argument('--id', action='store', dest='id', default=0, type=int, metavar='TEAM ID', \
+parser_stats_option.add_argument('--id', action='store', dest='id', default=0, type=int, metavar='TEAM_ID', \
                                 help='For --teamProgress only. Use to specify which team to print progression for. Example: --id 14')
+parser_stats_option.add_argument('--flagName', action='store', dest='flagName', default='', type=str, metavar='FLAG_NAME', \
+                                help='For --flagProgress only. Use to specify which flags to search for. Example: --flagName \'ssh01\'')
 parser_bench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
 parser_bench.add_argument('-n', action='store', dest='reqNum', default=100, \
                                 type=int, metavar='NB_OF_REQ', \
@@ -163,7 +168,7 @@ parser_conbench.add_argument('-c', action='store', dest='reqCon', default=30, \
 parser_sec = subparsers.add_parser('security', help='Test database security.')
 
 args = parser.parse_args()
-if DEBUG:
+if args.debug:
     print('[-] Arguments: ' + str(args))
 
 # Special case: No exceptions handling for database security tests
@@ -178,7 +183,7 @@ if args.action == 'security':
 # DB Connect
 try:
     c = kothAdmin.kothAdmin()
-    c.setDebug(DEBUG)
+    c.setDebug(args.debug)
 except postgresql.exceptions.PLPGSQLRaiseError as e:
     print('[-] ('+str(e.code)+') '+e.message)
     exit(1)
@@ -250,6 +255,13 @@ try:
         else: 
             parser.print_help()
             print('No subaction choosen')
+    elif args.action == 'flag':
+        if args.list:
+            print("Displaying flags")
+            print(c.getFlagList())
+        else: 
+            parser.print_help()
+            print('No subaction choosen')
     elif args.action == 'settings':
         if args.startNow:
             c.startGame()
@@ -289,8 +301,17 @@ try:
             print("Displaying flags submit count")
             print(c.getFormatFlagsSubmitCount(args.flagFilter))
         elif args.teamProgress:
-            print("Displaying team progression")
-            print(c.getFormatTeamProgress(args.id))
+            if args.id:
+                print("Displaying team progression")
+                print(c.getFormatTeamProgress(args.id))
+            else:
+                print('You must specify a team id with --id')
+        elif args.flagProgress:
+            if args.flagName:
+                print("Displaying flag progression")
+                print(c.getFormatFlagProgress(args.flagName))
+            else:
+                print('You must specify a flag name with --flagName')
         else:
             print("Displaying stats")
             print(c.getFormatGameStats())

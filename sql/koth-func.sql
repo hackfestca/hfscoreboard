@@ -602,6 +602,40 @@ RETURNS kingFlag.value%TYPE AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: listFlags()
+*/
+CREATE OR REPLACE FUNCTION listFlags(_top integer DEFAULT 30) 
+RETURNS TABLE (
+                id flag.id%TYPE,
+                name flag.name%TYPE,
+                pts flag.pts%TYPE,
+                category category.name%TYPE,
+                author flagAuthor.nick%TYPE,
+                displayInterval flag.displayInterval%TYPE,
+                description flag.description%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT f.id AS id,
+                            f.name AS name,
+                            f.pts AS pts,
+                            c.name AS catName,
+                            a.nick as author,
+                            f.displayInterval,
+                            f.description AS description
+                     FROM flag AS f
+                     LEFT OUTER JOIN (
+                        SELECT a.id, a.nick
+                        FROM flagAuthor AS a
+                        ) AS a ON f.author = a.id
+                     LEFT OUTER JOIN (
+                        SELECT c.id, c.name, c.hidden
+                        FROM category AS c
+                        ) AS c ON f.category = c.id
+                    ORDER BY f.id;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /* 
     Stored Proc: logSubmit(playerip,flagValue)
@@ -1342,7 +1376,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: getFlagsSubmitCount()
 */
-CREATE OR REPLACE FUNCTION getFlagsSubmitCount(_flagNameFilter varchar(20) DEFAULT '%')
+CREATE OR REPLACE FUNCTION getFlagsSubmitCount(_flagNameFilter flag.name%TYPE DEFAULT '%')
 RETURNS TABLE (
                 flagName flag.name%TYPE,
                 submitCount bigint
@@ -1552,6 +1586,42 @@ RETURNS TABLE (
                         FROM team_flag 
                         WHERE teamId=_teamId
                      ) AS tf ON flag.id = tf.flagId 
+                     ORDER BY tf.ts,name;
+                
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getFlagProgress()
+*/
+CREATE OR REPLACE FUNCTION getFlagProgress(_flagName flag.name%TYPE)
+RETURNS TABLE (
+                teamName team.name%TYPE,
+                isDone boolean,
+                submitTime team_flag.ts%TYPE
+              ) AS $$
+
+    DECLARE
+        _flagId flag.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getFlagProgress(%)',$1;
+
+        -- Get id from name
+        SELECT id INTO _flagId FROM flag WHERE name = _flagName LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Could not find flag %', _flagName;
+        end if;
+
+        return QUERY SELECT name,
+                            tf.ts IS NOT Null,
+                            tf.ts 
+                     FROM team 
+                     LEFT OUTER JOIN (
+                        SELECT id,teamId,ts 
+                        FROM team_flag 
+                        WHERE flagId = _flagId
+                     ) AS tf ON team.id = tf.teamId
                      ORDER BY tf.ts,name;
                 
     END;
