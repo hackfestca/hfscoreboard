@@ -147,9 +147,9 @@ parser_stats_action.add_argument('--flagsSubmitCount', action='store_true', dest
 parser_stats_action.add_argument('--teamProgress', action='store_true', dest='teamProgress', default=False, \
                                 help='Print all submitted flags of a specific team.')
 parser_stats_action.add_argument('--flagProgress', action='store_true', dest='flagProgress', default=False, \
-                                help='Print all teams who successfuly submitted a specific flag (TODO).')
+                                help='Print all teams who successfuly submitted a specific flag.')
 parser_stats_option.add_argument('--flagFilter', action='store', dest='flagFilter', default='%', type=str, metavar='SQL_FILTER', \
-                                help='For --flagsSubmitCount only. Use to specify which flags to search for. Example: --flagFilter \'ssh%%\'')
+                                help='For --flagsSubmitCount only. Use to specify which flag to print progression. Example: --flagFilter \'ssh%%\'')
 parser_stats_option.add_argument('--id', action='store', dest='id', default=0, type=int, metavar='TEAM_ID', \
                                 help='For --teamProgress only. Use to specify which team to print progression for. Example: --id 14')
 parser_stats_option.add_argument('--flagName', action='store', dest='flagName', default='', type=str, metavar='FLAG_NAME', \
@@ -345,7 +345,8 @@ except Exception as e:
     print(e)
     dump(e)
 else:
-    print('[+] Job completed')
+    if args.debug:
+        print('[+] Job completed')
 
 c.close()
 
