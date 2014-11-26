@@ -6,23 +6,33 @@ This script is the main interface for players to submit flags and display score
 
 @author: Martin Dubé
 @organization: Hackfest Communications
-@license: GNU GENERAL PUBLIC LICENSE Version 3
+@license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-    Copyright (C) 2014  Martin Dubé
+Copyright (c) 2014, Hackfest Communications
+All rights reserved.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 # Python version validation
@@ -31,28 +41,27 @@ if sys.version_info < (3,2,0):
     print('Python version 3.2 or later is needed for this script')
     exit(1);
 
-# Should be used only for admin side
 sys.path.insert(0, 'lib')
 del sys
 
 # Project imports
 import config
-from lib import kothPlayer
+from lib import PlayerController
 
 # System imports
-import logging
 import argparse
 import socket
 from xmlrpc.client import Fault
 
 # Get args
 usage = 'usage: %prog action [options]'
-description = 'King of the Hill player client. Use this tool to submit flags and display score'
+description = 'HF Scoreboard player client. Use this tool to submit flags and display score'
 parser = argparse.ArgumentParser(description=description)
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
+                    help='Run the tool in debug mode')
 
 actGrp = parser.add_argument_group("Action", "Select one of these action")
-optGrp = parser.add_argument_group("Option", "Use any depending on choosen action")
-
 actGrp.add_argument('--submit', '-s',  action='store', dest='flag', default='',\
               type=str, help='Submit a flag')
 actGrp.add_argument('--score', action='store_true', dest='score', default=False, \
@@ -66,30 +75,22 @@ actGrp.add_argument('--news', '-n', action='store_true', dest='news',
 actGrp.add_argument('--info', '-i', action='store_true', dest='info', 
               default=False, help='Display team information')
 
-optGrp.add_argument('--top', '-t', action='store', dest='top', default=config.KOTH_DEFAULT_TOP_VALUE, \
-              type=int, help='Limit --score number of result')
+optGrp = parser.add_argument_group("Option", "Use any depending on choosen action")
+optGrp.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
+              type=int, help='Limit --score number of rows')
 optGrp.add_argument('--cat', action='store', dest='cat', default=None, \
               type=str, help='Print results only for this category name')
+
 args = parser.parse_args()
 
-# Validate args
-if args.flag == '' and \
-    not args.score and \
-    not args.catProgress and \
-    not args.flagProgress and \
-    not args.news and \
-    not args.info:
-    print('[-] You must specify an action (Try to add -h)')
-    exit(1)
-
-# DB Connect
+# Step 1: Connect to database
 try:
-    c = kothPlayer.kothPlayer()
+    c = PlayerController.PlayerController()
 except Exception as e:
     print(e)
     exit(1)
 
-# Run requested action
+# Step 2: Process user request
 try:
     if args.flag != '':
         print("Submitting flag")
@@ -109,21 +110,13 @@ try:
     elif args.info:
         print("Displaying team informations")
         print(c.getTeamInfo())
-
+    else:
+        parser.print_help()
 except socket.error as e:
     print('[-] %s' % e)
 except Fault as err:
     print('[-] %s' % err.faultString)
 else:
-    if args.flag != '':
-        print('[+] Flag successfuly submitted ('+str(pts)+' pts)')
-    elif args.score:
-        print('[+] Score successfuly displayed')
-    elif args.catProgress:
-        print('[+] Score successfuly displayed')
-    elif args.flagProgress:
-        print('[+] Score successfuly displayed')
-    elif args.news:
-        print('[+] News sucessfuly displayed')
-    elif args.info:
-        print('[+] Team info sucessfuly displayed')
+    if args.debug:
+        print('[+] Job completed')
+

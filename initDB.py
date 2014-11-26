@@ -2,27 +2,38 @@
 # -*- coding: utf-8 -*-
 
 '''
-This script is the main interface for admins to manage CTF
+This script is used for massive interactions with database (flag imports, team imports, functions updates, 
+table creations, apply security, etc.)
 
 @author: Martin Dubé
 @organization: Hackfest Communications
-@license: GNU GENERAL PUBLIC LICENSE Version 3
+@license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-    Copyright (C) 2014  Martin Dubé
+Copyright (c) 2014, Hackfest Communications
+All rights reserved.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 # Python version validation
@@ -31,30 +42,26 @@ if sys.version_info < (3,2,0):
     print('Python version 3.2 or later is needed for this script')
     exit(1);
 
-# Should be used only for admin side
 sys.path.insert(0, 'lib')
 del sys
 
 # Project imports
 import config
-from lib import kothOwner
+from lib import InitController
 
 # System imports
-import logging
 import postgresql.exceptions
 import argparse
 
-# Some vars and constants
-VERSION = '0.01'
-DEBUG = True
-
 # Get args
 usage = 'usage: %prog action [options]'
-description = 'King of the Hill DB init script. Use this tool to manipulate db structure, update security and import data'
+description = 'HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data'
 parser = argparse.ArgumentParser(description=description)
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
+                    help='Run the tool in debug mode')
 
 actGrp = parser.add_argument_group("Action", "Select one of these action")
-
 actGrp.add_argument('--tables','-t', action='store_true', dest='tables', default=False, \
               help='Import structure only (tables and functions)')
 actGrp.add_argument('--functions','-f', action='store_true', dest='functions', default=False, \
@@ -67,29 +74,18 @@ actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=F
               help='Import teams only (from csv file: import/teams.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
-#actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
-#              help='Import all')
-actGrp.add_argument('--version', '-v', action='store_true', dest='version', default=False, \
-              help='Display client version')
+actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
+              help='Import all')
 
 args = parser.parse_args()
 
-# Validate args
-#    not args.all and \
-if  not args.tables and \
-    not args.functions and \
-    not args.data and \
-    not args.flags and \
-    not args.teams and \
-    not args.security and \
-    not args.version:
-    print('[-] You must specify an action')
-    exit(1)
+if args.debug:
+    print('[-] Arguments: ' + str(args))
 
-# DB Connect
+# Step 1: Connect to database
 try:
-    c = kothOwner.kothOwner()
-    c.setDebug(DEBUG)
+    c = InitController.InitController()
+    c.setDebug(args.debug)
 except postgresql.exceptions.PLPGSQLRaiseError as e:
     print('[-] ('+str(e.code)+') '+e.message)
     exit(1)
@@ -101,11 +97,11 @@ except postgresql.exceptions.InsecurityError:
     print('[-] Something insecure was detected. Please contact an admin')
     print(e)
     exit(1);
-#except Exception as e:
-#    print(e)
+except Exception as e:
+    print(e)
+    exit(1)
 
-
-# Run requested action
+# Step 2: Process user request
 try:
     if args.tables:
         print('Importing table structure')
@@ -128,27 +124,19 @@ try:
     elif args.all:
         print('Importing all (struct + data + security)')
         c.importAll()
-    elif args.version:
-        print('client.py is v'+VERSION+', kothOwner.py is v'+c.getVersion())
-#except postgresql.exceptions.PLPGSQLRaiseError as e:
-#    print('[-] ('+str(e.code)+') '+e.message)
+    else:
+        parser.print_help()
 except postgresql.exceptions.InsufficientPrivilegeError:
     print('[-] Insufficient privileges')
-except postgresql.exceptions.UniqueError:
-    print('[-] Flag already submitted')
-except postgresql.exceptions.UndefinedFunctionError:
-    print('[-] The specified function does not exist. Please contact an admin')
 except IOError as e:
     print('[-] '+str(e))
 except postgresql.message.Message as e:
     print(e)
-#except Exception as e:
-#    print(e)
-#    dump(e)
+except Exception as e:
+    print(e)
 else:
-    print('[+] Import successful')
+    if args.debug:
+        print('[+] Import successful')
 
 c.close()
-
-
 
