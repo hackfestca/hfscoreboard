@@ -44,10 +44,12 @@ class WebController(ClientController.ClientController):
     """
 
     def __init__(self):
-        self._sUser = config.DB_WEB_USER
-        self._sPass = config.DB_WEB_PASS
-        self._sCrtFile = config.DB_WEB_CRT_FILE
-        self._sKeyFile = config.DB_WEB_KEY_FILE
+        # Prevent overwrite for inherited classes
+        if self._sUser is None:
+            self._sUser = config.DB_WEB_USER
+            self._sPass = config.DB_WEB_PASS
+            self._sCrtFile = config.DB_WEB_CRT_FILE
+            self._sKeyFile = config.DB_WEB_KEY_FILE
         super().__init__()
 
     def benchScore(self,callLimit=config.BENCH_DEFAULT_REQ_NUM):

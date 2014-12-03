@@ -82,7 +82,6 @@ class ClientController():
     '''
 
     def __init__(self):
-
         self._oDB = postgresql.open( \
                             user = self._sUser, \
                             password = self._sPass, \

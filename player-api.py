@@ -67,8 +67,8 @@ args = parser.parse_args()
 
 # Run requested action
 if args.start:
-    print("Starting rpc server")
     server = SimpleXMLRPCServer((config.PLAYER_API_HOST,config.PLAYER_API_PORT),requestHandler=RPCController.RPCHandler,allow_none=True)
+    print("RPC server started.")
     try:
         server.serve_forever()
     except Exception as e:
