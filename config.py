@@ -57,7 +57,7 @@ DB_ADMIN_PASS = 'h9N)kv1*H!3(|<eASR1^]Iwql;fsDIDc6h.?o\,IS[v?4:~}J0'
 DB_ADMIN_CRT_FILE = None
 DB_ADMIN_KEY_FILE = None
 
-DB_WEB_USER = 'scoreboard'
+DB_WEB_USER = 'web'
 DB_WEB_PASS = None
 DB_WEB_CRT_FILE = 'certs/cli.psql.scoreboard.web.crt'
 DB_WEB_KEY_FILE = 'certs/cli.psql.scoreboard.web.key'
