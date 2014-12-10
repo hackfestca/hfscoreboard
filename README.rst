@@ -60,10 +60,35 @@ You can change DNS names and IPs at your will.
 
 2. Create a low privilege user on all VMs. Let's call it scoreboard.
     
-        adduser scoreboard
+        # adduser scoreboard
+        Enter username []: scoreboard
+        Enter full name []: Scoreboard
+        Enter shell csh ksh nologin sh [ksh]: 
+        Uid [1000]: 
+        Login group scoreboard [scoreboard]: 
+        Login group is ``scoreboard''. Invite scoreboard into other groups: guest no 
+        [no]: 
+        Login class authpf bgpd daemon default staff [default]: 
+        Enter password []: 
+        Disable password logins for the user? (y/n) [n]: y
+        
+        Name:        scoreboard
+        Password:    ****
+        Fullname:    Scoreboard
+        Uid:         1000
+        Gid:         1000 (scoreboard)
+        Groups:      scoreboard 
+        Login Class: default
+        HOME:        /home/scoreboard
+        Shell:       /bin/ksh
+        OK? (y/n) [y]: 
+        Added user ``scoreboard''
+        Copy files from /etc/skel to /home/scoreboard
+        Add another user? (y/n) [y]: n
+        Goodbye!
         
 
-2. [On db.hf] Generate a CA certificate which will be used for authorizations to database. If you plan to use passwords instead, skip this step.
+3. [On db.hf] Generate a CA certificate which will be used for authorizations to database. If you plan to use passwords instead, skip this step.
 
         cd /etc/ssl
         openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout postgres-server.key -out postgres-server.crt (TODO: test this)
@@ -82,7 +107,7 @@ You can change DNS names and IPs at your will.
     
         Move the crt file back on the machines
 
-3. [On db.hf] Install and configure postgresql
+4. [On db.hf] Install and configure postgresql
 
         pkg_add postgresql-server
         pkg_add postgresql-contrib-9.3.2 # for pgcrypto
@@ -91,7 +116,7 @@ You can change DNS names and IPs at your will.
         postgres -D /var/postgresql/data
         /etc/rc.d/postgresql restart
 
-    Initialize database
+    Create database
 
         -- DB Creation (owner role + schema + extension + db)
         CREATE ROLE hfowner LOGIN INHERIT;
@@ -171,7 +196,7 @@ You can change DNS names and IPs at your will.
         /etc/rc.d/postgresql restart
         
 
-4. [On web.hf] Install python dependencies
+5. [On web.hf] Install python dependencies
 
         curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
         python3.3 get-pip.py
@@ -188,9 +213,10 @@ You can change DNS names and IPs at your will.
         cp config.default.py config.py
         vim config.py
 
-5. [On scoreboard.hf] Install nginx and python dependencies for player API
+6. [On scoreboard.hf] Install nginx and python dependencies for player API
 
         pkg_add nginx-1.5.7
+        mkdir /var/www/htdocs/public /var/www/htdocs/static
         curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
         python3.3 get-pip.py
         pip install py-postgresql
@@ -208,24 +234,18 @@ You can change DNS names and IPs at your will.
     Then configure the web server to do reverse proxy to web.hf. You can also configure TLS, caching and static files handling (see below).
 
         upstream backends{
-         server 172.28.0.11:5000;
+            server 172.28.0.11:5000;
         }
         
         # This should be on a ramfs
         proxy_cache_path /var/www/cache/responses levels=1:2 keys_zone=hf:10m;
         proxy_temp_path /var/www/cache/proxy_temp 1 2;
 
-        # Remove comments to force redirect to https        
-        #server {
-        #    listen  80;
-        #    return  301 https://$host$request_uri;
-        #}
-        
         server {
-            listen       80;
-            server_name  scoreboard.hf;
-            server_name  172.28.0.12;
-            root         /var/www/htdocs;
+                listen       80;
+                server_name  scoreboard.hf;
+                server_name  172.28.0.12;
+                root         /var/www/htdocs;
         
                 location / {
                     proxy_cache hf;
@@ -250,21 +270,12 @@ You can change DNS names and IPs at your will.
                      allow 192.168.1.0/24;
                      deny all;
                 }
-            
-                # Remove comments to let nginx handle static files. Make sure you have a copy first.
-                #location /static {
-                #    alias /var/www/htdocs/static;
-                #    proxy_cache hf;
-                #    proxy_cache_lock on;
-                #    proxy_cache_methods GET HEAD;
-                #    proxy_cache_valid 200 60;
-                #}
-            
-                # Remove comments to let nginx handle public files (challenges). Make sure you have a copy first.
-                #location /public {
-                #    alias /var/www/htdocs/public;
-                #    autoindex on;
-                #}
+
+                # Can be used for challenges and share your CA certificate.
+                location /public {
+                    alias /var/www/htdocs/public;
+                    autoindex on;
+                }
             
                 location ~* ^.+.(jpg|jpeg|gif|css|png|js|ico)$ {
                     access_log        off;
@@ -291,119 +302,115 @@ You can change DNS names and IPs at your will.
                 location ~ /\.ht {
                     deny  all;
                 }
-            
-                # Remove comments to enable TLS
-                #add_header Strict-Transport-Security "max-age=2678400; includeSubdomains;";
-                #ssl                  on;
-                #ssl_certificate      /etc/ssl/scoreboard.crt;
-                #ssl_certificate_key  /etc/ssl/scoreboard.key;
-                #ssl_session_timeout  5m;
-                #ssl_session_cache    shared:SSL:10m;
-                #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-                #ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
         }
 
 
-7. 
+7. Start services
 
 
 [openbsd]: http://www.openbsd.org
 
 
-
-
-
-
 How to use
 ==========
 
-Setting up the main config file
--------------------------------
+Initialize database
+-------------------
 
-First, go to */etc/cnb*/ folder and copy the *cnb.conf.default* to *cnb.conf*. This is the main config
-file. Most of this should not be changed, except for the **connectors** and 
-**smtp** sections. Here is an example of a *cnb.conf* file. Simply fill the
-<...> fields.
+Once you have installed the database, you can initialize it with categories, authors, flags and settings, using `sql/data.sql` and `initDB.py`.
 
-    [global]
-    #root-dir = <string>  (dynamically added)
-    #bin-dir = <string>  (dynamically added)
-    #config-dir = <string> (dynamically added)
-    #log-dir = <string>  (dynamically added)
-    #tp-dir = <string>  (dynamically added)
-    pid-file = <string>  (dynamically added if started as a daemon)
-    version = 0.20
-    log-format = %(asctime)s - %(name)s - %(levelname)s - %(message)s
-
-    [connectors]
-    auto = [freenode.irc.conf, gmail.xmpp.conf]
- 
-    [smtp]
-    smtp-user = <an email address>
-    smtp-pass = <a password>
-    smtp-host = <a smtp server>
-    smtp-port = <a smtp port>
-
-As you can see in the **connectors** section, there are two more config files. 
-These files contain all necessary information to connect a chat server.
-The next section explain how to setup a connection config file. 
+        # ./initDB.py -h
+        usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
+        
+        HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data
+        
+        optional arguments:
+          -h, --help       show this help message and exit
+          -v, --version    show program's version number and exit
+          --debug          Run the tool in debug mode
+        
+        Action:
+          Select one of these action
+        
+          --tables, -t     Import structure only (tables and functions)
+          --functions, -f  Import structure only (tables and functions)
+          --data, -d       Import data only
+          --flags, -l      Import flags only (from csv file:
+                           import/flags.csv)
+          --teams, -e      Import teams only (from csv file:
+                           import/teams.csv)
+          --security, -s   Import security only
+          --all, -a        Import all
 
 
-Setting up a connection config file
------------------------------------
+Administer CTF
+--------------
 
-The bot will import files specified in *cnb.conf* file. Here's
-the syntax of an IRC connection file. Again, simply fill the <...> fields. 
+Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
-    | [bot]
-    | type = irc
-    | log-file = freenode.irc.log
-    | username = <an irc username>
-    | password = <a password>
-    | server = <an irc server>
-    | channels = [<a list of chan to connect (Syntax: chan:[password],...)>]
-    | auto-join = 1
-    | auto-start = 1
-    | auto-reconnect = 1
-    | verbose = 0
-    | admins = [<a list of admins (Syntax: nick1,...). WARNING: THIS IS NOT SECURE>]
-
-And this is a XMPP connection file
-
-    | [bot]
-    | #id = <int> (dynamically added)
-    | #config-file = <string> (dynamically added)
-    | #monday-suck-room = <string> (dynamically added)
-    | type = xmpp|xmpp-gtalk  //xmpp for custom xmpp, xmpp-gtalk for gmail chat
-    | log-file = gmail.xmpp.log
-    | username = <insert username here>
-    | password = <insert password here>
-    | server = <overwrite only if the server can't be resolved from SRV lookup.
-    | See <http://tools.ietf.org/html/rfc6120#section-3.2.1> >
-    | rooms = [<a list of default rooms to join (Syntax: room1,...)>]
-    | nickname = <insert nick name here>
-    | auto-join = 1
-    | auto-start = 1
-    | auto-reconnect = 1
-    | verbose = 0
-    | admins = [<a list of admins (Syntax: email1,...)>]
-    |
-    | muc-domain = <insert muc domain here>
+        # ./admin.py -h
+        usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
+        
+        HF Scoreboard admin client. Use this tool to manage the CTF
+        
+        positional arguments:
+          {team,news,flag,settings,score,history,stat,bench,conbench,security}
+            team                Manage teams.
+            news                Manage news.
+            flag                Manage flags.
+            settings            Manage game settings.
+            score               Print score table (table, matrix).
+            history             Print Submit History.
+            stat                Display game stats.
+            bench               Benchmark some db stored procedure.
+            conbench            Benchmark some db stored procedure using multiple connections.
+            security            Test database security.
+        
+        optional arguments:
+          -h, --help            show this help message and exit
+          -v, --version         show program's version number and exit
+          --debug               Run the tool in debug mode
 
 
-Running the bot
------------------
+Play CTF
+--------
 
-It is recommended to start it as a shell script first to see any errors
-and then start it as a service
+Players can interact with the scoreboard using `player.py` script.
 
-To run the bot as a shell script:
+        # ./player.py -h
+        usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
+        
+        HF Scoreboard player client. Use this tool to submit flags and display score
+        
+        optional arguments:
+          -h, --help            show this help message and exit
+          -v, --version         show program's version number and exit
+          --debug               Run the tool in debug mode
+        
+        Action:
+          Select one of these action
+        
+          --submit FLAG, -s FLAG
+                                Submit a flag
+          --score               Display score
+          --catProg, -c         Display category progression
+          --flagProg, -f        Display flag progression
+          --news, -n            Display news
+          --info, -i            Display team information
+        
+        Option:
+          Use any depending on choosen action
+        
+          --top TOP, -t TOP     Limit --score number of rows
+          --cat CAT             Print results only for this category name
 
-    [/usr/local/bin/]cnb-cli [--help]
 
-To run as a service:
+Running the scoreboard
+----------------------
 
-    sudo /etc/init.d/cnb start|stop|restart|status
+[On db.hf] You only need database running.
+[On web.hf] As user scoreboard (in a tmux?), run `python3.3 ./web.py`
+[On scoreboard.hf] As user scoreboard (in a tmux?), run `python3.3 ./player-api.py --start`
 
 
 Security
@@ -412,20 +419,8 @@ Security
 Some principle
 --------------
 
-* Never run the bot as root
-* For long time use, jail it on a VM
-* Set up admin list correctly
-    * You don't want anybody to run nmaps from your home?
-
-
-Bot Hardening
------------------
-
-By default, running Chuck as a service will run it as the user "cnb". It 
-is always a good idea to run the bot as a user with limited privileges.
-
-Disabling modules can also reduce attack vectors. Disable modules by removing 
-symbolic links in the cnb/modEnabled folder (apache style).
+* Never run a service as root
+* For long time use, jail or chroot it on a VM
 
 
 Use user/pass authentication instead
@@ -442,23 +437,115 @@ Most authentication are made using client certificates. To change authentication
 Enable TLS
 ----------
 
+1. To enable TLS on the web server, first generate a CSR and sign it by an authority.
+
+2. Add these lines to your nginx server configuration and replace `listen 80` to `listen 443`.
+
+        ssl                  on;
+        ssl_certificate      /etc/ssl/scoreboard.crt;
+        ssl_certificate_key  /etc/ssl/scoreboard.key;
+        ssl_session_timeout  5m;
+        ssl_session_cache    shared:SSL:10m;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
 
 
-Enable HSTS
------------
+3. Add this section if you wish to redirect port 80 to 443.
+
+        server {
+            listen  80;
+            return  301 https://$host$request_uri;
+        }
+
+        
+4. To enable HSTS, add this line.
+
+        add_header Strict-Transport-Security "max-age=2678400; includeSubdomains;";
 
 
 Database replication
 --------------------
 
+1. Clone db.hf or make a fresh install of a primary database
+
+2. On the primary database, 
+
+        wal_level = hot_standby
+        ...
+        max_wal_senders = 3
+    
+    Then add this to pg_hba.conf
+
         host    replication     all             172.28.70.19/32         trust
 
+3. On secondary database,
+
+        hot_standby = on
+
+
+
+
+Application Load Balancing and Fail Over
+----------------------------------------
+
+You might need to update code during a CTF, thus restart application server, wchich lead to a downtime. Also, the web tier is the second buttle neck after database. Spreading the web VMs on multiple hosts can enhance performance. 
+
+To configure web load balancing, clone the web server or make a fresh install using previous steps and then, in the upstream block, append server lines as described here.
+
+        upstream backends{
+            server 172.28.0.11:5000;
+            server 172.28.0.21:5000;
+        }
+
+To avoid downtime, configure a backup upstream. This will cause connection failures on primary servers to be sent on the backup server. To do so, simply append `backup` to a server line.
+
+        upstream backends{
+            server 172.28.0.11:5000;
+            server 172.28.0.21:5000;
+            server 172.28.0.31:5000 backup;
+        }
+        
+
+
+Hardening
+---------
 
 
 Optimization
 ============
 
-On heavy load, this setup on OpenBSD raise "too many opened files" errors. This can be fixed by 
+Core
+----
+
+On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class in `/etc/login.conf`. Simply append the following lines:
+
+        hfscoreboard:\
+            :datasize=infinity:\
+            :maxproc=infinity:\
+            :maxproc-max=512:\
+            :maxproc-cur=256:\
+            :openfiles=20000:
+
+Then, set the login class to the user.
+
+        usermod -L hfscoreboard scoreboard 
+
+
+Static files handling
+---------------------
+
+Ngninx handle much faster static files than a python application. To let nginx handle static files, create a location for URI `/static` by adding the following lines to nginx server configuration.
+
+        location /static {
+            alias /var/www/htdocs/static;
+            proxy_cache hf;
+            proxy_cache_lock on;
+            proxy_cache_methods GET HEAD;
+            proxy_cache_valid 200 60;
+        }
+
+            
+            
 
 Docs
 ====
@@ -471,23 +558,12 @@ It is also accessible here: http://htmlpreview.github.io/?https://github.com/hac
 
 Contributors
 ============
-This bot was created by Martin Dubé as a Hackfest Project (See:
-http://hackfest.ca). Martin is not a developper but still the main collaborator and reviser.
-Furthermore, a lot of ideas came from Hackfest crew and community.
 
-For any comment, questions, insult: martin d0t dube at hackfest d0t com. 
+This scoreboard was written by Martin Dubé (mdube) and _eko as a Hackfest Project (See:
+http://hackfest.ca). However, a lot of ideas came from Hackfest crew and community.
 
-Thanks also to
---------------
-Authors and maintainers of the following projects, which make this bot fun and
-useful:
+For any comment, questions, insult: martin d0t dube at hackfest d0t ca. 
 
-* findmyhash
-* Urban Dictionary
-* nmap
-* Trivia Game (vn at hackfest d0t ca)
-* Python
-* And every project I forgot
 
 License
 =======
