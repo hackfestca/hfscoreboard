@@ -66,7 +66,7 @@ You can change DNS names and IPs at your will.
         Enter shell csh ksh nologin sh [ksh]: 
         Uid [1000]: 
         Login group scoreboard [scoreboard]: 
-        Login group is ``scoreboard''. Invite scoreboard into other groups: guest no 
+        Login group is ''scoreboard''. Invite scoreboard into other groups: guest no 
         [no]: 
         Login class authpf bgpd daemon default staff [default]: 
         Enter password []: 
@@ -82,7 +82,7 @@ You can change DNS names and IPs at your will.
         HOME:        /home/scoreboard
         Shell:       /bin/ksh
         OK? (y/n) [y]: 
-        Added user ``scoreboard''
+        Added user ''scoreboard''
         Copy files from /etc/skel to /home/scoreboard
         Add another user? (y/n) [y]: n
         Goodbye!
