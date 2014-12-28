@@ -3,7 +3,7 @@ HF 2014 Scoreboard
 
 This is the scoreboard used for Hacking Games at Hackfest 2014. 
 
-This project support simple (jeopardy style) capture the flags (CTF) or King of the Hill style CTF. 
+This project support simple (jeopardy) capture the flags (CTF) or King of the Hill CTF. 
 
 Objectives behind the project were: performance + security. Ease of use was our last concern. 
 
@@ -13,15 +13,15 @@ The project was build and test on the following technologies:
 * Python 3
 * Tornado (Python 3 web framework)
 * Postgresql 9.3 (Database)
-* nginx (Web server)
+* nginx 1.5.7 (Web server)
 
 
 Architecture
 ------------
 
-Setup during Hackfest was like the following diagram but it could run on a single VM. 
+Setup during Hackfest was similar to the following diagram but note it can be merged on a single VM.
 
-*INSERT DIAGRAM HERE*
+![architecture](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/architecture.png)
 
 Only presentation server (nginx) was accessible from players. 
 
@@ -38,13 +38,13 @@ The scoreboard is made of 6 components in order to initialize, manage, play and 
 * Flag Updater
 * Web scoreboard
 
-By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). This should be considered in your architecture. 
+By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). This should be considered in your design.
 
 
 Install
 =======
 
-The procedure will describe a three(3) tier architecture but all these steps can be done on a single box. Let's say we have the following topology:
+This procedure will describe a three(3) tier architecturei but all these steps can be done on a single box. Let's say we have the following topology:
 
  * A web presentation server at 172.28.0.12, resolving to scoreboard.hf
  * A web application server at 172.28.0.11, resolving to web.hf
@@ -53,8 +53,7 @@ The procedure will describe a three(3) tier architecture but all these steps can
 
 You can change DNS names and IPs at your will.
 
-
-1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, etc.).
+1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
 
     _It will work with another OS as long as you are resourceful :)_
 
@@ -88,7 +87,7 @@ You can change DNS names and IPs at your will.
         Goodbye!
         
 
-3. [On db.hf] Generate a CA certificate which will be used for authorizations to database. If you plan to use passwords instead, skip this step.
+3. [On db.hf] Generate a CA certificate which will be used for authorizations on the database. If you plan to use passwords instead, skip this step.
 
         cd /etc/ssl
         openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout postgres-server.key -out postgres-server.crt (TODO: test this)
@@ -105,7 +104,7 @@ You can change DNS names and IPs at your will.
     
         [On db.hf] Sign the certificates
     
-        Move the crt file back on the machines
+        Move the crt files back on the machines
 
 4. [On db.hf] Install and configure postgresql
 

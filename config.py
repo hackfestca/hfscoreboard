@@ -44,7 +44,7 @@ PLAYER_API_PORT = 8000
 DB_HOST = 'db.hf'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
-DB_SSL_ROOT_CA = 'certs/scoreboard-root-ca.crt'
+DB_SSL_ROOT_CA = 'certs/sb-ca.crt'
 DB_CONNECT_TIMEOUT = 2
 
 DB_INIT_USER = 'hfowner'
