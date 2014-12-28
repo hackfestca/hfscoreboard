@@ -1,0 +1,106 @@
+[ default ]
+ca                      = sb-ca             # CA name
+dir                     = .                 # Top dir
+
+[ ca ]
+default_ca              = root_ca               # The default CA section
+
+[ root_ca ]
+certificate             = $dir/$ca.crt          # The CA cert
+private_key             = $dir/$ca.key          # CA private key
+new_certs_dir           = $dir/$ca              # Certificate archive
+serial                  = $dir/$ca.crt.srl      # Serial number file
+crlnumber               = $dir/$ca.crl.srl      # CRL number file
+database                = $dir/$ca.db           # Index file
+unique_subject          = no                    # Require unique subject
+default_days            = 3652                  # How long to certify for
+default_md              = sha512                # MD to use
+policy                  = match_pol             # Default naming policy
+email_in_dn             = no                    # Add email to cert DN
+preserve                = no                    # Keep passed DN ordering
+name_opt                = ca_default            # Subject DN display options
+cert_opt                = ca_default            # Certificate display options
+copy_extensions         = none                  # Copy extensions from CSR
+x509_extensions         = ca_ext                # Default cert extensions
+default_crl_days        = 365                   # How long before next CRL
+crl_extensions          = crl_ext               # CRL extensions
+
+# Naming policies control which parts of a DN end up in the certificate and
+# under what circumstances certification should be denied.
+
+[ match_pol ]
+domainComponent         = optional              # Must match 'simple.org'
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = match                 # Must match 'Simple Inc'
+organizationalUnitName  = optional              # Included if present
+commonName              = supplied              # Must be present
+
+[ any_pol ]
+domainComponent         = optional
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = optional
+emailAddress            = optional
+
+[ req ]
+default_bits            = 4096                  # RSA key size
+encrypt_key             = yes                   # Protect private key
+default_md              = sha512                # MD to use
+utf8                    = yes                   # Input is UTF-8
+string_mask             = utf8only              # Emit UTF-8 strings
+prompt                  = yes                   # Don't prompt for DN
+distinguished_name      = req_dn                # DN section
+req_extensions          = ca_reqext             # Desired extensions
+
+[ req_dn ]
+countryName			    = Country Name (2 letter code)
+countryName_default		= CA
+countryName_min			= 2
+countryName_max			= 2
+stateOrProvinceName		= State or Province Name (full name)
+stateOrProvinceName_default	= QC
+localityName			= Locality Name (eg, city)
+localityName_default    = Quebec
+0.organizationName		= Organization Name (eg, company)
+0.organizationName_default	= Internet Widgits Pty Ltd
+organizationalUnitName		= Organizational Unit Name (eg, section)
+organizationalUnitName_default	=
+commonName			    = Common Name (e.g. server FQDN or YOUR name)
+commonName_max			= 64
+commonName_default      = db.hf
+emailAddress			= Email Address
+emailAddress_max		= 64
+
+[ ca_ext ]
+keyUsage                = critical,keyCertSign,cRLSign
+basicConstraints        = critical,CA:true,pathlen:0
+subjectKeyIdentifier    = hash
+authorityKeyIdentifier  = keyid:always
+
+[ ca_reqext ]
+keyUsage                = critical,keyCertSign,cRLSign
+basicConstraints        = critical,CA:true,pathlen:0
+subjectKeyIdentifier    = hash
+
+[ server_reqext ]
+keyUsage                = critical,digitalSignature,keyEncipherment
+basicConstraints        = critical,CA:false
+extendedKeyUsage        = serverAuth
+subjectKeyIdentifier    = hash
+#subjectAltName          = "asdf"
+
+[ client_reqext ]
+keyUsage                = critical,digitalSignature,keyEncipherment
+basicConstraints        = critical,CA:false
+extendedKeyUsage        = clientAuth
+subjectKeyIdentifier    = hash
+#subjectAltName          = "asdf"
+
+[ crl_ext ]
+authorityKeyIdentifier  = keyid:always
+
