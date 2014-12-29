@@ -88,44 +88,44 @@ You can change DNS names and IPs at your will.
     Goodbye!
     ```
  Then, clone this git project in all sb's home.
-    ```
+    ```bash
     su - sb
     git clone https://github.com/hackfestca/hfscoreboard
     ```
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
-    ```
+    ```bash
     cd sh/cert
     ./gencert.sh
     ```
  Copy database certificate and key files to postgresql folder
-    ```
+    ```bash
     mkdir /var/postgresql/data/certs
     cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
     ```
  Copy flagUpdater certificate and key files to certs folder
-    ```
+    ```bash
     cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
     ```
  Upload web certificate and key files on web.hf
-    ```
+    ```bash
     scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
     ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
     ```
  Upload player certificate and key files on scoreboard.hf
-    ```
+    ```bash
     scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
     ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
     ```
  Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
-    ```        
+    ```bash        
     cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
     ```
 
 4. [On db.hf] Install and configure postgresql
 
-    ```
+    ```bash
     pkg_add postgresql-server
     pkg_add postgresql-contrib-9.3.2 # for pgcrypto
     mkdir -p /var/postgresql/data
@@ -187,7 +187,7 @@ You can change DNS names and IPs at your will.
     hostssl scoreboard  web         192.168.1.0/24         cert clientcert=1
     ```
  Then install ssh4py, needed for flagUpdater.py only, to push new flags on challenges box using SSH.
-    ```
+    ```bash
     git clone https://github.com/wallunit/ssh4py.git
     pkg_add libssh2-1.4.3
     cd /usr/local/include/python3.3m/
@@ -210,30 +210,30 @@ You can change DNS names and IPs at your will.
     ...
     ```
  Restart postgresql
-    ```
+    ```bash
     /etc/rc.d/postgresql restart
     ```
 5. [On web.hf] Install python dependencies
 
-    ```
+    ```bash
     curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
     python3.3 get-pip.py
     pip install py-postgresql
     pip install tornado
     ```
  Download the code from git
-    ```
+    ```bash
     git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
     ```
  Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
-    ```
+    ```bash
     cd hfscoreboard
     cp config.default.py config.py
     vim config.py
     ```
 6. [On scoreboard.hf] Install nginx and python dependencies for player API
 
-    ```
+    ```bash
     pkg_add nginx-1.5.7
     mkdir /var/www/htdocs/public /var/www/htdocs/static
     curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
@@ -241,11 +241,11 @@ You can change DNS names and IPs at your will.
     pip install py-postgresql
     ```
  Download the code from git
-    ```
+    ```bash
     git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
     ```
  Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
-    ```
+    ```bash
     cd hfscoreboard
     cp config.default.py config.py
     vim config.py
@@ -546,7 +546,7 @@ On heavy load, this setup on OpenBSD for presentation and application tier may r
         :openfiles=20000:
     ```
 Then, set the login class to the user.
-    ```
+    ```bash
     usermod -L hfscoreboard sb
     ```
 
