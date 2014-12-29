@@ -59,7 +59,7 @@ You can change DNS names and IPs at your will.
 
 2. Create a low privilege user on all VMs. Let's call it sb.
 
-    # adduser sb
+    adduser sb
     Enter username []: sb
     Enter full name []: Scoreboard
     Enter shell csh ksh nologin sh [ksh]: 
@@ -88,46 +88,46 @@ You can change DNS names and IPs at your will.
 
 Then, clone this git project in all sb's home.
 
-    # su - sb
-    # git clone https://github.com/hackfestca/hfscoreboard
+    su - sb
+    git clone https://github.com/hackfestca/hfscoreboard
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
-    # cd sh/cert
-    # ./gencert.sh
+    cd sh/cert
+    ./gencert.sh
 
 Copy database certificate and key files to postgresql folder
 
-    # mkdir /var/postgresql/data/certs
-    # cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
+    mkdir /var/postgresql/data/certs
+    cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
 
 Copy flagUpdater certificate and key files to certs folder
 
-    # cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
+    cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
 
 Upload web certificate and key files on web.hf
 
-    # scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
-    # ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
+    scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
+    ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
 
 Upload player certificate and key files on scoreboard.hf
 
-    # scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
-    # ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
+    scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
+    ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
 
 Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
          
-    # cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
+    cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
 
 4. [On db.hf] Install and configure postgresql
 
-    # pkg_add postgresql-server
-    # pkg_add postgresql-contrib-9.3.2 # for pgcrypto
-    # mkdir -p /var/postgresql/data
-    # su - _postgresql
+    pkg_add postgresql-server
+    pkg_add postgresql-contrib-9.3.2 # for pgcrypto
+    mkdir -p /var/postgresql/data
+    su - _postgresql
     $ postgres -D /var/postgresql/data
     $ exit
-    # /etc/rc.d/postgresql restart
+    /etc/rc.d/postgresql restart
 
 Create database (see `sql/install.sql`)
 
@@ -249,7 +249,7 @@ Then configure the web server to do reverse proxy to web.hf. You can also config
         server 172.28.0.11:5000;
     }
     
-    # This should be on a ramfs
+    This should be on a ramfs
     proxy_cache_path /var/www/cache/responses levels=1:2 keys_zone=hf:10m;
     proxy_temp_path /var/www/cache/proxy_temp 1 2;
 
@@ -336,7 +336,7 @@ Initialize database
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
 
-    # ./initDB.py -h
+    ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
     
     HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data
@@ -366,7 +366,7 @@ Administer the CTF
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
-    # ./admin.py -h
+    ./admin.py -h
     usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
     
     HF Scoreboard admin client. Use this tool to manage the CTF
@@ -395,7 +395,7 @@ Play the CTF
 
 Players can interact with the scoreboard using `player.py` script.
 
-    # ./player.py -h
+    ./player.py -h
     usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
     
     HF Scoreboard player client. Use this tool to submit flags and display score
@@ -544,7 +544,7 @@ On heavy load, this setup on OpenBSD for presentation and application tier may r
 
 Then, set the login class to the user.
 
-    # usermod -L hfscoreboard sb
+    usermod -L hfscoreboard sb
 
 
 Static files handling
