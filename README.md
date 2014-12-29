@@ -59,7 +59,7 @@ You can change DNS names and IPs at your will.
 
 2. Create a low privilege user on all VMs. Let's call it sb.
     ```
-    adduser sb
+    # adduser sb
     Enter username []: sb
     Enter full name []: Scoreboard
     Enter shell csh ksh nologin sh [ksh]: 
@@ -86,39 +86,40 @@ You can change DNS names and IPs at your will.
     Add another user? (y/n) [y]: n
     Goodbye!
     ```
-
  Then, clone this git project in all sb's home.
-
+    ```
     su - sb
     git clone https://github.com/hackfestca/hfscoreboard
+    ```
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
-
+    ```
     cd sh/cert
     ./gencert.sh
-
-Copy database certificate and key files to postgresql folder
-
+    ```
+ Copy database certificate and key files to postgresql folder
+    ```
     mkdir /var/postgresql/data/certs
     cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
-
-Copy flagUpdater certificate and key files to certs folder
-
+    ```
+ Copy flagUpdater certificate and key files to certs folder
+    ```
     cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
-
-Upload web certificate and key files on web.hf
-
+    ```
+ Upload web certificate and key files on web.hf
+    ```
     scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
     ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
-
-Upload player certificate and key files on scoreboard.hf
-
+    ```
+ Upload player certificate and key files on scoreboard.hf
+    ```
     scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
     ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
-
-Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
-         
+    ```
+ Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
+    ```        
     cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
+    ```
 
 4. [On db.hf] Install and configure postgresql
 
