@@ -122,17 +122,17 @@ You can change DNS names and IPs at your will.
     ```
 
 4. [On db.hf] Install and configure postgresql
-
+    ```
     pkg_add postgresql-server
     pkg_add postgresql-contrib-9.3.2 # for pgcrypto
     mkdir -p /var/postgresql/data
     su - _postgresql
-    $ postgres -D /var/postgresql/data
-    $ exit
+    postgres -D /var/postgresql/data
+    exit
     /etc/rc.d/postgresql restart
-
-Create database (see `sql/install.sql`)
-
+    ```
+ Create database (see `sql/install.sql`)
+    ```
     -- DB Creation (owner role + schema + extension + db)
     CREATE ROLE owner LOGIN INHERIT;
     CREATE DATABASE scoreboard WITH OWNER owner ENCODING 'UTF-8' TEMPLATE template0;
@@ -168,32 +168,32 @@ Create database (see `sql/install.sql`)
     -- Create yourself a role here. Replace admin by something else on both lines
     CREATE ROLE admin LOGIN INHERIT PASSWORD '<CHANGE_ME>';
     GRANT hfadmins to admin;
-
-Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
-
+    ```
+ Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
+    ```
     hostssl scoreboard  owner       192.168.1.0/24         cert clientcert=1 
     hostssl scoreboard  admin       192.168.1.0/24         md5 
     hostssl scoreboard  flagupdater 172.28.0.10/32         cert clientcert=1
     hostssl scoreboard  web         172.28.0.11/32         cert clientcert=1 
     hostssl scoreboard  player      172.28.0.12/32         cert clientcert=1 
-
-Some useful rules for development purpose:
-
+    ```
+ Some useful rules for development purpose:
+    ```
     hostssl scoreboard  flagupdater 192.168.1.0/24         cert clientcert=1
     hostssl scoreboard  player      192.168.1.0/24         cert clientcert=1 
     hostssl scoreboard  web         192.168.1.0/24         cert clientcert=1
-
-Then install ssh4py, needed for flagUpdater.py only, to push new flags on challenges box using SSH.
-
+    ```
+ Then install ssh4py, needed for flagUpdater.py only, to push new flags on challenges box using SSH.
+    ```
     git clone https://github.com/wallunit/ssh4py.git
     pkg_add libssh2-1.4.3
     cd /usr/local/include/python3.3m/
     ln -s ../libssh2_sftp.h libssh2_sftp.h 
     ln -s ../libssh2_sftp.h libssh2_sftp.h 
     cd /root/ssh4py; python3.2 ./setup.py build; python3.2 ./setup.py install
-
-Edit `/var/postgresql/data/postgresql.conf` and set the following variables.
-
+    ```
+ Edit `/var/postgresql/data/postgresql.conf` and set the following variables.
+    ```
     listen_addresses = '172.28.0.10'
     ...
     ssl = on
@@ -205,53 +205,53 @@ Edit `/var/postgresql/data/postgresql.conf` and set the following variables.
     ...
     search_path = 'scoreboard'
     ...
-
-Restart postgresql
-
+    ```
+ Restart postgresql
+    ```
     /etc/rc.d/postgresql restart
-
+    ```
 5. [On web.hf] Install python dependencies
-
+    ```
     curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
     python3.3 get-pip.py
     pip install py-postgresql
     pip install tornado
-
-Download the code from git
-
+    ```
+ Download the code from git
+    ```
     git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
-
-Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
-
+    ```
+ Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
+    ```
     cd hfscoreboard
     cp config.default.py config.py
     vim config.py
-
+    ```
 6. [On scoreboard.hf] Install nginx and python dependencies for player API
-
+    ```
     pkg_add nginx-1.5.7
     mkdir /var/www/htdocs/public /var/www/htdocs/static
     curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
     python3.3 get-pip.py
     pip install py-postgresql
-
-Download the code from git
-
+    ```
+ Download the code from git
+    ```bash
     git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
-
-Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
-
+    ```
+ Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
+    ```
     cd hfscoreboard
     cp config.default.py config.py
     vim config.py
-
-Then configure the web server to do reverse proxy to web.hf. You can also configure TLS, caching and static files handling (see below).
-
+    ```
+ Then configure the web server to do reverse proxy to web.hf. You can also configure TLS, caching and static files handling (see below).
+    ```
     upstream backends{
         server 172.28.0.11:5000;
     }
     
-    This should be on a ramfs
+    # This should be on a ramfs
     proxy_cache_path /var/www/cache/responses levels=1:2 keys_zone=hf:10m;
     proxy_temp_path /var/www/cache/proxy_temp 1 2;
 
@@ -317,7 +317,7 @@ Then configure the web server to do reverse proxy to web.hf. You can also config
                 deny  all;
             }
     }
-
+    ```
 
 [openbsd]: http://www.openbsd.org
 
@@ -337,7 +337,7 @@ Initialize database
 -------------------
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
-
+    ```
     ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
     
@@ -360,14 +360,14 @@ You might want to configure categories, authors, flags and settings. To do so, e
                        import/teams.csv)
       --security, -s   Import security only
       --all, -a        Import all
-
+    ```
 
 
 Administer the CTF
 ------------------
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
-
+    ```
     ./admin.py -h
     usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
     
@@ -390,13 +390,13 @@ Once data are initialized, several informations can be managed or displayed usin
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
       --debug               Run the tool in debug mode
-
+    ```
 
 Play the CTF
 ------------
 
 Players can interact with the scoreboard using `player.py` script.
-
+    ```
     ./player.py -h
     usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
     
@@ -423,7 +423,7 @@ Players can interact with the scoreboard using `player.py` script.
     
       --top TOP, -t TOP     Limit --score number of rows
       --cat CAT             Print results only for this category name
-
+    ```
 
 Security
 ========
@@ -442,13 +442,13 @@ Most authentication are made using client certificates. To change authentication
 
 1. Open `/var/postgresql/data/pg_hba.conf` on the database server.
 2. Find line corresponding to the user you want to change. For example:
-
+    ```
     hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
-
+    ```
 3. Replace `cert clientcert=1` to `md5` so it looks like:
-
+    ```
     hostssl scoreboard  player      172.28.71.11/32         md5
-
+    ```
 4. Restart database: `/etc/rc.d/postgresql restart`
 
 
@@ -456,9 +456,8 @@ Enable TLS
 ----------
 
 1. To enable TLS on the web server, first generate a CSR and sign it by an authority.
-
 2. Add these lines to your nginx server configuration and replace `listen 80` to `listen 443`.
-
+    ```
     ssl                  on;
     ssl_certificate      /etc/ssl/scoreboard.crt;
     ssl_certificate_key  /etc/ssl/scoreboard.key;
@@ -466,40 +465,37 @@ Enable TLS
     ssl_session_cache    shared:SSL:10m;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
-
-
+    ```
 3. Add this section if you wish to redirect port 80 to 443.
-
+    ```
     server {
         listen  80;
         return  301 https://$host$request_uri;
     }
-
-       
+    ```
 4. To enable HSTS, add this line.
-
+    ```
     add_header Strict-Transport-Security "max-age=2678400; includeSubdomains;";
-
+    ```
 
 Database replication
 --------------------
 
 1. Clone db.hf or make a fresh install of a primary database
-
 2. On the primary database, 
-
+    ```
     wal_level = hot_standby
     ...
     max_wal_senders = 3
-    
+     ```   
     Then add this to pg_hba.conf
-
+    ```
     host    replication     all             172.28.70.19/32         trust
-
+    ```
 3. On secondary database,
-
+    ```
     hot_standby = on
-
+    ```
 
 Application Load Balancing and Fail Over
 ----------------------------------------
@@ -507,20 +503,20 @@ Application Load Balancing and Fail Over
 You might need to update code during a CTF, thus cause a downtime by restarting application server. Also, on high load, the web tier is the second buttle neck after the database. Spreading the web VMs on multiple hosts can enhance performance. 
 
 To configure web load balancing, clone the web server or make a fresh install using previous steps. Then, in the upstream block, append server lines as described here.
-
+    ```
     upstream backends{
         server 172.28.0.11:5000;
         server 172.28.0.21:5000;
     }
-
+    ```
 To avoid downtime, configure a backup upstream. This will cause connection failures on primary servers to be sent on the backup server. To do so, simply append `backup` to a server line.
-
+    ```
     upstream backends{
         server 172.28.0.11:5000;
         server 172.28.0.21:5000;
         server 172.28.0.31:5000 backup;
     }
-    
+     ```   
 
 
 Hardening
@@ -536,24 +532,24 @@ Core
 ----
 
 On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class with specific properties in `/etc/login.conf`. Simply append the following lines:
-
+    ```
     hfscoreboard:\
         :datasize=infinity:\
         :maxproc=infinity:\
         :maxproc-max=512:\
         :maxproc-cur=256:\
         :openfiles=20000:
-
+    ```
 Then, set the login class to the user.
-
+    ```
     usermod -L hfscoreboard sb
-
+    ```
 
 Static files handling
 ---------------------
 
 Ngninx handle much faster static files than a python application. To let nginx handle static files, create a location for URI `/static` by adding the following lines to nginx server configuration.
-
+    ```
     location /static {
         alias /var/www/htdocs/static;
         proxy_cache hf;
@@ -561,6 +557,7 @@ Ngninx handle much faster static files than a python application. To let nginx h
         proxy_cache_methods GET HEAD;
         proxy_cache_valid 200 60;
     }
+    ```
 
 Flags & Teams management
 ------------------------
