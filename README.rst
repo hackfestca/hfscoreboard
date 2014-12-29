@@ -88,83 +88,84 @@ You can change DNS names and IPs at your will.
 
 Then, clone this git project in all sb's home.
 
-    | su - sb
-    | git clone https://github.com/hackfestca/hfscoreboard
+    | # su - sb
+    | # git clone https://github.com/hackfestca/hfscoreboard
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
-        | cd sh/cert
-        | ./gencert.sh
+    | # cd sh/cert
+    | # ./gencert.sh
 
-    1. Copy database certificate and key files to postgresql folder
+Copy database certificate and key files to postgresql folder
 
-        | mkdir /var/postgresql/data/certs
-        | cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
+    | # mkdir /var/postgresql/data/certs
+    | # cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
 
 Copy flagUpdater certificate and key files to certs folder
 
-        cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
+    | # cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
 
 Upload web certificate and key files on web.hf
 
-        scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
-        ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
+    | # scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
+    | # ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
 
 Upload player certificate and key files on scoreboard.hf
 
-        scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
-        ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
+    | # scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
+    | # ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
 
 Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
          
-        cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
+    | # cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
 
 4. [On db.hf] Install and configure postgresql
 
-        pkg_add postgresql-server
-        pkg_add postgresql-contrib-9.3.2 # for pgcrypto
-        mkdir -p /var/postgresql/data
-        su - _postgresql
-        postgres -D /var/postgresql/data
-        /etc/rc.d/postgresql restart
+    | # pkg_add postgresql-server
+    | # pkg_add postgresql-contrib-9.3.2 # for pgcrypto
+    | # mkdir -p /var/postgresql/data
+    | # su - _postgresql
+    | $ postgres -D /var/postgresql/data
+    | $ exit
+    | # /etc/rc.d/postgresql restart
 
-    Create database
+Create database
 
-        -- DB Creation (owner role + schema + extension + db)
-        CREATE ROLE owner LOGIN INHERIT;
-        CREATE DATABASE scoreboard WITH OWNER owner ENCODING 'UTF-8' TEMPLATE template0;
-        \c scoreboard;
-        
-        CREATE SCHEMA IF NOT EXISTS scoreboard AUTHORIZATION owner;
-        CREATE SCHEMA IF NOT EXISTS pgcrypto AUTHORIZATION owner;
-        CREATE SCHEMA IF NOT EXISTS tablefunc AUTHORIZATION owner;
-        CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA pgcrypto;
-        CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA tablefunc;
-        GRANT CONNECT ON DATABASE scoreboard TO owner;
-        
-        -- Modify default privileges
-        ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON TABLES FROM PUBLIC; 
-        ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON SEQUENCES FROM PUBLIC; 
-        ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON FUNCTIONS FROM PUBLIC; 
-        
-        -- Access roles
-        CREATE ROLE hfadmins NOINHERIT;     -- Admins 
-        CREATE ROLE hfplayers NOINHERIT;    -- Players 
-        CREATE ROLE hfscore NOINHERIT;      -- Scoreboard access
-        CREATE ROLE hfflagupdater NOINHERIT;-- FlagUpdater access
-        
-        CREATE ROLE player LOGIN INHERIT PASSWORD 'player';
-        CREATE ROLE web LOGIN INHERIT PASSWORD 'web';
-        CREATE ROLE flagupdater LOGIN INHERIT PASSWORD 'flagUpdater';
-        
-        GRANT hfadmins to owner;
-        GRANT hfplayers to player;
-        GRANT hfscore to web;
-        GRANT hfflagupdater to flagupdater;
+    | -- DB Creation (owner role + schema + extension + db)
+    | CREATE ROLE owner LOGIN INHERIT;
+    | CREATE DATABASE scoreboard WITH OWNER owner ENCODING 'UTF-8' TEMPLATE template0;
+    | #\c scoreboard;
+    | 
+    | CREATE SCHEMA IF NOT EXISTS scoreboard AUTHORIZATION owner;
+    | CREATE SCHEMA IF NOT EXISTS pgcrypto AUTHORIZATION owner;
+    | CREATE SCHEMA IF NOT EXISTS tablefunc AUTHORIZATION owner;
+    | CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA pgcrypto;
+    | CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA tablefunc;
+    | GRANT CONNECT ON DATABASE scoreboard TO owner;
+    | 
+    | -- Modify default privileges
+    | ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON TABLES FROM PUBLIC; 
+    | ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON SEQUENCES FROM PUBLIC; 
+    | ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON FUNCTIONS FROM PUBLIC; 
+    | 
+    | -- Access roles
+    | CREATE ROLE hfadmins NOINHERIT;     -- Admins 
+    | CREATE ROLE hfplayers NOINHERIT;    -- Players 
+    | CREATE ROLE hfscore NOINHERIT;      -- Scoreboard access
+    | CREATE ROLE hfflagupdater NOINHERIT;-- FlagUpdater access
+    | 
+    | CREATE ROLE player LOGIN INHERIT PASSWORD 'player';
+    | CREATE ROLE web LOGIN INHERIT PASSWORD 'web';
+    | CREATE ROLE flagupdater LOGIN INHERIT PASSWORD 'flagUpdater';
+    | 
+    | GRANT hfadmins to owner;
+    | GRANT hfplayers to player;
+    | GRANT hfscore to web;
+    | GRANT hfflagupdater to flagupdater;
 
-        -- Create yourself a role here. Replace admin by something else on both lines
-        CREATE ROLE admin LOGIN INHERIT PASSWORD '<CHANGE_ME>';
-        GRANT hfadmins to admin;
+    | -- Create yourself a role here. Replace admin by something else on both lines
+    | CREATE ROLE admin LOGIN INHERIT PASSWORD '<CHANGE_ME>';
+    | GRANT hfadmins to admin;
 
     Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
 
