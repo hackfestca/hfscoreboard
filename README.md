@@ -345,7 +345,7 @@ Initialize database
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
 
-    ./initDB.py -h
+    # ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
     
     HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data
@@ -374,7 +374,7 @@ Administer the CTF
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
-    ./admin.py -h
+    # ./admin.py -h
     usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
     
     HF Scoreboard admin client. Use this tool to manage the CTF
@@ -402,7 +402,7 @@ Play the CTF
 
 Players can interact with the scoreboard using `player.py` script.
 
-    ./player.py -h
+    # ./player.py -h
     usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
     
     HF Scoreboard player client. Use this tool to submit flags and display score
@@ -516,22 +516,18 @@ You might need to update code during a CTF, thus cause a downtime by restarting 
 
 To configure web load balancing, clone the web server or make a fresh install using previous steps. Then, in the upstream block, append server lines as described here.
 
-    ```
     upstream backends{
         server 172.28.0.11:5000;
         server 172.28.0.21:5000;
     }
-    ```
 
 To avoid downtime, configure a backup upstream. This will cause connection failures on primary servers to be sent on the backup server. To do so, simply append `backup` to a server line.
 
-    ```
     upstream backends{
         server 172.28.0.11:5000;
         server 172.28.0.21:5000;
         server 172.28.0.31:5000 backup;
     }
-     ```   
 
 
 Hardening
@@ -548,27 +544,22 @@ Core
 
 On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class with specific properties in `/etc/login.conf`. Simply append the following lines:
 
-    ```
     hfscoreboard:\
         :datasize=infinity:\
         :maxproc=infinity:\
         :maxproc-max=512:\
         :maxproc-cur=256:\
         :openfiles=20000:
-    ```
 
 Then, set the login class to the user.
 
-    ```bash
     usermod -L hfscoreboard sb
-    ```
 
 Static files handling
 ---------------------
 
 Ngninx handle much faster static files than a python application. To let nginx handle static files, create a location for URI `/static` by adding the following lines to nginx server configuration.
 
-    ```
     location /static {
         alias /var/www/htdocs/static;
         proxy_cache hf;
@@ -576,7 +567,6 @@ Ngninx handle much faster static files than a python application. To let nginx h
         proxy_cache_methods GET HEAD;
         proxy_cache_valid 200 60;
     }
-    ```
 
 Flags & Teams management
 ------------------------
