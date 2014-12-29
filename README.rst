@@ -51,14 +51,13 @@ This procedure will describe a three(3) tier architecturei but all these steps c
 * A database server at 172.28.0.10, resolving to db.hf
 * Admins are in 192.168.1.0/24
 
-
 You can change DNS names and IPs at your will.
 
-Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
+1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
 
 **It will work with another OS as long as you are resourceful :)**
 
-Create a low privilege user on all VMs. Let's call it sb.
+2. Create a low privilege user on all VMs. Let's call it sb.
 
     | # adduser sb
     | Enter username []: sb
@@ -89,20 +88,18 @@ Create a low privilege user on all VMs. Let's call it sb.
 
 Then, clone this git project in all sb's home.
 
- ```
- su - sb
- git clone https://github.com/hackfestca/hfscoreboard
- ```
+    | su - sb
+    | git clone https://github.com/hackfestca/hfscoreboard
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
-        cd sh/cert
-        ./gencert.sh
+        | cd sh/cert
+        | ./gencert.sh
 
-Copy database certificate and key files to postgresql folder
+    1. Copy database certificate and key files to postgresql folder
 
-        mkdir /var/postgresql/data/certs
-        cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
+        | mkdir /var/postgresql/data/certs
+        | cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
 
 Copy flagUpdater certificate and key files to certs folder
 
