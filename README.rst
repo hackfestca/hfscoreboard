@@ -54,11 +54,11 @@ This procedure will describe a three(3) tier architecturei but all these steps c
 
 You can change DNS names and IPs at your will.
 
-1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
+Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
 
 _It will work with another OS as long as you are resourceful :)_
 
-2. Create a low privilege user on all VMs. Let's call it sb.
+Create a low privilege user on all VMs. Let's call it sb.
 
 ```    
 # adduser sb
