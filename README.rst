@@ -60,6 +60,11 @@ _It will work with another OS as long as you are resourceful :)_
 
 Create a low privilege user on all VMs. Let's call it sb.
 
+    ```
+    test
+    ```
+
+
 ```    
 # adduser sb
 Enter username []: sb
