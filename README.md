@@ -334,7 +334,9 @@ Running the scoreboard
 ----------------------
 
 [On db.hf] You only need postgresql running with data initialized. Simply run `python3.3 ./initDB.py --all`
+
 [On web.hf] As user scoreboard (in a tmux, ideally), run `python3.3 ./web.py`
+
 [On scoreboard.hf] As user scoreboard (in a tmux, ideally), run `python3.3 ./player-api.py --start`
 
 
@@ -342,6 +344,7 @@ Initialize database
 -------------------
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
+
     ```
     ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
@@ -372,6 +375,7 @@ Administer the CTF
 ------------------
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
+
     ```
     ./admin.py -h
     usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
@@ -401,6 +405,7 @@ Play the CTF
 ------------
 
 Players can interact with the scoreboard using `player.py` script.
+
     ```
     ./player.py -h
     usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
@@ -447,10 +452,12 @@ Most authentication are made using client certificates. To change authentication
 
 1. Open `/var/postgresql/data/pg_hba.conf` on the database server.
 2. Find line corresponding to the user you want to change. For example:
+
     ```
     hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
     ```
 3. Replace `cert clientcert=1` to `md5` so it looks like:
+
     ```
     hostssl scoreboard  player      172.28.71.11/32         md5
     ```
@@ -472,6 +479,7 @@ Enable TLS
     ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
     ```
 3. Add this section if you wish to redirect port 80 to 443.
+
     ```
     server {
         listen  80;
@@ -479,6 +487,7 @@ Enable TLS
     }
     ```
 4. To enable HSTS, add this line.
+
     ```
     add_header Strict-Transport-Security "max-age=2678400; includeSubdomains;";
     ```
@@ -486,18 +495,21 @@ Enable TLS
 Database replication
 --------------------
 
-1. Clone db.hf or make a fresh install of a primary database
-2. On the primary database, 
+1. Clone db.hf or make a fresh install of a primary database.
+2. On the primary database, configure the following variables.
+
     ```
     wal_level = hot_standby
     ...
     max_wal_senders = 3
      ```   
-    Then add this to pg_hba.conf
+ Then add this to pg_hba.conf
+
     ```
     host    replication     all             172.28.70.19/32         trust
     ```
-3. On secondary database,
+3. On secondary database, configure the following variables.
+
     ```
     hot_standby = on
     ```
@@ -508,13 +520,16 @@ Application Load Balancing and Fail Over
 You might need to update code during a CTF, thus cause a downtime by restarting application server. Also, on high load, the web tier is the second buttle neck after the database. Spreading the web VMs on multiple hosts can enhance performance. 
 
 To configure web load balancing, clone the web server or make a fresh install using previous steps. Then, in the upstream block, append server lines as described here.
+
     ```
     upstream backends{
         server 172.28.0.11:5000;
         server 172.28.0.21:5000;
     }
     ```
+
 To avoid downtime, configure a backup upstream. This will cause connection failures on primary servers to be sent on the backup server. To do so, simply append `backup` to a server line.
+
     ```
     upstream backends{
         server 172.28.0.11:5000;
@@ -537,6 +552,7 @@ Core
 ----
 
 On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class with specific properties in `/etc/login.conf`. Simply append the following lines:
+
     ```
     hfscoreboard:\
         :datasize=infinity:\
@@ -545,7 +561,9 @@ On heavy load, this setup on OpenBSD for presentation and application tier may r
         :maxproc-cur=256:\
         :openfiles=20000:
     ```
+
 Then, set the login class to the user.
+
     ```bash
     usermod -L hfscoreboard sb
     ```
@@ -554,6 +572,7 @@ Static files handling
 ---------------------
 
 Ngninx handle much faster static files than a python application. To let nginx handle static files, create a location for URI `/static` by adding the following lines to nginx server configuration.
+
     ```
     location /static {
         alias /var/www/htdocs/static;
