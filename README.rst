@@ -60,39 +60,34 @@ _It will work with another OS as long as you are resourceful :)_
 
 Create a low privilege user on all VMs. Let's call it sb.
 
+    ```    
+    # adduser sb
+    Enter username []: sb
+    Enter full name []: Scoreboard
+    Enter shell csh ksh nologin sh [ksh]: 
+    Uid [1000]: 
+    Login group sb [sb]: 
+    Login group is ''sb''. Invite sb into other groups: guest no 
+    [no]: 
+    Login class authpf bgpd daemon default staff [default]: 
+    Enter password []: 
+    Disable password logins for the user? (y/n) [n]: y
+    
+    Name:        sb
+    Password:    ****
+    Fullname:    Scoreboard
+    Uid:         1000
+    Gid:         1000 (sb)
+    Groups:      sb
+    Login Class: default
+    HOME:        /home/sb
+    Shell:       /bin/ksh
+    OK? (y/n) [y]: 
+    Added user ''sb''
+    Copy files from /etc/skel to /home/sb
+    Add another user? (y/n) [y]: n
+    Goodbye!
     ```
-    test
-    ```
-
-
-```    
-# adduser sb
-Enter username []: sb
-Enter full name []: Scoreboard
-Enter shell csh ksh nologin sh [ksh]: 
-Uid [1000]: 
-Login group sb [sb]: 
-Login group is ''sb''. Invite sb into other groups: guest no 
-[no]: 
-Login class authpf bgpd daemon default staff [default]: 
-Enter password []: 
-Disable password logins for the user? (y/n) [n]: y
-
-Name:        sb
-Password:    ****
-Fullname:    Scoreboard
-Uid:         1000
-Gid:         1000 (sb)
-Groups:      sb
-Login Class: default
-HOME:        /home/sb
-Shell:       /bin/ksh
-OK? (y/n) [y]: 
-Added user ''sb''
-Copy files from /etc/skel to /home/sb
-Add another user? (y/n) [y]: n
-Goodbye!
-```
 
 Then, clone this git project in all sb's home.
 
