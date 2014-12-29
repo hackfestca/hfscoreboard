@@ -336,28 +336,28 @@ Initialize database
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
 
-    | # ./initDB.py -h
-    | usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
-    | 
-    | HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data
-    | 
-    | optional arguments:
-    |   -h, --help       show this help message and exit
-    |   -v, --version    show program's version number and exit
-    |   --debug          Run the tool in debug mode
-    | 
-    | Action:
-    |   Select one of these action
-    | 
-    |   --tables, -t     Import structure only (tables and functions)
-    |   --functions, -f  Import structure only (tables and functions)
-    |   --data, -d       Import data only
-    |   --flags, -l      Import flags only (from csv file:
-    |                    import/flags.csv)
-    |   --teams, -e      Import teams only (from csv file:
-    |                    import/teams.csv)
-    |   --security, -s   Import security only
-    |   --all, -a        Import all
+    # ./initDB.py -h
+    usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
+    
+    HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data
+    
+    optional arguments:
+      -h, --help       show this help message and exit
+      -v, --version    show program's version number and exit
+      --debug          Run the tool in debug mode
+    
+    Action:
+      Select one of these action
+    
+      --tables, -t     Import structure only (tables and functions)
+      --functions, -f  Import structure only (tables and functions)
+      --data, -d       Import data only
+      --flags, -l      Import flags only (from csv file:
+                       import/flags.csv)
+      --teams, -e      Import teams only (from csv file:
+                       import/teams.csv)
+      --security, -s   Import security only
+      --all, -a        Import all
 
 
 
