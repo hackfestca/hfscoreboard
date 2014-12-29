@@ -85,7 +85,7 @@ Displaying score (top 30)
 +----+-----------------------------+---------+-------------+-------+
 ```
 
-The web interface let players submit, display score but also see live progression which is useful for projectors.
+The web interface let players submit, display score but also see live progression, useful for projectors.
 
 ![dashboard](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/dashboard.png)
 
