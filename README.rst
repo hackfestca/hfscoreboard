@@ -65,6 +65,9 @@ Create a low privilege user on all VMs. Let's call it sb.
     Enter username []: sb
     Enter full name []: Scoreboard
     Enter shell csh ksh nologin sh [ksh]: 
+    ```
+
+
     Uid [1000]: 
     Login group sb [sb]: 
     Login group is ''sb''. Invite sb into other groups: guest no 
