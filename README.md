@@ -135,7 +135,7 @@ You can change DNS names and IPs at your will.
     /etc/rc.d/postgresql restart
     ```
  Create database (see `sql/install.sql`)
-    ```
+    ```sql
     -- DB Creation (owner role + schema + extension + db)
     CREATE ROLE owner LOGIN INHERIT;
     CREATE DATABASE scoreboard WITH OWNER owner ENCODING 'UTF-8' TEMPLATE template0;
@@ -241,7 +241,7 @@ You can change DNS names and IPs at your will.
     pip install py-postgresql
     ```
  Download the code from git
-    ```bash
+    ```
     git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
     ```
  Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
