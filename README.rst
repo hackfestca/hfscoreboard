@@ -38,7 +38,7 @@ The scoreboard is made of 6 components in order to initialize, manage, play and 
 * Flag Updater
 * Web scoreboard
 
-By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). This should be considered in your design.
+By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). This should be considered in your design. Players interact with the scoreboard via a web app or a web API. 
 
 
 Install
@@ -57,54 +57,67 @@ You can change DNS names and IPs at your will.
 
     _It will work with another OS as long as you are resourceful :)_
 
-2. Create a low privilege user on all VMs. Let's call it scoreboard.
+2. Create a low privilege user on all VMs. Let's call it sb.
     
-        # adduser scoreboard
-        Enter username []: scoreboard
+        # adduser sb
+        Enter username []: sb
         Enter full name []: Scoreboard
         Enter shell csh ksh nologin sh [ksh]: 
         Uid [1000]: 
-        Login group scoreboard [scoreboard]: 
-        Login group is ''scoreboard''. Invite scoreboard into other groups: guest no 
+        Login group sb [sb]: 
+        Login group is ''sb''. Invite sb into other groups: guest no 
         [no]: 
         Login class authpf bgpd daemon default staff [default]: 
         Enter password []: 
         Disable password logins for the user? (y/n) [n]: y
         
-        Name:        scoreboard
+        Name:        sb
         Password:    ****
         Fullname:    Scoreboard
         Uid:         1000
-        Gid:         1000 (scoreboard)
-        Groups:      scoreboard 
+        Gid:         1000 (sb)
+        Groups:      sb
         Login Class: default
-        HOME:        /home/scoreboard
+        HOME:        /home/sb
         Shell:       /bin/ksh
         OK? (y/n) [y]: 
-        Added user ''scoreboard''
-        Copy files from /etc/skel to /home/scoreboard
+        Added user ''sb''
+        Copy files from /etc/skel to /home/sb
         Add another user? (y/n) [y]: n
         Goodbye!
         
+Then, clone this git project in all sb's home.
 
-3. [On db.hf] Generate a CA certificate which will be used for authorizations on the database. If you plan to use passwords instead, skip this step.
+        su - sb
+        git clone https://github.com/hackfestca/hfscoreboard
 
-        cd /etc/ssl
-        openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout postgres-server.key -out postgres-server.crt (TODO: test this)
+3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
-    Generate CSR for all components and sign them on db.hf
+        cd sh/cert
+        ./gencert.sh
 
-        [On db.hf] Generate a certificate for user flagupdater
-    
-        [On web.hf] Generate a certificate for user web and copy it to db.hf
-    
-        [On scoreboard.hf] Generate a certificate for user player and copy it to db.hf
-    
-        [On your PC] Generate a certificate for user hfowner and copy it to db.hf
-    
-        [On db.hf] Sign the certificates
-    
-        Move the crt files back on the machines
+Copy database certificate and key files to postgresql folder
+
+        mkdir /var/postgresql/data/certs
+        cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
+
+Copy flagUpdater certificate and key files to certs folder
+
+        cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
+
+Upload web certificate and key files on web.hf
+
+        scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
+        ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
+
+Upload player certificate and key files on scoreboard.hf
+
+        scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
+        ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
+
+Finally, upload `cli.psql.scoreboard.owner.{crt,key}` files on your machine and/or to certs folder to manage database from db.hf
+         
+        cp cli.psql.scoreboard.owner.{crt,key} /home/sb/hfscoreboard/certs/
 
 4. [On db.hf] Install and configure postgresql
 
@@ -118,16 +131,16 @@ You can change DNS names and IPs at your will.
     Create database
 
         -- DB Creation (owner role + schema + extension + db)
-        CREATE ROLE hfowner LOGIN INHERIT;
-        CREATE DATABASE scoreboard WITH OWNER hfowner ENCODING 'UTF-8' TEMPLATE template0;
+        CREATE ROLE owner LOGIN INHERIT;
+        CREATE DATABASE scoreboard WITH OWNER owner ENCODING 'UTF-8' TEMPLATE template0;
         \c scoreboard;
         
-        CREATE SCHEMA IF NOT EXISTS scoreboard AUTHORIZATION hfowner;
-        CREATE SCHEMA IF NOT EXISTS pgcrypto AUTHORIZATION hfowner;
-        CREATE SCHEMA IF NOT EXISTS tablefunc AUTHORIZATION hfowner;
+        CREATE SCHEMA IF NOT EXISTS scoreboard AUTHORIZATION owner;
+        CREATE SCHEMA IF NOT EXISTS pgcrypto AUTHORIZATION owner;
+        CREATE SCHEMA IF NOT EXISTS tablefunc AUTHORIZATION owner;
         CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA pgcrypto;
         CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA tablefunc;
-        GRANT CONNECT ON DATABASE scoreboard TO hfowner;
+        GRANT CONNECT ON DATABASE scoreboard TO owner;
         
         -- Modify default privileges
         ALTER DEFAULT PRIVILEGES IN SCHEMA scoreboard REVOKE ALL PRIVILEGES ON TABLES FROM PUBLIC; 
@@ -144,7 +157,7 @@ You can change DNS names and IPs at your will.
         CREATE ROLE web LOGIN INHERIT PASSWORD 'web';
         CREATE ROLE flagupdater LOGIN INHERIT PASSWORD 'flagUpdater';
         
-        GRANT hfadmins to hfowner;
+        GRANT hfadmins to owner;
         GRANT hfplayers to player;
         GRANT hfscore to web;
         GRANT hfflagupdater to flagupdater;
@@ -155,7 +168,7 @@ You can change DNS names and IPs at your will.
 
     Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
 
-        hostssl scoreboard  hfowner     192.168.1.0/24         cert clientcert=1 
+        hostssl scoreboard  owner       192.168.1.0/24         cert clientcert=1 
         hostssl scoreboard  admin       192.168.1.0/24         md5 
         hostssl scoreboard  flagupdater 172.28.0.10/32         cert clientcert=1
         hostssl scoreboard  web         172.28.0.11/32         cert clientcert=1 
@@ -183,9 +196,9 @@ You can change DNS names and IPs at your will.
         ssl = on
         ssl_ciphers = 'DEFAULT:!LOW:!EXP:!MD5:@STRENGTH'
         ...
-        ssl_cert_file = '/etc/ssl/postgresql-server.crt'       # (change requires restart)
-        ssl_key_file = '/etc/ssl/postgresql-server.key'        # (change requires restart)
-        ssl_ca_file = '/etc/ssl/scoreboard-root-ca.crt'        # (change requires restart)
+        ssl_cert_file = '/etc/ssl/srv.psql.scoreboard.db.crt' # (change requires restart)
+        ssl_key_file = '/etc/ssl/srv.psql.scoreboard.db.key'  # (change requires restart)
+        ssl_ca_file = '/etc/ssl/sb-ca.crt'        i           # (change requires restart)
         ...
         search_path = 'scoreboard'
         ...
@@ -204,11 +217,11 @@ You can change DNS names and IPs at your will.
 
     Download the code from git
 
-        git clone https://github.com/hackfestca/hf2k14-scoreboard hf2k14-scoreboard
+        git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
 
-    Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
+    Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
 
-        cd hf2k14-scoreboard
+        cd hfscoreboard
         cp config.default.py config.py
         vim config.py
 
@@ -222,11 +235,11 @@ You can change DNS names and IPs at your will.
 
     Download the code from git
 
-        git clone https://github.com/hackfestca/hf2k14-scoreboard hf2k14-scoreboard
+        git clone https://github.com/hackfestca/hfscoreboard hfscoreboard
 
     Make a copy of config.default.py and customize the config.py file. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
 
-        cd hf2k14-scoreboard
+        cd hfscoreboard
         cp config.default.py config.py
         vim config.py
 
@@ -284,7 +297,7 @@ You can change DNS names and IPs at your will.
                 }
             
                 location ~* \.(eot|ttf|woff)$ {
-                        add_header Access-Control-Allow-Origin *;
+                        add_header Access-Control-Allow-Origin \*;
                 }
             
                 access_log  /var/log/nginx/scoreboard.access.log;
@@ -313,10 +326,18 @@ You can change DNS names and IPs at your will.
 How to use
 ==========
 
+Running the scoreboard
+----------------------
+
+[On db.hf] You only need postgresql running with data initialized. Simply run `python3.3 ./initDB.py --all`
+[On web.hf] As user scoreboard (in a tmux, ideally), run `python3.3 ./web.py`
+[On scoreboard.hf] As user scoreboard (in a tmux, ideally), run `python3.3 ./player-api.py --start`
+
+
 Initialize database
 -------------------
 
-Once you have installed the database, you can initialize it with categories, authors, flags and settings, using `sql/data.sql` and `initDB.py`.
+You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
 
         # ./initDB.py -h
         usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
@@ -342,8 +363,9 @@ Once you have installed the database, you can initialize it with categories, aut
           --all, -a        Import all
 
 
-Administer CTF
---------------
+
+Administer the CTF
+------------------
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
@@ -371,8 +393,8 @@ Once data are initialized, several informations can be managed or displayed usin
           --debug               Run the tool in debug mode
 
 
-Play CTF
---------
+Play the CTF
+------------
 
 Players can interact with the scoreboard using `player.py` script.
 
@@ -404,14 +426,6 @@ Players can interact with the scoreboard using `player.py` script.
           --cat CAT             Print results only for this category name
 
 
-Running the scoreboard
-----------------------
-
-[On db.hf] You only need database running.
-[On web.hf] As user scoreboard (in a tmux?), run `python3.3 ./web.py`
-[On scoreboard.hf] As user scoreboard (in a tmux?), run `python3.3 ./player-api.py --start`
-
-
 Security
 ========
 
@@ -419,24 +433,26 @@ Some principle
 --------------
 
 * Never run a service as root
-* For long time use, jail or chroot it on a VM
+* For long time use, jail or chroot it
 
 
 Use user/pass authentication instead
 ------------------------------------
 
 Most authentication are made using client certificates. To change authentication scheme, 
-1.  Open `/var/postgresql/data/pg_hba.conf` on the database server
-2.  Find line corresponding to the user you want to change. For example:
+1. Open `/var/postgresql/data/pg_hba.conf` on the database server
+2. Find line corresponding to the user you want to change. For example:
         hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
-3.  Replace `cert clientcert=1` to `md5` so it looks like:
+3. Replace `cert clientcert=1` to `md5` so it looks like:
         hostssl scoreboard  player      172.28.71.11/32         md5
+4. Restart database: `/etc/rc.d/postgresql restart`
 
 
 Enable TLS
 ----------
 
 1. To enable TLS on the web server, first generate a CSR and sign it by an authority.
+
 
 2. Add these lines to your nginx server configuration and replace `listen 80` to `listen 443`.
 
@@ -456,7 +472,7 @@ Enable TLS
             return  301 https://$host$request_uri;
         }
 
-        
+       
 4. To enable HSTS, add this line.
 
         add_header Strict-Transport-Security "max-age=2678400; includeSubdomains;";
@@ -482,14 +498,12 @@ Database replication
         hot_standby = on
 
 
-
-
 Application Load Balancing and Fail Over
 ----------------------------------------
 
-You might need to update code during a CTF, thus restart application server, wchich lead to a downtime. Also, the web tier is the second buttle neck after database. Spreading the web VMs on multiple hosts can enhance performance. 
+You might need to update code during a CTF, thus cause a downtime by restarting application server. Also, on high load, the web tier is the second buttle neck after the database. Spreading the web VMs on multiple hosts can enhance performance. 
 
-To configure web load balancing, clone the web server or make a fresh install using previous steps and then, in the upstream block, append server lines as described here.
+To configure web load balancing, clone the web server or make a fresh install using previous steps. Then, in the upstream block, append server lines as described here.
 
         upstream backends{
             server 172.28.0.11:5000;
@@ -509,6 +523,8 @@ To avoid downtime, configure a backup upstream. This will cause connection failu
 Hardening
 ---------
 
+TBD
+
 
 Optimization
 ============
@@ -516,7 +532,7 @@ Optimization
 Core
 ----
 
-On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class in `/etc/login.conf`. Simply append the following lines:
+On heavy load, this setup on OpenBSD for presentation and application tier may raise "too many opened files" errors. This can be fixed by creating a login class with specific properties in `/etc/login.conf`. Simply append the following lines:
 
         hfscoreboard:\
             :datasize=infinity:\
@@ -527,7 +543,7 @@ On heavy load, this setup on OpenBSD for presentation and application tier may r
 
 Then, set the login class to the user.
 
-        usermod -L hfscoreboard scoreboard 
+        usermod -L hfscoreboard sb
 
 
 Static files handling
@@ -543,23 +559,19 @@ Ngninx handle much faster static files than a python application. To let nginx h
             proxy_cache_valid 200 60;
         }
 
-            
-            
 
 Docs
 ====
 
-If you are interested to know more about the code, the documentation is in 
-*docs/* folder, generated with epydoc.
+If you are interested to know more about the code, the documentation is in *docs/* folder, generated with epydoc.
 
-It is also accessible here: http://htmlpreview.github.io/?https://github.com/hackfestca/cnb/blob/master/docs/index.html
+It is also accessible here: http://htmlpreview.github.io/?https://github.com/hackfestca/hfscoreboard/blob/master/docs/index.html
 
 
 Contributors
 ============
 
-This scoreboard was written by Martin Dubé (mdube) and _eko as a Hackfest Project (See:
-http://hackfest.ca). However, a lot of ideas came from Hackfest crew and community.
+This scoreboard was written by Martin Dubé (mdube) and _eko for Hackfest 2014 (See: http://hackfest.ca). However, a lot of ideas and tests were made by the Hacking Games team. Special thanks to FLR and Cechaput for trying to break it before the CTF. :)
 
 For any comment, questions, insult: martin d0t dube at hackfest d0t ca. 
 

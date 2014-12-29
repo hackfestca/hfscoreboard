@@ -27,10 +27,10 @@ REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfscore;
 --REVOKE ALL PRIVILEGES ON SCHEMA public FROM PUBLIC;     -- Why not...
 
 -- Grant privileges
-GRANT CONNECT ON DATABASE scoreboard TO hfowner,hfadmins,hfplayers,hfscore,hfflagupdater;
+GRANT CONNECT ON DATABASE scoreboard TO owner,hfadmins,hfplayers,hfscore,hfflagupdater;
 
---GRANT ALL PRIVILEGES ON SCHEMA scoreboard TO hfowner;
---GRANT ALL PRIVILEGES ON SCHEMA pgcrypto TO hfowner;
+--GRANT ALL PRIVILEGES ON SCHEMA scoreboard TO owner;
+--GRANT ALL PRIVILEGES ON SCHEMA pgcrypto TO owner;
 
 GRANT USAGE ON SCHEMA scoreboard TO hfadmins,hfplayers,hfscore,hfflagupdater;
 GRANT USAGE ON SCHEMA pgcrypto TO hfadmins,hfplayers,hfscore;

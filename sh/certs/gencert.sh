@@ -12,7 +12,7 @@ DB_KEY_FILE=$DB_FILE_PATH'.key'
 DB_CSR_FILE=$DB_FILE_PATH'.csr'
 DB_CRT_FILE=$DB_FILE_PATH'.crt'
 DB_SUBJECT="/C=CA/ST=Qc/L=Quebec/O=My Org/OU=My Org Department/CN=db.hf"
-CLI_NAMES=('player' 'flagupdater' 'web' 'hfowner')  # Must match with database users
+CLI_NAMES=('player' 'flagupdater' 'web' 'owner')  # Must match with database users
 
 mkdir -p $CA_FILE_PATH
 touch $ROOT'/'$CA_NAME'.db'
