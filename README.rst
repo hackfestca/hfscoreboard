@@ -438,11 +438,15 @@ Use user/pass authentication instead
 
 Most authentication are made using client certificates. To change authentication scheme:
 
-1. Open `/var/postgresql/data/pg_hba.conf` on the database server
+1. Open `/var/postgresql/data/pg_hba.conf` on the database server.
 2. Find line corresponding to the user you want to change. For example:
+
     | hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
+
 3. Replace `cert clientcert=1` to `md5` so it looks like:
+
     | hostssl scoreboard  player      172.28.71.11/32         md5
+
 4. Restart database: `/etc/rc.d/postgresql restart`
 
 
