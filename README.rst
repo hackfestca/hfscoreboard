@@ -46,10 +46,10 @@ Install
 
 This procedure will describe a three(3) tier architecturei but all these steps can be done on a single box. Let's say we have the following topology:
 
- * A web presentation server at 172.28.0.12, resolving to scoreboard.hf
- * A web application server at 172.28.0.11, resolving to web.hf
- * A database server at 172.28.0.10, resolving to db.hf
- * Admins are in 192.168.1.0/24
+* A web presentation server at 172.28.0.12, resolving to scoreboard.hf
+* A web application server at 172.28.0.11, resolving to web.hf
+* A database server at 172.28.0.10, resolving to db.hf
+* Admins are in 192.168.1.0/24
 
 
 You can change DNS names and IPs at your will.
@@ -59,34 +59,34 @@ You can change DNS names and IPs at your will.
 _It will work with another OS as long as you are resourceful :)_
 
 2. Create a low privilege user on all VMs. Let's call it sb.
+    ```    
+    # adduser sb
+    Enter username []: sb
+    Enter full name []: Scoreboard
+    Enter shell csh ksh nologin sh [ksh]: 
+    Uid [1000]: 
+    Login group sb [sb]: 
+    Login group is ''sb''. Invite sb into other groups: guest no 
+    [no]: 
+    Login class authpf bgpd daemon default staff [default]: 
+    Enter password []: 
+    Disable password logins for the user? (y/n) [n]: y
     
-        # adduser sb
-        Enter username []: sb
-        Enter full name []: Scoreboard
-        Enter shell csh ksh nologin sh [ksh]: 
-        Uid [1000]: 
-        Login group sb [sb]: 
-        Login group is ''sb''. Invite sb into other groups: guest no 
-        [no]: 
-        Login class authpf bgpd daemon default staff [default]: 
-        Enter password []: 
-        Disable password logins for the user? (y/n) [n]: y
-        
-        Name:        sb
-        Password:    ****
-        Fullname:    Scoreboard
-        Uid:         1000
-        Gid:         1000 (sb)
-        Groups:      sb
-        Login Class: default
-        HOME:        /home/sb
-        Shell:       /bin/ksh
-        OK? (y/n) [y]: 
-        Added user ''sb''
-        Copy files from /etc/skel to /home/sb
-        Add another user? (y/n) [y]: n
-        Goodbye!
-        
+    Name:        sb
+    Password:    ****
+    Fullname:    Scoreboard
+    Uid:         1000
+    Gid:         1000 (sb)
+    Groups:      sb
+    Login Class: default
+    HOME:        /home/sb
+    Shell:       /bin/ksh
+    OK? (y/n) [y]: 
+    Added user ''sb''
+    Copy files from /etc/skel to /home/sb
+    Add another user? (y/n) [y]: n
+    Goodbye!
+    ```
 Then, clone this git project in all sb's home.
 
         su - sb
