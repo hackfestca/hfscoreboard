@@ -58,6 +58,7 @@ You can change DNS names and IPs at your will.
  **It will work with another OS as long as you are resourceful :)**
 
 2. Create a low privilege user on all VMs. Let's call it sb.
+
     ```
     # adduser sb
     Enter username []: sb
@@ -93,6 +94,7 @@ You can change DNS names and IPs at your will.
     ```
 
 3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
+
     ```
     cd sh/cert
     ./gencert.sh
@@ -122,6 +124,7 @@ You can change DNS names and IPs at your will.
     ```
 
 4. [On db.hf] Install and configure postgresql
+
     ```
     pkg_add postgresql-server
     pkg_add postgresql-contrib-9.3.2 # for pgcrypto
@@ -211,6 +214,7 @@ You can change DNS names and IPs at your will.
     /etc/rc.d/postgresql restart
     ```
 5. [On web.hf] Install python dependencies
+
     ```
     curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
     python3.3 get-pip.py
@@ -228,6 +232,7 @@ You can change DNS names and IPs at your will.
     vim config.py
     ```
 6. [On scoreboard.hf] Install nginx and python dependencies for player API
+
     ```
     pkg_add nginx-1.5.7
     mkdir /var/www/htdocs/public /var/www/htdocs/static
