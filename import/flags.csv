@@ -1,9 +1,2 @@
 Flag Name,Flag Value,Flag PTS,Flag Location,Category (see tab #2),displayInterval,Author,isKing,Description,UpdateCmd,How to
-lock01,EsWSBM9X1Bt4dSr7c7FYgV6iFnfVsJEA,300,scoreboard.hf,tri,365 days,HF Crew,FALSE,Winner for flag for Duel at 15:00,Null,
-lock02,dpYPEL1SHuxU1M1gztaHOm7K1i1AoKiy,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Second place for flag for Duel at 15:00,Null,
-lock03,0zlutTjPnzlGc2O12GZVhTlRaW1ma4xd,400,scoreboard.hf,tri,365 days,HF Crew,FALSE,Winner for flag for Duel at xx,Null,
-lock04,mC6FBvsq71MPRB2GCVJ1S1aBjeisJKyl,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Second place for flag for Duel at xx,Null,
-lock05,zgmL2SVqZL13d5rMNpU7iO4Y7umI4S11,300,scoreboard.hf,tri,365 days,HF Crew,FALSE,Winner for flag for Duel at yy,Null,
-lock06,lqPNzDjkQPoUvaped4zsOeQqnxt85033,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Second place for flag for Duel at yy,Null,
-lock07,i0TSFfuzZUKMlVYz8E9UxV4A3lbGmOmk,300,scoreboard.hf,tri,365 days,HF Crew,FALSE,Winner for flag for Duel at zz,Null,
-lock08,Mghj33RWwWu4Tn3eVA8YtPPCxjJbzBeN,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Second place for flag for Duel at zz,Null,
+test01,EsWSBM9X1Bt4dSr7c7FYgV6iFnfVsJEA,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Testing,Null,

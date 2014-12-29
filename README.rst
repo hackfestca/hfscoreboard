@@ -48,14 +48,15 @@ This procedure will describe a three(3) tier architecturei but all these steps c
 
  * A web presentation server at 172.28.0.12, resolving to scoreboard.hf
  * A web application server at 172.28.0.11, resolving to web.hf
- * A database server at 172.28.0.10, resolving to db.hf.
- * Admins are in 192.168.1.0/24.
+ * A database server at 172.28.0.10, resolving to db.hf
+ * Admins are in 192.168.1.0/24
+
 
 You can change DNS names and IPs at your will.
 
 1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
 
-    _It will work with another OS as long as you are resourceful :)_
+_It will work with another OS as long as you are resourceful :)_
 
 2. Create a low privilege user on all VMs. Let's call it sb.
     
@@ -558,6 +559,11 @@ Ngninx handle much faster static files than a python application. To let nginx h
             proxy_cache_methods GET HEAD;
             proxy_cache_valid 200 60;
         }
+
+Flags & Teams management
+------------------------
+
+The `initDB.py` script let database owner import flags and teams from CSV files. Use google spreadsheet to write flags at a central location so multiple admins can prepare their flags before the CTF. On a regular basis, export the spreadsheet in CSV format, move it to `import/flags.csv` and import flags by running `python3.3 ./initDB --flags`. The same procedure apply for teams.
 
 
 Docs
