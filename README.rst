@@ -59,6 +59,7 @@ You can change DNS names and IPs at your will.
 _It will work with another OS as long as you are resourceful :)_
 
 2. Create a low privilege user on all VMs. Let's call it sb.
+
     ```    
     # adduser sb
     Enter username []: sb
@@ -87,6 +88,7 @@ _It will work with another OS as long as you are resourceful :)_
     Add another user? (y/n) [y]: n
     Goodbye!
     ```
+
 Then, clone this git project in all sb's home.
 
         su - sb
