@@ -436,7 +436,8 @@ Some principle
 Use user/pass authentication instead
 ------------------------------------
 
-Most authentication are made using client certificates. To change authentication scheme, 
+Most authentication are made using client certificates. To change authentication scheme:
+
 1. Open `/var/postgresql/data/pg_hba.conf` on the database server
 2. Find line corresponding to the user you want to change. For example:
     | hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
