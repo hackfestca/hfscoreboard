@@ -86,7 +86,7 @@ SELECT addNews('Welcome to Hackfest CTF 2014 !', NOW()::timestamp);
 /*
     Set game start
 */
-INSERT INTO settings(gameStartTs) VALUES('2014-11-07 10:30'::timestamp);
+INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2014-11-07 10:30'::timestamp,'2014-11-08 02:30'::timestamp);
 
 /*
     fake teams for tests

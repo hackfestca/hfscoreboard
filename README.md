@@ -44,6 +44,7 @@ By design, all components except the player script, connect directly to the data
 User Experience
 ===============
 
+The command line interface let players submit and display score from a shell. 
 
 ```
 $ ./player.py --score
@@ -83,6 +84,11 @@ Displaying score (top 30)
 | 30 | Team HF DMZ                 |    0    |      0      |   0   |
 +----+-----------------------------+---------+-------------+-------+
 ```
+
+The web interface let players submit, display score but also see live progression which is useful for projectors.
+
+![dashboard](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/dashboard.png)
+
 
 Install
 =======
