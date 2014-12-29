@@ -345,7 +345,6 @@ Initialize database
 
 You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
 
-    ```
     ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data] [--flags] [--teams] [--security] [--all]
     
@@ -368,7 +367,6 @@ You might want to configure categories, authors, flags and settings. To do so, e
                        import/teams.csv)
       --security, -s   Import security only
       --all, -a        Import all
-    ```
 
 
 Administer the CTF
@@ -376,7 +374,6 @@ Administer the CTF
 
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
-    ```
     ./admin.py -h
     usage: admin.py [-h] [-v] [--debug] {team,news,flag,settings,score,history,stat,bench,conbench,security} ...
     
@@ -399,14 +396,12 @@ Once data are initialized, several informations can be managed or displayed usin
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
       --debug               Run the tool in debug mode
-    ```
 
 Play the CTF
 ------------
 
 Players can interact with the scoreboard using `player.py` script.
 
-    ```
     ./player.py -h
     usage: player.py [-h] [-v] [--debug] [--submit FLAG] [--score] [--catProg] [--flagProg] [--news] [--info] [--top TOP] [--cat CAT]
     
@@ -433,7 +428,6 @@ Players can interact with the scoreboard using `player.py` script.
     
       --top TOP, -t TOP     Limit --score number of rows
       --cat CAT             Print results only for this category name
-    ```
 
 Security
 ========
@@ -469,6 +463,7 @@ Enable TLS
 
 1. To enable TLS on the web server, first generate a CSR and sign it by an authority.
 2. Add these lines to your nginx server configuration and replace `listen 80` to `listen 443`.
+
     ```
     ssl                  on;
     ssl_certificate      /etc/ssl/scoreboard.crt;
