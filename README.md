@@ -38,8 +38,51 @@ The scoreboard is made of 6 components in order to initialize, manage, play and 
 * Flag Updater
 * Web scoreboard
 
-By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). This should be considered in your design. Players interact with the scoreboard via a web app or a web API. 
+By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). Players interact with the scoreboard via a web app or a web API. 
 
+
+User Experience
+===============
+
+
+```
+$ ./player.py --score
+Displaying score (top 30)
++----+-----------------------------+---------+-------------+-------+
+| ID | TeamName                    | FlagPts | FlagInstPts | Total |
++----+-----------------------------+---------+-------------+-------+
+| 3  | return ENEEDGIN;            |  10675  |     1660    | 12335 |
+| 14 | l33tb33s                    |   9825  |      0      |  9825 |
+| 4  | DCIETS                      |   8800  |     226     |  9026 |
+| 23 | BonziBuddy                  |   6400  |      0      |  6400 |
+| 11 | Good Work IOIextreme        |   6000  |     212     |  6212 |
+| 2  | _TMIH_                      |   5925  |      0      |  5925 |
+| 19 | Relentless Penguin Uprising |   5900  |      0      |  5900 |
+| 10 | GLO in the dark             |   5250  |      0      |  5250 |
+| 6  | Shellbleedoodleshock        |   5175  |      0      |  5175 |
+| 12 | crackmayorsecurity          |   5150  |      0      |  5150 |
+| 13 | In the middle man           |   4675  |      0      |  4675 |
+| 17 | PolyHack                    |   4550  |      0      |  4550 |
+| 25 | Unicorn as a service        |   4350  |      0      |  4350 |
+| 9  | Flaggots                    |   4175  |      0      |  4175 |
+| 22 | Shell investigator          |   3825  |      0      |  3825 |
+| 18 | Quick Overflow              |   2975  |      0      |  2975 |
+| 26 | Freethinker1                |   2950  |      0      |  2950 |
+| 28 | usedoils                    |   2875  |      0      |  2875 |
+| 7  | Eliteroot                   |   2750  |      0      |  2750 |
+| 15 | Packet Drop                 |   2725  |      0      |  2725 |
+| 24 | thinker^or^die              |   2650  |      0      |  2650 |
+| 27 | Freethinker2                |   2300  |      0      |  2300 |
+| 5  | Hack ULaval                 |   2150  |      0      |  2150 |
+| 21 | Sea and Tea                 |   1050  |      0      |  1050 |
+| 8  | EMTA XIDLESYC GODS !        |   450   |      0      |  450  |
+| 20 | @dminPr0tect n friends      |   450   |      0      |  450  |
+| 1  | Team HF Crew                |    25   |      0      |   25  |
+| 16 | Ping Master                 |    0    |      0      |   0   |
+| 29 | Team Dube                   |    0    |      0      |   0   |
+| 30 | Team HF DMZ                 |    0    |      0      |   0   |
++----+-----------------------------+---------+-------------+-------+
+```
 
 Install
 =======
@@ -435,6 +478,7 @@ Some principle
 
 * Never run a service as root
 * For long time use, jail or chroot it
+* Certs > Passwords
 
 Use user/pass authentication instead
 ------------------------------------
@@ -504,6 +548,8 @@ Database replication
     ```
     hot_standby = on
     ```
+
+TODO: Find a python postgresql spooler to support multiple database servers.
 
 Application Load Balancing and Fail Over
 ----------------------------------------
