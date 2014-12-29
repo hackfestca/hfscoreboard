@@ -339,7 +339,6 @@ Running the scoreboard
 
 [On scoreboard.hf] As user scoreboard (in a tmux, ideally), run `python3.3 ./player-api.py --start`
 
-
 Initialize database
 -------------------
 
@@ -367,7 +366,6 @@ You might want to configure categories, authors, flags and settings. To do so, e
                        import/teams.csv)
       --security, -s   Import security only
       --all, -a        Import all
-
 
 Administer the CTF
 ------------------
@@ -438,7 +436,6 @@ Some principle
 * Never run a service as root
 * For long time use, jail or chroot it
 
-
 Use user/pass authentication instead
 ------------------------------------
 
@@ -456,7 +453,6 @@ Most authentication are made using client certificates. To change authentication
     hostssl scoreboard  player      172.28.71.11/32         md5
     ```
 4. Restart database: `/etc/rc.d/postgresql restart`
-
 
 Enable TLS
 ----------
@@ -529,7 +525,6 @@ To avoid downtime, configure a backup upstream. This will cause connection failu
         server 172.28.0.31:5000 backup;
     }
 
-
 Hardening
 ---------
 
@@ -579,13 +574,15 @@ Docs
 
 If you are interested to know more about the code, the documentation is in *docs/* folder, generated with epydoc.
 
-It is also accessible here: http://htmlpreview.github.io/?https://github.com/hackfestca/hfscoreboard/blob/master/docs/index.html
+It is also accessible [here][hfdoc].
+
+[hfdoc]: http://htmlpreview.github.io/?https://github.com/hackfestca/hfscoreboard/blob/master/docs/index.html
 
 
 Contributors
 ============
 
-This scoreboard was written by Martin Dubé (mdube) and _eko for Hackfest 2014 (See: http://hackfest.ca). However, a lot of ideas and tests were made by the Hacking Games team. Special thanks to FLR and Cechaput for trying to break it before the CTF. :)
+This scoreboard was written by Martin Dubé (mdube) and \_eko for Hackfest 2014 (See http://www.hackfest.ca/hacking-games-2014). However, a lot of ideas and tests were made by the Hacking Games team. Special thanks to FLR and Cechaput for trying to break it before the CTF. :)
 
 For any comment, questions, insult: martin d0t dube at hackfest d0t ca. 
 
