@@ -1,13 +1,13 @@
 HF 2014 Scoreboard
 ==================
 
-This is the scoreboard used for Hacking Games at Hackfest 2014. 
+This is the scoreboard used for the Hacking Games at Hackfest 2014. 
 
-This project support simple (jeopardy) capture the flags (CTF) or King of the Hill CTF. 
+This project supports simple (jeopardy) capture the flags (CTF) or King of the Hill CTF. 
 
-Objectives behind the project were: performance + security. Ease of use was our last concern. 
+The objectives behind the project were performance and security. Ease of use was our last concern.
 
-The project was build and test on the following technologies:
+The project was built and tested with the following technologies:
 
 * OpenBSD 5.5
 * Python 3
@@ -19,12 +19,11 @@ The project was build and test on the following technologies:
 Architecture
 ------------
 
-Setup during Hackfest was similar to the following diagram but note it can be merged on a single VM.
+The configuration during Hackfest was similar to the following diagram but note that it can be merged to a single VM.
 
 ![architecture](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/architecture.png)
 
-Only presentation server (nginx) was accessible from players. 
-
+Only the presentation server (nginx) was accessible from players. 
 
 Components
 ----------
@@ -35,16 +34,16 @@ The scoreboard is made of 6 components in order to initialize, manage, play and 
 * Admin script
 * Player script
 * Player API
-* Flag Updater
+* Flag updater
 * Web scoreboard
 
-By design, all components except the player script, connect directly to the database as they are considered "trusted" and user privileges are restricted (see security below). Players interact with the scoreboard via a web app or a web API. 
+By design, all components except the player script are considered "trusted" and connect directly to the database. User privileges are restricted (see security below). Players interact with the scoreboard via a web app or a web API. 
 
 
 User Experience
 ===============
 
-The command line interface let players submit and display score from a shell. 
+The command line interface lets players submit and display scores from a shell. 
 
 ```
 $ ./player.py --score
@@ -85,7 +84,7 @@ Displaying score (top 30)
 +----+-----------------------------+---------+-------------+-------+
 ```
 
-The web interface let players submit, display score but also see live progression, useful for projectors.
+The web interface lets players submit and display scores but also shows live progression, which can be useful for projectors.
 
 ![dashboard](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/dashboard.png)
 
@@ -93,16 +92,16 @@ The web interface let players submit, display score but also see live progressio
 Install
 =======
 
-This procedure will describe a three(3) tier architecturei but all these steps can be done on a single box. Let's say we have the following topology:
+This procedure will describe a three(3) tier architecture but all steps can be done on a single box. Let's say we have the following topology:
 
 * A web presentation server at 172.28.0.12, resolving to scoreboard.hf
 * A web application server at 172.28.0.11, resolving to web.hf
 * A database server at 172.28.0.10, resolving to db.hf
 * Admins are in 192.168.1.0/24
 
-You can change DNS names and IPs at your will.
+You can change DNS names and IPs as you wish.
 
-1. Install three(3) VMs on latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players?, bruteforce?, lot of binaries to download, etc.).
+1. Install three(3) VMs with the latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players, bruteforce, several binaries to download, etc.)
   
  **It will work with another OS as long as you are resourceful :)**
 
@@ -136,33 +135,33 @@ You can change DNS names and IPs at your will.
     Add another user? (y/n) [y]: n
     Goodbye!
     ```
- Then, clone this git project in all sb's home.
+ Then, clone this git project in sb's home.
     ```bash
     su - sb
     git clone https://github.com/hackfestca/hfscoreboard
     ```
 
-3. [On db.hf] Generate a CA, generate a signed server certificate for database and then 4 client certificates for some components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
+3. [On db.hf] Generate a CA, generate a signed server certificate for the database and then 4 client certificates for different components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
 
     ```bash
     cd sh/cert
     ./gencert.sh
     ```
- Copy database certificate and key files to postgresql folder
+ Copy the database certificate and key file to postgresql folder
     ```bash
     mkdir /var/postgresql/data/certs
     cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
     ```
- Copy flagUpdater certificate and key files to certs folder
+ Copy the flagUpdater certificate and key file to certs folder
     ```bash
     cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
     ```
- Upload web certificate and key files on web.hf
+ Upload the web certificate and key file to web.hf
     ```bash
     scp cli.psql.scoreboard.web.{crt,key} root@web.hf:/home/sb/scoreboard/certs/
     ssh root@web.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
     ```
- Upload player certificate and key files on scoreboard.hf
+ Upload the player certificate and key file to scoreboard.hf
     ```bash
     scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
     ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
