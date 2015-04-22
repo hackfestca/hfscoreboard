@@ -2,8 +2,8 @@
 config.py
 *__pycache__*
 *.log
-certs/*.crt
-certs/*.key
+#certs/*.crt
+#certs/*.key
 certs/*.srl
 certs/*.db
 certs/*.attr
