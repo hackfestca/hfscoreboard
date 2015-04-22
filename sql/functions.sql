@@ -1644,13 +1644,7 @@ RETURNS TABLE (
                 t5_score flag.pts%TYPE,
                 t6_score flag.pts%TYPE,
                 t7_score flag.pts%TYPE,
-                t8_score flag.pts%TYPE,
-                t9_score flag.pts%TYPE,
-                t10_score flag.pts%TYPE,
-                t11_score flag.pts%TYPE,
-                t12_score flag.pts%TYPE,
-                t13_score flag.pts%TYPE,
-                t14_score flag.pts%TYPE
+                t8_score flag.pts%TYPE
               ) AS $$
     DECLARE
         MAX_TEAM_NUMBER integer := 200;
@@ -1754,13 +1748,7 @@ RETURNS TABLE (
                         t5_score integer,
                         t6_score integer,
                         t7_score integer,
-                        t8_score integer,
-                        t9_score integer,
-                        t10_score integer,
-                        t11_score integer,
-                        t12_score integer,
-                        t13_score integer,
-                        t14_score integer
+                        t8_score integer
                         );
                         
     END;
