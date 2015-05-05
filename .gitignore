@@ -7,3 +7,5 @@ config.py
 certs/*.srl
 certs/*.db
 certs/*.attr
+certs/*.crt
+certs/*.key

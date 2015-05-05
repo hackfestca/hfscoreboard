@@ -42,7 +42,6 @@ if sys.version_info < (3,2,0):
     exit(1);
 
 sys.path.insert(0, 'lib')
-del sys
 
 # Project imports
 import config
