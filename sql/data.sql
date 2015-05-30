@@ -32,7 +32,7 @@ SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
 SELECT addCategory('net', 'Networking', 'Firewall rule bypass');
 SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
 SELECT addCategory('tca', 'Turmelle, Choquette ', 'Some company to hack');
-SELECT addCategory('electro', 'Electronics', 'Electronics challenge near admins table');
+SELECT addCategory('electro', 'Electronics', 'CustomCorp electronics challenge near admins table. You may need <a href="/public/arduino-chal.c">this</a>');
 SELECT addCategory('sc', 'Sigmen Corp.', 'Sigmen corp. hacking challenge');
 SELECT addCategory('adfs', 'ADFS', 'ADFS federation challenges');
 
