@@ -282,7 +282,7 @@ class IndexHandler(BaseHandler):
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
 
-        match = re.search("^(FLAG-*|flag-*)", flag)
+        match = re.search("^(FLAG\-|flag\-)", flag)
         if match:
             submit_message = "Are you fucking kidding me ? \"Your flag without 'FLAG-'\""
 
