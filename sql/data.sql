@@ -56,18 +56,18 @@ SELECT addNews('Welcome to iHack CTF 2015 !', NOW()::timestamp);
     Set game start
 */
 -- INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
-INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-26 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
+INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
 
 /*
     fake teams for tests
 */
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
-SELECT addTeam('Team Dube', '192.168.1.0/24');
-SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
-SELECT addTeam('Team VPN', '192.168.9.0/24');
-SELECT addTeam('Team VPN 2', '192.168.10.0/24');
-SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
-SELECT addTeam('Team Eko', '127.0.0.1/8');
+--SELECT addTeam('Team Dube', '192.168.1.0/24');
+--SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+--SELECT addTeam('Team VPN', '192.168.9.0/24');
+--SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+--SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+--SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 
 /*

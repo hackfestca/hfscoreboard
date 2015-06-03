@@ -52,10 +52,10 @@ DB_INIT_PASS = None
 DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
 DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
 
-DB_ADMIN_USER = 'martin'
-DB_ADMIN_PASS = 'h9N)kv1*H!3(|<eASR1^]Iwql;fsDIDc6h.?o\,IS[v?4:~}J0'
-DB_ADMIN_CRT_FILE = None
-DB_ADMIN_KEY_FILE = None
+DB_ADMIN_USER = 'admin'
+DB_ADMIN_PASS = None
+DB_ADMIN_CRT_FILE = 'certs/hf.cli.db.admin.crt'
+DB_ADMIN_KEY_FILE = 'certs/hf.cli.db.admin.key'
 
 DB_WEB_USER = 'web'
 DB_WEB_PASS = None
