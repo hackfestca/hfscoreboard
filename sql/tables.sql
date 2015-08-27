@@ -32,6 +32,7 @@ CREATE TABLE team(
     id serial primary key,
     name varchar(50) not null unique,
     net inet not null unique,
+    hide boolean not null default false,
     ts timestamp not null default current_timestamp,
     constraint valid_team_name check (name != '')
     );
@@ -98,8 +99,8 @@ CREATE TABLE flag(
     host integer not null references host(id),
     category integer not null references category(id),
     statusCode integer not null references status(id),
-    displayInterval interval default null,
     author integer default null references flagAuthor(id),
+    displayInterval interval default null,
     description text default null,
     hint text default null,
     isKing boolean not null default False,  -- For king flags only
@@ -150,17 +151,6 @@ CREATE TABLE team_kingFlag(
     );
 
 /*
-    Represent a news that can be printed on the scoreboard
-*/
-CREATE TABLE news(
-    id serial primary key,
-    title varchar(150) not null unique,
-    displayTs timestamp not null default current_timestamp,
-    ts timestamp not null default current_timestamp,
-    constraint valid_title_name check (title != '')
-    );
-
-/*
     This table contains all relevant submit attempts
 */
 CREATE TABLE submit_history(
@@ -181,6 +171,17 @@ CREATE TABLE status_history(
     );
 
 /*
+    Represent a news that can be printed on the scoreboard
+*/
+CREATE TABLE news(
+    id serial primary key,
+    title varchar(150) not null unique,
+    displayTs timestamp not null default current_timestamp,
+    ts timestamp not null default current_timestamp,
+    constraint valid_title_name check (title != '')
+    );
+
+/*
     This table contains scoreboard settings
 */ 
 CREATE TABLE settings(
@@ -189,3 +190,28 @@ CREATE TABLE settings(
     gameEndTs timestamp not null,
     ts timestamp not null default current_timestamp
     ); 
+
+
+-- black market items (Attribute: nb of time to be sold?)
+-- black market items status (For sale, For approval, Removed from game, Sold)
+-- black market items category (Game, Player)
+-- black market item status history
+-- team_transaction
+-- flagType
+--   Incremental: min, max, step
+--   Decremental: min, max, step
+--   Group flag: groupId, min, max, step
+--   Unique: no special field. One team can submit it
+--   Negative value flag.
+--   Trap Flag
+--   Cash Flag
+--   Hybrid Flag (Pts + Cash)
+-- team_cashItem
+-- cashItem
+-- cashItemStatus
+-- cashItemType (Start Wallet, Cash Flag, Transaction)
+-- cashItemStatus_history
+-- events (using triggers)
+
+-- Add cashItem field (integer) to flag table. used only for cash flags.
+-- Add flagTypeId to flag table. Used to determine special types of flags.
