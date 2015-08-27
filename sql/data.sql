@@ -19,26 +19,7 @@ SELECT addStatus(3::smallint,'Disabled','The flag is removed by admins');
     Add hosts
 */
 SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
-SELECT addHost('172.28.72.4', 'Debian 7 x32', 'Test box for scoreboard development (misc01.ctf.hf)');
-SELECT addHost('172.28.72.5', 'Debian 7 x64', 'Chroot Challenges by _eko (chroot02.ctf.hf)');
-SELECT addHost('172.28.72.6', 'Debian 7 x64', 'Misc Challenges by Mart (misc02.ctf.hf)');
-SELECT addHost('172.28.72.7', 'Debian 7 x64', 'Exploit Challenges by _eko (expl01.ctf.hf)');
-SELECT addHost('172.28.72.8', 'Debian 7 x64', 'Exploit Challenges by _eko (expl02.ctf.hf)');
-SELECT addHost('172.28.72.10', 'OpenBSD5.5 x64', 'Chroot & PHP Challenges by Mart (chroot01.ctf.hf)');
-SELECT addHost('172.28.72.11', 'Debian 7 x64', 'Data mining Challenges by vn & Pat (dm01.ctf.hf)');
-SELECT addHost('172.28.72.12', 'OpenBSD5.5 x64', 'Prog Challenges by _eko (prog01.ctf.hf)');
-SELECT addHost('172.28.72.100', 'Ubuntu 14.04LTS', 'Ubuntu Forensics by Ced (wakinsun.ctf.hf)');
-SELECT addHost('172.28.72.101', 'Windows 2012', 'Windows 2012 Challenges by Ced (windfeu.ctf.hf)');
-SELECT addHost('172.28.72.103', 'Ubuntu 14.04LTS', 'Ubuntu server by Ced (alogator.ctf.hf)');
-SELECT addHost('172.28.72.104', 'Ubuntu 14.04LTS', 'Ubuntu lock screen bypass by Ced (lockubuntu.ctf.hf)');
-SELECT addHost('172.28.72.105', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012adm.ctf.hf)');
-SELECT addHost('172.28.72.106', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012usr.ctf.hf)');
-SELECT addHost('172.28.72.107', 'Windows 2012', 'Windows 2012 Challenges by sigs (w2012usr.ctf.hf)');
-SELECT addHost('172.28.72.110', 'CentOS 6 x64', 'Nose Bleeding Track by FLR (nosebleeding.ctf.hf)');
-SELECT addHost('172.28.72.120', 'CentOS 6 x32', 'Monopoly Jail Escape Track by Martin L. (mono01.ctf.hf)');
-SELECT addHost('172.28.72.121', 'CentOS 6 x32', 'VOIP Challenges by Martin L. (voip01.ctf.hf)');
-SELECT addHost('172.28.72.130', 'Debian 7 x32', 'Mostly BOF challenges by P-Y. (expl02.ctf.hf)');
-SELECT addHost('172.28.72.140', 'ArchARM', 'Exploit Challenges by _eko (rpi.ctf.hf)');
+SELECT addHost('dd-wrt', 'Some router', 'bla');
 
 /*
     Add categories
@@ -47,21 +28,13 @@ SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
 SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
 SELECT addCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
 SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
-SELECT addCategory('prog', 'Programming', 'Programming challenges, All the challenges search the answer in the "result" parameter, in the POST request.');
-SELECT addCategory('data', 'Data Mining', 'Data mining challenges');
 SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
-SELECT addCategory('tri', 'Trivia', 'Chuck Norris Questions');
-SELECT addCategory('net', 'Networking', 'VOIP Challenges, firewall rule bypass');
-SELECT addCategory('rand', 'Random Shit', 'Random Shit');
+SELECT addCategory('net', 'Networking', 'Firewall rule bypass');
 SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
-SELECT addCategory('virus', 'Virus Analysis', '<ul>
-<li>You will find a Windows 7 VM in the USB key given to your team. This VM was tested with VirtualBox 4.3.18 r96516. You need Oracle VM VirtualBox Extension Pack ot run the VM. <a href=""https://www.virtualbox.org/wiki/Downloads"">Download here</a></li>
-<li>You need Your mission: boot the VM and find a way to <b>disable</b> the spreaded virus from running.</li>
-<li>You are admin and your password is HFWPhenix. </li>
-<li>Use the WPhenixChecker.exe on desktop to verify your cleanup. This binary will pop you up to 5 flags for successful permanent cleanup. </li>
-<li>Trying to reverse WPhenixChecker.exe might give you headache. The challenge should be done without reversing this binary.</li>
-<li>We strongly suggest you make a copy of the VM before booting it. </li>
-</ul>');
+SELECT addCategory('tca', 'Turmelle, Choquette ', 'Some company to hack');
+SELECT addCategory('electro', 'Electronics', 'CustomCorp electronics challenge near admins table. You may need <a href="/public/arduino-chal.c">this</a>');
+SELECT addCategory('sc', 'Sigmen Corp.', 'Sigmen corp. hacking challenge');
+SELECT addCategory('adfs', 'ADFS', 'ADFS federation challenges');
 
 /*
     Add authors
@@ -69,35 +42,32 @@ SELECT addCategory('virus', 'Virus Analysis', '<ul>
 SELECT addAuthor('Martin Dube', 'mdube');
 SELECT addAuthor('Jessy Campos', '_eko');
 SELECT addAuthor('Cedrick Chaput', 'cechaput');
-SELECT addAuthor('Pierre-Yves Tremblay', 'hidden');
-SELECT addAuthor('Franck Desert', 'hiddenman');
-SELECT addAuthor('Francois Lajeunesse-Robert', 'FLR');
-SELECT addAuthor('Martin Lemay', 'Do.Z10');
-SELECT addAuthor('Vincent & Patrick', 'vn & pat');
 SELECT addAuthor('Stephane Sigmen', 's1g5');
-SELECT addAuthor('Philippe Godbout', 'psyker156');
+SELECT addAuthor('Francois Barrette', 'fbarrette');
+SELECT addAuthor('Jean-Sebastien Grenon', 'jsg');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to Hackfest CTF 2014 !', NOW()::timestamp);
+SELECT addNews('Welcome to iHack CTF 2015 !', NOW()::timestamp);
 
 /*
     Set game start
 */
-INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2014-11-07 10:30'::timestamp,'2014-11-08 02:30'::timestamp);
+-- INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
+INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
 
 /*
     fake teams for tests
 */
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
-SELECT addTeam('Team Dube', '192.168.1.0/24');
-SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
-SELECT addTeam('Team VPN', '192.168.9.0/24');
-SELECT addTeam('Team VPN 2', '192.168.10.0/24');
-SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
-SELECT addTeam('Team Eko', '127.0.0.1/8');
+--SELECT addTeam('Team Dube', '192.168.1.0/24');
+--SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+--SELECT addTeam('Team VPN', '192.168.9.0/24');
+--SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+--SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+--SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 
 /*
