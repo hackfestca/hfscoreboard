@@ -122,9 +122,8 @@ try:
         print('Importing database security')
         c.importSecurity()
     elif args.all:
-        #print('Importing all (struct + data + security)')
-        #c.importAll()
-        print('Nop')
+        print('Importing all (struct + data + security)')
+        c.importAll()
     else:
         parser.print_help()
 except postgresql.exceptions.InsufficientPrivilegeError:

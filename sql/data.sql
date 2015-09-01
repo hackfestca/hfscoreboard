@@ -47,6 +47,16 @@ SELECT addAuthor('Francois Barrette', 'fbarrette');
 SELECT addAuthor('Jean-Sebastien Grenon', 'jsg');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
+/* 
+    Create flag type
+*/
+SELECT addFlagType(1,'Standard');
+SELECT addFlagType(2,'Decremental');
+SELECT addFlagType(3,'Group Flag');
+SELECT addFlagType(4,'Unique');
+SELECT addFlagType(5,'Trap');
+SELECT addFlagType(6,'Cash');
+SELECT addFlagType(7,'Hybrid');
 /*
     Add a starting news
 */
@@ -62,11 +72,11 @@ INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp
     fake teams for tests
 */
 SELECT addTeam('Team HF Crew', '172.16.66.0/24');
---SELECT addTeam('Team Dube', '192.168.1.0/24');
---SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
---SELECT addTeam('Team VPN', '192.168.9.0/24');
---SELECT addTeam('Team VPN 2', '192.168.10.0/24');
---SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+SELECT addTeam('Team Dube', '192.168.1.0/24');
+SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+SELECT addTeam('Team VPN', '192.168.9.0/24');
+SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 

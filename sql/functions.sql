@@ -421,6 +421,24 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+/*
+    Stored Proc: addFlagType(code,name)
+*/
+CREATE OR REPLACE FUNCTION addFlagType(_code flagType.code%TYPE, 
+                                   _name flagType.name%TYPE
+                                   ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addFlagType(%,%)',$1,$2;
+
+        -- Insert a new row
+        INSERT INTO flagType(code,name)
+                VALUES(_code,_name);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addFlag(...)
@@ -433,6 +451,7 @@ CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE,
                                     _statusCode status.code%TYPE default 1,
                                     _displayInterval varchar(20) default Null,
                                     _author flagAuthor.name%TYPE  default Null,
+                                    _type flagType.name%TYPE  default Null,
                                     _isKing flag.isKing%TYPE default false,
                                     _description flag.description%TYPE default '',
                                     _hint flag.hint%TYPE default '',
@@ -444,10 +463,11 @@ RETURNS integer AS $$
         _hostId host.id%TYPE;
         _catId category.id%TYPE;
         _authorId flagAuthor.id%TYPE;
+        _typeId flagType.id%TYPE;
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -471,7 +491,17 @@ RETURNS integer AS $$
             _authorId = _author;
         end if;
 
-        -- Get author id from name
+        -- Get type id from name
+        if _type is not Null then
+            SELECT id INTO _typeId FROM flagType WHERE name = _type;
+            if not FOUND then
+                raise exception 'Could not find flag type "%"',_type;
+            end if;
+        else
+            _typeId = _type;
+        end if;
+
+        -- Convert displayInterval
         if _displayInterval is not Null then
             _display = _displayInterval::interval;
         else
@@ -480,9 +510,9 @@ RETURNS integer AS $$
 
         
         -- Insert a new row
-        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,
+        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,type,
                         description,hint,isKing,updateCmd,monitorCmd)
-                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,
+                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,_typeId,
                         _description,_hint,_isKing,_updateCmd,_monitorCmd);
 
         RETURN 0;
@@ -499,6 +529,7 @@ CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE,
                                     _statusCode status.code%TYPE default 1,
                                     _displayInterval varchar(20) default Null,
                                     _author flagAuthor.name%TYPE  default Null,
+                                    _type flagType.name%TYPE  default Null,
                                     _isKing flag.isKing%TYPE default false,
                                     _description flag.description%TYPE default '',
                                     _hint flag.hint%TYPE default '',
@@ -510,7 +541,7 @@ RETURNS flag.value%TYPE AS $$
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -520,7 +551,7 @@ RETURNS flag.value%TYPE AS $$
 
                 -- addFlag
                 PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
-                                _statusCode,_displayInterval,_author,_isKing,_description,
+                                _statusCode,_displayInterval,_author,_type,_isKing,_description,
                                 _hint,_updateCmd,_monitorCmd);
 
                 RETURN _flagValue;

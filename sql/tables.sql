@@ -23,7 +23,17 @@ DROP TABLE IF EXISTS flagAuthor CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS host CASCADE;
 DROP TABLE IF EXISTS status CASCADE;
+DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
+DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
+DROP TABLE IF EXISTS event CASCADE;
+DROP TABLE IF EXISTS team_bmItem CASCADE;
+DROP TABLE IF EXISTS bmItem CASCADE;
+DROP TABLE IF EXISTS bmItemCategory CASCADE;
+DROP TABLE IF EXISTS bmItemStatus CASCADE;
+DROP TABLE IF EXISTS transaction CASCADE;
+DROP TABLE IF EXISTS transactionType CASCADE;
+DROP TABLE IF EXISTS wallet CASCADE;
 
 /*
     Represent a team. A team can submit flags.
@@ -88,6 +98,24 @@ CREATE TABLE flagAuthor(
     constraint u_flagAuthor_constraint unique (name,nick)
     );
 
+/*
+flagType
+   Decremental: min, max, step
+   Group flag: groupId, min, max, step (incremental)
+   Unique: no special field. One team can submit it
+   Negative value flag.
+   Trap Flag
+   Cash Flag
+   Hybrid Flag (Pts + Cash)
+*/
+CREATE TABLE flagType(
+    id serial primary key,
+    code integer not null unique,
+    name varchar(50) not null unique,
+    ts timestamp not null default current_timestamp,
+    constraint valid_flagType_name check (name != '')
+    );
+
 /* 
     Represent a flag. A flag is generated once, before the game start. Flags can be found on classical challenges. 
 */
@@ -98,8 +126,9 @@ CREATE TABLE flag(
     pts integer not null,
     host integer not null references host(id),
     category integer not null references category(id),
-    statusCode integer not null references status(id),
+    statusCode integer not null references status(code),
     author integer default null references flagAuthor(id),
+    type integer not null references flagType(code),
     displayInterval interval default null,
     description text default null,
     hint text default null,
@@ -160,6 +189,7 @@ CREATE TABLE submit_history(
     value varchar(64) not null,
     ts timestamp not null default current_timestamp
     );
+
 /*
     This table contains all flag changes (not implemented yet)
 */
@@ -168,6 +198,105 @@ CREATE TABLE status_history(
     flagId integer not null references flag(id) on delete cascade, 
     status integer not null references status(id) on delete cascade,
     ts timestamp not null default current_timestamp
+    );
+
+/*
+    Represent an entity wallet, mostly used for teams. 
+*/
+CREATE TABLE wallet(
+    id serial primary key,
+    publicId varchar(64) not null unique,
+    name varchar(20) not null,
+    description text,
+    amount money not null,
+    ts timestamp not null default current_timestamp,
+    constraint valid_wallet_name check (name != ''),
+    constraint valid_wallet_publicId check (amount >= 0::money)
+    );
+
+/*
+    Represent a transaction type. Mostly used to standardize how money is managed in the financial system.
+    Possible values: Start Wallet, Cash Flag, BM item bought, BM item sold, Money Laundering
+*/
+CREATE TABLE transactionType(
+    id serial primary key,
+    code integer not null unique,
+    name varchar(20) not null,
+    description text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_status_code check (code > 0),
+    constraint valid_status_name check (name != '')
+    );
+/*
+
+    Represent a team's cash transaction. Used only for logging, not to determine what item was bought 
+    or which cash flag was found.
+*/
+CREATE TABLE transaction(
+    id serial primary key,
+    srcWalletId integer not null references wallet(id) on delete cascade,
+    dstWalletId integer not null references wallet(id) on delete cascade,
+    amount money not null,
+    type integer not null references transactionType(id) on delete cascade,
+    description text,
+    ts timestamp not null default current_timestamp
+    );
+
+/*
+    For sale, For approval, Removed from game, Sold, Hidden
+*/
+CREATE TABLE bmItemStatus(
+    id serial primary key,
+    code integer not null unique,
+    name varchar(20) not null,
+    description text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_bmItemStatus_code check (code > 0),
+    constraint valid_bmItemStatus_name check (name != '')
+    );
+
+/*
+    Possible choices: Game, Player
+    Could also be used to separate items in different categories at display
+*/
+CREATE TABLE bmItemCategory(
+    id serial primary key,
+    name varchar(20) not null,
+    description text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_bmItemCategory_name check (name != '')
+    );
+
+/*
+    Represent a black market item. Any leak, payload, document on the black market shall be in this table.
+*/
+CREATE TABLE bmItem(
+    id serial primary key,
+    publicId varchar(64) not null unique,
+    name varchar(40) not null unique,
+    description text,
+    status integer not null references bmItemStatus(id) on delete cascade,
+    category integer not null references bmItemCategory(id) on delete cascade,
+    amount money not null,
+    quantity integer default null,
+    reviewRating integer default 0,
+    reviewComments text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_bmItem_name check (name != ''),
+    constraint valid_bmItem_amount check (amount > 0::money),
+    constraint valid_bmItem_rating check (reviewRating >= 0 and reviewRating <= 5)
+    );
+
+/*
+    Represent a team's successfuly bought black market item.
+*/
+CREATE TABLE team_bmItem(
+    id serial primary key,
+    teamId integer not null references team(id) on delete cascade,
+    bmItem integer not null references bmItem(id) on delete cascade,
+    playerIp inet not null,
+    ts timestamp not null default current_timestamp,
+    constraint u_bmItem_constraint unique (teamId,bmItem)
     );
 
 /*
@@ -182,6 +311,17 @@ CREATE TABLE news(
     );
 
 /*
+    Represent an event that can be printed on the scoreboard or the log visualizator
+    Mostly called by triggers
+*/
+CREATE TABLE event(
+    id serial primary key,
+    title varchar(150) not null unique,
+    ts timestamp not null default current_timestamp,
+    constraint valid_title_name check (title != '')
+    );
+
+/*
     This table contains scoreboard settings
 */ 
 CREATE TABLE settings(
@@ -191,27 +331,13 @@ CREATE TABLE settings(
     ts timestamp not null default current_timestamp
     ); 
 
+/*
+    This table contains all relevant black market status changes
+*/
+CREATE TABLE bmItemStatus_history(
+    id serial primary key,
+    bmItemId integer not null references bmItem(id) on delete cascade,
+    status integer not null references bmItemStatus(id) on delete cascade,
+    ts timestamp not null default current_timestamp
+    );
 
--- black market items (Attribute: nb of time to be sold?)
--- black market items status (For sale, For approval, Removed from game, Sold)
--- black market items category (Game, Player)
--- black market item status history
--- team_transaction
--- flagType
---   Incremental: min, max, step
---   Decremental: min, max, step
---   Group flag: groupId, min, max, step
---   Unique: no special field. One team can submit it
---   Negative value flag.
---   Trap Flag
---   Cash Flag
---   Hybrid Flag (Pts + Cash)
--- team_cashItem
--- cashItem
--- cashItemStatus
--- cashItemType (Start Wallet, Cash Flag, Transaction)
--- cashItemStatus_history
--- events (using triggers)
-
--- Add cashItem field (integer) to flag table. used only for cash flags.
--- Add flagTypeId to flag table. Used to determine special types of flags.

@@ -90,6 +90,7 @@ class InitController(ClientController.ClientController):
                                     integer, \
                                     varchar, \
                                     varchar, \
+                                    varchar, \
                                     boolean, \
                                     text,    \
                                     text,    \
@@ -100,6 +101,7 @@ class InitController(ClientController.ClientController):
                                     varchar, \
                                     varchar, \
                                     integer, \
+                                    varchar, \
                                     varchar, \
                                     varchar, \
                                     boolean, \
@@ -118,10 +120,11 @@ class InitController(ClientController.ClientController):
                     fstatus = 1
                     fdispint = row[5]
                     fauthor = row[6]
-                    fisking = row[7]
-                    fdesc = row[8]
+                    ftype = row[7]
+                    fisking = row[8]
+                    fdesc = row[9]
                     fhint = None
-                    fupdcmd = row[9]
+                    fupdcmd = row[10]
                     fmoncmd = None
                     
                     if fname != 'Flag Name':
@@ -134,6 +137,7 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(fstatus,'int'), \
                                     self._sanitize(fdispint,'str'), \
                                     self._sanitize(fauthor,'str'), \
+                                    self._sanitize(ftype,'str'), \
                                     self._sanitize(fisking,'bool'), \
                                     self._sanitize(fdesc,'str'), \
                                     self._sanitize(fhint,'str'), \
@@ -147,6 +151,7 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(fstatus,'int'), \
                                     self._sanitize(fdispint,'str'), \
                                     self._sanitize(fauthor,'str'), \
+                                    self._sanitize(ftype,'str'), \
                                     self._sanitize(fisking,'bool'), \
                                     self._sanitize(fdesc,'str'), \
                                     self._sanitize(fhint,'str'), \
