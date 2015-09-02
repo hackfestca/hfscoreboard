@@ -20,9 +20,9 @@ DROP TABLE IF EXISTS team_flag CASCADE;
 DROP TABLE IF EXISTS kingFlag CASCADE;
 DROP TABLE IF EXISTS flag CASCADE;
 DROP TABLE IF EXISTS flagAuthor CASCADE;
-DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS flagCategory CASCADE;
 DROP TABLE IF EXISTS host CASCADE;
-DROP TABLE IF EXISTS status CASCADE;
+DROP TABLE IF EXISTS flagStatus CASCADE;
 DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
@@ -31,9 +31,24 @@ DROP TABLE IF EXISTS team_bmItem CASCADE;
 DROP TABLE IF EXISTS bmItem CASCADE;
 DROP TABLE IF EXISTS bmItemCategory CASCADE;
 DROP TABLE IF EXISTS bmItemStatus CASCADE;
+DROP TABLE IF EXISTS bmItemReview CASCADE;
 DROP TABLE IF EXISTS transaction CASCADE;
 DROP TABLE IF EXISTS transactionType CASCADE;
 DROP TABLE IF EXISTS wallet CASCADE;
+
+/*
+    Represent an entity wallet, mostly used for teams. 
+*/
+CREATE TABLE wallet(
+    id serial primary key,
+    publicId varchar(64) not null unique,
+    name varchar(50) not null,
+    description text,
+    amount money not null,
+    ts timestamp not null default current_timestamp,
+    constraint valid_wallet_name check (name != ''),
+    constraint valid_wallet_publicId check (amount >= 0::money)
+    );
 
 /*
     Represent a team. A team can submit flags.
@@ -42,6 +57,7 @@ CREATE TABLE team(
     id serial primary key,
     name varchar(50) not null unique,
     net inet not null unique,
+    wallet integer not null references wallet(id),
     hide boolean not null default false,
     ts timestamp not null default current_timestamp,
     constraint valid_team_name check (name != '')
@@ -50,7 +66,7 @@ CREATE TABLE team(
 /*
     Represent a flag status. A flag could be disabled if the box is broken or too corrupted
 */
-CREATE TABLE status(
+CREATE TABLE flagStatus(
     id serial primary key,
     code integer not null unique,
     name varchar(20) not null,
@@ -76,7 +92,7 @@ CREATE TABLE host(
 /*
     Represent a flag category such as web, binary, exploits, etc. 
 */
-CREATE TABLE category(
+CREATE TABLE flagCategory(
     id serial primary key,
     name varchar(10) not null unique,
     displayName varchar(20) not null unique,
@@ -125,8 +141,8 @@ CREATE TABLE flag(
     value varchar(64) not null unique,
     pts integer not null,
     host integer not null references host(id),
-    category integer not null references category(id),
-    statusCode integer not null references status(code),
+    category integer not null references flagCategory(id),
+    statusCode integer not null references flagStatus(code),
     author integer default null references flagAuthor(id),
     type integer not null references flagType(code),
     displayInterval interval default null,
@@ -196,22 +212,8 @@ CREATE TABLE submit_history(
 CREATE TABLE status_history(
     id serial primary key,
     flagId integer not null references flag(id) on delete cascade, 
-    status integer not null references status(id) on delete cascade,
+    status integer not null references flagStatus(id) on delete cascade,
     ts timestamp not null default current_timestamp
-    );
-
-/*
-    Represent an entity wallet, mostly used for teams. 
-*/
-CREATE TABLE wallet(
-    id serial primary key,
-    publicId varchar(64) not null unique,
-    name varchar(20) not null,
-    description text,
-    amount money not null,
-    ts timestamp not null default current_timestamp,
-    constraint valid_wallet_name check (name != ''),
-    constraint valid_wallet_publicId check (amount >= 0::money)
     );
 
 /*
@@ -237,7 +239,7 @@ CREATE TABLE transaction(
     srcWalletId integer not null references wallet(id) on delete cascade,
     dstWalletId integer not null references wallet(id) on delete cascade,
     amount money not null,
-    type integer not null references transactionType(id) on delete cascade,
+    type integer not null references transactionType(code) on delete cascade,
     description text,
     ts timestamp not null default current_timestamp
     );
@@ -268,6 +270,17 @@ CREATE TABLE bmItemCategory(
     );
 
 /*
+    Table used to document a black market item review. Used only when players sell items.
+*/
+CREATE TABLE bmItemReview(
+    id serial primary key,
+    rating integer default 0,
+    comments text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_bmItemReview_rating check (rating >= 0 and rating <= 5)
+    );
+
+/*
     Represent a black market item. Any leak, payload, document on the black market shall be in this table.
 */
 CREATE TABLE bmItem(
@@ -277,14 +290,12 @@ CREATE TABLE bmItem(
     description text,
     status integer not null references bmItemStatus(id) on delete cascade,
     category integer not null references bmItemCategory(id) on delete cascade,
+    review integer not null references bmItemReview(id) on delete cascade,
     amount money not null,
     quantity integer default null,
-    reviewRating integer default 0,
-    reviewComments text,
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
-    constraint valid_bmItem_amount check (amount > 0::money),
-    constraint valid_bmItem_rating check (reviewRating >= 0 and reviewRating <= 5)
+    constraint valid_bmItem_amount check (amount > 0::money)
     );
 
 /*
@@ -316,8 +327,10 @@ CREATE TABLE news(
 */
 CREATE TABLE event(
     id serial primary key,
+    level integer not null default 0,
     title varchar(150) not null unique,
     ts timestamp not null default current_timestamp,
+    constraint valid_level_name check (level >= 0 and level <= 5),
     constraint valid_title_name check (title != '')
     );
 

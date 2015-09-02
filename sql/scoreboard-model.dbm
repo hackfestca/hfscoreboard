@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.1" last-position="228,0" last-zoom="0.95"
+<dbmodel pgmodeler-ver="0.8.1" last-position="0,0" last-zoom="0.9"
 	 default-schema="public" default-owner="postgres">
 <role name="hfowner"
       inherit="true"
@@ -99,15 +99,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" protected="true" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="scoreboard" rect-visible="true" fill-color="#17ef1f">
+<schema name="scoreboard" rect-visible="true" fill-color="#583a02">
 	<role name="owner"/>
 </schema>
 
-<schema name="pgcrypto" rect-visible="true" fill-color="#61d879">
+<schema name="pgcrypto" rect-visible="true" fill-color="#84250f">
 	<role name="owner"/>
 </schema>
 
-<schema name="tablefunc" rect-visible="true" fill-color="#c3478e">
+<schema name="tablefunc" rect-visible="true" fill-color="#643696">
 	<role name="owner"/>
 </schema>
 
@@ -132,7 +132,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="399.365" y="520.23"/>
+	<position x="50" y="50"/>
 	<column name="id" not-null="true" default-value="nextval('team_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -141,6 +141,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="net" not-null="true">
 		<type name="inet"/>
+	</column>
+	<column name="hide" not-null="true" default-value="false">
+		<type name="boolean"/>
 	</column>
 	<column name="ts" not-null="true" default-value="now()">
 		<type name="timestamp"/>
@@ -170,8 +173,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="status">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<comment><![CDATA[test]]></comment>
-	<position x="1830.48" y="477.455"/>
+	<position x="386" y="50"/>
 	<column name="id" not-null="true" default-value="nextval('status_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -212,7 +214,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="host">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1812.58" y="792.679"/>
+	<position x="756" y="50"/>
 	<column name="id" not-null="true" default-value="nextval('host_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -253,7 +255,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="category">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1821.45" y="628.126"/>
+	<position x="1126" y="50"/>
 	<column name="id" not-null="true" default-value="nextval('category_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -300,7 +302,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flagauthor">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1810.02" y="935.13"/>
+	<position x="1507" y="50"/>
 	<column name="id" not-null="true" default-value="nextval('flagauthor_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -327,6 +329,44 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<sequence name="flagtype_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="flagtype">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="50" y="214.4"/>
+	<column name="id" not-null="true" default-value="nextval('flagtype_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_flagtype_name" type="ck-constr" table="scoreboard.flagtype">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="flagtype_pkey" type="pk-constr" table="scoreboard.flagtype">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="flagtype_code_key" type="uq-constr" table="scoreboard.flagtype">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="flagtype_name_key" type="uq-constr" table="scoreboard.flagtype">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <sequence name="flag_id_seq"
 	 start="1" increment="1"
 	 min-value="1" max-value="9223372036854775807"
@@ -338,7 +378,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1279.56" y="463.424"/>
+	<position x="386" y="214.4"/>
 	<column name="id" not-null="true" default-value="nextval('flag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -360,11 +400,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="statuscode" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="displayinterval">
-		<type name="interval"/>
-	</column>
 	<column name="author">
 		<type name="integer"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="displayinterval">
+		<type name="interval"/>
 	</column>
 	<column name="description">
 		<type name="text"/>
@@ -418,7 +461,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="kingflag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1256.59" y="902.04"/>
+	<position x="786" y="214.4"/>
 	<column name="id" not-null="true" default-value="nextval('kingflag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -459,7 +502,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team_flag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="845.189" y="506.234"/>
+	<position x="1063" y="214.4"/>
 	<column name="id" not-null="true" default-value="nextval('team_flag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -494,7 +537,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team_kingflag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="853.777" y="660.352"/>
+	<position x="1351" y="214.4"/>
 	<column name="id" not-null="true" default-value="nextval('team_kingflag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -518,41 +561,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<sequence name="news_id_seq"
-	 start="1" increment="1"
-	 min-value="1" max-value="9223372036854775807"
-	 cache="1" cycle="false">
-	<schema name="scoreboard"/>
-	<role name="owner"/>
-</sequence>
-
-<table name="news">
-	<schema name="scoreboard"/>
-	<role name="owner"/>
-	<position x="398.836" y="810.935"/>
-	<column name="id" not-null="true" default-value="nextval('news_id_seq'::regclass)">
-		<type name="integer"/>
-	</column>
-	<column name="title" not-null="true">
-		<type name="character varying" length="150"/>
-	</column>
-	<column name="displayts" not-null="true" default-value="now()">
-		<type name="timestamp"/>
-	</column>
-	<column name="ts" not-null="true" default-value="now()">
-		<type name="timestamp"/>
-	</column>
-	<constraint name="valid_title_name" type="ck-constr" table="scoreboard.news">
-			<expression><![CDATA[((title)::text <> ''::text)]]></expression>
-	</constraint>
-	<constraint name="news_pkey" type="pk-constr" table="scoreboard.news">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="news_title_key" type="uq-constr" table="scoreboard.news">
-		<columns names="title" ref-type="src-columns"/>
-	</constraint>
-</table>
-
 <sequence name="submit_history_id_seq"
 	 start="1" increment="1"
 	 min-value="1" max-value="9223372036854775807"
@@ -564,8 +572,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="submit_history">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<comment><![CDATA[used by submitFlagFromIp()]]></comment>
-	<position x="354.398" y="223.02"/>
+	<position x="50" y="528.8"/>
 	<column name="id" not-null="true" default-value="nextval('submit_history_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -597,7 +604,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="status_history">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1863.41" y="308.325"/>
+	<position x="397" y="528.8"/>
 	<column name="id" not-null="true" default-value="nextval('status_history_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -615,6 +622,369 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<sequence name="wallet_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="wallet">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="906.222" y="382.133"/>
+	<column name="id" not-null="true" default-value="nextval('wallet_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="publicid" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="money"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_wallet_name" type="ck-constr" table="scoreboard.wallet">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="valid_wallet_publicid" type="ck-constr" table="scoreboard.wallet">
+			<expression><![CDATA[(amount >= (0)::money)]]></expression>
+	</constraint>
+	<constraint name="wallet_pkey" type="pk-constr" table="scoreboard.wallet">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="wallet_publicid_key" type="uq-constr" table="scoreboard.wallet">
+		<columns names="publicid" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="transactiontype_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="transactiontype">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="1024" y="528.8"/>
+	<column name="id" not-null="true" default-value="nextval('transactiontype_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_status_code" type="ck-constr" table="scoreboard.transactiontype">
+			<expression><![CDATA[(code > 0)]]></expression>
+	</constraint>
+	<constraint name="valid_status_name" type="ck-constr" table="scoreboard.transactiontype">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="transactiontype_pkey" type="pk-constr" table="scoreboard.transactiontype">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="transactiontype_code_key" type="uq-constr" table="scoreboard.transactiontype">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="transaction_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="transaction">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="1501.78" y="401.022"/>
+	<column name="id" not-null="true" default-value="nextval('transaction_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="srcwalletid" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="dstwalletid" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="money"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="transaction_pkey" type="pk-constr" table="scoreboard.transaction">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="bmitemstatus_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="bmitemstatus">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="50" y="708.2"/>
+	<column name="id" not-null="true" default-value="nextval('bmitemstatus_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="code" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_bmitemstatus_code" type="ck-constr" table="scoreboard.bmitemstatus">
+			<expression><![CDATA[(code > 0)]]></expression>
+	</constraint>
+	<constraint name="valid_bmitemstatus_name" type="ck-constr" table="scoreboard.bmitemstatus">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="bmitemstatus_pkey" type="pk-constr" table="scoreboard.bmitemstatus">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="bmitemstatus_code_key" type="uq-constr" table="scoreboard.bmitemstatus">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="bmitemcategory_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="bmitemcategory">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="420" y="708.2"/>
+	<column name="id" not-null="true" default-value="nextval('bmitemcategory_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_bmitemcategory_name" type="ck-constr" table="scoreboard.bmitemcategory">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="bmitemcategory_pkey" type="pk-constr" table="scoreboard.bmitemcategory">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="bmitem_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="bmitem">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="770" y="708.2"/>
+	<column name="id" not-null="true" default-value="nextval('bmitem_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="publicid" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="40"/>
+	</column>
+	<column name="description">
+		<type name="text"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="category" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="money"/>
+	</column>
+	<column name="quantity">
+		<type name="integer"/>
+	</column>
+	<column name="reviewrating" default-value="0">
+		<type name="integer"/>
+	</column>
+	<column name="reviewcomments">
+		<type name="text"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_bmitem_name" type="ck-constr" table="scoreboard.bmitem">
+			<expression><![CDATA[((name)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="valid_bmitem_amount" type="ck-constr" table="scoreboard.bmitem">
+			<expression><![CDATA[(amount > (0)::money)]]></expression>
+	</constraint>
+	<constraint name="valid_bmitem_rating" type="ck-constr" table="scoreboard.bmitem">
+			<expression><![CDATA[((reviewrating >= 0) AND (reviewrating <= 5))]]></expression>
+	</constraint>
+	<constraint name="bmitem_pkey" type="pk-constr" table="scoreboard.bmitem">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="bmitem_publicid_key" type="uq-constr" table="scoreboard.bmitem">
+		<columns names="publicid" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="bmitem_name_key" type="uq-constr" table="scoreboard.bmitem">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="team_bmitem_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="team_bmitem">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="1179" y="708.2"/>
+	<column name="id" not-null="true" default-value="nextval('team_bmitem_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="teamid" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="bmitem" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="playerip" not-null="true">
+		<type name="inet"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="team_bmitem_pkey" type="pk-constr" table="scoreboard.team_bmitem">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="u_bmitem_constraint" type="uq-constr" table="scoreboard.team_bmitem">
+		<columns names="teamid,bmitem" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="news_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="news">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="1467" y="708.2"/>
+	<column name="id" not-null="true" default-value="nextval('news_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="title" not-null="true">
+		<type name="character varying" length="150"/>
+	</column>
+	<column name="displayts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_title_name" type="ck-constr" table="scoreboard.news">
+			<expression><![CDATA[((title)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="news_pkey" type="pk-constr" table="scoreboard.news">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="news_title_key" type="uq-constr" table="scoreboard.news">
+		<columns names="title" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="event_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="event">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="50" y="947.6"/>
+	<column name="id" not-null="true" default-value="nextval('event_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="title" not-null="true">
+		<type name="character varying" length="150"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="valid_title_name" type="ck-constr" table="scoreboard.event">
+			<expression><![CDATA[((title)::text <> ''::text)]]></expression>
+	</constraint>
+	<constraint name="event_pkey" type="pk-constr" table="scoreboard.event">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="event_title_key" type="uq-constr" table="scoreboard.event">
+		<columns names="title" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <sequence name="settings_id_seq"
 	 start="1" increment="1"
 	 min-value="1" max-value="9223372036854775807"
@@ -626,7 +996,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="settings">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="397.679" y="932.377"/>
+	<position x="383" y="947.6"/>
 	<column name="id" not-null="true" default-value="nextval('settings_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -640,6 +1010,35 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp"/>
 	</column>
 	<constraint name="settings_pkey" type="pk-constr" table="scoreboard.settings">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="bmitemstatus_history_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+</sequence>
+
+<table name="bmitemstatus_history">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<position x="662" y="947.6"/>
+	<column name="id" not-null="true" default-value="nextval('bmitemstatus_history_id_seq'::regclass)">
+		<type name="integer"/>
+	</column>
+	<column name="bmitemid" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="ts" not-null="true" default-value="now()">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="bmitemstatus_history_pkey" type="pk-constr" table="scoreboard.bmitemstatus_history">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -1300,6 +1699,40 @@ CAUTION: Do not modify this file unless you know what you are doing.
 ]]></definition>
 </function>
 
+<function name="addflagtype"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="100"
+		row-amount="0">
+	<schema name="scoreboard"/>
+	<role name="owner"/>
+	<language name="plpgsql" protected="true" sql-disabled="true"/>
+	<return-type>
+	<type name="integer"/>
+	</return-type>
+	<parameter name="_code">
+		<type name="integer"/>
+	</parameter>
+	<parameter name="_name">
+		<type name="character varying"/>
+	</parameter>
+	<definition><![CDATA[
+    BEGIN
+        -- Logging
+        raise notice 'addFlagType(%,%)',$1,$2;
+
+        -- Insert a new row
+        INSERT INTO flagType(code,name)
+                VALUES(_code,_name);
+
+        RETURN 0;
+    END;
+]]></definition>
+</function>
+
 <function name="addflag"
 		window-func="false"
 		returns-setof="false"
@@ -1323,19 +1756,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<parameter name="_pts" default-value="NULL::character varying">
 		<type name="integer"/>
 	</parameter>
-	<parameter name="_host" default-value="false">
+	<parameter name="_host" default-value="NULL::character varying">
 		<type name="character varying"/>
 	</parameter>
-	<parameter name="_category" default-value="''::text">
+	<parameter name="_category" default-value="false">
 		<type name="character varying"/>
 	</parameter>
 	<parameter name="_statuscode" default-value="''::text">
 		<type name="integer"/>
 	</parameter>
-	<parameter name="_displayinterval" default-value="''::character varying">
+	<parameter name="_displayinterval" default-value="''::text">
 		<type name="character varying"/>
 	</parameter>
 	<parameter name="_author" default-value="''::character varying">
+		<type name="character varying"/>
+	</parameter>
+	<parameter name="_type" default-value="''::character varying">
 		<type name="character varying"/>
 	</parameter>
 	<parameter name="_isking">
@@ -1358,10 +1794,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
         _hostId host.id%TYPE;
         _catId category.id%TYPE;
         _authorId flagAuthor.id%TYPE;
+        _typeId flagType.id%TYPE;
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -1385,7 +1822,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
             _authorId = _author;
         end if;
 
-        -- Get author id from name
+        -- Get type id from name
+        if _type is not Null then
+            SELECT id INTO _typeId FROM flagType WHERE name = _type;
+            if not FOUND then
+                raise exception 'Could not find flag type "%"',_type;
+            end if;
+        else
+            _typeId = _type;
+        end if;
+
+        -- Convert displayInterval
         if _displayInterval is not Null then
             _display = _displayInterval::interval;
         else
@@ -1394,9 +1841,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
         
         -- Insert a new row
-        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,
+        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,type,
                         description,hint,isKing,updateCmd,monitorCmd)
-                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,
+                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,_typeId,
                         _description,_hint,_isKing,_updateCmd,_monitorCmd);
 
         RETURN 0;
@@ -1427,16 +1874,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<parameter name="_host" default-value="NULL::character varying">
 		<type name="character varying"/>
 	</parameter>
-	<parameter name="_category" default-value="false">
+	<parameter name="_category" default-value="NULL::character varying">
 		<type name="character varying"/>
 	</parameter>
-	<parameter name="_statuscode" default-value="''::text">
+	<parameter name="_statuscode" default-value="false">
 		<type name="integer"/>
 	</parameter>
 	<parameter name="_displayinterval" default-value="''::text">
 		<type name="character varying"/>
 	</parameter>
-	<parameter name="_author" default-value="''::character varying">
+	<parameter name="_author" default-value="''::text">
+		<type name="character varying"/>
+	</parameter>
+	<parameter name="_type" default-value="''::character varying">
 		<type name="character varying"/>
 	</parameter>
 	<parameter name="_isking" default-value="''::character varying">
@@ -1459,7 +1909,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -1469,7 +1919,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
                 -- addFlag
                 PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
-                                _statusCode,_displayInterval,_author,_isKing,_description,
+                                _statusCode,_displayInterval,_author,_type,_isKing,_description,
                                 _hint,_updateCmd,_monitorCmd);
 
                 RETURN _flagValue;
@@ -3392,48 +3842,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 ]]></definition>
 </function>
 
-<table name="team_money">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="924.348" y="357.187"/>
-</table>
-
-<table name="cashItem">
-	<schema name="scoreboard"/>
-	<role name="owner"/>
-	<position x="1153.04" y="360.665"/>
-</table>
-
-<table name="cashItemStatus">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="1308.7" y="363.274"/>
-</table>
-
-<table name="team_transaction">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="911.304" y="223.274"/>
-</table>
-
-<table name="bmItem">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="1155.65" y="218.926"/>
-</table>
-
-<table name="bmItemStatus">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="1305.22" y="199.795"/>
-</table>
-
-<table name="bmItemType">
-	<schema name="scoreboard"/>
-	<role name="postgres"/>
-	<position x="1304.35" y="249.361"/>
-</table>
-
 <constraint name="flag_host_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="scoreboard.host" table="scoreboard.flag">
 	<columns names="host" ref-type="src-columns"/>
@@ -3449,13 +3857,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="flag_statuscode_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="scoreboard.status" table="scoreboard.flag">
 	<columns names="statuscode" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
+	<columns names="code" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="flag_author_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="scoreboard.flagauthor" table="scoreboard.flag">
 	<columns names="author" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="flag_type_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="scoreboard.flagtype" table="scoreboard.flag">
+	<columns names="type" ref-type="src-columns"/>
+	<columns names="code" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="kingflag_flagid_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
@@ -3506,76 +3920,184 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="transaction_srcwalletid_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.wallet" table="scoreboard.transaction">
+	<columns names="srcwalletid" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transaction_dstwalletid_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.wallet" table="scoreboard.transaction">
+	<columns names="dstwalletid" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transaction_type_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.transactiontype" table="scoreboard.transaction">
+	<columns names="type" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="bmitem_status_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.bmitemstatus" table="scoreboard.bmitem">
+	<columns names="status" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="bmitem_category_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.bmitemcategory" table="scoreboard.bmitem">
+	<columns names="category" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="team_bmitem_teamid_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.team" table="scoreboard.team_bmitem">
+	<columns names="teamid" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="team_bmitem_bmitem_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.bmitem" table="scoreboard.team_bmitem">
+	<columns names="bmitem" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="bmitemstatus_history_bmitemid_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.bmitem" table="scoreboard.bmitemstatus_history">
+	<columns names="bmitemid" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="bmitemstatus_history_status_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="scoreboard.bmitemstatus" table="scoreboard.bmitemstatus_history">
+	<columns names="status" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
 <relationship name="rel_flag_host" type="relfk"
-	 custom-color="#783c28"
+	 custom-color="#cfafa4"
 	 src-table="scoreboard.flag"
 	 dst-table="scoreboard.host"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_flag_category" type="relfk"
-	 custom-color="#481f42"
+	 custom-color="#9041d9"
 	 src-table="scoreboard.flag"
 	 dst-table="scoreboard.category"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_flag_status" type="relfk"
-	 custom-color="#04f7a0"
+	 custom-color="#d20cbe"
 	 src-table="scoreboard.flag"
 	 dst-table="scoreboard.status"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_flag_flagauthor" type="relfk"
-	 custom-color="#e698e1"
+	 custom-color="#6bc8da"
 	 src-table="scoreboard.flag"
 	 dst-table="scoreboard.flagauthor"
 	 src-required="false" dst-required="false"/>
 
+<relationship name="rel_flag_flagtype" type="relfk"
+	 custom-color="#100394"
+	 src-table="scoreboard.flag"
+	 dst-table="scoreboard.flagtype"
+	 src-required="false" dst-required="false"/>
+
 <relationship name="rel_kingflag_flag" type="relfk"
-	 custom-color="#e59e5c"
+	 custom-color="#dab3c6"
 	 src-table="scoreboard.kingflag"
 	 dst-table="scoreboard.flag"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_team_flag_team" type="relfk"
-	 custom-color="#882171"
+	 custom-color="#878d5f"
 	 src-table="scoreboard.team_flag"
 	 dst-table="scoreboard.team"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_team_flag_flag" type="relfk"
-	 custom-color="#a0425b"
+	 custom-color="#fd4d96"
 	 src-table="scoreboard.team_flag"
 	 dst-table="scoreboard.flag"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_team_kingflag_team" type="relfk"
-	 custom-color="#15132e"
+	 custom-color="#b8f5c5"
 	 src-table="scoreboard.team_kingflag"
 	 dst-table="scoreboard.team"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_team_kingflag_kingflag" type="relfk"
-	 custom-color="#3e9a14"
+	 custom-color="#98e11e"
 	 src-table="scoreboard.team_kingflag"
 	 dst-table="scoreboard.kingflag"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_submit_history_team" type="relfk"
-	 custom-color="#734d12"
+	 custom-color="#3c7379"
 	 src-table="scoreboard.submit_history"
 	 dst-table="scoreboard.team"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_status_history_flag" type="relfk"
-	 custom-color="#7ced44"
+	 custom-color="#06f1db"
 	 src-table="scoreboard.status_history"
 	 dst-table="scoreboard.flag"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_status_history_status" type="relfk"
-	 custom-color="#600a95"
+	 custom-color="#32862d"
 	 src-table="scoreboard.status_history"
 	 dst-table="scoreboard.status"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_transaction_wallet" type="relfk"
+	 custom-color="#1c47a1"
+	 src-table="scoreboard.transaction"
+	 dst-table="scoreboard.wallet"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_transaction_transactiontype" type="relfk"
+	 custom-color="#360ae1"
+	 src-table="scoreboard.transaction"
+	 dst-table="scoreboard.transactiontype"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_bmitem_bmitemstatus" type="relfk"
+	 custom-color="#a11007"
+	 src-table="scoreboard.bmitem"
+	 dst-table="scoreboard.bmitemstatus"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_bmitem_bmitemcategory" type="relfk"
+	 custom-color="#c18046"
+	 src-table="scoreboard.bmitem"
+	 dst-table="scoreboard.bmitemcategory"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_bmitem_team" type="relfk"
+	 custom-color="#953dba"
+	 src-table="scoreboard.team_bmitem"
+	 dst-table="scoreboard.team"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_bmitem_bmitem" type="relfk"
+	 custom-color="#fd5156"
+	 src-table="scoreboard.team_bmitem"
+	 dst-table="scoreboard.bmitem"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_bmitemstatus_history_bmitem" type="relfk"
+	 custom-color="#b52a17"
+	 src-table="scoreboard.bmitemstatus_history"
+	 dst-table="scoreboard.bmitem"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_bmitemstatus_history_bmitemstatus" type="relfk"
+	 custom-color="#544ae1"
+	 src-table="scoreboard.bmitemstatus_history"
+	 dst-table="scoreboard.bmitemstatus"
 	 src-required="false" dst-required="false"/>
 
 <permission>
@@ -3753,11 +4275,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges execute="true"/>
 </permission>
 <permission>
-	<object name="scoreboard.addnews(character varying,timestamp)" type="function"/>
-	<roles names="hfadmins"/>
-	<privileges execute="true"/>
-</permission>
-<permission>
 	<object name="scoreboard.addnews(character varying,character varying)" type="function"/>
 	<roles names="owner"/>
 	<privileges execute="true"/>
@@ -3788,12 +4305,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges execute="true"/>
 </permission>
 <permission>
-	<object name="scoreboard.addflag(character varying,character varying,integer,character varying,character varying,integer,character varying,character varying,boolean,text,text,character varying,character varying)" type="function"/>
+	<object name="scoreboard.addflagtype(integer,character varying)" type="function"/>
 	<roles names="owner"/>
 	<privileges execute="true"/>
 </permission>
 <permission>
-	<object name="scoreboard.addrandomflag(character varying,integer,character varying,character varying,integer,character varying,character varying,boolean,text,text,character varying,character varying)" type="function"/>
+	<object name="scoreboard.addflag(character varying,character varying,integer,character varying,character varying,integer,character varying,character varying,character varying,boolean,text,text,character varying,character varying)" type="function"/>
+	<roles names="owner"/>
+	<privileges execute="true"/>
+</permission>
+<permission>
+	<object name="scoreboard.addrandomflag(character varying,integer,character varying,character varying,integer,character varying,character varying,character varying,boolean,text,text,character varying,character varying)" type="function"/>
 	<roles names="owner"/>
 	<privileges execute="true"/>
 </permission>

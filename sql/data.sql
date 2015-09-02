@@ -11,9 +11,9 @@ SELECT emptyTables();
 /* 
     Create flag status
 */
-SELECT addStatus(1::smallint,'Enabled','The flag is functionnal');
-SELECT addStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
-SELECT addStatus(3::smallint,'Disabled','The flag is removed by admins');
+SELECT addFlagStatus(1::smallint,'Enabled','The flag is functionnal');
+SELECT addFlagStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
+SELECT addFlagStatus(3::smallint,'Disabled','The flag is removed by admins');
 
 /*
     Add hosts
@@ -24,17 +24,17 @@ SELECT addHost('dd-wrt', 'Some router', 'bla');
 /*
     Add categories
 */
-SELECT addCategory('web', 'Web', 'Elastics Search & PHP');
-SELECT addCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
-SELECT addCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
-SELECT addCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
-SELECT addCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
-SELECT addCategory('net', 'Networking', 'Firewall rule bypass');
-SELECT addCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
-SELECT addCategory('tca', 'Turmelle, Choquette ', 'Some company to hack');
-SELECT addCategory('electro', 'Electronics', 'CustomCorp electronics challenge near admins table. You may need <a href="/public/arduino-chal.c">this</a>');
-SELECT addCategory('sc', 'Sigmen Corp.', 'Sigmen corp. hacking challenge');
-SELECT addCategory('adfs', 'ADFS', 'ADFS federation challenges');
+SELECT addFlagCategory('web', 'Web', 'Elastics Search & PHP');
+SELECT addFlagCategory('re', 'Reverse Engineering', 'Reverse Engineering challenges such as VMs and binaries analysis');
+SELECT addFlagCategory('for', 'Forensics', 'Chroot, Data and Virus Analysis');
+SELECT addFlagCategory('expl', 'Pwning', 'Exploitation challenges from linux to windows. ');
+SELECT addFlagCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
+SELECT addFlagCategory('net', 'Networking', 'Firewall rule bypass');
+SELECT addFlagCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
+SELECT addFlagCategory('tca', 'Turmelle, Choquette ', 'Some company to hack');
+SELECT addFlagCategory('electro', 'Electronics', 'CustomCorp electronics challenge near admins table. You may need <a href="/public/arduino-chal.c">this</a>');
+SELECT addFlagCategory('sc', 'Sigmen Corp.', 'Sigmen corp. hacking challenge');
+SELECT addFlagCategory('adfs', 'ADFS', 'ADFS federation challenges');
 
 /*
     Add authors
@@ -57,10 +57,20 @@ SELECT addFlagType(4,'Unique');
 SELECT addFlagType(5,'Trap');
 SELECT addFlagType(6,'Cash');
 SELECT addFlagType(7,'Hybrid');
+
 /*
     Add a starting news
 */
 SELECT addNews('Welcome to iHack CTF 2015 !', NOW()::timestamp);
+
+/*
+    Add transaction types
+*/
+SELECT addTransactionType(1, 'Start Wallet', 'Money received at the begining of the CTF');
+SELECT addTransactionType(2, 'Cash Flag', 'Money received by submiting a cash or hybrid flag');
+SELECT addTransactionType(3, 'Item bought', 'Money sent by buying an item on the black market');
+SELECT addTransactionType(4, 'Item sold', 'Money received by selling an item on the black market');
+SELECT addTransactionType(5, 'Money Laundering', 'Money received by laundering money with a CTF admin');
 
 /*
     Set game start
