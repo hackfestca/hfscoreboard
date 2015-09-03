@@ -15,11 +15,23 @@ INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney)
        VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000::money);
 
 /* 
+    Create event severity
+*/
+SELECT addEventSeverity(0,'Emergency','emerg','System is unusable');
+SELECT addEventSeverity(1,'Alert','alert','Should be corrected immediately');
+SELECT addEventSeverity(2,'Critical','crit','Critical conditions');
+SELECT addEventSeverity(3,'Error','err','Error conditions');
+SELECT addEventSeverity(4,'Warning','warning','May indicate that an error will occur if action is not taken.');
+SELECT addEventSeverity(5,'Notice','notice','Events that are unusual, but not error conditions.');
+SELECT addEventSeverity(6,'Informational','info','Normal operational messages that require no action.');
+SELECT addEventSeverity(7,'Debug','debug','Information useful to developers for debugging the application.');
+
+/* 
     Create flag status
 */
-SELECT addFlagStatus(1::smallint,'Enabled','The flag is functionnal');
-SELECT addFlagStatus(2::smallint,'Erronous','The flag is corrupted or fucked up');
-SELECT addFlagStatus(3::smallint,'Disabled','The flag is removed by admins');
+SELECT addFlagStatus(1,'Enabled','The flag is functionnal');
+SELECT addFlagStatus(2,'Erronous','The flag is corrupted or fucked up');
+SELECT addFlagStatus(3,'Disabled','The flag is removed by admins');
 
 /*
     Add hosts

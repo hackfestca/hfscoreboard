@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
+DROP TABLE IF EXISTS eventSeverity CASCADE;
 DROP TABLE IF EXISTS team_bmItem CASCADE;
 DROP TABLE IF EXISTS bmItem CASCADE;
 DROP TABLE IF EXISTS bmItemCategory CASCADE;
@@ -322,15 +323,29 @@ CREATE TABLE news(
     );
 
 /*
+    Represent an event severity (inspired from syslog)
+*/
+CREATE TABLE eventSeverity(
+    id serial primary key,
+    code integer not null unique,
+    name varchar(20) not null unique,
+    keyword varchar(10) not null unique,
+    description text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_eventSeverity_code check (code >= 0 and code <= 7),
+    constraint valid_eventSeverity_name check (name != ''),
+    constraint valid_eventSeverity_keyword check (keyword != '')
+    );
+
+/*
     Represent an event that can be printed on the scoreboard or the log visualizator
     Mostly called by triggers
 */
 CREATE TABLE event(
     id serial primary key,
-    level integer not null default 0,
+    severity integer not null references eventSeverity(code) on delete cascade,
     title varchar(150) not null unique,
     ts timestamp not null default current_timestamp,
-    constraint valid_level_name check (level >= 0 and level <= 5),
     constraint valid_title_name check (title != '')
     );
 

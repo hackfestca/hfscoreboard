@@ -251,6 +251,26 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: addTransactionType(code,name,desc)
+*/
+CREATE OR REPLACE FUNCTION addTransactionType(_code transactionType.code%TYPE,
+                                    _name transactionType.name%TYPE, 
+                                    _description transactionType.description%TYPE default ''
+                                    ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addTransactionType(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO transactionType(code,name,description)
+                VALUES(_code,_name,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
     Stored Proc: getTransactionHistory(_top)
 */
 CREATE OR REPLACE FUNCTION getTransactionHistory(_top integer DEFAULT 30)  
@@ -2265,6 +2285,60 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+/*
+    Stored Proc: addEventSeverity(code,name,keyword,desc)
+*/
+CREATE OR REPLACE FUNCTION addEventSeverity(_code eventSeverity.code%TYPE,
+                                            _name eventSeverity.name%TYPE,
+                                            _keyword eventSeverity.keyword%TYPE, 
+                                            _description eventSeverity.description%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addEventSeverity(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Some checks
+        if _name is null then
+            raise exception 'Name cannot be null';
+        end if;
+
+        if _keyword is null then
+            raise exception 'Keyword cannot be null';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO eventSeverity(code,name,keyword,description) VALUES(_code,_name,_keyword,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getEvents(_lastUpdateTS,_top,level)
+*/
+CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp,
+                                     _top integer DEFAULT 30,
+                                     _level integer DEFAULT 0)  
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTransactionHistory(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
 -- ** money **
 -- update getScore() to have team cash. Replace king flag?
 
@@ -2279,27 +2353,6 @@ $$ LANGUAGE plpgsql;
 -- ** others **
 -- getEvents(lastUpdateTS=None,level=None)
 -- addEvent(level, title)
-
-
-/*
-    Stored Proc: addTransactionType(code,name,desc)
-*/
-CREATE OR REPLACE FUNCTION addTransactionType(_code transactionType.code%TYPE,
-                                    _name transactionType.name%TYPE, 
-                                    _description transactionType.description%TYPE default ''
-                                    ) 
-RETURNS integer AS $$
-    BEGIN
-        -- Logging
-        raise notice 'addTransactionType(%,%,%)',$1,$2,$3;
-
-        -- Insert a new row
-        INSERT INTO transactionType(code,name,description)
-                VALUES(_code,_name,_description);
-
-        RETURN 0;
-    END;
-$$ LANGUAGE plpgsql;
 
 
 
