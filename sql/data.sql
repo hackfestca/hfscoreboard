@@ -8,6 +8,12 @@ SET search_path TO scoreboard;
 */
 SELECT emptyTables();
 
+/*
+    Set game start timestamp and other variables
+*/
+INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
+       VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000::money);
+
 /* 
     Create flag status
 */
@@ -71,12 +77,12 @@ SELECT addTransactionType(2, 'Cash Flag', 'Money received by submiting a cash or
 SELECT addTransactionType(3, 'Item bought', 'Money sent by buying an item on the black market');
 SELECT addTransactionType(4, 'Item sold', 'Money received by selling an item on the black market');
 SELECT addTransactionType(5, 'Money Laundering', 'Money received by laundering money with a CTF admin');
+SELECT addTransactionType(6, 'Loto HF', 'Money won at loto HF');
 
 /*
-    Set game start
+    Create the bank which act as the wallet #1
 */
--- INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
-INSERT INTO settings(gameStartTs,gameEndTs) VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp);
+SELECT initBank(100000::money);
 
 /*
     fake teams for tests

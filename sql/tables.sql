@@ -341,6 +341,7 @@ CREATE TABLE settings(
     id serial primary key,
     gameStartTs timestamp not null,
     gameEndTs timestamp not null,
+    teamStartMoney money not null default 0,
     ts timestamp not null default current_timestamp
     ); 
 

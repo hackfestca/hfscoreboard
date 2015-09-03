@@ -76,6 +76,6 @@ GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
 
 -- Grants for multiple groups
-GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,category.name%TYPE) TO hfplayers,hfscore,hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,flagCategory.name%TYPE) TO hfplayers,hfscore,hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getNews() TO hfplayers,hfscore,hfadmins;
 

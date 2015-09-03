@@ -77,7 +77,7 @@ $$ LANGUAGE SQL;
     idx: Used in some ORDER BY
 */
 CREATE OR REPLACE FUNCTION idx(anyarray, anyelement)
-  RETURNS int AS 
+  RETURNS integer AS 
 $$
   SELECT i FROM (
      SELECT generate_series(array_lower($1,1),array_upper($1,1))
@@ -86,7 +86,6 @@ $$
   LIMIT 1;
 $$ LANGUAGE sql IMMUTABLE;
 
--- 
 /*
     Stored Proc: transferMoney(srcWalletId,dstWalletId,amount,transactionType)
 */
@@ -100,12 +99,12 @@ RETURNS integer AS $$
         raise notice 'transferMoney(%,%,%,%)',$1,$2,$3,$4;
 
         -- Some checks
-        SELECT id FROM wallet WHERE id = _srcWalletId;
+        PERFORM id FROM wallet WHERE id = _srcWalletId;
         if not FOUND then
             raise exception 'Could not find the source wallet "%"',_srcWalletId;
         end if;
 
-        SELECT id FROM wallet WHERE id = _dstWalletId;
+        PERFORM id FROM wallet WHERE id = _dstWalletId;
         if not FOUND then
             raise exception 'Could not find the destination wallet "%"',_dstWalletId;
         end if;
@@ -114,13 +113,13 @@ RETURNS integer AS $$
             raise exception 'Cannot transfer negative value';
         end if;
 
-        SELECT code FROM transactionType WHERE code = _transactionTypeCode;
+        PERFORM code FROM transactionType WHERE code = _transactionTypeCode;
         if not FOUND then
             raise exception 'Could not find transaction type "%"',_transactionTypeCode;
         end if;
 
         -- Verify source wallet has enough money to transfer the amount
-        SELECT id,amount FROM wallet WHERE id = _srcWalletId and amount - _amount >= 0;
+        PERFORM id,amount FROM wallet WHERE id = _srcWalletId and (amount - _amount) >= 0::money;
         if not FOUND then
             raise exception 'Sender does not have enough money';
         end if;
@@ -144,12 +143,58 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: launderMoney(dstWalletId,amount)
+*/
+CREATE OR REPLACE FUNCTION launderMoney(_dstWalletId wallet.id%TYPE, 
+                                   _amount wallet.amount%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'launderMoney(%,%)',$1,$2;
+
+        PERFORM transferMoney(1,_dstWalletId,_amount,5);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: launderMoneyFromTeamId(dstWalletId,amount)
+*/
+CREATE OR REPLACE FUNCTION launderMoneyFromTeamId(_teamId team.id%TYPE, 
+                                                  _amount wallet.amount%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _dstWalletId wallet.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'launderMoneyFromTeamId(%,%)',$1,$2;
+
+        -- Get team wallet id
+        SELECT wallet INTO _dstWalletId FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find team "%"',_teamId;
+        end if;
+
+        -- Perform laundering
+        PERFORM launderMoney(_dstWalletId,_amount);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- payBMItem()
+-- transferCashFlag()
+-- payLotoTicket()
+-- transferLotoToWinner()
+
+/*
     Stored Proc: addWallet(name,desc,amount)
 */
 CREATE OR REPLACE FUNCTION addWallet(_name wallet.name%TYPE,
                                    _desc wallet.description%TYPE, 
                                    _amount wallet.amount%TYPE) 
-RETURNS integer AS $$
+RETURNS wallet.id%TYPE AS $$
     DECLARE
         _walletId wallet.id%TYPE;
     BEGIN
@@ -171,10 +216,139 @@ RETURNS integer AS $$
 
         -- Perform first transaction if _amount > 0
         if _amount > 0::money then
-            PERFORM transferMoney(0,_walletId,_amount,1);
+            PERFORM transferMoney(1,_walletId,_amount,1);
         end if;
 
         RETURN _walletId;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: initBank(amount)
+*/
+CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE) 
+RETURNS integer AS $$
+    DECLARE
+        _bankWalletId wallet.id%TYPE := 1;
+    BEGIN
+        -- Logging
+        raise notice 'initBank(%)',$1;
+
+        if _amount < 0::money then
+            raise exception 'Wallet amount cannot be under 0';
+        end if;
+
+        -- Create bank as Wallet #1
+        PERFORM addWallet('Bank Wallet','Default wallet used for cash flags, money laundering, etc.',0::money);
+
+        -- Set bank value
+        UPDATE wallet
+        SET amount = _amount
+        WHERE id = _bankWalletId;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTransactionHistory(_top)
+*/
+CREATE OR REPLACE FUNCTION getTransactionHistory(_top integer DEFAULT 30)  
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTransactionHistory(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        RETURN QUERY SELECT
+                            w1.name as srcWallet,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.id
+                     ORDER BY t.ts
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamTransactionHistory(_top)
+*/
+CREATE OR REPLACE FUNCTION getTeamTransactionHistory(_teamId team.id%TYPE,
+                                                     _top integer DEFAULT 30) 
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    DECLARE
+        _walletId wallet.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamTransactionHistory(%,%)',$1,$2;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        -- Get walletId from teamId
+        SELECT wallet INTO _walletId FROM team WHERE id = _teamId;
+
+        -- Get history
+        RETURN QUERY SELECT
+                            w1.name as srcWallet,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.id
+                     WHERE t.srcWalletId = _walletId OR t.dstWalletId = _walletId
+                     ORDER BY t.ts
+                     LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -187,6 +361,7 @@ RETURNS integer AS $$
     DECLARE
         _inet inet;
         _walletId wallet.id%TYPE;
+        _teamStartMoney settings.teamStartMoney%TYPE;
     BEGIN
         -- Logging
         raise notice 'addTeam(%,%)',$1,$2;
@@ -202,11 +377,15 @@ RETURNS integer AS $$
             raise exception 'Only IPv4 addresses are supported';
         end if;
 
+        -- Get team starting money
+        SELECT teamStartMoney into _teamStartMoney FROM settings ORDER BY ts DESC LIMIT 1;
+
         -- Create wallet
-        SELECT addWallet(_name,'Wallet of team: '||_name,0::money) into _walletId;
+        _walletId := addWallet(_name,'Wallet of team: '||_name,_teamStartMoney);
 
         -- Insert a new row
         INSERT INTO team(name,net,wallet) VALUES(_name,_inet,_walletId);
+
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -944,7 +1123,7 @@ RETURNS TABLE (
                             t.name AS team,
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
-                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal 
+                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal
                          FROM team AS t
                          LEFT OUTER JOIN (
                             SELECT tf2.teamId,
@@ -1317,6 +1496,7 @@ RETURNS TABLE (
         _teamFlagSubmitCt integer;
         _playerFlagSubmitCt integer;
         _teamScore flag.pts%TYPE;
+        _teamMoney wallet.amount%TYPE;
     BEGIN
         -- Logging
         raise notice 'getTeamInfoFromIp(%)',$1;
@@ -1385,6 +1565,17 @@ RETURNS TABLE (
                     ) AS tfi2
                     WHERE tfi2.teamId = _teamRec.id
                 ) as score;
+
+        -- Get team money
+        SELECT w.amount
+        INTO _teamMoney
+        FROM team
+        LEFT OUTER JOIN (
+            SELECT id,
+                   amount
+            FROM wallet
+        ) AS w ON team.wallet = w.id
+        WHERE team.id = _teamRec.id;
         
         -- Return
         RETURN QUERY SELECT 'ID'::varchar, _teamRec.id::varchar
@@ -1393,7 +1584,8 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Active Players'::varchar, _activePlayerCt::varchar
                      UNION ALL SELECT 'Team Submit Attempts'::varchar, _teamFlagSubmitCt::varchar
                      UNION ALL SELECT 'Player Submit Attempts'::varchar, _playerFlagSubmitCt::varchar
-                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar;
+                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar
+                     UNION ALL SELECT 'Team money'::varchar, _teamMoney::varchar;
                      --ORDER BY 1;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1500,7 +1692,6 @@ RETURNS TABLE (
                     LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 
 /*
     Stored Proc: getFlagsSubmitCount()
@@ -1936,8 +2127,8 @@ RETURNS TABLE (
         -- Logging
         raise notice 'getSettings()';
 
-        RETURN QUERY SELECT unnest(array['gameStartTs'])::text AS "Key", 
-                            unnest(array[gameStartTs])::text as "Value" 
+        RETURN QUERY SELECT unnest(array['gameStartTs','gameEndTs','teamStartMoney'])::text AS "Key", 
+                            unnest(array[gameStartTs::text,gameEndTs::text,teamStartMoney::text])::text as "Value" 
                      FROM settings;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -2075,14 +2266,6 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 -- ** money **
--- addWallet(name, desc)
--- addTransactionType(code, name, desc);
--- getTeamWalletAmount(teamName);
--- getTransactionHistory(_top)
--- getTeamTransactionHistory(teamId)
--- transferMoney(srcWalletId,dstWalletId,amount,transactionType)
--- setStartingTeamMoney(teamId,amount)
--- launderTeamMoney(teamId,amount)
 -- update getScore() to have team cash. Replace king flag?
 
 -- ** black market **
@@ -2094,7 +2277,7 @@ $$ LANGUAGE plpgsql;
 -- reviewBMItem(bmItemId,status,rating,comments)
 
 -- ** others **
--- getEvents(lastUpdateTS=None)
+-- getEvents(lastUpdateTS=None,level=None)
 -- addEvent(level, title)
 
 
