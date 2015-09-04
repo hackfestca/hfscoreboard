@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.8.1" last-position="144,273" last-zoom="0.9"
+<dbmodel pgmodeler-ver="0.8.1" last-position="189,141" last-zoom="0.9"
 	 default-schema="public" default-owner="postgres">
 <role name="hfowner"
       inherit="true"
@@ -132,7 +132,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="wallet">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="956" y="223"/>
+	<position x="957.111" y="223"/>
 	<column name="id" not-null="true" default-value="nextval('wallet_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -176,7 +176,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="213" y="362"/>
+	<position x="214.111" y="362"/>
 	<column name="id" not-null="true" default-value="nextval('team_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -220,7 +220,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flagstatus">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1537" y="546.571"/>
+	<position x="1538.11" y="546.571"/>
 	<column name="id" not-null="true" default-value="nextval('flagstatus_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -261,7 +261,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="host">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1537.43" y="418"/>
+	<position x="1538.54" y="418"/>
 	<column name="id" not-null="true" default-value="nextval('host_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -302,7 +302,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flagcategory">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1891" y="542.571"/>
+	<position x="1892.11" y="542.571"/>
 	<column name="id" not-null="true" default-value="nextval('flagcategory_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -349,7 +349,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flagauthor">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1539.43" y="321.4"/>
+	<position x="1540.54" y="321.4"/>
 	<column name="id" not-null="true" default-value="nextval('flagauthor_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -387,7 +387,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flagtype">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1589" y="784.971"/>
+	<position x="1590.11" y="784.971"/>
 	<column name="id" not-null="true" default-value="nextval('flagtype_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -425,7 +425,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="927" y="509.4"/>
+	<position x="928.111" y="509.4"/>
 	<column name="id" not-null="true" default-value="nextval('flag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -508,7 +508,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="kingflag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="986.286" y="865.4"/>
+	<position x="987.397" y="865.4"/>
 	<column name="id" not-null="true" default-value="nextval('kingflag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -549,7 +549,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team_flag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="516" y="572.4"/>
+	<position x="517.111" y="572.4"/>
 	<column name="id" not-null="true" default-value="nextval('team_flag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -584,7 +584,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team_kingflag">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="564" y="790.8"/>
+	<position x="565.111" y="790.8"/>
 	<column name="id" not-null="true" default-value="nextval('team_kingflag_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -619,7 +619,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="submit_history">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="693" y="70.8"/>
+	<position x="694.111" y="70.8"/>
 	<column name="id" not-null="true" default-value="nextval('submit_history_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -651,7 +651,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="status_history">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1816" y="693.371"/>
+	<position x="1558.22" y="666.704"/>
 	<column name="id" not-null="true" default-value="nextval('status_history_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -680,7 +680,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="transactiontype">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1800" y="73.3714"/>
+	<position x="1801.11" y="73.3714"/>
 	<column name="id" not-null="true" default-value="nextval('transactiontype_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -721,7 +721,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="transaction">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1480" y="126.371"/>
+	<position x="1481.11" y="126.371"/>
 	<column name="id" not-null="true" default-value="nextval('transaction_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -759,7 +759,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bmitemstatus">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1669.14" y="1199.91"/>
+	<position x="1670.25" y="1199.91"/>
 	<column name="id" not-null="true" default-value="nextval('bmitemstatus_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -800,7 +800,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bmitemcategory">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1675.14" y="956.629"/>
+	<position x="1676.25" y="956.629"/>
 	<column name="id" not-null="true" default-value="nextval('bmitemcategory_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -832,7 +832,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bmitemreview">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1673" y="1073.2"/>
+	<position x="1674.11" y="1073.2"/>
 	<column name="id" not-null="true" default-value="nextval('bmitemreview_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -864,7 +864,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bmitem">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1058" y="1086.2"/>
+	<position x="1059.11" y="1086.2"/>
 	<column name="id" not-null="true" default-value="nextval('bmitem_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -923,7 +923,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="team_bmitem">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="644" y="1005.2"/>
+	<position x="645.111" y="1005.2"/>
 	<column name="id" not-null="true" default-value="nextval('team_bmitem_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -958,7 +958,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="news">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="53" y="1131.6"/>
+	<position x="54.1111" y="1131.6"/>
 	<column name="id" not-null="true" default-value="nextval('news_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -993,7 +993,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="event">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="53" y="1243.6"/>
+	<position x="54.1111" y="1243.6"/>
 	<column name="id" not-null="true" default-value="nextval('event_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -1031,7 +1031,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="settings">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="54" y="1353.6"/>
+	<position x="55.1111" y="1353.6"/>
 	<column name="id" not-null="true" default-value="nextval('settings_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>
@@ -1060,7 +1060,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="bmitemstatus_history">
 	<schema name="scoreboard"/>
 	<role name="owner"/>
-	<position x="1301.29" y="1324.46"/>
+	<position x="1302.4" y="1324.46"/>
 	<column name="id" not-null="true" default-value="nextval('bmitemstatus_history_id_seq'::regclass)">
 		<type name="integer"/>
 	</column>

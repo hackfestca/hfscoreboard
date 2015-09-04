@@ -87,9 +87,8 @@ SELECT addNews('Welcome to iHack CTF 2015 !', NOW()::timestamp);
 SELECT addTransactionType(1, 'Start Wallet', 'Money received at the begining of the CTF');
 SELECT addTransactionType(2, 'Cash Flag', 'Money received by submiting a cash or hybrid flag');
 SELECT addTransactionType(3, 'Item bought', 'Money sent by buying an item on the black market');
-SELECT addTransactionType(4, 'Item sold', 'Money received by selling an item on the black market');
-SELECT addTransactionType(5, 'Money Laundering', 'Money received by laundering money with a CTF admin');
-SELECT addTransactionType(6, 'Loto HF', 'Money won at loto HF');
+SELECT addTransactionType(4, 'Money Laundering', 'Money received by laundering money with a CTF admin');
+SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 
 /*
     Create the bank which act as the wallet #1
@@ -107,6 +106,23 @@ SELECT addTeam('Team VPN 2', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Eko', '127.0.0.1/8');
 
+/*
+    Black market   
+*/
+SELECT addBMItemCategory('admin','Admin','This item was created by an admin and can be considered safe.');
+SELECT addBMItemCategory('player','Player','This item was uploaded by a player.');
+
+SELECT addBMItemStatus(1,'For Sale','This item is for sale.');
+SELECT addBMItemStatus(2,'Sold','This item is sold and is not available anymore (qty = 0).');
+SELECT addBMItemStatus(3,'For approval','This item was submitted by a player and needs approval.');
+SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market by a player and was refused by an admin.');
+SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
+
+SELECT addBMItem('Military base leak','admin',1,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!');
+SELECT addBMItem('Casino 0-day','admin',1,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!');
+SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100::money,NULL,Null,'Something', 'exploit!');
+SELECT addBMItem('Pipeline 0-day','admin',1,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!');
+SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,'Mouhaha', 'exploit!');
 
 /*
     Insert random data (for scoreboard development)

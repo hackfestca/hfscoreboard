@@ -12,7 +12,7 @@ SET search_path TO scoreboard;
     Some cleanup
 */
 DROP TABLE IF EXISTS settings CASCADE;
-DROP TABLE IF EXISTS status_history CASCADE;
+DROP TABLE IF EXISTS flagStatus_history CASCADE;
 DROP TABLE IF EXISTS submit_history CASCADE;
 DROP TABLE IF EXISTS news CASCADE;
 DROP TABLE IF EXISTS team_kingFlag CASCADE;
@@ -210,10 +210,10 @@ CREATE TABLE submit_history(
 /*
     This table contains all flag changes (not implemented yet)
 */
-CREATE TABLE status_history(
+CREATE TABLE flagStatus_history(
     id serial primary key,
     flagId integer not null references flag(id) on delete cascade, 
-    status integer not null references flagStatus(id) on delete cascade,
+    statusCode integer not null references flagStatus(code) on delete cascade,
     ts timestamp not null default current_timestamp
     );
 
@@ -246,7 +246,7 @@ CREATE TABLE transaction(
     );
 
 /*
-    For sale, For approval, Removed from game, Sold, Hidden
+    For sale, For approval, Sold, Removed from game
 */
 CREATE TABLE bmItemStatus(
     id serial primary key,
@@ -264,10 +264,12 @@ CREATE TABLE bmItemStatus(
 */
 CREATE TABLE bmItemCategory(
     id serial primary key,
-    name varchar(20) not null,
+    name varchar(10) not null unique,
+    displayName varchar(20) not null unique,
     description text,
     ts timestamp not null default current_timestamp,
-    constraint valid_bmItemCategory_name check (name != '')
+    constraint valid_bmItemCategory_name check (name != ''),
+    constraint valid_bmItemCategory_displayName check (displayName!= '')
     );
 
 /*
@@ -287,16 +289,21 @@ CREATE TABLE bmItemReview(
 CREATE TABLE bmItem(
     id serial primary key,
     publicId varchar(64) not null unique,
-    name varchar(40) not null unique,
-    description text,
-    status integer not null references bmItemStatus(id) on delete cascade,
+    name varchar(50) not null unique,
     category integer not null references bmItemCategory(id) on delete cascade,
-    review integer not null references bmItemReview(id) on delete cascade,
+    statusCode integer not null references bmItemStatus(code) on delete cascade,
+    review integer default null references bmItemReview(id) on delete cascade,
+    ownerWallet integer not null references wallet(id) on delete cascade,
     amount money not null,
-    quantity integer default null,
+    qty integer default null,
+    displayInterval interval default null,
+    description text,
+    data text not null,
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
-    constraint valid_bmItem_amount check (amount > 0::money)
+    constraint valid_bmItem_data check (data != ''),
+    constraint valid_bmItem_amount check (amount > 0::money),
+    constraint valid_bmItem_displayTs check (displayInterval > '0 hours'::interval)
     );
 
 /*
@@ -305,10 +312,10 @@ CREATE TABLE bmItem(
 CREATE TABLE team_bmItem(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
-    bmItem integer not null references bmItem(id) on delete cascade,
+    bmItemId integer not null references bmItem(id) on delete cascade,
     playerIp inet not null,
     ts timestamp not null default current_timestamp,
-    constraint u_bmItem_constraint unique (teamId,bmItem)
+    constraint u_bmItem_constraint unique (teamId,bmItemId)
     );
 
 /*
@@ -366,7 +373,7 @@ CREATE TABLE settings(
 CREATE TABLE bmItemStatus_history(
     id serial primary key,
     bmItemId integer not null references bmItem(id) on delete cascade,
-    status integer not null references bmItemStatus(id) on delete cascade,
+    statusCode integer not null references bmItemStatus(code) on delete cascade,
     ts timestamp not null default current_timestamp
     );
 

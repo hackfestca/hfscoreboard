@@ -42,7 +42,7 @@ RETURNS integer AS $$
                  team_kingFlag,
                  news,
                  submit_history,
-                 status_history,
+                 flagStatus_history,
                  settings
             RESTART IDENTITY
             CASCADE;
@@ -2286,6 +2286,358 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
+    Stored Proc: addBMItemCategory(name,displayName,description)
+*/
+CREATE OR REPLACE FUNCTION addBMItemCategory(_name bmItemCategory.name%TYPE, 
+                                       _displayName bmItemCategory.displayName%TYPE,
+                                       _description bmItemCategory.description%TYPE) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addBMItemCategory(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO bmItemCategory(name,displayName,description)
+                VALUES(_name,_displayName,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addBMItemStatus(code,name,description)
+*/
+CREATE OR REPLACE FUNCTION addBMItemStatus(_code bmItemStatus.code%TYPE,
+                                    _name bmItemStatus.name%TYPE, 
+                                    _description text default ''
+                                    ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addBMItemStatus(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO bmItemStatus(code,name,description)
+                VALUES(_code,_name,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: setBMItemStatus(_bmItemId,_bmItemStatusCode)
+*/
+CREATE OR REPLACE FUNCTION setBMItemStatus(_bmItemId bmItem.id%TYPE,
+                                           _bmItemStatusCode bmItem.statusCode%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'setBMItemStatus(%,%)',$1,$2;
+
+        -- Update bmItem
+        UPDATE bmItem
+        SET statusCode = _bmItemStatusCode
+        WHERE id = _bmItemId;
+        
+        -- Insert a new row in history
+        INSERT INTO bmItemStatus_history(bmItemId,statusCode)
+                VALUES(_bmItemId,_bmItemStatusCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addBMItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,desc)
+*/
+CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE, 
+                                    _category bmItemCategory.name%TYPE,
+                                    _statusCode bmItemStatus.code%TYPE,
+                                    _ownerWallet bmItem.ownerWallet%TYPE,
+                                    _amount bmItem.amount%TYPE,
+                                    _qty bmItem.qty%TYPE,
+                                    _displayInterval varchar(20),
+                                    _description bmItem.description%TYPE,
+                                    _data bmItem.data%TYPE) 
+RETURNS integer AS $$
+    DECLARE
+        _bmItemId bmItem.id%TYPE;
+        _catId bmItemCategory.id%TYPE;
+        _display bmItem.displayInterval%TYPE;
+        BMI_FOR_SALE_STATUS bmItemStatus.code%TYPE := 1;
+    BEGIN
+        -- Logging
+        raise notice 'addFlag(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+
+        -- Get category id from name
+        SELECT id INTO _catId FROM bmItemCategory WHERE name = _category;
+        if not FOUND then
+            raise exception 'Could not find category "%"',_category;
+        end if;
+
+        -- Verify status code exist
+        PERFORM code FROM bmItemStatus WHERE code = _statusCode;
+        if not FOUND then
+            raise exception 'Could not find status code "%"',_statusCode;
+        end if;
+
+        -- Verify amount
+        if _amount <= 0::money then
+            raise exception 'Black market item cannot cost < 0';
+        end if;
+
+        -- Verify quantity
+        if _qty is not Null and _qty <= 0 then
+            raise exception 'Black market item quantity cannot be < 0';
+        end if;
+
+        -- Convert displayInterval
+        if _displayInterval is not Null then
+            _display = _displayInterval::interval;
+        else
+            _display = _displayInterval;
+        end if;
+
+        -- Insert a new row
+        INSERT INTO bmItem(publicId,name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,data)
+                VALUES(random_64(),_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_data);
+        _bmItemId := LASTVAL();
+
+        -- Set initial status
+        PERFORM setBMItemStatus(_bmItemId,BMI_FOR_SALE_STATUS);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: checkTeamSolvency(teamId,itemId)
+*/
+CREATE OR REPLACE FUNCTION checkTeamSolvency(_teamId team.id%TYPE,
+                                             _itemId bmItem.id%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _walletId wallet.id%TYPE;
+        _walletAmount wallet.amount%TYPE;
+        _bmItemAmount bmItem.amount%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'checkTeamSolvency(%,%)',$1,$2;
+
+        -- Get team walletId
+        SELECT wallet INTO _walletId FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find the team ID "%"',_teamId;
+        end if;
+
+        -- Get wallet amount
+        SELECT amount INTO _walletAmount FROM wallet WHERE id = _walletId;
+        if not FOUND then
+            raise exception 'Could not find the wallet of team ID "%"',_teamId;
+        end if;
+
+        -- Get black market item amount
+        SELECT amount INTO _bmItemAmount FROM bmItem WHERE id = _itemId;
+        if not FOUND then
+            raise exception 'Could not find the black market item ID "%"',_itemId;
+        end if;
+
+        -- Check that the player has enough money
+        if _walletAmount < _bmItemAmount then
+            raise exception 'Not enough money to buy the item';
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: checkItemAvailability(bmItemId,teamId=Null)
+*/
+CREATE OR REPLACE FUNCTION checkItemAvailability(_bmItemId bmItem.id%TYPE,
+                                                 _teamId team.id%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _bmItemRec bmItem%ROWTYPE;
+        _bmItemStatus bmItemStatus.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'checkItemAvailability(%,%)',$1,$2;
+
+        -- Get black market item record
+        SELECT * INTO _bmItemRec FROM bmItem WHERE id = _bmItemId;
+        if not FOUND then
+            raise exception 'Could not find the black market item ID "%"',_bmItemId;
+        end if;
+
+        -- Check item status
+        if _bmItemRec.statusCode > 1 then
+            SELECT name INTO _bmItemStatus FROM bmItemStatus WHERE id = _bmItemRec.statusCode;
+            raise exception 'Item is not available. Current status: "%"';
+        end if;
+
+        -- Check item qty
+        if _bmItemRec.qty = 0 then
+            raise exception 'Item is out of stock.';
+        end if;
+
+        -- if a teamId is specified.
+        if _teamId is not null then
+            -- Determine if the team already bought this item
+            PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+            if FOUND then
+                raise exception 'Item "%" was already acquired by team "%"',_bmItemId,_teamId;
+            end if;
+
+            -- Determine if the team is the item's owner
+            SELECT id,
+                   wallet 
+            FROM team AS t
+            LEFT OUTER JOIN (
+                SELECT id,
+                       ownerWallet
+                FROM bmItem 
+            ) AS bmi ON t.wallet = bmi.ownerWallet
+            WHERE t.id= _teamId AND bmi.id = _bmItemId;
+            if FOUND then
+                raise exception 'You cannot buy an item you are selling';
+            end if;
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: buyBMItem(teamId,bmItemId)
+*/
+CREATE OR REPLACE FUNCTION buyBMItemFromIp(_bmItemId bmItem.id%TYPE,
+                                           _playerIpStr varchar(20))
+RETURNS integer AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _teamWalletId wallet.id%TYPE;
+        _ownerWalletId wallet.id%TYPE;
+        _bmItemAmount bmItem.amount%TYPE;
+        _bmItemQty bmItem.qty%TYPE;
+        BMI_SOLD_STATUS bmItemStatus.code%TYPE := 2;
+        TR_BOUGHT_STATUS transactionType.code%TYPE := 3;
+    BEGIN
+        -- Logging
+        raise notice 'buyBMItem(%,%)',$1,$2;
+
+        -- Get team from userIp 
+        _playerIp := _playerIpStr::inet;
+        SELECT id INTO _teamId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Check team solvency
+        PERFORM checkTeamSolvency(_teamId,_bmItemId);
+
+        -- Check item availability
+        PERFORM checkItemAvailability(_teamId,_bmItemId);
+
+        -- Transfer money
+        SELECT wallet INTO _teamWalletId FROM team WHERE id = _teamId;
+        SELECT ownerWallet,amount,qty INTO _ownerWalletId,_bmItemAmount,_bmItemQty FROM bmItem WHERE id = _bmItemId;
+        PERFORM transferMoney(_teamWalletId,_ownerWalletId,_bmItemAmount,TR_BOUGHT_STATUS);
+
+        -- Assign item
+        INSERT INTO team_bmItem(teamId,bmItemId,playerIp)
+               VALUES(_teamId,_bmItemId,_playerIp);
+
+        -- Update qty
+        UPDATE bmItem
+        SET qty = qty - 1
+        WHERE id = _bmItemId;
+
+        -- Update status if needed
+        if _bmItemQty = 1 then
+            PERFORM setBMItemStatus(_bmItemId,BMI_SOLD_STATUS);
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: sellBMItemFromIp(name,amount,qty,desc,playerIp)
+*/
+CREATE OR REPLACE FUNCTION sellBMItemFromIp(_name bmItem.name%TYPE, 
+                                    _amount bmItem.amount%TYPE,
+                                    _qty bmItem.amount%TYPE,
+                                    _description bmItem.description%TYPE,
+                                    _data bmItem.data%TYPE, 
+                                    _playerIp varchar(20))
+RETURNS integer AS $$
+    DECLARE
+        _playerIp inet;
+        _ownerWalletId bmItem.ownerWallet%TYPE;
+        _catId bmItemCategory.id%TYPE;
+        _catName bmItemCategory.name%TYPE := 'player';
+        BMI_APPROVAL_STATUS bmItemStatus.code%TYPE := 3;
+    BEGIN
+        -- Logging
+        raise notice 'sellBMItemFromIp(%,%,%,%,%)',$1,$2,$3,$4,$5;
+
+        -- Get team from userIp 
+        _playerIp := _playerIpStr::inet;
+        SELECT wallet INTO _ownerWalletId FROM team where _playerIp << net ORDER BY wallet DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Add a new black market item
+        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,Null,_description,_data);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: reviewBMItem(bmItemId,bmItemStatus,rating,comments)
+*/
+CREATE OR REPLACE FUNCTION reviewBMItem(_bmItemId bmItem.id%TYPE,
+                                        _statusCode bmItemStatus.code%TYPE,
+                                        _rating bmItemReview.rating%TYPE,
+                                        _comments bmItemReview.comments%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _reviewId bmItemReview.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'reviewBMItem(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Insert review
+        INSERT INTO bmItemReview(rating,comments) VALUES(_rating,_comments);
+        _reviewId := LASTVAL();
+
+        -- Assign review
+        UPDATE bmItem
+        SET review = _reviewId
+        WHERE id = _bmItemId;
+
+        -- Update status
+        PERFORM setBMItemStatus(_bmItemId,_statusCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+-- ** money **
+-- update getScore() to have team cash. Replace king flag?
+
+-- ** others **
+-- getEvents(lastUpdateTS=None,level=None)
+-- addEvent(level, title)
+
+
+
+
+/*
     Stored Proc: addEventSeverity(code,name,keyword,desc)
 */
 CREATE OR REPLACE FUNCTION addEventSeverity(_code eventSeverity.code%TYPE,
@@ -2337,23 +2689,4 @@ RETURNS TABLE (
 
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-
--- ** money **
--- update getScore() to have team cash. Replace king flag?
-
--- ** black market **
--- addBMItemCategory(name, desc)
--- addBMItemStatus(code, name, desc)
--- addBMItem(name, desc, category, cost, qty)
--- buyBMItem(teamId,itemId)
--- sellBMItem(teamId,itemName,itemDesc,amount,qty)
--- reviewBMItem(bmItemId,status,rating,comments)
-
--- ** others **
--- getEvents(lastUpdateTS=None,level=None)
--- addEvent(level, title)
-
-
-
 
