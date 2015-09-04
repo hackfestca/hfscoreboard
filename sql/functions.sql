@@ -753,9 +753,7 @@ CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE,
                                     _type flagType.name%TYPE  default Null,
                                     _isKing flag.isKing%TYPE default false,
                                     _description flag.description%TYPE default '',
-                                    _hint flag.hint%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default '',
-                                    _monitorCmd flag.monitorCmd%TYPE default ''
+                                    _updateCmd flag.updateCmd%TYPE default ''
                                     ) 
 RETURNS integer AS $$
     DECLARE
@@ -766,7 +764,7 @@ RETURNS integer AS $$
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -810,9 +808,9 @@ RETURNS integer AS $$
         
         -- Insert a new row
         INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,type,
-                        description,hint,isKing,updateCmd,monitorCmd)
+                        description,isKing,updateCmd)
                 VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,_typeId,
-                        _description,_hint,_isKing,_updateCmd,_monitorCmd);
+                        _description,_isKing,_updateCmd);
 
         RETURN 0;
     END;
@@ -831,16 +829,14 @@ CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE,
                                     _type flagType.name%TYPE  default Null,
                                     _isKing flag.isKing%TYPE default false,
                                     _description flag.description%TYPE default '',
-                                    _hint flag.hint%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default '',
-                                    _monitorCmd flag.monitorCmd%TYPE default ''
+                                    _updateCmd flag.updateCmd%TYPE default ''
                                     ) 
 RETURNS flag.value%TYPE AS $$
     DECLARE
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -849,9 +845,8 @@ RETURNS flag.value%TYPE AS $$
                 SELECT random_32() INTO _flagValue;
 
                 -- addFlag
-                PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
-                                _statusCode,_displayInterval,_author,_type,_isKing,_description,
-                                _hint,_updateCmd,_monitorCmd);
+                PERFORM addFlag(_name,_flagValue,_pts,_host,_category,_statusCode,
+                                _displayInterval,_author,_type,_isKing,_description,_updateCmd);
 
                 RETURN _flagValue;
             EXCEPTION WHEN unique_violation THEN
@@ -2199,33 +2194,29 @@ RETURNS integer AS $$
         FROM generate_series(1,TEAM_COUNT) as id;
 
         -- Insert random flags where isKing = False
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
+        INSERT INTO flag(name,value,pts,host,category,updateCmd,statusCode,isKing,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
                 'echo $FLAG > /root/flag'||id||'.txt',
-                'bla',
                 1,
                 False,
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.',
-                ''
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(1,FLAG_COUNT) as id;
 
         -- Insert random flags where isKing = True
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
+        INSERT INTO flag(name,value,pts,host,category,updateCmd,statusCode,isKing,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
                 'echo $FLAG > /root/flag'||id||'.txt',
-                'bla',
                 1,
                 True,
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.',
-                ''
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(FLAG_COUNT+1,FLAG_COUNT+1+FLAG_IS_KING_COUNT) as id;
 
         -- Insert random king flags

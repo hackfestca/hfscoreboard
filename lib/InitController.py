@@ -93,8 +93,6 @@ class InitController(ClientController.ClientController):
                                     varchar, \
                                     boolean, \
                                     text,    \
-                                    text,    \
-                                    varchar, \
                                     varchar)')
             addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
                                     integer, \
@@ -106,8 +104,6 @@ class InitController(ClientController.ClientController):
                                     varchar, \
                                     boolean, \
                                     text,    \
-                                    text,    \
-                                    varchar, \
                                     varchar)')
             with self._oDB.xact():
                 for row in reader:
@@ -123,9 +119,7 @@ class InitController(ClientController.ClientController):
                     ftype = row[7]
                     fisking = row[8]
                     fdesc = row[9]
-                    fhint = None
                     fupdcmd = row[10]
-                    fmoncmd = None
                     
                     if fname != 'Flag Name':
                         if fvalue != '':
@@ -140,9 +134,7 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(ftype,'str'), \
                                     self._sanitize(fisking,'bool'), \
                                     self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fhint,'str'), \
-                                    self._sanitize(fupdcmd,'str'), \
-                                    self._sanitize(fmoncmd,'str'))
+                                    self._sanitize(fupdcmd,'str'))
                         else:
                             addRandomFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fpts,'int'), \
@@ -154,9 +146,7 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(ftype,'str'), \
                                     self._sanitize(fisking,'bool'), \
                                     self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fhint,'str'), \
-                                    self._sanitize(fupdcmd,'str'), \
-                                    self._sanitize(fmoncmd,'str'))
+                                    self._sanitize(fupdcmd,'str'))
 
     def importTeams(self):
         with open(self._teamsFile) as csvfile:

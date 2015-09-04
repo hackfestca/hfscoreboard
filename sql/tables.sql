@@ -148,10 +148,8 @@ CREATE TABLE flag(
     type integer not null references flagType(code),
     displayInterval interval default null,
     description text default null,
-    hint text default null,
     isKing boolean not null default False,  -- For king flags only
     updateCmd varchar(255) default null,    -- For king flags only
-    monitorCmd varchar(255) default null,   -- For king flags only
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
@@ -319,14 +317,13 @@ CREATE TABLE team_bmItem(
     );
 
 /*
-    Represent a news that can be printed on the scoreboard
+    This table contains all relevant black market status changes
 */
-CREATE TABLE news(
+CREATE TABLE bmItemStatus_history(
     id serial primary key,
-    title varchar(150) not null unique,
-    displayTs timestamp not null default current_timestamp,
-    ts timestamp not null default current_timestamp,
-    constraint valid_title_name check (title != '')
+    bmItemId integer not null references bmItem(id) on delete cascade,
+    statusCode integer not null references bmItemStatus(code) on delete cascade,
+    ts timestamp not null default current_timestamp
     );
 
 /*
@@ -357,6 +354,17 @@ CREATE TABLE event(
     );
 
 /*
+    Represent a news that can be printed on the scoreboard
+*/
+CREATE TABLE news(
+    id serial primary key,
+    title varchar(150) not null unique,
+    displayTs timestamp not null default current_timestamp,
+    ts timestamp not null default current_timestamp,
+    constraint valid_title_name check (title != '')
+    );
+
+/*
     This table contains scoreboard settings
 */ 
 CREATE TABLE settings(
@@ -366,14 +374,3 @@ CREATE TABLE settings(
     teamStartMoney money not null default 0,
     ts timestamp not null default current_timestamp
     ); 
-
-/*
-    This table contains all relevant black market status changes
-*/
-CREATE TABLE bmItemStatus_history(
-    id serial primary key,
-    bmItemId integer not null references bmItem(id) on delete cascade,
-    statusCode integer not null references bmItemStatus(code) on delete cascade,
-    ts timestamp not null default current_timestamp
-    );
-
