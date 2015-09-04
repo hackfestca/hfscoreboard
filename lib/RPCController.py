@@ -123,7 +123,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.submitFlagFromIp,clientIP,flagValue)
-        self._dbConnect()
+        self._dbClose()
         return ret
 
     @expose()
@@ -131,7 +131,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.getFormatScore,top,ts,cat)
-        self._dbConnect()
+        self._dbClose()
         return ret
 
     @expose()
@@ -139,7 +139,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.getFormatCatProgressFromIp,clientIP)
-        self._dbConnect()
+        self._dbClose()
         return ret
 
     @expose()
@@ -147,7 +147,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.getFormatFlagProgressFromIp,clientIP)
-        self._dbConnect()
+        self._dbClose()
         return ret
 
     @expose()
@@ -155,7 +155,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.getFormatNews)
-        self._dbConnect()
+        self._dbClose()
         return ret
 
     @expose()
@@ -163,5 +163,5 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = ''
         self._dbConnect()
         ret = self._dbExec(self._oC.getFormatTeamInfoFromIp,clientIP)
-        self._dbConnect()
+        self._dbClose()
         return ret

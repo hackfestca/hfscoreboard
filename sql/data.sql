@@ -93,7 +93,7 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create the bank which act as the wallet #1
 */
-SELECT initBank(100000::money);
+SELECT initBank(500000::money);
 
 /*
     fake teams for tests
@@ -138,6 +138,63 @@ SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,
 *
 ******************************************************* */
 
+/*
+    Testing transactions and black market
+*/
+-- Team
+-- id |            name             |       net       | wallet | hide |             ts             
+------+-----------------------------+-----------------+--------+------+----------------------------
+--  1 | Team HF Crew                | 172.16.66.0/24  |      2 | f    | 2015-09-03 22:45:58.502987
+--  2 | Team Dube                   | 192.168.1.0/24  |      3 | f    | 2015-09-03 22:45:58.502987
+--  3 | Team HF DMZ                 | 192.168.6.0/24  |      4 | f    | 2015-09-03 22:45:58.502987
+
+-- Wallet
+-- id |     name     |  amount   
+------+--------------+-----------
+--  2 | Team HF Crew | $1,000.00
+--  3 | Team Dube    | $1,000.00
+--  4 | Team HF DMZ  | $1,000.00
+
+-- bmItem
+-- id |            name            | ownerwallet |  amount   | qty 
+------+----------------------------+-------------+-----------+-----
+--  1 | Military base leak         |           1 |   $800.00 |    
+--  2 | Casino 0-day               |           1 | $1,600.00 |    
+--  3 | Hydroelectric dam helper   |           1 | $2,100.00 |    
+--  4 | Pipeline 0-day             |           1 | $3,700.00 |    
+--  5 | Phoenix corp takeover logs |           1 | $5,000.00 |    
+
+
+-- Launder money
+SELECT launderMoneyFromTeamId(1,2000::money);
+SELECT launderMoneyFromTeamId(2,2000::money);
+SELECT launderMoneyFromTeamId(3,2000::money);
+
+-- Buy an admin item
+SELECT buyBMItemFromIp(1,'172.16.66.123');
+
+-- Sell an item
+SELECT sellBMItemFromIp('My item',1500::money,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
+
+-- Attempt to buy an un-reviewed item (tested:work)
+--SELECT buyBMItemFromIp(6,'172.16.66.155');
+
+-- Review an admin item (should fail): Remove from game (tested:work)
+--SELECT reviewBMItem(3,4,4,'this is a good item');
+
+-- Review the item: Remove from game
+SELECT reviewBMItem(6,4,0,'this is a malicious item. nice try');
+
+-- Attempt to buy the item removed from the game (tested:work)
+--SELECT buyBMItemFromIp(6,'172.16.66.159'); 
+
+-- Review the item: Approve
+SELECT reviewBMItem(6,1,5,'this is a good item');
+
+-- Attempt to buy the approuved item (tested:work)
+SELECT buyBMItemFromIp(6,'172.16.66.250'); 
+
+
 --SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
 --                1::smallint, Null, Null, True, '', '',
 --                'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 
@@ -164,29 +221,6 @@ SELECT addFlag('Test 4.3', 'noob', 3::smallint, '172.28.72.4', 'rev', 1::smallin
 SELECT addFlag('Test 4.4', ':|!+"/_"!$)("/%*%$?&', 3::smallint, '172.28.72.4', 'rev', 1::smallint, Null, Null, True, '', ''
                 'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
 */
-
-/*
-    Add random flags
-*/
-/*
-SELECT addRandomFlag('Test 1.1', 3, '172.28.72.4', 'web', 1::smallint, Null, Null, True, '', '',
-                     'echo $FLAG > /root/flag.txt', 'wget http://dathost/test');
-SELECT addRandomFlag('Test 1.2', 3, '172.28.72.4', 'web', 1::smallint, Null, Null, True, '', '',
-                     'echo $FLAG > /root/flag.txt', 'wget http://dathost/test');
-SELECT addRandomFlag('Test 1.3', 3, '172.28.72.4', 'web', 1::smallint, Null, Null, True, '', '',
-                     'echo $FLAG > /root/flag.txt', 'wget http://dathost/test');
-SELECT addRandomFlag('Test 2', 5, '172.28.72.4', 'expl', 2::smallint, Null, Null, True, '', '',
-                     'echo $FLAG > /root/flag2.txt', 'wget http://dathost/test');
-SELECT addRandomFlag('Test 3', 7, '172.28.72.4', 'expl', 3::smallint, Null, Null, True, '', '',
-                     'echo $FLAG > /root/flag3.txt', 'wget http://dathost/test');
-*/
-
---SELECT addKingFlagFromName('Test 1.1', random_32(), 1::smallint);
--- Testing erronous and disabled flags
---SELECT addKingFlagFromName('Test 2', random_32(), 1::smallint);
---SELECT addKingFlagFromName('Test 3', random_32(), 1::smallint);
--- Testing invalid flag
---SELECT addKingFlagFromName('Flag 4', random_32(), 1);
 
 /*
     Submit tests

@@ -148,11 +148,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION launderMoney(_dstWalletId wallet.id%TYPE, 
                                    _amount wallet.amount%TYPE)
 RETURNS integer AS $$
+    DECLARE
+        TR_LAUNDERING_CODE transactionType.code%TYPE := 4;
     BEGIN
         -- Logging
         raise notice 'launderMoney(%,%)',$1,$2;
 
-        PERFORM transferMoney(1,_dstWalletId,_amount,5);
+        PERFORM transferMoney(1,_dstWalletId,_amount,TR_LAUNDERING_CODE);
 
         RETURN 0;
     END;
@@ -226,20 +228,22 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: initBank(amount)
 */
-CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE) 
+CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE,
+                                    _name wallet.name%TYPE DEFAULT 'Bank',
+                                    _desc wallet.description%TYPE DEFAULT 'Default wallet used for cash flags, money laundering, etc.') 
 RETURNS integer AS $$
     DECLARE
         _bankWalletId wallet.id%TYPE := 1;
     BEGIN
         -- Logging
-        raise notice 'initBank(%)',$1;
+        raise notice 'initBank(%,%,%)',$1,$2,$3;
 
         if _amount < 0::money then
             raise exception 'Wallet amount cannot be under 0';
         end if;
 
         -- Create bank as Wallet #1
-        PERFORM addWallet('Bank Wallet','Default wallet used for cash flags, money laundering, etc.',0::money);
+        PERFORM addWallet(_name,_desc,0::money);
 
         -- Set bank value
         UPDATE wallet
@@ -1095,7 +1099,8 @@ RETURNS TABLE (
                 team team.name%TYPE,
                 flagPts flag.pts%TYPE,
                 kingFlagPts kingFlag.pts%TYPE,
-                flagTotal flag.pts%TYPE
+                flagTotal flag.pts%TYPE,
+                cash wallet.amount%TYPE
               ) AS $$
     DECLARE
         _settings settings%ROWTYPE;
@@ -1143,8 +1148,14 @@ RETURNS TABLE (
                             t.name AS team,
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
-                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal
+                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
+                            w.amount AS cash
                          FROM team AS t
+                         LEFT OUTER JOIN (
+                            SELECT w.id,
+                                   w.amount
+                            FROM wallet as w
+                         ) AS w ON t.wallet = w.id
                          LEFT OUTER JOIN (
                             SELECT tf2.teamId,
                                    sum(tf2.pts) AS sum
@@ -2364,10 +2375,9 @@ RETURNS integer AS $$
         _bmItemId bmItem.id%TYPE;
         _catId bmItemCategory.id%TYPE;
         _display bmItem.displayInterval%TYPE;
-        BMI_FOR_SALE_STATUS bmItemStatus.code%TYPE := 1;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+        raise notice 'addBMItem(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
 
         -- Get category id from name
         SELECT id INTO _catId FROM bmItemCategory WHERE name = _category;
@@ -2404,11 +2414,57 @@ RETURNS integer AS $$
         _bmItemId := LASTVAL();
 
         -- Set initial status
-        PERFORM setBMItemStatus(_bmItemId,BMI_FOR_SALE_STATUS);
+        PERFORM setBMItemStatus(_bmItemId,_statusCode);
 
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: listBMItems(_top)
+*/
+CREATE OR REPLACE FUNCTION listBMItems(_top integer DEFAULT 30,
+                                       _teamId team.id%TYPE DEFAULT NULL) 
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.name%TYPE,
+                status bmItemStatus.name%TYPE,
+                rating bmItemReview.rating%TYPE,
+                owner wallet.name%TYPE,
+                cost bmItem.amount%TYPE,
+                qty bmItem.qty%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.displayName AS category,
+                            ist.name AS status,
+                            ir.rating AS rating,
+                            w.name AS owner,
+                            i.amount AS cost,
+                            i.qty AS qty
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.displayName 
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code, ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT ir.id,ir.rating
+                        FROM bmItemReview AS ir
+                        ) AS ir ON i.review = ir.id
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: checkTeamSolvency(teamId,itemId)
@@ -2473,7 +2529,7 @@ RETURNS integer AS $$
         -- Check item status
         if _bmItemRec.statusCode > 1 then
             SELECT name INTO _bmItemStatus FROM bmItemStatus WHERE id = _bmItemRec.statusCode;
-            raise exception 'Item is not available. Current status: "%"';
+            raise exception 'Item is not available. Current status: "%"',_bmItemStatus;
         end if;
 
         -- Check item qty
@@ -2490,8 +2546,8 @@ RETURNS integer AS $$
             end if;
 
             -- Determine if the team is the item's owner
-            SELECT id,
-                   wallet 
+            PERFORM t.id,
+                    t.wallet 
             FROM team AS t
             LEFT OUTER JOIN (
                 SELECT id,
@@ -2509,7 +2565,7 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: buyBMItem(teamId,bmItemId)
+    Stored Proc: buyBMItemFromIp(bmItemId,playerIp)
 */
 CREATE OR REPLACE FUNCTION buyBMItemFromIp(_bmItemId bmItem.id%TYPE,
                                            _playerIpStr varchar(20))
@@ -2522,7 +2578,7 @@ RETURNS integer AS $$
         _bmItemAmount bmItem.amount%TYPE;
         _bmItemQty bmItem.qty%TYPE;
         BMI_SOLD_STATUS bmItemStatus.code%TYPE := 2;
-        TR_BOUGHT_STATUS transactionType.code%TYPE := 3;
+        TR_BOUGHT_CODE transactionType.code%TYPE := 3;
     BEGIN
         -- Logging
         raise notice 'buyBMItem(%,%)',$1,$2;
@@ -2538,12 +2594,12 @@ RETURNS integer AS $$
         PERFORM checkTeamSolvency(_teamId,_bmItemId);
 
         -- Check item availability
-        PERFORM checkItemAvailability(_teamId,_bmItemId);
+        PERFORM checkItemAvailability(_bmItemId,_teamId);
 
         -- Transfer money
         SELECT wallet INTO _teamWalletId FROM team WHERE id = _teamId;
         SELECT ownerWallet,amount,qty INTO _ownerWalletId,_bmItemAmount,_bmItemQty FROM bmItem WHERE id = _bmItemId;
-        PERFORM transferMoney(_teamWalletId,_ownerWalletId,_bmItemAmount,TR_BOUGHT_STATUS);
+        PERFORM transferMoney(_teamWalletId,_ownerWalletId,_bmItemAmount,TR_BOUGHT_CODE);
 
         -- Assign item
         INSERT INTO team_bmItem(teamId,bmItemId,playerIp)
@@ -2564,14 +2620,14 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: sellBMItemFromIp(name,amount,qty,desc,playerIp)
+    Stored Proc: sellBMItemFromIp(name,amount,qty,desc,data,playerIp)
 */
 CREATE OR REPLACE FUNCTION sellBMItemFromIp(_name bmItem.name%TYPE, 
                                     _amount bmItem.amount%TYPE,
-                                    _qty bmItem.amount%TYPE,
+                                    _qty bmItem.qty%TYPE,
                                     _description bmItem.description%TYPE,
                                     _data bmItem.data%TYPE, 
-                                    _playerIp varchar(20))
+                                    _playerIpStr varchar(20))
 RETURNS integer AS $$
     DECLARE
         _playerIp inet;
@@ -2607,9 +2663,25 @@ CREATE OR REPLACE FUNCTION reviewBMItem(_bmItemId bmItem.id%TYPE,
 RETURNS integer AS $$
     DECLARE
         _reviewId bmItemReview.id%TYPE;
+        CAT_PLAYER bmItemCategory.name%TYPE := 'player';
     BEGIN
         -- Logging
         raise notice 'reviewBMItem(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Can only review player items
+        PERFORM bmi.id,bmi.category 
+        FROM bmItem AS bmi
+        LEFT OUTER JOIN (
+            SELECT id,
+                   name
+            FROM bmItemCategory AS c
+        ) AS c ON bmi.category = c.id
+        WHERE bmi.id = _bmItemId
+            AND c.name = CAT_PLAYER
+        LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Black market player item "%" not found',_bmItemId;
+        end if;
 
         -- Insert review
         INSERT INTO bmItemReview(rating,comments) VALUES(_rating,_comments);
