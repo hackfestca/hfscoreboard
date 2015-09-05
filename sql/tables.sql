@@ -48,7 +48,7 @@ CREATE TABLE wallet(
     amount money not null,
     ts timestamp not null default current_timestamp,
     constraint valid_wallet_name check (name != ''),
-    constraint valid_wallet_publicId check (amount >= 0::money)
+    constraint valid_wallet_amount check (amount >= 0::money)
     );
 
 /*
@@ -286,7 +286,6 @@ CREATE TABLE bmItemReview(
 */
 CREATE TABLE bmItem(
     id serial primary key,
-    publicId varchar(64) not null unique,
     name varchar(50) not null unique,
     category integer not null references bmItemCategory(id) on delete cascade,
     statusCode integer not null references bmItemStatus(code) on delete cascade,
@@ -296,7 +295,9 @@ CREATE TABLE bmItem(
     qty integer default null,
     displayInterval interval default null,
     description text,
-    data text not null,
+    privateId varchar(64) not null unique,  -- Should be secured
+    data text not null,                     -- Should be secured
+    dlLink text default null,               -- Should be secured
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
     constraint valid_bmItem_data check (data != ''),

@@ -2400,8 +2400,8 @@ RETURNS integer AS $$
         end if;
 
         -- Insert a new row
-        INSERT INTO bmItem(publicId,name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,data)
-                VALUES(random_64(),_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_data);
+        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,data)
+                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,random_64(),_data);
         _bmItemId := LASTVAL();
 
         -- Set initial status
@@ -2414,17 +2414,16 @@ $$ LANGUAGE plpgsql;
 /*
     Stored Proc: listBMItems(_top)
 */
-CREATE OR REPLACE FUNCTION listBMItems(_top integer DEFAULT 30,
-                                       _teamId team.id%TYPE DEFAULT NULL) 
+CREATE OR REPLACE FUNCTION listBMItems(_top integer DEFAULT 30)
 RETURNS TABLE (
                 id bmItem.id%TYPE,
                 name bmItem.name%TYPE,
-                category bmItemCategory.name%TYPE,
+                category bmItemCategory.displayName%TYPE,
                 status bmItemStatus.name%TYPE,
-                rating bmItemReview.rating%TYPE,
+                rating text,
                 owner wallet.name%TYPE,
                 cost bmItem.amount%TYPE,
-                qty bmItem.qty%TYPE
+                qty text
               ) AS $$
 
     BEGIN
@@ -2432,17 +2431,17 @@ RETURNS TABLE (
                             i.name AS name,
                             ic.displayName AS category,
                             ist.name AS status,
-                            ir.rating AS rating,
+                            CASE WHEN ir.rating is null THEN '-' ELSE ir.rating::text || '/5' END,
                             w.name AS owner,
                             i.amount AS cost,
-                            i.qty AS qty
+                            CASE WHEN i.qty is null THEN '-' ELSE i.qty::text END
                      FROM bmItem AS i
                      LEFT OUTER JOIN (
                         SELECT ic.id,ic.displayName 
                         FROM bmItemCategory AS ic
                         ) AS ic ON i.category = ic.id
                      LEFT OUTER JOIN (
-                        SELECT ist.code, ist.name
+                        SELECT ist.code,ist.name
                         FROM bmItemStatus AS ist
                         ) AS ist ON i.statusCode = ist.code
                      LEFT OUTER JOIN (
@@ -2453,10 +2452,121 @@ RETURNS TABLE (
                         SELECT w.id,w.name
                         FROM wallet AS w
                         ) AS w ON i.ownerWallet = w.id
-                    ORDER BY i.id;
+                    ORDER BY i.id
+                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: listBMItemsUpdater(_top)
+*/
+CREATE OR REPLACE FUNCTION listBMItemsUpdater(_top integer DEFAULT 30)
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.name%TYPE,
+                status bmItemStatus.code%TYPE,
+                statusName bmItemStatus.name%TYPE,
+                owner wallet.name%TYPE,
+                qty bmItem.qty%TYPE,
+                privateId bmItem.privateId%TYPE,
+                dlLink bmItem.dlLink%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.name AS category,
+                            ist.code AS status,
+                            ist.name AS statusName,
+                            w.name AS owner,
+                            i.qty AS qty,
+                            i.privateId as privateId,
+                            i.dlLink as dlLink
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.name
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemInfo()
+*/
+CREATE OR REPLACE FUNCTION getBMItemInfo(_bmItemId bmItem.id%TYPE)
+RETURNS TABLE (
+                info varchar(30),
+                value varchar(100)
+              ) AS $$
+    DECLARE
+        _ret RECORD;
+        _qty varchar(20);
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemInfo(%)',$1;
+
+        SELECT i.id AS id,
+                i.name AS name,
+                i.description AS description,
+                ic.name AS catName,
+                ic.displayName AS catDisplay,
+                ist.code AS statusCode,
+                ist.name AS statusName,
+                ir.rating AS rating,
+                ir.comments AS comments,
+                w.name AS owner,
+                i.amount AS cost,
+                i.qty AS qty
+         INTO _ret
+         FROM bmItem AS i
+         LEFT OUTER JOIN (
+            SELECT ic.id,ic.name,ic.displayName 
+            FROM bmItemCategory AS ic
+            ) AS ic ON i.category = ic.id
+         LEFT OUTER JOIN (
+            SELECT ist.code,ist.name
+            FROM bmItemStatus AS ist
+            ) AS ist ON i.statusCode = ist.code
+         LEFT OUTER JOIN (
+            SELECT ir.id,ir.rating,ir.comments
+            FROM bmItemReview AS ir
+            ) AS ir ON i.review = ir.id
+         LEFT OUTER JOIN (
+            SELECT w.id,w.name
+            FROM wallet AS w
+            ) AS w ON i.ownerWallet = w.id
+        WHERE i.id = _bmItemId;
+
+        if _ret.qty is null then
+            _qty := 'infinite';
+        else
+            _qty := _ret.qty::varchar;
+        end if;
+        
+        -- Return
+        RETURN QUERY SELECT 'ID'::varchar, _ret.id::varchar
+                     UNION ALL SELECT 'Name'::varchar, _ret.name
+                     UNION ALL SELECT 'Description'::varchar, _ret.description
+                     UNION ALL SELECT 'Category'::varchar, _ret.catDisplay
+                     UNION ALL SELECT 'Status'::varchar, _ret.statusName
+                     UNION ALL SELECT 'Rating'::varchar, _ret.rating::varchar
+                     UNION ALL SELECT 'Comments'::varchar, _ret.comments
+                     UNION ALL SELECT 'Owner'::varchar, _ret.owner
+                     UNION ALL SELECT 'Cost'::varchar, _ret.cost::varchar 
+                     UNION ALL SELECT 'Qty'::varchar, _qty;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: checkTeamSolvency(teamId,itemId)
 */
@@ -2690,15 +2800,44 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql;
 
--- ** money **
--- update getScore() to have team cash. Replace king flag?
+/*
+    Stored Proc: publishBMItem(bmItemId,bmItemDLLink)
+*/
+CREATE OR REPLACE FUNCTION publishBMItem(_bmItemId bmItem.id%TYPE,
+                                         _bmItemDLLink bmItem.dlLink%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        BMI_FORSALE_STATUS bmItemStatus.code%TYPE := 1;
+        BMI_TOPUBLISH_STATUS bmItemStatus.code%TYPE := 6;
+        _bmItemStatusName bmItemStatus.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'publishBMItem(%,%)',$1,$2;
 
--- ** others **
--- getEvents(lastUpdateTS=None,level=None)
--- addEvent(level, title)
+        -- Can only publish items with status "To Publish"
+        SELECT ist.name
+        INTO _bmItemStatusName
+        FROM bmItem AS bmi
+        LEFT OUTER JOIN (
+            SELECT code,
+                   name
+            FROM bmItemStatus AS ist
+        ) AS ist ON bmi.statusCode = ist.code
+        WHERE bmi.id = _bmItemId
+            AND bmi.statusCode <> BMI_TOPUBLISH_STATUS
+        LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Wrong black market item status for publishing. Current status: "%"',_bmItemStatusName;
+        end if;
 
+        -- Update status
+        PERFORM setBMItemStatus(_bmItemId,BMI_FORSALE_STATUS);
 
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
 
+-- getBMItemDataFromIp(privateId,playerIp)
 
 /*
     Stored Proc: addEventSeverity(code,name,keyword,desc)
@@ -2752,4 +2891,8 @@ RETURNS TABLE (
 
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ** others **
+-- getEvents(lastUpdateTS=None,level=None)
+-- addEvent(level, title)
 

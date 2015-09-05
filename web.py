@@ -308,6 +308,33 @@ class DashboardHandler(BaseHandler):
             self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
 
+class BlackMarketItemHandler(BaseHandler):
+
+    @tornado.web.addslash
+    def get(self):
+        privateId = self.get_argument("privateId")
+
+        try:
+            bmItemData = self.client.getBMItemDataFromIp()
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
+        else:
+            buf_size = 4096
+            self.set_header('Content-Type', 'application/octet-stream')
+            self.set_header('Content-Disposition', 'attachment; filename=' + privateId)
+            while True:
+                data = bmItemData.read(buf_size)        # to test
+                if not data:
+                    break
+                self.write(data)
+            self.finish()
+
+
 class Error404Handler(BaseHandler):
 
     def initialize(self):

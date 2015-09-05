@@ -117,12 +117,13 @@ SELECT addBMItemStatus(2,'Sold','This item is sold and is not available anymore 
 SELECT addBMItemStatus(3,'For approval','This item was submitted by a player and needs approval.');
 SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market by a player and was refused by an admin.');
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
+SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 
-SELECT addBMItem('Military base leak','admin',1,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!');
-SELECT addBMItem('Casino 0-day','admin',1,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!');
-SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100::money,NULL,Null,'Something', 'exploit!');
-SELECT addBMItem('Pipeline 0-day','admin',1,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!');
-SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,'Mouhaha', 'exploit!');
+SELECT addBMItem('Military base leak','admin',6,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!');
+SELECT addBMItem('Casino 0-day','admin',6,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!');
+SELECT addBMItem('Hydroelectric dam helper','admin',6,1,2100::money,NULL,Null,'Something', 'exploit!');
+SELECT addBMItem('Pipeline 0-day','admin',6,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!');
+SELECT addBMItem('Phoenix corp takeover logs','admin',6,1,5000::money,NULL,Null,'Mouhaha', 'exploit!');
 
 /*
     Insert random data (for scoreboard development)
@@ -171,7 +172,7 @@ SELECT launderMoneyFromTeamId(2,2000::money);
 SELECT launderMoneyFromTeamId(3,2000::money);
 
 -- Buy an admin item
-SELECT buyBMItemFromIp(1,'172.16.66.123');
+--SELECT buyBMItemFromIp(1,'172.16.66.123');
 
 -- Sell an item
 SELECT sellBMItemFromIp('My item',1500::money,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
@@ -189,10 +190,10 @@ SELECT reviewBMItem(6,4,0,'this is a malicious item. nice try');
 --SELECT buyBMItemFromIp(6,'172.16.66.159'); 
 
 -- Review the item: Approve
-SELECT reviewBMItem(6,1,5,'this is a good item');
+SELECT reviewBMItem(6,6,5,'this is a good item');
 
 -- Attempt to buy the approuved item (tested:work)
-SELECT buyBMItemFromIp(6,'172.16.66.250'); 
+--SELECT buyBMItemFromIp(6,'172.16.66.250'); 
 
 
 --SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
