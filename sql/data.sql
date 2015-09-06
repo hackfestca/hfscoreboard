@@ -119,11 +119,11 @@ SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market b
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
 SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 
-SELECT addBMItem('Military base leak','admin',6,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!');
-SELECT addBMItem('Casino 0-day','admin',6,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!');
-SELECT addBMItem('Hydroelectric dam helper','admin',6,1,2100::money,NULL,Null,'Something', 'exploit!');
-SELECT addBMItem('Pipeline 0-day','admin',6,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!');
-SELECT addBMItem('Phoenix corp takeover logs','admin',6,1,5000::money,NULL,Null,'Mouhaha', 'exploit!');
+SELECT addBMItem('Military base leak','admin',6,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
+SELECT addBMItem('Casino 0-day','admin',6,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
+SELECT addBMItem('Hydroelectric dam helper','admin',6,1,2100::money,NULL,Null,'Something', 'exploit!'::bytea);
+SELECT addBMItem('Pipeline 0-day','admin',6,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
+SELECT addBMItem('Phoenix corp takeover logs','admin',6,1,5000::money,NULL,Null,'Mouhaha', 'exploit!'::bytea);
 
 /*
     Insert random data (for scoreboard development)

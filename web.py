@@ -315,7 +315,7 @@ class BlackMarketItemHandler(BaseHandler):
         privateId = self.get_argument("privateId")
 
         try:
-            bmItemData = self.client.getBMItemDataFromIp()
+            bmItemData = self.client.getBMItemDataFromIp(privateId,self.request.remote_ip)
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
@@ -324,14 +324,14 @@ class BlackMarketItemHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            buf_size = 4096
             self.set_header('Content-Type', 'application/octet-stream')
             self.set_header('Content-Disposition', 'attachment; filename=' + privateId)
-            while True:
-                data = bmItemData.read(buf_size)        # to test
-                if not data:
-                    break
-                self.write(data)
+            #buf_size = 4096
+            #while True:
+            #    data = bmItemData.read(buf_size)        # to test
+            #    if not data:
+            #        break
+            self.write(bmItemData)
             self.finish()
 
 
@@ -411,6 +411,7 @@ if __name__ == '__main__':
             (r"/scoreboard/?", ScoreHandler, args),
             (r"/dashboard/?", DashboardHandler, args),
             (r"/rules/?", RulesHandler, args),
+            (r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler, args),
             (r"/projector/2/?", DashboardProjectorHandler, args),
             (r"/projector/3/?", SponsorsProjectorHandler, args)

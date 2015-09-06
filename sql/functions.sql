@@ -2837,7 +2837,45 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql;
 
--- getBMItemDataFromIp(privateId,playerIp)
+/*
+    Stored Proc: getBMItemDataFromIp(privateId,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemDataFromIp(_privateId bmItem.privateId%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS bytea AS $$
+    DECLARE
+        _bmItemId bmItem.id%TYPE;
+        _teamId team.id%TYPE;
+        _playerIp inet;
+        _data bmItem.data%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemDataFromIp(%,%)',$1,$2;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get bmItemId FROM privateId
+        SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
+
+        -- Get teamId FROM playerIp
+        SELECT id INTO _teamId FROM team WHERE playerIp << net;
+
+        -- Verify that the team have successfuly bought the item
+        SELECT id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+
+            -- Reset the item's private ID is an authorized access was performed
+            UPDATE bmItem
+            SET privateId = random(64)
+            WHERE id = _bmItemId;
+        end if;
+
+        -- Return data
+        SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
+        return _data;
+    END;
+$$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addEventSeverity(code,name,keyword,desc)

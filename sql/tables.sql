@@ -296,7 +296,7 @@ CREATE TABLE bmItem(
     displayInterval interval default null,
     description text,
     privateId varchar(64) not null unique,  -- Should be secured
-    data text not null,                     -- Should be secured
+    data bytea not null,                    -- Should be secured
     dlLink text default null,               -- Should be secured
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
