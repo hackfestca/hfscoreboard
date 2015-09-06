@@ -2752,7 +2752,7 @@ RETURNS integer AS $$
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: reviewBMItem(bmItemId,bmItemStatus,rating,comments)
@@ -2798,7 +2798,7 @@ RETURNS integer AS $$
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: publishBMItem(bmItemId,bmItemDLLink)
@@ -2835,7 +2835,7 @@ RETURNS integer AS $$
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getBMItemDataFromIp(privateId,playerIp)
@@ -2858,10 +2858,10 @@ RETURNS bytea AS $$
         SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
 
         -- Get teamId FROM playerIp
-        SELECT id INTO _teamId FROM team WHERE playerIp << net;
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
 
         -- Verify that the team have successfuly bought the item
-        SELECT id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
             raise exception 'You do not have permission to download this item';
 
@@ -2875,7 +2875,7 @@ RETURNS bytea AS $$
         SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
         return _data;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: addEventSeverity(code,name,keyword,desc)
