@@ -38,6 +38,7 @@ SELECT addFlagStatus(3,'Disabled','The flag is removed by admins');
 */
 SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
 SELECT addHost('dd-wrt', 'Some router', 'bla');
+SELECT addHost('chaltest.ctf.hf', 'Some testing box', 'bla');
 
 /*
     Add categories
@@ -92,8 +93,6 @@ SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
 SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
 SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
 SELECT addFlagTypeExt('King','King');          -- I know it's redundant.
-SELECT addFlagTypeExt('Increment_-1','Dynamic', 1, -1);          -- I know it's redundant.
-SELECT addFlagTypeExt('Increment_-2','Dynamic', 1, -2);          -- I know it's redundant.
 
 /*
     Add a starting news
@@ -214,7 +213,17 @@ SELECT reviewBMItem(6,1,5,'this is a good item');
 -- Attempt to buy the approuved item (tested:work)
 --SELECT buyBMItemFromIp(6,'172.16.66.250'); 
 
+/*
+    Test specific flag types
+*/
+SELECT addFlagTypeExt('Increment_-1','Dynamic', 100, -100);
+SELECT addFlagTypeExt('Decrement_-2','Dynamic', 100, -200);
+SELECT addFlag('Flag 1', 'vvvvvvvvvvvvvv', 300, NULL, 'chaltest.ctf.hf', 'web', 1,
+                NULL, 'Martin Dube', 'Dynamic', 'Increment_-1', 'descccccc');
 
+/*
+    Testing invalid pts
+*/
 --SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
 --                1::smallint, Null, Null, True, '', '',
 --                'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 

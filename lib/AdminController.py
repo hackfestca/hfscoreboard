@@ -134,7 +134,7 @@ class AdminController(ClientController.ClientController):
             return self._oDB.proc('listFlags(integer)')(top)
 
     def getFlagList(self,top=config.DEFAULT_TOP_VALUE):
-        title = ['ID','Name','Pts','Category','Author','Display Interval','Description'] 
+        title = ['ID','Name','Pts','Cash','Category','Status','Type','TypeExt','Author','Display Int.','Description'] 
         score = self.listFlags(top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'

@@ -947,6 +947,11 @@ RETURNS integer AS $$
             _display = _displayInterval;
         end if;
 
+        -- Convert cash if NULL
+        if _cash is Null then
+            _cash = '0'::money;
+        end if;
+
         -- Insert a new row
         INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
                         type,typeExt,description)
@@ -1078,7 +1083,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 pts flag.pts%TYPE,
+                cash flag.cash%TYPE,
                 category flagCategory.name%TYPE,
+                status flagStatus.name%TYPE,
+                type flagType.name%TYPE,
+                typeExt flagTypeExt.name%TYPE,
                 author flagAuthor.nick%TYPE,
                 displayInterval flag.displayInterval%TYPE,
                 description flag.description%TYPE
@@ -1088,7 +1097,11 @@ RETURNS TABLE (
         return QUERY SELECT f.id AS id,
                             f.name AS name,
                             f.pts AS pts,
+                            f.cash AS cash,
                             c.name AS catName,
+                            s.name AS statusName,
+                            ft.name AS type,
+                            fte.name AS typeExt,
                             a.nick as author,
                             f.displayInterval,
                             f.description AS description
@@ -1098,9 +1111,21 @@ RETURNS TABLE (
                         FROM flagAuthor AS a
                         ) AS a ON f.author = a.id
                      LEFT OUTER JOIN (
-                        SELECT c.id, c.name, c.hidden
+                        SELECT c.id, c.name
                         FROM flagCategory AS c
                         ) AS c ON f.category = c.id
+                     LEFT OUTER JOIN (
+                        SELECT s.id, s.name
+                        FROM flagStatus AS s
+                        ) AS s ON f.statusCode = s.id
+                     LEFT OUTER JOIN (
+                        SELECT ft.id, ft.name
+                        FROM flagType AS ft
+                        ) AS ft ON f.type = ft.id
+                     LEFT OUTER JOIN (
+                        SELECT fte.id, fte.name
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON f.typeExt = fte.id
                     ORDER BY f.id;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
