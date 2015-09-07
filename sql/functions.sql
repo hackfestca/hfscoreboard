@@ -2856,9 +2856,15 @@ RETURNS bytea AS $$
 
         -- Get bmItemId FROM privateId
         SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
 
         -- Get teamId FROM playerIp
         SELECT id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
 
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;

@@ -104,7 +104,7 @@ SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
 SELECT addTeam('Team VPN', '192.168.9.0/24');
 SELECT addTeam('Team VPN 2', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
---SELECT addTeam('Team Eko', '127.0.0.1/8');
+SELECT addTeam('Team Eko', '127.0.0.1/8');
 
 /*
     Black market   
@@ -119,11 +119,11 @@ SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market b
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
 SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 
-SELECT addBMItem('Military base leak','admin',6,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
-SELECT addBMItem('Casino 0-day','admin',6,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
-SELECT addBMItem('Hydroelectric dam helper','admin',6,1,2100::money,NULL,Null,'Something', 'exploit!'::bytea);
-SELECT addBMItem('Pipeline 0-day','admin',6,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
-SELECT addBMItem('Phoenix corp takeover logs','admin',6,1,5000::money,NULL,Null,'Mouhaha', 'exploit!'::bytea);
+SELECT addBMItem('Military base leak','admin',1,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
+SELECT addBMItem('Casino 0-day','admin',1,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
+SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100::money,NULL,Null,'Something', 'exploit!'::bytea);
+SELECT addBMItem('Pipeline 0-day','admin',1,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
+SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,'Mouhaha', 'exploit!'::bytea);
 
 /*
     Insert random data (for scoreboard development)
@@ -172,7 +172,7 @@ SELECT launderMoneyFromTeamId(2,2000::money);
 SELECT launderMoneyFromTeamId(3,2000::money);
 
 -- Buy an admin item
---SELECT buyBMItemFromIp(1,'172.16.66.123');
+SELECT buyBMItemFromIp(1,'192.168.1.100');
 
 -- Sell an item
 SELECT sellBMItemFromIp('My item',1500::money,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');

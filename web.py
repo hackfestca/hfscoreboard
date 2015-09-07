@@ -50,6 +50,7 @@ from lib.WebController import WebController
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
+import tornado.log
 
 # System imports
 import os
@@ -339,7 +340,6 @@ class Error404Handler(BaseHandler):
 
     def initialize(self):
         self._client = None
-#        self._logger = Logger("HF2k14_Logger")
         self._team_name = None
         self._team_ip = None
         self._team_score = None
@@ -397,11 +397,14 @@ if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
 
+    # test
+    tornado.log.enable_pretty_logging()
+
     sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
     sponsors_imgs = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
                         if os.path.isfile(os.path.join(sponsors_imgs_path, f)) ]
 
-    logger = Logger("HF2k14_Logger")
+    logger = Logger("HF2k15_Logger")
 
     args = dict(logger=logger, sponsors_imgs=sponsors_imgs)
     
