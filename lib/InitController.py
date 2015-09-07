@@ -64,6 +64,7 @@ class InitController(ClientController.ClientController):
 
         options = {'str' : str, \
                    'int': int, \
+                   'float': float, \
                    'bool': lambda x: True if type(x) == str and x.lower() == 'true' else False}
         return options[t](data)
                    
@@ -87,66 +88,66 @@ class InitController(ClientController.ClientController):
                                     integer, \
                                     varchar, \
                                     varchar, \
+                                    varchar, \
                                     integer, \
                                     varchar, \
                                     varchar, \
                                     varchar, \
-                                    boolean, \
-                                    text,    \
-                                    varchar)')
+                                    varchar, \
+                                    text)')
             addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
                                     integer, \
                                     varchar, \
                                     varchar, \
+                                    varchar, \
                                     integer, \
                                     varchar, \
                                     varchar, \
                                     varchar, \
-                                    boolean, \
-                                    text,    \
-                                    varchar)')
+                                    varchar, \
+                                    text)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
                     fname = row[0]
                     fvalue = row[1]
                     fpts = row[2]
-                    fhost = row[3]
-                    fcat = row[4]
+                    fcash = row[3]
+                    fhost = row[4]
+                    fcat = row[5]
                     fstatus = 1
-                    fdispint = row[5]
-                    fauthor = row[6]
-                    ftype = row[7]
-                    fisking = row[8]
-                    fdesc = row[9]
-                    fupdcmd = row[10]
+                    fdispint = row[6]
+                    fauthor = row[7]
+                    ftype = row[8]
+                    ftypeext = row[9]
+                    fdesc = row[10]
                     
                     if fname != 'Flag Name':
                         if fvalue != '':
                             addFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fvalue,'str'), \
                                     self._sanitize(fpts,'int'), \
+                                    self._sanitize(fcash,'str'), \
                                     self._sanitize(fhost,'str'), \
                                     self._sanitize(fcat,'str'), \
                                     self._sanitize(fstatus,'int'), \
                                     self._sanitize(fdispint,'str'), \
                                     self._sanitize(fauthor,'str'), \
                                     self._sanitize(ftype,'str'), \
-                                    self._sanitize(fisking,'bool'), \
-                                    self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fupdcmd,'str'))
+                                    self._sanitize(ftypeext,'str'), \
+                                    self._sanitize(fdesc,'str'))
                         else:
                             addRandomFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fpts,'int'), \
+                                    self._sanitize(cash,'str'), \
                                     self._sanitize(fhost,'str'), \
                                     self._sanitize(fcat,'str'), \
                                     self._sanitize(fstatus,'int'), \
                                     self._sanitize(fdispint,'str'), \
                                     self._sanitize(fauthor,'str'), \
                                     self._sanitize(ftype,'str'), \
-                                    self._sanitize(fisking,'bool'), \
-                                    self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fupdcmd,'str'))
+                                    self._sanitize(ftypeext,'str'), \
+                                    self._sanitize(fdesc,'str'))
 
     def importTeams(self):
         with open(self._teamsFile) as csvfile:

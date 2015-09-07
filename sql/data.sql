@@ -66,15 +66,31 @@ SELECT addAuthor('Jean-Sebastien Grenon', 'jsg');
 SELECT addAuthor('HF Crew', 'HFCrew');
 
 /* 
-    Create flag type
+    Create flag type definitions
 */
-SELECT addFlagType(1,'Standard');
-SELECT addFlagType(2,'Decremental');
-SELECT addFlagType(3,'Group Flag');
-SELECT addFlagType(4,'Unique');
-SELECT addFlagType(5,'Trap');
-SELECT addFlagType(6,'Cash');
-SELECT addFlagType(7,'Hybrid');
+-- Scope: Global. Purpose: Let a team gain pts or cash.
+SELECT addFlagType(1,'Standard');       -- Simple (pts + cash)
+-- Scope: Global. Purpose: Let only one team gain pts or cash.
+SELECT addFlagType(2,'Unique');         -- Simple (pts + cash)
+-- Scope: Global. Purpose: Define a king flag which will be instanciated on a regular basis on hosts.
+SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
+-- Scope: Global. Purpose: Make the flag be less/more valuable the more it is submitted.
+SELECT addFlagType(12,'Dynamic');       -- Complex (pts + min,max,step)
+-- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
+SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + groupId,min,max,step)
+
+-- Scope: Team. Purpose: Grant points only when the entire group is submitted.
+SELECT addFlagType(21,'Pokemon Flag');  -- Complex (pts + groupId)
+-- Scope: Team. Purpose: Make a group of flags be less/more valuable the more it is submitted by a single team.
+SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + groupId,min,max,step)
+-- Scope: Team. Purpose: Trigger a malicious action when submitted
+SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
+
+/* 
+    Create flag types
+*/
+SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
+SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
 
 /*
     Add a starting news
@@ -190,7 +206,7 @@ SELECT reviewBMItem(6,4,0,'this is a malicious item. nice try');
 --SELECT buyBMItemFromIp(6,'172.16.66.159'); 
 
 -- Review the item: Approve
-SELECT reviewBMItem(6,6,5,'this is a good item');
+SELECT reviewBMItem(6,1,5,'this is a good item');
 
 -- Attempt to buy the approuved item (tested:work)
 --SELECT buyBMItemFromIp(6,'172.16.66.250'); 

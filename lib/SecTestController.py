@@ -74,10 +74,10 @@ class SecTestController(ClientController.ClientController):
                           ], \
               'P_NO_ACCESS': [ \
                                (self._oDB.proc('addTeam(varchar,varchar)'),['Team Name', '192.168.1.0/24']), \
-                               (self._oDB.proc('addStatus(integer,varchar,text)'),[4, 'Name', 'blabla']), \
+                               (self._oDB.proc('addFlagStatus(integer,varchar,text)'),[4, 'Name', 'blabla']), \
                                (self._oDB.proc('addHost(varchar,varchar,text)'),['a', 'b', 'c']), \
-                               (self._oDB.proc('addCategory(varchar,varchar,text,boolean)'),['a', 'b', 'c', None]), \
-                               (self._oDB.proc('addRandomFlag(varchar,integer,varchar,varchar,integer,varchar,varchar,boolean,text,text,varchar,varchar)'),['name', 100, 'host', 'cat', 1, None, 'Author', True, 'desc', 'hint', 'updatecmd', 'monitorcmd']), \
+                               (self._oDB.proc('addFlagCategory(varchar,varchar,text,boolean)'),['a', 'b', 'c', None]), \
+                               (self._oDB.proc('addRandomFlag(varchar,integer,varchar,varchar,integer,varchar,varchar,varchar,boolean,text,varchar)'),['name', 100, 'host', 'cat', 1, None, 'Author', 'Standard', True, 'desc', 'updatecmd']), \
                                (self._oDB.proc('addKingFlagFromName(varchar,varchar,integer)'),['a', 'b', 1]), \
                                (self._oDB.proc('addNews(varchar,varchar)'),['a','2014-03-03']), \
                                (self._oDB.proc('getAllKingFlags()'),[]), \
@@ -86,11 +86,9 @@ class SecTestController(ClientController.ClientController):
                                (self._oDB.proc('addRandomKingFlagFromId(integer,integer)'),[1,2]), \
                                (self._oDB.proc('getScoreProgress(integer)'),[20]), \
                                (self._oDB.proc('getGameStats()'),[]), \
-                               (self._oDB.proc('getRandomFlag()'),[]), \
                                (self._oDB.proc('getSettings()'),[]), \
                                (self._oDB.proc('startGame()'),[]), \
-                               (self._oDB.proc('insertRandomData()'),[]), \
-                               (self._oDB.proc('submitRandomFlag()'),[]) \
+                               (self._oDB.proc('insertRandomData()'),[]) \
                              ] \
             }
 

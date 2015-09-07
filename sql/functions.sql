@@ -740,20 +740,51 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
+    Stored Proc: addFlagTypeExt(name,typeExt,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
+*/
+CREATE OR REPLACE FUNCTION addFlagTypeExt(_name flagTypeExt.name%TYPE,
+                                          _type flagType.name%TYPE,
+                                          _ptsLimit flagTypeExt.ptsLimit%TYPE DEFAULT NULL,
+                                          _ptsStep flagTypeExt.ptsStep%TYPE DEFAULT NULL,
+                                          _groupId flagTypeExt.groupId%TYPE DEFAULT NULL,
+                                          _trapCmd flagTypeExt.trapCmd%TYPE DEFAULT NULL,
+                                          _updateCmd flagTypeExt.updateCmd%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _typeId flagType.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'addFlagTypeExt(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+
+        -- Get category id from name
+        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        if not FOUND then
+            raise exception 'Could not find flag type "%"',_type;
+        end if;
+
+        -- Insert a new row
+        INSERT INTO flagTypeExt(name,typeId,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
+                VALUES(_name,_typeId,_ptsLimit,_ptsStep,_groupId,_trapCmd,_updateCmd);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
     Stored Proc: addFlag(...)
 */
 CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE, 
                                     _value flag.value%TYPE, 
                                     _pts flag.pts%TYPE,
+                                    _cash varchar(20),
                                     _host host.name%TYPE,
                                     _category flagCategory.name%TYPE,
-                                    _statusCode flagStatus.code%TYPE default 1,
-                                    _displayInterval varchar(20) default Null,
-                                    _author flagAuthor.name%TYPE  default Null,
-                                    _type flagType.name%TYPE  default Null,
-                                    _isKing flag.isKing%TYPE default false,
-                                    _description flag.description%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default ''
+                                    _statusCode flagStatus.code%TYPE,
+                                    _displayInterval varchar(20),
+                                    _author flagAuthor.name%TYPE,
+                                    _type flagType.name%TYPE,
+                                    _typeExt flagTypeExt.name%TYPE,
+                                    _description flag.description%TYPE
                                     ) 
 RETURNS integer AS $$
     DECLARE
@@ -761,6 +792,7 @@ RETURNS integer AS $$
         _catId flagCategory.id%TYPE;
         _authorId flagAuthor.id%TYPE;
         _typeId flagType.id%TYPE;
+        _typeExtId flagTypeExt.id%TYPE;
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
@@ -789,13 +821,19 @@ RETURNS integer AS $$
         end if;
 
         -- Get type id from name
-        if _type is not Null then
-            SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        if not FOUND then
+            raise exception 'Could not find flag type "%"',_type;
+        end if;
+
+        -- Get type ext id from name
+        if _typeExt is not Null then
+            SELECT id INTO _typeExtId FROM flagTypeExt WHERE name = _typeExt;
             if not FOUND then
-                raise exception 'Could not find flag type "%"',_type;
+                raise exception 'Could not find flag type extension "%"',_typeExt;
             end if;
         else
-            _typeId = _type;
+            _typeExtId = _typeExt;
         end if;
 
         -- Convert displayInterval
@@ -805,12 +843,11 @@ RETURNS integer AS $$
             _display = _displayInterval;
         end if;
 
-        
         -- Insert a new row
-        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,type,
-                        description,isKing,updateCmd)
-                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,_typeId,
-                        _description,_isKing,_updateCmd);
+        INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
+                        type,typeExt,description)
+                VALUES(_name,_value,_pts,_cash::money,_hostId,_catId,_statusCode,_display,_authorId,
+                        _typeId,_typeExtId,_description);
 
         RETURN 0;
     END;
@@ -821,22 +858,22 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
+                                    _cash varchar(20),
                                     _host host.name%TYPE,
                                     _category flagCategory.name%TYPE,
-                                    _statusCode flagStatus.code%TYPE default 1,
-                                    _displayInterval varchar(20) default Null,
-                                    _author flagAuthor.name%TYPE  default Null,
-                                    _type flagType.name%TYPE  default Null,
-                                    _isKing flag.isKing%TYPE default false,
-                                    _description flag.description%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default ''
+                                    _statusCode flagStatus.code%TYPE,
+                                    _displayInterval varchar(20),
+                                    _author flagAuthor.name%TYPE,
+                                    _type flagType.name%TYPE,
+                                    _typeExt flagTypeExt.name%TYPE,
+                                    _description flag.description%TYPE
                                     ) 
 RETURNS flag.value%TYPE AS $$
     DECLARE
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -845,8 +882,8 @@ RETURNS flag.value%TYPE AS $$
                 SELECT random_32() INTO _flagValue;
 
                 -- addFlag
-                PERFORM addFlag(_name,_flagValue,_pts,_host,_category,_statusCode,
-                                _displayInterval,_author,_type,_isKing,_description,_updateCmd);
+                PERFORM addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
+                                _displayInterval,_author,_type,_typeExt,_description);
 
                 RETURN _flagValue;
             EXCEPTION WHEN unique_violation THEN
@@ -1059,9 +1096,13 @@ RETURNS integer AS $$
         -- Flag statusCode must be equal 1
         -- category 1 = flag, category 2 = kingFlag
         SELECT * FROM (
-            SELECT id,value,pts,statusCode,1 AS category FROM flag WHERE statusCode = STATUS_CODE_OK and value = _flagValue and isKing = False
-            UNION ALL
-            SELECT id,value,pts,Null,2 AS category FROM kingFlag WHERE value = _flagValue
+            SELECT id,value,pts,statusCode,1 AS category 
+            FROM flag 
+            WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 2
+              UNION ALL
+            SELECT id,value,pts,Null,2 AS category 
+            FROM kingFlag 
+            WHERE value = _flagValue
         ) AS x INTO _flagRec;
 
         -- if the flag is found, determine if it is a flag or a kingFlag
@@ -1289,7 +1330,7 @@ RETURNS TABLE (
                                        f.category,
                                        f.pts
                                 FROM flag AS f
-                                WHERE f.isKing = False
+                                WHERE f.type <> 2
                                 ) as f ON tf.flagId = f.id
                             WHERE tf.teamId = _teamId
                             ) AS tf2
@@ -1299,7 +1340,7 @@ RETURNS TABLE (
                          SELECT f2.category,
                                 sum(f2.pts) AS sum
                          FROM flag AS f2
-                         WHERE f2.isKing = False
+                         WHERE f2.type <> 2
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
                      WHERE c.hidden = False
@@ -1372,7 +1413,7 @@ RETURNS TABLE (
                          ) AS tf2 ON f.id = tf2.flagId
                     WHERE (f.displayInterval is null 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
-                          and f.isKing = False
+                          and f.type <> 2
                           and c.hidden = False
                     ORDER BY f.name;
     END;
@@ -1386,10 +1427,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getAllKingFlags()';
@@ -1397,16 +1439,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1418,10 +1463,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromHost(%)',$1;
@@ -1429,16 +1475,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True and h.name = _host;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE and h.name = _host;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1450,10 +1499,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromName(%)',$1;
@@ -1461,16 +1511,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True and f.name = _name;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE and f.name = _name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -2161,6 +2214,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: insertRandomData()
+
+    TODOO : Make this function work again. It's broken.
 */
 CREATE OR REPLACE FUNCTION insertRandomData() 
 RETURNS integer AS $$
@@ -2193,29 +2248,25 @@ RETURNS integer AS $$
         SELECT 'Team '||id,('172.29.'||id||'.0/32')::inet
         FROM generate_series(1,TEAM_COUNT) as id;
 
-        -- Insert random flags where isKing = False
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,statusCode,isKing,description) 
+        -- Insert random flags 
+        INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
-                'echo $FLAG > /root/flag'||id||'.txt',
                 1,
-                False,
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(1,FLAG_COUNT) as id;
 
-        -- Insert random flags where isKing = True
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,statusCode,isKing,description) 
+        -- Insert random king flags
+        INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
-                'echo $FLAG > /root/flag'||id||'.txt',
                 1,
-                True,
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(FLAG_COUNT+1,FLAG_COUNT+1+FLAG_IS_KING_COUNT) as id;
 
@@ -2225,7 +2276,7 @@ RETURNS integer AS $$
                 random_32(),
                 1           --random() * 9 + 1
         FROM flag,generate_series(1,KINGFLAG_PER_FLAG_COUNT)
-        WHERE flag.isKing = True;
+        WHERE flag.type = 11;
 
         -- Assign flags to team randomly
         FOR _teamId,_net IN SELECT id,net FROM team LOOP
