@@ -150,11 +150,12 @@ CREATE OR REPLACE FUNCTION launderMoney(_dstWalletId wallet.id%TYPE,
 RETURNS integer AS $$
     DECLARE
         TR_LAUNDERING_CODE transactionType.code%TYPE := 4;
+        BANK_ID wallet.id%TYPE := 1;
     BEGIN
         -- Logging
         raise notice 'launderMoney(%,%)',$1,$2;
 
-        PERFORM transferMoney(1,_dstWalletId,_amount,TR_LAUNDERING_CODE);
+        PERFORM transferMoney(BANK_ID,_dstWalletId,_amount,TR_LAUNDERING_CODE);
 
         RETURN 0;
     END;
@@ -185,10 +186,113 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- payBMItem()
--- transferCashFlag()
--- payLotoTicket()
--- transferLotoToWinner()
+/*
+    Stored Proc: transferCashFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION transferCashFlag(_flagId team.id%TYPE, 
+                                            _teamId flag.id%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _dstWalletId wallet.id%TYPE;
+        _flagCashValue flag.cash%TYPE;
+        BANK_ID wallet.id%TYPE := 1;
+        TR_CASH_FLAG_CODE transactionType.code%TYPE := 2;
+    BEGIN
+        -- Logging
+        raise notice 'transferCashFlag(%,%)',$1,$2;
+
+        -- Get team wallet id
+        SELECT wallet INTO _dstWalletId FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find team "%"',_teamId;
+        end if;
+
+        -- Get flag cash value
+        SELECT cash INTO _flagCashValue FROM flag WHERE id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+    
+        -- Value cannot be 0$
+        if _flagCashValue is null or _flagCashValue = 0::money then
+            raise exception 'Cannot transfer a 0$ flag';
+        end if;
+
+        -- Perform laundering
+        PERFORM transferMoney(BANK_ID,_dstWalletId,_flagCashValue,TR_CASH_FLAG_CODE);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getFlagPts(flagId,teamId)
+    This function does not manage king flags.
+*/
+CREATE OR REPLACE FUNCTION getFlagPts(_flagId team.id%TYPE, 
+                                      _teamId flag.id%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        flagRec RECORD;
+    BEGIN
+        -- Logging
+        raise notice 'getFlagPts(%,%)',$1,$2;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.pts,
+                f.type,
+                f.typeExt,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.groupId,
+                fte.trapCmd,
+                fte.updateCmd
+        INTO flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    ptsLimit,
+                    ptsStep,
+                    groupId,
+                    trapCmd,
+                    updateCmd
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+
+        -- Contextualize the flag pts based on flag types
+        if flagRec.type = 1 then
+            RETURN flagRec.pts;
+        elsif flagRec.type = 2 then
+            -- Check if the flag was already submitted
+
+            RETURN flagRec.pts;
+        elsif flagRec.type = 11 then
+            RETURN 0;   -- This functions does not manage king flags.
+        elsif flagRec.type = 12 then
+            -- Calculate new value
+            RETURN flagRec.pts;
+        elsif flagRec.type = 13 then
+            -- Calculate new value
+            RETURN flagRec.pts;
+        elsif flagRec.type = 21 then
+            -- Calculate new value
+            RETURN flagRec.pts;
+        elsif flagRec.type = 22 then
+            -- Calculate new value
+            RETURN flagRec.pts;
+        elsif flagRec.type = 22 then
+            -- Calculate new value
+            RETURN flagRec.pts;
+        else
+            raise exception 'Unsupported flag type "%"',flagRec.type;
+        end if;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: addWallet(name,desc,amount)
@@ -229,8 +333,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: initBank(amount)
 */
 CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE,
-                                    _name wallet.name%TYPE DEFAULT 'Bank',
-                                    _desc wallet.description%TYPE DEFAULT 'Default wallet used for cash flags, money laundering, etc.') 
+                                    _name wallet.name%TYPE,
+                                    _desc wallet.description%TYPE)
 RETURNS integer AS $$
     DECLARE
         _bankWalletId wallet.id%TYPE := 1;
@@ -1036,7 +1140,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION submitFlagFromIp( _playerIpStr varchar(20), 
                                              _flagValue flag.value%TYPE
                                            ) 
-RETURNS integer AS $$
+RETURNS text AS $$
     DECLARE
         _teamRec team%ROWTYPE;
         _flagRec RECORD;
@@ -1044,10 +1148,14 @@ RETURNS integer AS $$
         _teamAttempts smallint;
         _playerIp inet;
         _settings settings%ROWTYPE;
+        _pts flag.pts%TYPE;
+        _ret text := '';
         ANTI_BF_INT interval := '20 second';
         ANTI_BF_LIMIT integer := 20;
         STATUS_CODE_OK integer := 1;
         FLAG_MAX_LENGTH integer := 64;
+        FLAG_TYPE_STANDARD flagType.code%TYPE := 1;
+        FLAG_TYPE_KING flagType.code%TYPE := 11;
     BEGIN
         -- Logging
         raise notice 'submitFlagFromIp(%,%)',$1,$2;
@@ -1094,33 +1202,46 @@ RETURNS integer AS $$
 
         -- Search for the flag in flag and kingFlag tables
         -- Flag statusCode must be equal 1
-        -- category 1 = flag, category 2 = kingFlag
+        -- tableId 1 = flag, category 2 = kingFlag
         SELECT * FROM (
-            SELECT id,value,pts,statusCode,1 AS category 
+            SELECT id,value,pts,cash,statusCode,type,1 AS tableId
             FROM flag 
-            WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 2
+            WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 11
               UNION ALL
-            SELECT id,value,pts,Null,2 AS category 
+            SELECT id,value,pts,Null,Null,Null,2 AS tableId
             FROM kingFlag 
             WHERE value = _flagValue
         ) AS x INTO _flagRec;
 
         -- if the flag is found, determine if it is a flag or a kingFlag
+        -- then assign the flag
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount = 1 then
-            if _flagRec.category = 1 then
-                INSERT INTO team_flag(teamId,flagId,playerIp)
-                        VALUES(_teamRec.id, _flagRec.id,_playerIp);
-            elsif _flagRec.category = 2 then
+            if _flagRec.tableId = 1 then
+                -- getFlagPts only for non standard flag types
+                if _flagRec.type <> FLAG_TYPE_STANDARD and _flagRec.type <> FLAG_TYPE_KING then
+                    _pts := getFlagPts(_flagRec.id,_teamRec.id);
+                else
+                    _pts := _flagRec.pts;
+                end if;
+                INSERT INTO team_flag(teamId,flagId,pts,playerIp)
+                        VALUES(_teamRec.id,_flagRec.id,_pts,_playerIp);
+            elsif _flagRec.tableId = 2 then
                 INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp)
                         VALUES(_teamRec.id, _flagRec.id,_playerIp);
             end if;
-            RETURN _flagRec.pts;
+            _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
         else
             raise exception 'Invalid flag';
-            RETURN 0;
         end if;
 
+        -- Give cash if flag contains cash
+        if _flagRec.cash is not null and _flagRec.cash <> 0::money then
+            PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
+            _ret = _ret || 'You also received ' || _flagRec.cash::text || '.';
+        end if;
+
+        RETURN _ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -2990,4 +3111,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- ** others **
 -- getEvents(lastUpdateTS=None,level=None)
 -- addEvent(level, title)
+
+-- payLotoTicket()
+-- transferLotoToWinner()
 

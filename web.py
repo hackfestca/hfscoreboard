@@ -267,7 +267,7 @@ class IndexHandler(BaseHandler):
 
 
         try:
-            self.client.submitFlagFromIp(self.request.remote_ip, flag)
+            submit_message = self.client.submitFlagFromIp(self.request.remote_ip, flag)
         except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
@@ -280,7 +280,7 @@ class IndexHandler(BaseHandler):
             self.set_status(500)
             self.render('templates/error.html', error_msg="Error")
         else:
-            submit_message = "Flag successfully submitted"
+            #submit_message = "Flag successfully submitted"
             flag_is_valid = True
 
         match = re.search("^(FLAG\-|flag\-)", flag)

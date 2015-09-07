@@ -91,6 +91,9 @@ SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
 */
 SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
 SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
+SELECT addFlagTypeExt('King','King');          -- I know it's redundant.
+SELECT addFlagTypeExt('Increment_-1','Dynamic', 1, -1);          -- I know it's redundant.
+SELECT addFlagTypeExt('Increment_-2','Dynamic', 1, -2);          -- I know it's redundant.
 
 /*
     Add a starting news
@@ -109,7 +112,7 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create the bank which act as the wallet #1
 */
-SELECT initBank(500000::money);
+SELECT initBank(500000::money,'HF Bank','Default wallet used for cash flags, money laundering, etc.');
 
 /*
     fake teams for tests

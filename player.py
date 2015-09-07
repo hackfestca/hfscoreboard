@@ -94,7 +94,7 @@ except Exception as e:
 try:
     if args.flag != '':
         print("Submitting flag")
-        pts = c.submitFlag(args.flag)
+        print(c.submitFlag(args.flag))
     elif args.score:
         print('Displaying score')
         print(c.getScore(args.top,None,args.cat))
