@@ -44,33 +44,38 @@ PLAYER_API_PORT = 8000
 DB_HOST = 'db.hf'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
-DB_SSL_ROOT_CA = 'certs/sb-ca.crt'
+DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
 DB_CONNECT_TIMEOUT = 2
 
 DB_INIT_USER = 'owner'
 DB_INIT_PASS = None
-DB_INIT_CRT_FILE = 'certs/cli.psql.scoreboard.owner.crt'
-DB_INIT_KEY_FILE = 'certs/cli.psql.scoreboard.owner.key'
+DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
+DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
 
-DB_ADMIN_USER = 'martin'
-DB_ADMIN_PASS = 'h9N)kv1*H!3(|<eASR1^]Iwql;fsDIDc6h.?o\,IS[v?4:~}J0'
-DB_ADMIN_CRT_FILE = None
-DB_ADMIN_KEY_FILE = None
+DB_ADMIN_USER = 'admin'
+DB_ADMIN_PASS = None
+DB_ADMIN_CRT_FILE = 'certs/hf.cli.db.admin.crt'
+DB_ADMIN_KEY_FILE = 'certs/hf.cli.db.admin.key'
 
 DB_WEB_USER = 'web'
 DB_WEB_PASS = None
-DB_WEB_CRT_FILE = 'certs/cli.psql.scoreboard.web.crt'
-DB_WEB_KEY_FILE = 'certs/cli.psql.scoreboard.web.key'
+DB_WEB_CRT_FILE = 'certs/hf.cli.db.web.crt'
+DB_WEB_KEY_FILE = 'certs/hf.cli.db.web.key'
 
 DB_PLAYER_USER = 'player'
 DB_PLAYER_PASS = None
-DB_PLAYER_CRT_FILE = 'certs/cli.psql.scoreboard.player.crt'
-DB_PLAYER_KEY_FILE = 'certs/cli.psql.scoreboard.player.key'
+DB_PLAYER_CRT_FILE = 'certs/hf.cli.db.player.crt'
+DB_PLAYER_KEY_FILE = 'certs/hf.cli.db.player.key'
 
 DB_FU_USER = 'flagupdater'
 DB_FU_PASS = None
-DB_FU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
-DB_FU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
+DB_FU_CRT_FILE = 'certs/hf.cli.db.flagupdater.crt'
+DB_FU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
+
+DB_BMU_USER = 'flagupdater'
+DB_BMU_PASS = None
+DB_BMU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
+DB_BMU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
 
 SQL_DATA_FILE = 'sql/data.sql'
 SQL_FUNC_FILE = 'sql/functions.sql'

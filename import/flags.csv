@@ -1,2 +1,37 @@
-Flag Name,Flag Value,Flag PTS,Flag Location,Category (see tab #2),displayInterval,Author,isKing,Description,UpdateCmd,How to
-test01,EsWSBM9X1Bt4dSr7c7FYgV6iFnfVsJEA,100,scoreboard.hf,tri,365 days,HF Crew,FALSE,Testing,Null,
+Flag Name,Flag Value,Pts,Cash,Flag Location,Category (see tab #2),displayInterval,Author,FlagType,FlagTypeExt,isKing,Description,UpdateCmd,How to,
+tca04,so9TaRKmiLPBb4f8wI2a,300,0,scoreboard.hf,tca,Null,Cedrick Chaput,Standard,Null,FALSE,"Find list of all Turmelle, Choquette and Associate clients.  http://tca.ctf.hf.  You must find tc01 before",Null,dans le vpn utilisé exploit wordpress,
+wifi01,A362EE636A,100,0,dd-wrt,misc,Null,Cedrick Chaput,Standard,Null,FALSE,[*** Local only ****]Break Serge access point. ,Null,simple wep,
+tca01,91c8d83d74bcd3a281908f5ff02e72a2,100,0,scoreboard.hf,tca,Null,Cedrick Chaput,Standard,Null,FALSE,"Find the way in Turmelle, Choquette and Associate internal network. Our spy found that serge.ctf.hf  access TCA network. See if you can hack it.",Null,utiliser ms-08-067 sur le windows xp pour devenir root dans sa openvpn,
+tca02,9B55EEF34798AF24BF2AE950AB35242D,200,0,scoreboard.hf,tca,Null,Jean-Sebastien Grenon,Standard,Null,FALSE,Find wordpress DMZ network range. You must find tc01 before,Null,zone transfert,
+tca03,QmNwuXR7aN8w,100,0,scoreboard.hf,tca,Null,Jean-Sebastien Grenon,Standard,Null,FALSE,Find Peter Gene password. you must find tc01 before,Null,,
+fw01,46dcec266a1ab888986659f957214d72,100,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8888  <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,le source poste doit etre 443 ,
+fw02,1fdae0cc71e12f61c729238ed6bd945b,200,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8887 <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,"chaput@garde-Barriere:~$ nc 172.28.73.20 3128
+GET http://127.0.0.1:8887 HTTP/1.0",
+fw03,7deea0b57cc0ca1c71e696424307bc3c,300,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8889  <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,"port knoking 7000,8000,9000",
+for01,d5858027b0b4256ed26fb0df74fe830d,25,0,scoreboard.hf,for,Null,Cedrick Chaput,Standard,Null,FALSE,"Excel securityByPass <a href=""https://scoreboard.hf/public/caramoulk.xlsx "">Excel</a> ",Null,le excel est sécurité sur le workspace,
+php01,69b11d35af9e229ccd58808cbac10224,150,0,scoreboard.hf,web,Null,Cedrick Chaput,Standard,Null,FALSE,"try to log as admin in  <a href=""http://web.ctf.hf/chal1/index.php"">link</a> Hint: there must be some info on php some were",Null,le cookie de session est /session/ pour devenir admin,
+php02,fd5a63ceb5ce5b9eb76a115bb2b49166,100,0,scoreboard.hf,web,Null,Cedrick Chaput,Standard,Null,FALSE,"Find the flag in the database  <a href=""http://web.ctf.hf/chal2/index.php"">link</a> ",Null,"bob' UNION SELECT flag,value FROM ""FLAG""  -- ",
+re01,eba6e024f83706ac12f0a87914e37d26d65dc7d6,100,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"Very basic crackme. <a href=""https://scoreboard.hf/public/re01"">re01</a>
+",Null,"Basic RE, anti-debug, data packing.",
+re02,APOCdee456DSArwQwere,400,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"Can't crack this <a href=""https://scoreboard.hf/public/re02"">re02</a>
+",Null,./re 134 322 1112 299,
+re03,7901836a6d41f62bca232834c4a68ec246526b209c23f39e2,500,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"You shouldn't waste your time reversing this manually. <a href=""https://scoreboard.hf/public/re03"">re03</a>
+",Null,"Advanced RE, pas assez de temps de le faire à la main, utilisation de DBI ou de script obligatoire (exemple: execution symbolique)",
+pwn01,274e69de8ccaf3c13d36dc31b2d862996ba89a0e,100,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"Basic pwnable, ASLR + RX bypass required. <a href=""https://scoreboard.hf/public/pwn01"">pwn01</a>. ssh level1@lostunicorn.ctf.hf password: level1
+",Null,Stack smashing ROP classique.,
+pwn02,asdf9823ulirasDFQ24sadfaser,200,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"Basic pwnable. ASLR + NX bypass required. Level2 <a href=""https://scoreboard.hf/public/pwn02"">pwn02</a>. ssh level2@lostunicorn.ctf.hf password: level1 FLAG",Null,ROP mon heap bitch. Utilisation d'un stack pivot pour tomber dans le heap et péter le bazar.,
+pwn03,4b3b8ace354b685fc77e682c563475b132374b38,300,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"I love cookies.<a href=""https://scoreboard.hf/public/pwn03"">pwn03</a>. ssh level3@lostunicorn.ctf.hf password: level2 FLAG",Null,"advanced, utilisation d'une sandbox pour réduire la surface d'exploitation
+",
+elec01,d1g1t4ll0ck,100,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] These guys built their own digital lock at the entrance. Ho noes!,Null,Run the combination lock which is hardcoded in the code,
+elec02,und3rc0v3rz,100,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Hmm a TV in a conference room. Ever heard of TV's secret menus?,Null,"Using IR, run the right combination. Find that the last signal can be found by holding any key.",
+elec03,chr1stm4str,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Party Time!,Null,"Turn all lights ON by solving any challenge, sending an IR signal and holding button #2.",
+elec04,r4c3abcc0nd,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Enough recon. Build your way to the core of the system. You are allowed to connect a single GPIO wire on the arduino. ,Null,Build a custom made serial port using python and a raspberry pi or an arduino.,
+elec05,aas3r14lbbc,300,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Exploit the race condition with a single cable.,Null,Plug the cable in G42 and B59. Set potentiometer to 0 and increase slowly until it reach 1000.,"
+"
+elec06,f1r3burnw00,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,"[*** Local only ****] Finally, trigger the fire alarm before leaving. You are allowed to move the DALLAS temperature sensor. ",Null,Switch the sensor in the opposite side. This will make the sensor very hot. Then plug it back. ,
+win01,flagVMWXKlcVtP15RYV,100,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Can you find local accounts username on this windows b0x 172.28.17.75,Null,,
+win02,flagxyVgfnBfLlxb123,100,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Sharing cool stuff on corporate workstation is bad - 172.28.17.76,Null,,
+win03,flagjWVR6M330ODNoSmX3eln,200,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Bad admin always put sensitive information in Active Directory GPO (humm you need a simple domain account to dig here),Null,,
+win04,flagyZWCYGv0Ega1IDX3UTTF,400,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,"A lame domain admin browse the public share ""shareforall"" on 172.28.17.76 every minute. With this information, you should be able to setup a client side attack to capitalize on his creds and get a shell DC01  (172.28.17.70). Your prize is c:\flag.txt. Hint - smb signature is disabled on DC01.",Null,,
+win05,DCD0E1E8D951953999969DDF6CB79ACF,200,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,"If you pwned DC01, dump password hash.  Uppercase NTLM part of FlagUser's hash is your prize.",Null,,
+misc01,ILoveBeer!,50,0,scoreboard.hf,misc,Null,Jessy Campos,Standard,Null,FALSE,[*** Local only ***] Find the flag in the room.,Null,,

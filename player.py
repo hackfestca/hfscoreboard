@@ -83,7 +83,7 @@ optGrp.add_argument('--cat', action='store', dest='cat', default=None, \
 
 args = parser.parse_args()
 
-# Step 1: Connect to database
+# Step 1: Connect to API
 try:
     c = PlayerController.PlayerController()
 except Exception as e:

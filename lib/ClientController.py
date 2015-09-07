@@ -133,7 +133,7 @@ class ClientController():
             return self._oDB.proc('getScore(integer,varchar,varchar)')(top,ts,cat)
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        title = ['ID','TeamName','FlagPts','FlagInstPts','Total'] 
+        title = ['ID','TeamName','FlagPts','FlagInstPts','Total','Cash'] 
         score = self.getScore(top,ts,cat)
         x = PrettyTable(title)
         x.align['TeamName'] = 'l'

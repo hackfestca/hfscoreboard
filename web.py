@@ -50,6 +50,7 @@ from lib.WebController import WebController
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
+import tornado.log
 
 # System imports
 import os
@@ -282,7 +283,7 @@ class IndexHandler(BaseHandler):
             submit_message = "Flag successfully submitted"
             flag_is_valid = True
 
-        match = re.search("^(FLAG-*|flag-*)", flag)
+        match = re.search("^(FLAG\-|flag\-)", flag)
         if match:
             submit_message = "Are you fucking kidding me ? \"Your flag without 'FLAG-'\""
 
@@ -308,11 +309,37 @@ class DashboardHandler(BaseHandler):
             self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
 
 
+class BlackMarketItemHandler(BaseHandler):
+
+    @tornado.web.addslash
+    def get(self):
+        privateId = self.get_argument("privateId")
+
+        try:
+            bmItemData = self.client.getBMItemDataFromIp(privateId,self.request.remote_ip)
+        except PLPGSQLRaiseError as e:
+            message = e.message
+            self.render('templates/error.html', error_msg=message)
+        except:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
+        else:
+            self.set_header('Content-Type', 'application/octet-stream')
+            self.set_header('Content-Disposition', 'attachment; filename=' + privateId)
+            #buf_size = 4096
+            #while True:
+            #    data = bmItemData.read(buf_size)        # to test
+            #    if not data:
+            #        break
+            self.write(bmItemData)
+            self.finish()
+
+
 class Error404Handler(BaseHandler):
 
     def initialize(self):
         self._client = None
-#        self._logger = Logger("HF2k14_Logger")
         self._team_name = None
         self._team_ip = None
         self._team_score = None
@@ -370,11 +397,14 @@ if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
 
+    # test
+    tornado.log.enable_pretty_logging()
+
     sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
     sponsors_imgs = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
                         if os.path.isfile(os.path.join(sponsors_imgs_path, f)) ]
 
-    logger = Logger("HF2k14_Logger")
+    logger = Logger("HF2k15_Logger")
 
     args = dict(logger=logger, sponsors_imgs=sponsors_imgs)
     
@@ -384,6 +414,7 @@ if __name__ == '__main__':
             (r"/scoreboard/?", ScoreHandler, args),
             (r"/dashboard/?", DashboardHandler, args),
             (r"/rules/?", RulesHandler, args),
+            (r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler, args),
             (r"/projector/2/?", DashboardProjectorHandler, args),
             (r"/projector/3/?", SponsorsProjectorHandler, args)

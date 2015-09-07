@@ -104,3 +104,10 @@ class WebController(ClientController.ClientController):
                 )
         s += "]"
         return s
+
+    def getBMItemDataFromIp(self,privateId,playerIp):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getBMItemDataFromIp(varchar,varchar)'),privateId,playerIp)
+        else:
+            return self._oDB.proc('getBMItemDataFromIp(varchar,varchar)')(privateId,playerIp)
+

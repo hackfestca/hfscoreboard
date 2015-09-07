@@ -72,6 +72,11 @@ DB_FU_PASS = None
 DB_FU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
 DB_FU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
 
+DB_BMU_USER = 'flagupdater'
+DB_BMU_PASS = None
+DB_BMU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
+DB_BMU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
+
 SQL_DATA_FILE = 'sql/data.sql'
 SQL_FUNC_FILE = 'sql/functions.sql'
 SQL_TABLE_FILE = 'sql/tables.sql'

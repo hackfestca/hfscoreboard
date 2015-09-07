@@ -32,9 +32,9 @@ RETURNS integer AS $$
         raise notice 'emptyTables()';
 
         TRUNCATE team,
-                 status,
+                 flagStatus,
                  host,
-                 category,
+                 flagCategory,
                  flagAuthor,
                  flag,
                  kingFlag,
@@ -42,7 +42,7 @@ RETURNS integer AS $$
                  team_kingFlag,
                  news,
                  submit_history,
-                 status_history,
+                 flagStatus_history,
                  settings
             RESTART IDENTITY
             CASCADE;
@@ -77,7 +77,7 @@ $$ LANGUAGE SQL;
     idx: Used in some ORDER BY
 */
 CREATE OR REPLACE FUNCTION idx(anyarray, anyelement)
-  RETURNS int AS 
+  RETURNS integer AS 
 $$
   SELECT i FROM (
      SELECT generate_series(array_lower($1,1),array_upper($1,1))
@@ -87,6 +87,296 @@ $$
 $$ LANGUAGE sql IMMUTABLE;
 
 /*
+    Stored Proc: transferMoney(srcWalletId,dstWalletId,amount,transactionType)
+*/
+CREATE OR REPLACE FUNCTION transferMoney(_srcWalletId wallet.id%TYPE,
+                                   _dstWalletId wallet.id%TYPE, 
+                                   _amount wallet.amount%TYPE, 
+                                   _transactionTypeCode transactionType.code%TYPE) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'transferMoney(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Some checks
+        PERFORM id FROM wallet WHERE id = _srcWalletId;
+        if not FOUND then
+            raise exception 'Could not find the source wallet "%"',_srcWalletId;
+        end if;
+
+        PERFORM id FROM wallet WHERE id = _dstWalletId;
+        if not FOUND then
+            raise exception 'Could not find the destination wallet "%"',_dstWalletId;
+        end if;
+
+        if _amount < 0::money then
+            raise exception 'Cannot transfer negative value';
+        end if;
+
+        PERFORM code FROM transactionType WHERE code = _transactionTypeCode;
+        if not FOUND then
+            raise exception 'Could not find transaction type "%"',_transactionTypeCode;
+        end if;
+
+        -- Verify source wallet has enough money to transfer the amount
+        PERFORM id,amount FROM wallet WHERE id = _srcWalletId and (amount - _amount) >= 0::money;
+        if not FOUND then
+            raise exception 'Sender does not have enough money';
+        end if;
+
+        -- Update source wallet
+        UPDATE wallet
+        SET amount = amount - _amount
+        WHERE id = _srcWalletId;
+
+        -- Update destination wallet
+        UPDATE wallet
+        SET amount = amount + _amount
+        WHERE id = _dstWalletId;
+
+        -- log in transaction table
+        INSERT INTO transaction(srcWalletId,dstWalletId,amount,type) 
+                VALUES(_srcWalletId,_dstWalletId,_amount,_transactionTypeCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: launderMoney(dstWalletId,amount)
+*/
+CREATE OR REPLACE FUNCTION launderMoney(_dstWalletId wallet.id%TYPE, 
+                                   _amount wallet.amount%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        TR_LAUNDERING_CODE transactionType.code%TYPE := 4;
+    BEGIN
+        -- Logging
+        raise notice 'launderMoney(%,%)',$1,$2;
+
+        PERFORM transferMoney(1,_dstWalletId,_amount,TR_LAUNDERING_CODE);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: launderMoneyFromTeamId(dstWalletId,amount)
+*/
+CREATE OR REPLACE FUNCTION launderMoneyFromTeamId(_teamId team.id%TYPE, 
+                                                  _amount wallet.amount%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _dstWalletId wallet.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'launderMoneyFromTeamId(%,%)',$1,$2;
+
+        -- Get team wallet id
+        SELECT wallet INTO _dstWalletId FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find team "%"',_teamId;
+        end if;
+
+        -- Perform laundering
+        PERFORM launderMoney(_dstWalletId,_amount);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- payBMItem()
+-- transferCashFlag()
+-- payLotoTicket()
+-- transferLotoToWinner()
+
+/*
+    Stored Proc: addWallet(name,desc,amount)
+*/
+CREATE OR REPLACE FUNCTION addWallet(_name wallet.name%TYPE,
+                                   _desc wallet.description%TYPE, 
+                                   _amount wallet.amount%TYPE) 
+RETURNS wallet.id%TYPE AS $$
+    DECLARE
+        _walletId wallet.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'addWallet(%,%,%)',$1,$2,$3;
+
+        -- Some checks
+        if _name is null then
+            raise exception 'Name cannot be null';
+        end if;
+
+        if _amount < 0::money then
+            raise exception 'Wallet amount cannot be under 0';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO wallet(publicId,name,description,amount) VALUES(random_64(),_name,_desc,0::money);
+        _walletId := LASTVAL();
+
+        -- Perform first transaction if _amount > 0
+        if _amount > 0::money then
+            PERFORM transferMoney(1,_walletId,_amount,1);
+        end if;
+
+        RETURN _walletId;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: initBank(amount)
+*/
+CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE,
+                                    _name wallet.name%TYPE DEFAULT 'Bank',
+                                    _desc wallet.description%TYPE DEFAULT 'Default wallet used for cash flags, money laundering, etc.') 
+RETURNS integer AS $$
+    DECLARE
+        _bankWalletId wallet.id%TYPE := 1;
+    BEGIN
+        -- Logging
+        raise notice 'initBank(%,%,%)',$1,$2,$3;
+
+        if _amount < 0::money then
+            raise exception 'Wallet amount cannot be under 0';
+        end if;
+
+        -- Create bank as Wallet #1
+        PERFORM addWallet(_name,_desc,0::money);
+
+        -- Set bank value
+        UPDATE wallet
+        SET amount = _amount
+        WHERE id = _bankWalletId;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: addTransactionType(code,name,desc)
+*/
+CREATE OR REPLACE FUNCTION addTransactionType(_code transactionType.code%TYPE,
+                                    _name transactionType.name%TYPE, 
+                                    _description transactionType.description%TYPE default ''
+                                    ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addTransactionType(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO transactionType(code,name,description)
+                VALUES(_code,_name,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: getTransactionHistory(_top)
+*/
+CREATE OR REPLACE FUNCTION getTransactionHistory(_top integer DEFAULT 30)  
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTransactionHistory(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        RETURN QUERY SELECT
+                            w1.name as srcWallet,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.id
+                     ORDER BY t.ts
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamTransactionHistory(_top)
+*/
+CREATE OR REPLACE FUNCTION getTeamTransactionHistory(_teamId team.id%TYPE,
+                                                     _top integer DEFAULT 30) 
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    DECLARE
+        _walletId wallet.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamTransactionHistory(%,%)',$1,$2;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        -- Get walletId from teamId
+        SELECT wallet INTO _walletId FROM team WHERE id = _teamId;
+
+        -- Get history
+        RETURN QUERY SELECT
+                            w1.name as srcWallet,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.id
+                     WHERE t.srcWalletId = _walletId OR t.dstWalletId = _walletId
+                     ORDER BY t.ts
+                     LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: addTeam(name,net)
 */
 CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
@@ -94,6 +384,8 @@ CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
 RETURNS integer AS $$
     DECLARE
         _inet inet;
+        _walletId wallet.id%TYPE;
+        _teamStartMoney settings.teamStartMoney%TYPE;
     BEGIN
         -- Logging
         raise notice 'addTeam(%,%)',$1,$2;
@@ -109,8 +401,15 @@ RETURNS integer AS $$
             raise exception 'Only IPv4 addresses are supported';
         end if;
 
+        -- Get team starting money
+        SELECT teamStartMoney into _teamStartMoney FROM settings ORDER BY ts DESC LIMIT 1;
+
+        -- Create wallet
+        _walletId := addWallet(_name,'Wallet of team: '||_name,_teamStartMoney);
+
         -- Insert a new row
-        INSERT INTO team(name,net) VALUES(_name,_inet);
+        INSERT INTO team(name,net,wallet) VALUES(_name,_inet,_walletId);
+
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -261,19 +560,19 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: addStatus(name,description)
+    Stored Proc: addFlagStatus(name,description)
 */
-CREATE OR REPLACE FUNCTION addStatus(_code status.code%TYPE,
-                                    _name status.name%TYPE, 
+CREATE OR REPLACE FUNCTION addFlagStatus(_code flagStatus.code%TYPE,
+                                    _name flagStatus.name%TYPE, 
                                     _description text default ''
                                     ) 
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'addStatus(%,%,%)',$1,$2,$3;
+        raise notice 'addFlagStatus(%,%,%)',$1,$2,$3;
 
         -- Insert a new row
-        INSERT INTO status(code,name,description)
+        INSERT INTO flagStatus(code,name,description)
                 VALUES(_code,_name,_description);
 
         RETURN 0;
@@ -281,20 +580,20 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: addCategory(name,description)
+    Stored Proc: addFlagCategory(name,description)
 */
-CREATE OR REPLACE FUNCTION addCategory(_name category.name%TYPE, 
-                                       _displayName category.displayName%TYPE,
+CREATE OR REPLACE FUNCTION addFlagCategory(_name flagCategory.name%TYPE, 
+                                       _displayName flagCategory.displayName%TYPE,
                                        _description text,
-                                       _hidden category.hidden%TYPE default false
+                                       _hidden flagCategory.hidden%TYPE default false
                                       ) 
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'addCategory(%,%,%,%)',$1,$2,$3,$4;
+        raise notice 'addFlagCategory(%,%,%,%)',$1,$2,$3,$4;
 
         -- Insert a new row
-        INSERT INTO category(name,displayName,description,hidden)
+        INSERT INTO flagCategory(name,displayName,description,hidden)
                 VALUES(_name,_displayName,_description,_hidden);
 
         RETURN 0;
@@ -421,6 +720,55 @@ RETURNS integer AS $$
     END;
 $$ LANGUAGE plpgsql;
 
+/*
+    Stored Proc: addFlagType(code,name)
+*/
+CREATE OR REPLACE FUNCTION addFlagType(_code flagType.code%TYPE, 
+                                   _name flagType.name%TYPE
+                                   ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addFlagType(%,%)',$1,$2;
+
+        -- Insert a new row
+        INSERT INTO flagType(code,name)
+                VALUES(_code,_name);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addFlagTypeExt(name,typeExt,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
+*/
+CREATE OR REPLACE FUNCTION addFlagTypeExt(_name flagTypeExt.name%TYPE,
+                                          _type flagType.name%TYPE,
+                                          _ptsLimit flagTypeExt.ptsLimit%TYPE DEFAULT NULL,
+                                          _ptsStep flagTypeExt.ptsStep%TYPE DEFAULT NULL,
+                                          _groupId flagTypeExt.groupId%TYPE DEFAULT NULL,
+                                          _trapCmd flagTypeExt.trapCmd%TYPE DEFAULT NULL,
+                                          _updateCmd flagTypeExt.updateCmd%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _typeId flagType.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'addFlagTypeExt(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+
+        -- Get category id from name
+        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        if not FOUND then
+            raise exception 'Could not find flag type "%"',_type;
+        end if;
+
+        -- Insert a new row
+        INSERT INTO flagTypeExt(name,typeId,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
+                VALUES(_name,_typeId,_ptsLimit,_ptsStep,_groupId,_trapCmd,_updateCmd);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addFlag(...)
@@ -428,26 +776,27 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE, 
                                     _value flag.value%TYPE, 
                                     _pts flag.pts%TYPE,
+                                    _cash varchar(20),
                                     _host host.name%TYPE,
-                                    _category category.name%TYPE,
-                                    _statusCode status.code%TYPE default 1,
-                                    _displayInterval varchar(20) default Null,
-                                    _author flagAuthor.name%TYPE  default Null,
-                                    _isKing flag.isKing%TYPE default false,
-                                    _description flag.description%TYPE default '',
-                                    _hint flag.hint%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default '',
-                                    _monitorCmd flag.monitorCmd%TYPE default ''
+                                    _category flagCategory.name%TYPE,
+                                    _statusCode flagStatus.code%TYPE,
+                                    _displayInterval varchar(20),
+                                    _author flagAuthor.name%TYPE,
+                                    _type flagType.name%TYPE,
+                                    _typeExt flagTypeExt.name%TYPE,
+                                    _description flag.description%TYPE
                                     ) 
 RETURNS integer AS $$
     DECLARE
         _hostId host.id%TYPE;
-        _catId category.id%TYPE;
+        _catId flagCategory.id%TYPE;
         _authorId flagAuthor.id%TYPE;
+        _typeId flagType.id%TYPE;
+        _typeExtId flagTypeExt.id%TYPE;
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -456,7 +805,7 @@ RETURNS integer AS $$
         end if;
 
         -- Get category id from name
-        SELECT id INTO _catId FROM category WHERE name = _category;
+        SELECT id INTO _catId FROM flagCategory WHERE name = _category;
         if not FOUND then
             raise exception 'Could not find category "%"',_category;
         end if;
@@ -471,19 +820,34 @@ RETURNS integer AS $$
             _authorId = _author;
         end if;
 
-        -- Get author id from name
+        -- Get type id from name
+        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        if not FOUND then
+            raise exception 'Could not find flag type "%"',_type;
+        end if;
+
+        -- Get type ext id from name
+        if _typeExt is not Null then
+            SELECT id INTO _typeExtId FROM flagTypeExt WHERE name = _typeExt;
+            if not FOUND then
+                raise exception 'Could not find flag type extension "%"',_typeExt;
+            end if;
+        else
+            _typeExtId = _typeExt;
+        end if;
+
+        -- Convert displayInterval
         if _displayInterval is not Null then
             _display = _displayInterval::interval;
         else
             _display = _displayInterval;
         end if;
 
-        
         -- Insert a new row
-        INSERT INTO flag(name,value,pts,host,category,statusCode,displayInterval,author,
-                        description,hint,isKing,updateCmd,monitorCmd)
-                VALUES(_name,_value,_pts,_hostId,_catId,_statusCode,_display,_authorId,
-                        _description,_hint,_isKing,_updateCmd,_monitorCmd);
+        INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
+                        type,typeExt,description)
+                VALUES(_name,_value,_pts,_cash::money,_hostId,_catId,_statusCode,_display,_authorId,
+                        _typeId,_typeExtId,_description);
 
         RETURN 0;
     END;
@@ -494,23 +858,22 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
+                                    _cash varchar(20),
                                     _host host.name%TYPE,
-                                    _category category.name%TYPE,
-                                    _statusCode status.code%TYPE default 1,
-                                    _displayInterval varchar(20) default Null,
-                                    _author flagAuthor.name%TYPE  default Null,
-                                    _isKing flag.isKing%TYPE default false,
-                                    _description flag.description%TYPE default '',
-                                    _hint flag.hint%TYPE default '',
-                                    _updateCmd flag.updateCmd%TYPE default '',
-                                    _monitorCmd flag.monitorCmd%TYPE default ''
+                                    _category flagCategory.name%TYPE,
+                                    _statusCode flagStatus.code%TYPE,
+                                    _displayInterval varchar(20),
+                                    _author flagAuthor.name%TYPE,
+                                    _type flagType.name%TYPE,
+                                    _typeExt flagTypeExt.name%TYPE,
+                                    _description flag.description%TYPE
                                     ) 
 RETURNS flag.value%TYPE AS $$
     DECLARE
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -519,9 +882,8 @@ RETURNS flag.value%TYPE AS $$
                 SELECT random_32() INTO _flagValue;
 
                 -- addFlag
-                PERFORM addFlag(_name,_flagValue,_pts,_host,_category,
-                                _statusCode,_displayInterval,_author,_isKing,_description,
-                                _hint,_updateCmd,_monitorCmd);
+                PERFORM addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
+                                _displayInterval,_author,_type,_typeExt,_description);
 
                 RETURN _flagValue;
             EXCEPTION WHEN unique_violation THEN
@@ -612,7 +974,7 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 pts flag.pts%TYPE,
-                category category.name%TYPE,
+                category flagCategory.name%TYPE,
                 author flagAuthor.nick%TYPE,
                 displayInterval flag.displayInterval%TYPE,
                 description flag.description%TYPE
@@ -633,7 +995,7 @@ RETURNS TABLE (
                         ) AS a ON f.author = a.id
                      LEFT OUTER JOIN (
                         SELECT c.id, c.name, c.hidden
-                        FROM category AS c
+                        FROM flagCategory AS c
                         ) AS c ON f.category = c.id
                     ORDER BY f.id;
     END;
@@ -734,9 +1096,13 @@ RETURNS integer AS $$
         -- Flag statusCode must be equal 1
         -- category 1 = flag, category 2 = kingFlag
         SELECT * FROM (
-            SELECT id,value,pts,statusCode,1 AS category FROM flag WHERE statusCode = STATUS_CODE_OK and value = _flagValue and isKing = False
-            UNION ALL
-            SELECT id,value,pts,Null,2 AS category FROM kingFlag WHERE value = _flagValue
+            SELECT id,value,pts,statusCode,1 AS category 
+            FROM flag 
+            WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 2
+              UNION ALL
+            SELECT id,value,pts,Null,2 AS category 
+            FROM kingFlag 
+            WHERE value = _flagValue
         ) AS x INTO _flagRec;
 
         -- if the flag is found, determine if it is a flag or a kingFlag
@@ -763,18 +1129,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
                                     _timestamp varchar(30) default Null,
-                                    _category category.name%TYPE default Null)
+                                    _category flagCategory.name%TYPE default Null)
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
                 flagPts flag.pts%TYPE,
                 kingFlagPts kingFlag.pts%TYPE,
-                flagTotal flag.pts%TYPE
+                flagTotal flag.pts%TYPE,
+                cash wallet.amount%TYPE
               ) AS $$
     DECLARE
         _settings settings%ROWTYPE;
         _ts timestamp;
-        -- _aCat category.id%TYPE[];    -- This doesn't work :(
+        -- _aCat flagCategory.id%TYPE[];    -- This doesn't work :(
         _aCat integer[];
         _rowCount integer;
     BEGIN
@@ -804,9 +1171,9 @@ RETURNS TABLE (
         end if;
 
         if _category is Null then
-            SELECT array(select category.id from category) INTO _aCat;
+            SELECT array(select flagCategory.id from flagCategory) INTO _aCat;
         else
-            SELECT array[category.id] INTO _aCat FROM category WHERE name = _category;
+            SELECT array[flagCategory.id] INTO _aCat FROM flagCategory WHERE name = _category;
             GET DIAGNOSTICS _rowCount = ROW_COUNT;
             if _rowCount <> 1 then
                 raise exception 'Category "%" not found',_category;
@@ -817,8 +1184,14 @@ RETURNS TABLE (
                             t.name AS team,
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
-                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal 
+                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
+                            w.amount AS cash
                          FROM team AS t
+                         LEFT OUTER JOIN (
+                            SELECT w.id,
+                                   w.amount
+                            FROM wallet as w
+                         ) AS w ON t.wallet = w.id
                          LEFT OUTER JOIN (
                             SELECT tf2.teamId,
                                    sum(tf2.pts) AS sum
@@ -904,13 +1277,13 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION getCatProgressFromIp(_playerIp varchar(20)) 
 RETURNS TABLE (
-                id category.id%TYPE,
-                name category.name%TYPE,
-                displayName category.displayName%TYPE,
-                description category.description%TYPE,
+                id flagCategory.id%TYPE,
+                name flagCategory.name%TYPE,
+                displayName flagCategory.displayName%TYPE,
+                description flagCategory.description%TYPE,
                 pts flag.pts%TYPE,
                 total flag.pts%TYPE,
-                hidden category.hidden%TYPE
+                hidden flagCategory.hidden%TYPE
               ) AS $$
     DECLARE
         _teamId team.id%TYPE;
@@ -942,7 +1315,7 @@ RETURNS TABLE (
                             coalesce(tf3.sum::integer,0) AS pts,
                             coalesce(tft3.sum::integer,0) AS total,
                             c.hidden as hidden
-                     FROM category AS c
+                     FROM flagCategory AS c
                      LEFT OUTER JOIN (
                         SELECT tf2.category,
                                sum(tf2.pts) AS sum
@@ -957,7 +1330,7 @@ RETURNS TABLE (
                                        f.category,
                                        f.pts
                                 FROM flag AS f
-                                WHERE f.isKing = False
+                                WHERE f.type <> 2
                                 ) as f ON tf.flagId = f.id
                             WHERE tf.teamId = _teamId
                             ) AS tf2
@@ -967,7 +1340,7 @@ RETURNS TABLE (
                          SELECT f2.category,
                                 sum(f2.pts) AS sum
                          FROM flag AS f2
-                         WHERE f2.isKing = False
+                         WHERE f2.type <> 2
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
                      WHERE c.hidden = False
@@ -984,8 +1357,8 @@ RETURNS TABLE (
                 name flag.name%TYPE,
                 description flag.description%TYPE,
                 pts flag.pts%TYPE,
-                catId category.id%TYPE,
-                catName category.name%TYPE,
+                catId flagCategory.id%TYPE,
+                catName flagCategory.name%TYPE,
                 isDone boolean,
                 author flagAuthor.nick%TYPE,
                 displayInterval flag.displayInterval%TYPE
@@ -1030,7 +1403,7 @@ RETURNS TABLE (
                         ) AS a ON f.author = a.id
                      LEFT OUTER JOIN (
                         SELECT c.id, c.name, c.hidden
-                        FROM category AS c
+                        FROM flagCategory AS c
                         ) AS c ON f.category = c.id
                      LEFT OUTER JOIN (
                          SELECT tf.flagId,
@@ -1040,7 +1413,7 @@ RETURNS TABLE (
                          ) AS tf2 ON f.id = tf2.flagId
                     WHERE (f.displayInterval is null 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
-                          and f.isKing = False
+                          and f.type <> 2
                           and c.hidden = False
                     ORDER BY f.name;
     END;
@@ -1054,10 +1427,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getAllKingFlags()';
@@ -1065,16 +1439,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1086,10 +1463,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromHost(%)',$1;
@@ -1097,16 +1475,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True and h.name = _host;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE and h.name = _host;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1118,10 +1499,11 @@ RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
                 host host.name%TYPE,
-                updateCmd flag.updateCmd%TYPE,
-                statusCode flag.statusCode%TYPE,
-                isKing flag.isKing%TYPE
+                updateCmd flagTypeExt.updateCmd%TYPE,
+                statusCode flag.statusCode%TYPE
               ) AS $$
+    DECLARE
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromName(%)',$1;
@@ -1129,16 +1511,19 @@ RETURNS TABLE (
         return QUERY SELECT f.id,
                             f.name,
                             h.name AS host,
-                            f.updateCmd,
-                            f.statusCode,
-                            f.isKing 
+                            fte.updateCmd,
+                            f.statusCode
                      FROM flag AS f
                      LEFT OUTER JOIN (
                         SELECT host.id,
                                host.name
                         FROM host
                         ) AS h ON h.id = f.host
-                     WHERE f.isKing = True and f.name = _name;
+                     LEFT OUTER JOIN (
+                        SELECT fte.updateCmd
+                        FROM flagTypeExt AS fte
+                        ) AS fte ON fte.id = f.typeExt
+                     WHERE f.type = KING_FLAG_TYPE and f.name = _name;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1190,6 +1575,7 @@ RETURNS TABLE (
         _teamFlagSubmitCt integer;
         _playerFlagSubmitCt integer;
         _teamScore flag.pts%TYPE;
+        _teamMoney wallet.amount%TYPE;
     BEGIN
         -- Logging
         raise notice 'getTeamInfoFromIp(%)',$1;
@@ -1258,6 +1644,17 @@ RETURNS TABLE (
                     ) AS tfi2
                     WHERE tfi2.teamId = _teamRec.id
                 ) as score;
+
+        -- Get team money
+        SELECT w.amount
+        INTO _teamMoney
+        FROM team
+        LEFT OUTER JOIN (
+            SELECT id,
+                   amount
+            FROM wallet
+        ) AS w ON team.wallet = w.id
+        WHERE team.id = _teamRec.id;
         
         -- Return
         RETURN QUERY SELECT 'ID'::varchar, _teamRec.id::varchar
@@ -1266,7 +1663,8 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Active Players'::varchar, _activePlayerCt::varchar
                      UNION ALL SELECT 'Team Submit Attempts'::varchar, _teamFlagSubmitCt::varchar
                      UNION ALL SELECT 'Player Submit Attempts'::varchar, _playerFlagSubmitCt::varchar
-                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar;
+                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar
+                     UNION ALL SELECT 'Team money'::varchar, _teamMoney::varchar;
                      --ORDER BY 1;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1300,7 +1698,7 @@ RETURNS TABLE (
                 teamName team.name%TYPE,
                 flagName flag.name%TYPE,
                 flagPts flag.pts%TYPE,
-                flagCat category.name%TYPE,
+                flagCat flagCategory.name%TYPE,
                 flagType integer
               ) AS $$
     BEGIN
@@ -1336,7 +1734,7 @@ RETURNS TABLE (
                          LEFT OUTER JOIN (
                             SELECT id,
                                    name
-                            FROM category
+                            FROM flagCategory
                          ) AS c ON f.category = c.id
                          UNION ALL
                          SELECT tkf.ts AS timestamp,
@@ -1366,14 +1764,13 @@ RETURNS TABLE (
                          LEFT OUTER JOIN (
                             SELECT id,
                                    name
-                            FROM category
+                            FROM flagCategory
                          ) AS c2 ON f2.category = c2.id
                     ) AS r
                     ORDER BY r.timestamp DESC
                     LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 
 /*
     Stored Proc: getFlagsSubmitCount()
@@ -1438,7 +1835,7 @@ RETURNS TABLE (
         -- Get tables informations
         SELECT count(*) INTO _teamCt FROM team;
         SELECT count(*) INTO _hostCt FROM host;
-        SELECT count(*) INTO _catCt FROM category;
+        SELECT count(*) INTO _catCt FROM flagCategory;
         SELECT count(*) INTO _flagCt FROM flag;
         SELECT count(*) INTO _kingFlagCt FROM kingFlag;
         SELECT count(*) INTO _teamFlagCt FROM team_flag;
@@ -1809,14 +2206,16 @@ RETURNS TABLE (
         -- Logging
         raise notice 'getSettings()';
 
-        RETURN QUERY SELECT unnest(array['gameStartTs'])::text AS "Key", 
-                            unnest(array[gameStartTs])::text as "Value" 
+        RETURN QUERY SELECT unnest(array['gameStartTs','gameEndTs','teamStartMoney'])::text AS "Key", 
+                            unnest(array[gameStartTs::text,gameEndTs::text,teamStartMoney::text])::text as "Value" 
                      FROM settings;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: insertRandomData()
+
+    TODOO : Make this function work again. It's broken.
 */
 CREATE OR REPLACE FUNCTION insertRandomData() 
 RETURNS integer AS $$
@@ -1849,34 +2248,26 @@ RETURNS integer AS $$
         SELECT 'Team '||id,('172.29.'||id||'.0/32')::inet
         FROM generate_series(1,TEAM_COUNT) as id;
 
-        -- Insert random flags where isKing = False
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
+        -- Insert random flags 
+        INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
-                'echo $FLAG > /root/flag'||id||'.txt',
-                'bla',
                 1,
-                False,
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.',
-                ''
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(1,FLAG_COUNT) as id;
 
-        -- Insert random flags where isKing = True
-        INSERT INTO flag(name,value,pts,host,category,updateCmd,monitorCmd,statusCode,isKing,description,hint) 
+        -- Insert random king flags
+        INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
         SELECT 'Flag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
-                'echo $FLAG > /root/flag'||id||'.txt',
-                'bla',
                 1,
-                True,
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.',
-                ''
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(FLAG_COUNT+1,FLAG_COUNT+1+FLAG_IS_KING_COUNT) as id;
 
         -- Insert random king flags
@@ -1885,7 +2276,7 @@ RETURNS integer AS $$
                 random_32(),
                 1           --random() * 9 + 1
         FROM flag,generate_series(1,KINGFLAG_PER_FLAG_COUNT)
-        WHERE flag.isKing = True;
+        WHERE flag.type = 11;
 
         -- Assign flags to team randomly
         FOR _teamId,_net IN SELECT id,net FROM team LOOP
@@ -1946,4 +2337,657 @@ RETURNS integer AS $$
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addBMItemCategory(name,displayName,description)
+*/
+CREATE OR REPLACE FUNCTION addBMItemCategory(_name bmItemCategory.name%TYPE, 
+                                       _displayName bmItemCategory.displayName%TYPE,
+                                       _description bmItemCategory.description%TYPE) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addBMItemCategory(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO bmItemCategory(name,displayName,description)
+                VALUES(_name,_displayName,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addBMItemStatus(code,name,description)
+*/
+CREATE OR REPLACE FUNCTION addBMItemStatus(_code bmItemStatus.code%TYPE,
+                                    _name bmItemStatus.name%TYPE, 
+                                    _description text default ''
+                                    ) 
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addBMItemStatus(%,%,%)',$1,$2,$3;
+
+        -- Insert a new row
+        INSERT INTO bmItemStatus(code,name,description)
+                VALUES(_code,_name,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: setBMItemStatus(_bmItemId,_bmItemStatusCode)
+*/
+CREATE OR REPLACE FUNCTION setBMItemStatus(_bmItemId bmItem.id%TYPE,
+                                           _bmItemStatusCode bmItem.statusCode%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'setBMItemStatus(%,%)',$1,$2;
+
+        -- Update bmItem
+        UPDATE bmItem
+        SET statusCode = _bmItemStatusCode
+        WHERE id = _bmItemId;
+        
+        -- Insert a new row in history
+        INSERT INTO bmItemStatus_history(bmItemId,statusCode)
+                VALUES(_bmItemId,_bmItemStatusCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: addBMItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,desc)
+*/
+CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE, 
+                                    _category bmItemCategory.name%TYPE,
+                                    _statusCode bmItemStatus.code%TYPE,
+                                    _ownerWallet bmItem.ownerWallet%TYPE,
+                                    _amount bmItem.amount%TYPE,
+                                    _qty bmItem.qty%TYPE,
+                                    _displayInterval varchar(20),
+                                    _description bmItem.description%TYPE,
+                                    _data bmItem.data%TYPE) 
+RETURNS integer AS $$
+    DECLARE
+        _bmItemId bmItem.id%TYPE;
+        _catId bmItemCategory.id%TYPE;
+        _display bmItem.displayInterval%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'addBMItem(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+
+        -- Get category id from name
+        SELECT id INTO _catId FROM bmItemCategory WHERE name = _category;
+        if not FOUND then
+            raise exception 'Could not find category "%"',_category;
+        end if;
+
+        -- Verify status code exist
+        PERFORM code FROM bmItemStatus WHERE code = _statusCode;
+        if not FOUND then
+            raise exception 'Could not find status code "%"',_statusCode;
+        end if;
+
+        -- Verify amount
+        if _amount <= 0::money then
+            raise exception 'Black market item cannot cost < 0';
+        end if;
+
+        -- Verify quantity
+        if _qty is not Null and _qty <= 0 then
+            raise exception 'Black market item quantity cannot be < 0';
+        end if;
+
+        -- Convert displayInterval
+        if _displayInterval is not Null then
+            _display = _displayInterval::interval;
+        else
+            _display = _displayInterval;
+        end if;
+
+        -- Insert a new row
+        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,data)
+                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,random_64(),_data);
+        _bmItemId := LASTVAL();
+
+        -- Set initial status
+        PERFORM setBMItemStatus(_bmItemId,_statusCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: listBMItems(_top)
+*/
+CREATE OR REPLACE FUNCTION listBMItems(_top integer DEFAULT 30)
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.displayName%TYPE,
+                status bmItemStatus.name%TYPE,
+                rating text,
+                owner wallet.name%TYPE,
+                cost bmItem.amount%TYPE,
+                qty text
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.displayName AS category,
+                            ist.name AS status,
+                            CASE WHEN ir.rating is null THEN '-' ELSE ir.rating::text || '/5' END,
+                            w.name AS owner,
+                            i.amount AS cost,
+                            CASE WHEN i.qty is null THEN '-' ELSE i.qty::text END
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.displayName 
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT ir.id,ir.rating
+                        FROM bmItemReview AS ir
+                        ) AS ir ON i.review = ir.id
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: listBMItemsUpdater(_top)
+*/
+CREATE OR REPLACE FUNCTION listBMItemsUpdater(_top integer DEFAULT 30)
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.name%TYPE,
+                status bmItemStatus.code%TYPE,
+                statusName bmItemStatus.name%TYPE,
+                owner wallet.name%TYPE,
+                qty bmItem.qty%TYPE,
+                privateId bmItem.privateId%TYPE,
+                dlLink bmItem.dlLink%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.name AS category,
+                            ist.code AS status,
+                            ist.name AS statusName,
+                            w.name AS owner,
+                            i.qty AS qty,
+                            i.privateId as privateId,
+                            i.dlLink as dlLink
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.name
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemInfo()
+*/
+CREATE OR REPLACE FUNCTION getBMItemInfo(_bmItemId bmItem.id%TYPE)
+RETURNS TABLE (
+                info varchar(30),
+                value varchar(100)
+              ) AS $$
+    DECLARE
+        _ret RECORD;
+        _qty varchar(20);
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemInfo(%)',$1;
+
+        SELECT i.id AS id,
+                i.name AS name,
+                i.description AS description,
+                ic.name AS catName,
+                ic.displayName AS catDisplay,
+                ist.code AS statusCode,
+                ist.name AS statusName,
+                ir.rating AS rating,
+                ir.comments AS comments,
+                w.name AS owner,
+                i.amount AS cost,
+                i.qty AS qty
+         INTO _ret
+         FROM bmItem AS i
+         LEFT OUTER JOIN (
+            SELECT ic.id,ic.name,ic.displayName 
+            FROM bmItemCategory AS ic
+            ) AS ic ON i.category = ic.id
+         LEFT OUTER JOIN (
+            SELECT ist.code,ist.name
+            FROM bmItemStatus AS ist
+            ) AS ist ON i.statusCode = ist.code
+         LEFT OUTER JOIN (
+            SELECT ir.id,ir.rating,ir.comments
+            FROM bmItemReview AS ir
+            ) AS ir ON i.review = ir.id
+         LEFT OUTER JOIN (
+            SELECT w.id,w.name
+            FROM wallet AS w
+            ) AS w ON i.ownerWallet = w.id
+        WHERE i.id = _bmItemId;
+
+        if _ret.qty is null then
+            _qty := 'infinite';
+        else
+            _qty := _ret.qty::varchar;
+        end if;
+        
+        -- Return
+        RETURN QUERY SELECT 'ID'::varchar, _ret.id::varchar
+                     UNION ALL SELECT 'Name'::varchar, _ret.name
+                     UNION ALL SELECT 'Description'::varchar, _ret.description
+                     UNION ALL SELECT 'Category'::varchar, _ret.catDisplay
+                     UNION ALL SELECT 'Status'::varchar, _ret.statusName
+                     UNION ALL SELECT 'Rating'::varchar, _ret.rating::varchar
+                     UNION ALL SELECT 'Comments'::varchar, _ret.comments
+                     UNION ALL SELECT 'Owner'::varchar, _ret.owner
+                     UNION ALL SELECT 'Cost'::varchar, _ret.cost::varchar 
+                     UNION ALL SELECT 'Qty'::varchar, _qty;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+/*
+    Stored Proc: checkTeamSolvency(teamId,itemId)
+*/
+CREATE OR REPLACE FUNCTION checkTeamSolvency(_teamId team.id%TYPE,
+                                             _itemId bmItem.id%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _walletId wallet.id%TYPE;
+        _walletAmount wallet.amount%TYPE;
+        _bmItemAmount bmItem.amount%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'checkTeamSolvency(%,%)',$1,$2;
+
+        -- Get team walletId
+        SELECT wallet INTO _walletId FROM team WHERE id = _teamId;
+        if not FOUND then
+            raise exception 'Could not find the team ID "%"',_teamId;
+        end if;
+
+        -- Get wallet amount
+        SELECT amount INTO _walletAmount FROM wallet WHERE id = _walletId;
+        if not FOUND then
+            raise exception 'Could not find the wallet of team ID "%"',_teamId;
+        end if;
+
+        -- Get black market item amount
+        SELECT amount INTO _bmItemAmount FROM bmItem WHERE id = _itemId;
+        if not FOUND then
+            raise exception 'Could not find the black market item ID "%"',_itemId;
+        end if;
+
+        -- Check that the player has enough money
+        if _walletAmount < _bmItemAmount then
+            raise exception 'Not enough money to buy the item';
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: checkItemAvailability(bmItemId,teamId=Null)
+*/
+CREATE OR REPLACE FUNCTION checkItemAvailability(_bmItemId bmItem.id%TYPE,
+                                                 _teamId team.id%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _bmItemRec bmItem%ROWTYPE;
+        _bmItemStatus bmItemStatus.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'checkItemAvailability(%,%)',$1,$2;
+
+        -- Get black market item record
+        SELECT * INTO _bmItemRec FROM bmItem WHERE id = _bmItemId;
+        if not FOUND then
+            raise exception 'Could not find the black market item ID "%"',_bmItemId;
+        end if;
+
+        -- Check item status
+        if _bmItemRec.statusCode > 1 then
+            SELECT name INTO _bmItemStatus FROM bmItemStatus WHERE id = _bmItemRec.statusCode;
+            raise exception 'Item is not available. Current status: "%"',_bmItemStatus;
+        end if;
+
+        -- Check item qty
+        if _bmItemRec.qty = 0 then
+            raise exception 'Item is out of stock.';
+        end if;
+
+        -- if a teamId is specified.
+        if _teamId is not null then
+            -- Determine if the team already bought this item
+            PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+            if FOUND then
+                raise exception 'Item "%" was already acquired by team "%"',_bmItemId,_teamId;
+            end if;
+
+            -- Determine if the team is the item's owner
+            PERFORM t.id,
+                    t.wallet 
+            FROM team AS t
+            LEFT OUTER JOIN (
+                SELECT id,
+                       ownerWallet
+                FROM bmItem 
+            ) AS bmi ON t.wallet = bmi.ownerWallet
+            WHERE t.id= _teamId AND bmi.id = _bmItemId;
+            if FOUND then
+                raise exception 'You cannot buy an item you are selling';
+            end if;
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: buyBMItemFromIp(bmItemId,playerIp)
+*/
+CREATE OR REPLACE FUNCTION buyBMItemFromIp(_bmItemId bmItem.id%TYPE,
+                                           _playerIpStr varchar(20))
+RETURNS integer AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _teamWalletId wallet.id%TYPE;
+        _ownerWalletId wallet.id%TYPE;
+        _bmItemAmount bmItem.amount%TYPE;
+        _bmItemQty bmItem.qty%TYPE;
+        BMI_SOLD_STATUS bmItemStatus.code%TYPE := 2;
+        TR_BOUGHT_CODE transactionType.code%TYPE := 3;
+    BEGIN
+        -- Logging
+        raise notice 'buyBMItem(%,%)',$1,$2;
+
+        -- Get team from userIp 
+        _playerIp := _playerIpStr::inet;
+        SELECT id INTO _teamId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Check team solvency
+        PERFORM checkTeamSolvency(_teamId,_bmItemId);
+
+        -- Check item availability
+        PERFORM checkItemAvailability(_bmItemId,_teamId);
+
+        -- Transfer money
+        SELECT wallet INTO _teamWalletId FROM team WHERE id = _teamId;
+        SELECT ownerWallet,amount,qty INTO _ownerWalletId,_bmItemAmount,_bmItemQty FROM bmItem WHERE id = _bmItemId;
+        PERFORM transferMoney(_teamWalletId,_ownerWalletId,_bmItemAmount,TR_BOUGHT_CODE);
+
+        -- Assign item
+        INSERT INTO team_bmItem(teamId,bmItemId,playerIp)
+               VALUES(_teamId,_bmItemId,_playerIp);
+
+        -- Update qty
+        UPDATE bmItem
+        SET qty = qty - 1
+        WHERE id = _bmItemId;
+
+        -- Update status if needed
+        if _bmItemQty = 1 then
+            PERFORM setBMItemStatus(_bmItemId,BMI_SOLD_STATUS);
+        end if;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: sellBMItemFromIp(name,amount,qty,desc,data,playerIp)
+*/
+CREATE OR REPLACE FUNCTION sellBMItemFromIp(_name bmItem.name%TYPE, 
+                                    _amount bmItem.amount%TYPE,
+                                    _qty bmItem.qty%TYPE,
+                                    _description bmItem.description%TYPE,
+                                    _data bmItem.data%TYPE, 
+                                    _playerIpStr varchar(20))
+RETURNS integer AS $$
+    DECLARE
+        _playerIp inet;
+        _ownerWalletId bmItem.ownerWallet%TYPE;
+        _catId bmItemCategory.id%TYPE;
+        _catName bmItemCategory.name%TYPE := 'player';
+        BMI_APPROVAL_STATUS bmItemStatus.code%TYPE := 3;
+    BEGIN
+        -- Logging
+        raise notice 'sellBMItemFromIp(%,%,%,%,%)',$1,$2,$3,$4,$5;
+
+        -- Get team from userIp 
+        _playerIp := _playerIpStr::inet;
+        SELECT wallet INTO _ownerWalletId FROM team where _playerIp << net ORDER BY wallet DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Add a new black market item
+        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,Null,_description,_data);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: reviewBMItem(bmItemId,bmItemStatus,rating,comments)
+*/
+CREATE OR REPLACE FUNCTION reviewBMItem(_bmItemId bmItem.id%TYPE,
+                                        _statusCode bmItemStatus.code%TYPE,
+                                        _rating bmItemReview.rating%TYPE,
+                                        _comments bmItemReview.comments%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _reviewId bmItemReview.id%TYPE;
+        CAT_PLAYER bmItemCategory.name%TYPE := 'player';
+    BEGIN
+        -- Logging
+        raise notice 'reviewBMItem(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Can only review player items
+        PERFORM bmi.id,bmi.category 
+        FROM bmItem AS bmi
+        LEFT OUTER JOIN (
+            SELECT id,
+                   name
+            FROM bmItemCategory AS c
+        ) AS c ON bmi.category = c.id
+        WHERE bmi.id = _bmItemId
+            AND c.name = CAT_PLAYER
+        LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Black market player item "%" not found',_bmItemId;
+        end if;
+
+        -- Insert review
+        INSERT INTO bmItemReview(rating,comments) VALUES(_rating,_comments);
+        _reviewId := LASTVAL();
+
+        -- Assign review
+        UPDATE bmItem
+        SET review = _reviewId
+        WHERE id = _bmItemId;
+
+        -- Update status
+        PERFORM setBMItemStatus(_bmItemId,_statusCode);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: publishBMItem(bmItemId,bmItemDLLink)
+*/
+CREATE OR REPLACE FUNCTION publishBMItem(_bmItemId bmItem.id%TYPE,
+                                         _bmItemDLLink bmItem.dlLink%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        BMI_FORSALE_STATUS bmItemStatus.code%TYPE := 1;
+        BMI_TOPUBLISH_STATUS bmItemStatus.code%TYPE := 6;
+        _bmItemStatusName bmItemStatus.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'publishBMItem(%,%)',$1,$2;
+
+        -- Can only publish items with status "To Publish"
+        SELECT ist.name
+        INTO _bmItemStatusName
+        FROM bmItem AS bmi
+        LEFT OUTER JOIN (
+            SELECT code,
+                   name
+            FROM bmItemStatus AS ist
+        ) AS ist ON bmi.statusCode = ist.code
+        WHERE bmi.id = _bmItemId
+            AND bmi.statusCode <> BMI_TOPUBLISH_STATUS
+        LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Wrong black market item status for publishing. Current status: "%"',_bmItemStatusName;
+        end if;
+
+        -- Update status
+        PERFORM setBMItemStatus(_bmItemId,BMI_FORSALE_STATUS);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemDataFromIp(privateId,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemDataFromIp(_privateId bmItem.privateId%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS bytea AS $$
+    DECLARE
+        _bmItemId bmItem.id%TYPE;
+        _teamId team.id%TYPE;
+        _playerIp inet;
+        _data bmItem.data%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemDataFromIp(%,%)',$1,$2;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get bmItemId FROM privateId
+        SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Get teamId FROM playerIp
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Verify that the team have successfuly bought the item
+        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+
+            -- Reset the item's private ID is an authorized access was performed
+            UPDATE bmItem
+            SET privateId = random(64)
+            WHERE id = _bmItemId;
+        end if;
+
+        -- Return data
+        SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
+        return _data;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: addEventSeverity(code,name,keyword,desc)
+*/
+CREATE OR REPLACE FUNCTION addEventSeverity(_code eventSeverity.code%TYPE,
+                                            _name eventSeverity.name%TYPE,
+                                            _keyword eventSeverity.keyword%TYPE, 
+                                            _description eventSeverity.description%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addEventSeverity(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Some checks
+        if _name is null then
+            raise exception 'Name cannot be null';
+        end if;
+
+        if _keyword is null then
+            raise exception 'Keyword cannot be null';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO eventSeverity(code,name,keyword,description) VALUES(_code,_name,_keyword,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getEvents(_lastUpdateTS,_top,level)
+*/
+CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp,
+                                     _top integer DEFAULT 30,
+                                     _level integer DEFAULT 0)  
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTransactionHistory(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ** others **
+-- getEvents(lastUpdateTS=None,level=None)
+-- addEvent(level, title)
 

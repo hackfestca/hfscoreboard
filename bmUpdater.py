@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 '''
-This script reads the database and upload new flags to KOTH servers.
+This script reads the database and update the black market by updating status and uploading files on the front-end.
 
 @author: Martin Dubé
 @organization: Hackfest Communications
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ del sys
 
 # Project imports
 import config
-from lib import FlagUpdaterController
+from lib import BMUpdaterController
 
 # System imports
 import postgresql.exceptions
@@ -55,19 +55,21 @@ import argparse
 
 # Get args
 usage = 'usage: %prog action [options]'
-description = 'HF Scoreboard flag updater. Use this tool to update flags on koth boxes'
+description = 'HF Scoreboard black market updater. Use this tool to update black market items and make them available from the scoreboard'
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 
 actGrp = parser.add_argument_group("Action", "Select one of these action")
-actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
-              help='Update all system flags')
-actGrp.add_argument('--host',  action='store', dest='host', default='',\
-              type=str, help='Update all flags of a specific box')
-actGrp.add_argument('--name', '-n',  action='store', dest='name', default='',\
-              type=str, help='Update a specific flag from name')
+actGrp.add_argument('--updateToPublish', '-u', action='store_true', dest='updateToPublish', default=False, \
+              help='Update all items that have status "Ready to publish"')
+actGrp.add_argument('--updateSold', '-s', action='store_true', dest='updateSold', default=False, \
+              help='Update all items that have status "Sold" (Remove them from frontend)')
+actGrp.add_argument('--updateAll', '-a', action='store_true', dest='updateAll', default=False, \
+              help='Update all items (even already existing ones)'
+actGrp.add_argument('--deleteAll', '-d', action='store_true', dest='deleteAll', default=False, \
+              help='Delete all items (Dangerous! Will erase all files in black market folder)'
 actGrp.add_argument('--list', '-l',  action='store_true', dest='list', default=False,\
               help='List flags that will be processed')
 
@@ -75,7 +77,7 @@ args = parser.parse_args()
 
 # Step 1: Connect to database
 try:
-    c = FlagUpdaterController.FlagUpdaterController()
+    c = BMUpdaterController.BMUpdaterController()
 except postgresql.exceptions.PLPGSQLRaiseError as e:
     print('[-] ('+str(e.code)+') '+e.message)
     exit(1)
@@ -95,18 +97,21 @@ c.setDebug(args.debug)
 
 # Run requested action
 try:
-    if args.all:
-        print("Updating all system flags")
-        ret = c.updateAllFlags()
-    elif args.host != '':
-        print('Updating all flags on host "' + args.host + '"')
-        ret = c.updateFlagsFromHost(args.host)
-    elif args.name != '':
-        print("Updating the following flag: %s" % args.name)
-        ret = c.updateFlagFromName(args.name)
+    if args.updateToPublish:
+        print('Updating black market items with status "Ready to publish"')
+        ret = c.updateToPublish()
+    elif args.updateSold:
+        print('Updating black market items with status "Sold"')
+        ret = c.updateSold()
+    elif args.updateAll:
+        print('Updating all black market items')
+        ret = c.updateAll()
+    elif args.deleteAll:
+        print('Delete all black market items')
+        ret = c.deleteAll()
     elif args.list:
-        print("Listing flags")
-        print(c.getFormatKingFlags())
+        print("Listing black market items")
+        print(c.getFormatBMItems())
     else:
         parser.print_help()
 except postgresql.exceptions.InsufficientPrivilegeError:

@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 '''
-Flag updater controller class used by flagUpdater.py
+Black market updater controller class used by bmUpdater.py
 
 @author: Martin Dubé
 @organization: Hackfest Communications
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -42,17 +42,25 @@ import socket
 import libssh2
 from prettytable import PrettyTable 
 
-class UpdaterController(ClientController.ClientController):
+class BMUpdaterController(ClientController.ClientController):
     """
-    Flag updater controller class used by flagUpdater.py
+    Black market updater controller class used by bmUpdater.py
     """
-    STATUS_OK = 1
-    STATUS_ERROR = 2
-    STATUS_DISABLED = 3
+
+    STATUS_FOR_SALE = 1
+    STATUS_SOLD = 2
+    STATUS_FOR_APPROVAL= 3
+    STATUS_REFUSED = 4
+    STATUS_REMOVED = 5
+    STATUS_TOPUBLISH = 6
+
     STATUS_MSG_ERROR = 'The flag was disabled because the service is not running properly'
     STATUS_MSG_DISABLED = 'The flag was disabled by admins'
 
     KING_FLAG_VALUE = 2
+    STATUS_COL_ID = 3
+
+    FE_ITEM_PATH = '/var/www/htdocs/blackmarket'
 
     def __init__(self):
         self._sUser = config.DB_FU_USER
@@ -64,30 +72,23 @@ class UpdaterController(ClientController.ClientController):
     def _substituteCmd(self,cmd,flag):
         return cmd.replace('$FLAG', 'KOTH-'+flag)
     
-    def _getAllKingFlags(self):
+    def _getBMItems(self,top=30):
         if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getAllKingFlags()')))
+            return list(self._benchmark(self._oDB.proc('listBMItemsUpdater(integer)'),top))
         else:
-            return list(self._oDB.proc('getAllKingFlags()')())
-
-    def _getKingFlagsFromHost(self,host):
-        if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getKingFlagsFromHost(varchar)'),host))
-        else:
-            return list(self._oDB.proc('getKingFlagsFromHost(varchar)')(host))
-
-    def _getKingFlagFromName(self,name):
-        if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getKingFlagsFromName(varchar)'),name))
-        else:
-            return list(self._oDB.proc('getKingFlagsFromName(varchar)')(name))
-
-    def _addRandomKingFlagFromId(self,flagId):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('addRandomKingFlagFromId(integer,integer)'),flagId,self.KING_FLAG_VALUE)
-        else:
-            return self._oDB.proc('addRandomKingFlagFromId(integer,integer)')(flagId,self.KING_FLAG_VALUE)
+            return list(self._oDB.proc('listBMItemsUpdater(integer)')(top))
         
+    def _getBMItemsFromStatus(self,statusCode):
+        return [x for x in self._getBMItems() if x[self.STATUS_COL_ID] == statusCode]
+        
+    def _getBMItemsDeleteAll(self):
+        return [x[self.STATUS_COL_ID] = STATUS_REMOVED for x in self._getBMItems()]
+        
+    def _getBMItems(self,top=30):
+        if self._bDebug:
+            return list(self._benchmark(self._oDB.proc('listBMItemsUpdater(integer)'),top))
+        else:
+            return list(self._oDB.proc('listBMItemsUpdater(integer)')(top))
     
     def _remoteExec(self,host,cmd):
         try:
@@ -115,17 +116,30 @@ class UpdaterController(ClientController.ClientController):
 
         return (0,None)
 
-    def _updateFromList(self,flags):
-        if len(list(flags)) != 0:
+    def _updateFromList(self,bmItems):
+        if len(list(bmItems)) != 0:
 
-            for row in flags:
-                flagId = row[0]
-                flagName = row[1]
-                host = row[2]
-                updateCmd = row[3]
-                statusCode = row[4]
+            for row in bmItems:
+                bmItemId = row[0]
+                bmItemName = row[1]
+                bmItemCategory = row[2]
+                bmItemStatus = row[3]
+                bmItemStatusName = row[4]
+                bmItemOwner = row[5]
+                bmItemQty = row[6]
+                bmItemPrivateId = row[7]
+                bmItemDLLink= row[8]
                 timestamp = str(time.strftime("%Y-%m-%d-%H%M"))
-               
+              
+                # Remove items
+                if bmItemStatusCode == STATUS_REMOVED or \
+                    bmItemStatusCode == STATUS_SOLD:
+
+                # Publish new items
+                elif bmItemStatusCode == STATUS_TOPUBLISH:
+
+
+
                 # if statusCode is ok, generate and update the flag
                 if statusCode == self.STATUS_OK:
                     flagValue = self._addRandomKingFlagFromId(flagId)
@@ -156,9 +170,9 @@ class UpdaterController(ClientController.ClientController):
             print('[-] No flag were found with specified criteas')
             return 1
 
-    def getFormatKingFlags(self):
-        title = ['ID','Name','Host','UpdateCmd','Status','isKing']
-        info = self._getAllKingFlags()
+    def getFormatBMItems(self):
+        title = ['ID','Name','Category','Status','Rating','Owner','Cost','Qty']
+        info = self._getBMItems()
         x = PrettyTable(title)
         x.align['Info'] = 'l'
         x.align['Value'] = 'l'
@@ -167,13 +181,13 @@ class UpdaterController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def updateAllFlags(self):
-        return self._updateFromList(self._getAllKingFlags())
+    def updateToPublish(self):
+        return self._updateFromList(self._getBMItemsFromStatus(self.STATUS_TOPUBLISH))
 
-    def updateFlagsFromHost(self,host):
-        return self._updateFromList(self._getKingFlagsFromHost(host))
+    def updateSold(self,host):
+        return self._updateFromList(self._getBMItemsFromStatus(self.STATUS_SOLD))
 
-    def updateFlagFromName(self,name):
-        return self._updateFromList(self._getKingFlagFromName(name))
+    def updateAll(self,name):
+        return self._updateFromList(self._getBMItemsFromStatus())
 
     
