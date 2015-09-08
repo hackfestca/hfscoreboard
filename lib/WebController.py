@@ -34,7 +34,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
-
 import ClientController
 import config
 
@@ -90,7 +89,7 @@ class WebController(ClientController.ClientController):
         else:
             return self._oDB.proc('getTeamInfoFromIp(varchar)')(playerIp)
 
-    def getJsDataScoreProgress(self,varname='data'):
+    def getJsDataScoreProgress(self):
         s = "[\n"
         teams = self.getScore(15)
         newTeams = [x[1] for x in teams]
@@ -99,11 +98,28 @@ class WebController(ClientController.ClientController):
         s += "['Time', '{}']\n".format("', '".join(newTeams))
         for line in newScore:
             s += ",['{}', {}]\n".format(
-                line[0].strftime("%H:%M"),
+                line[0].strftime("%Y-%m-%d %H:%M"),
                 ','.join(line[1:])
                 )
         s += "]"
         return s
+
+    def getCsvScoreProgress(self):
+        data = StringIO()
+        csvh = csv.writer(data, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        teams = self.getScore(15)
+        newTeams = [x[1] for x in teams]
+        score = list(self.getScoreProgress())
+        newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
+
+        # Write header
+        csvh.writerow(['Time'] + newTeams)
+
+        # Write content
+        for line in newScore:
+            csvh.writerow([line[0].strftime("%H:%M")] + line[1:])
+
+        return data.getvalue()
 
     def getBMItemDataFromIp(self,privateId,playerIp):
         if self._bDebug:

@@ -126,6 +126,8 @@ parser_score_action.add_argument('--graph', action='store_true', dest='graph', d
                                 help='Print score graph.')
 parser_score_action.add_argument('--matrix', action='store_true', dest='matrix', default=False, \
                                 help='Print progression matrix.')
+parser_score_action.add_argument('--csv', action='store_true', dest='csv', default=False, \
+                                help='Print progression in csv format.')
 parser_score_option.add_argument('-t', '--top', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
                                 help='Use to specify number of rows to display. Default is 30.')
@@ -288,6 +290,9 @@ try:
         elif args.matrix:
             print("Displaying progression matrix")
             print(c.getFormatScoreProgress())
+        elif args.csv:
+            print("Displaying progression in csv format")
+            print(c.getCsvScoreProgress())
         else:
             print('Displaying score (top '+str(args.top)+')')
             print(c.getFormatScore(args.top,args.ts))

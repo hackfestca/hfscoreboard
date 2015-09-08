@@ -40,6 +40,8 @@ import ClientController
 import WebController
 import threading
 from prettytable import PrettyTable 
+from io import StringIO
+import csv
 
 # Used for benchmark test only
 class MyThread(threading.Thread):
@@ -238,18 +240,6 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def getJsDataScoreProgress(self,varname='data'):
-        s ="var data = google.visualization.arrayToDataTable([\n"
-        teams = self.getScore(10)
-        newTeams = [x[1] for x in teams]
-        score = list(self.getScoreProgress())
-        newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
-        s += '[\'Time\',\'' + '\', \''.join(newTeams) + '\']' + "\n"
-        for line in newScore:
-            s += ',[\'' + line[0].strftime("%H:%M") + '\',' + ','.join(line[1:]) + ']' + "\n"
-        s += "]);"
-        return s
-
     def startGame(self):
         if self._bDebug:
             return self._benchmark(self._oDB.proc('startGame()'))
@@ -292,3 +282,19 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
+    def getCsvScoreProgress(self):
+        data = StringIO()
+        csvh = csv.writer(data, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        teams = self.getScore(15)
+        newTeams = [x[1] for x in teams]
+        score = list(self.getScoreProgress())
+        newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
+
+        # Write header
+        csvh.writerow(['Time'] + newTeams)
+
+        # Write content
+        for line in newScore:
+            csvh.writerow([line[0].strftime("%Y-%m-%d %H:%M")] + line[1:])
+
+        return data.getvalue()
