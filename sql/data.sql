@@ -252,6 +252,7 @@ SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 3'));
 */
 
 -- notte: remove groupId from flagTypeExt.
+-- add pts as a value for pokemon flag and others
 
 
 
