@@ -76,14 +76,14 @@ SELECT addFlagType(2,'Unique');         -- Simple (pts + cash)
 -- Scope: Global. Purpose: Define a king flag which will be instanciated on a regular basis on hosts.
 SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
 -- Scope: Global. Purpose: Make the flag be less/more valuable the more it is submitted.
-SELECT addFlagType(12,'Dynamic');       -- Complex (pts + min,max,step)
+SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,step)
 -- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
-SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + groupId,min,max,step)
+SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + limit,step,groupId)
 
 -- Scope: Team. Purpose: Grant points only when the entire group is submitted.
 SELECT addFlagType(21,'Pokemon Flag');  -- Complex (pts + groupId)
 -- Scope: Team. Purpose: Make a group of flags be less/more valuable the more it is submitted by a single team.
-SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + groupId,min,max,step)
+SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + limit,step,groupId)
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
 SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
 
@@ -216,10 +216,44 @@ SELECT reviewBMItem(6,1,5,'this is a good item');
 /*
     Test specific flag types
 */
-SELECT addFlagTypeExt('Increment_-1','Dynamic', 100, -100);
+SELECT addFlagTypeExt('Decrement_-1','Dynamic', 100, -100);
 SELECT addFlagTypeExt('Decrement_-2','Dynamic', 100, -200);
 SELECT addFlag('Flag 1', 'vvvvvvvvvvvvvv', 300, NULL, 'chaltest.ctf.hf', 'web', 1,
-                NULL, 'Martin Dube', 'Dynamic', 'Increment_-1', 'descccccc');
+                NULL, 'Martin Dube', 'Dynamic', 'Decrement_-2', 'descccccc');
+
+/*
+SELECT submitFlagFromIp('192.168.9.234', getFlagValueFromName('Flag 1'));
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 1'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 1'));
+SELECT submitFlagFromIp('192.168.13.21', getFlagValueFromName('Flag 1'));
+SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 1'));
+*/
+
+SELECT addFlagTypeExt('GroupDecrement_-100','Group Dynamic', 100, -100);
+SELECT addRandomFlag('Flag 2', 200, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Group Dynamic', 'GroupDecrement_-100', 'descccccc1');
+SELECT addRandomFlag('Flag 3', 300, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Group Dynamic', 'GroupDecrement_-100', 'descccccc2');
+SELECT addRandomFlag('Flag 4', 400, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Group Dynamic', 'GroupDecrement_-100', 'descccccc3');
+
+/*
+SELECT submitFlagFromIp('192.168.9.234', getFlagValueFromName('Flag 2'));
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 3'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 4'));
+SELECT submitFlagFromIp('192.168.13.21', getFlagValueFromName('Flag 4'));
+SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 4'));
+SELECT submitFlagFromIp('192.168.9.234', getFlagValueFromName('Flag 3'));
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 2'));
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 4'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 2'));
+SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 2'));
+SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 3'));
+*/
+
+-- notte: remove groupId from flagTypeExt.
+
+
 
 /*
     Testing invalid pts

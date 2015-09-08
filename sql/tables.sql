@@ -137,7 +137,6 @@ CREATE TABLE flagTypeExt(
     typeId integer not null references flagType(id),
     ptsLimit integer default null,    
     ptsStep integer default null,    
-    groupId integer default null,                   -- "Group Dynamic" and "Team Group Dynamic" flags only
     trapCmd text default null,                      -- For trap flags only
     updateCmd text default null,                    -- For king flags only
     ts timestamp not null default current_timestamp,
@@ -159,7 +158,7 @@ CREATE TABLE flag(
     category integer not null references flagCategory(id),
     statusCode integer not null references flagStatus(code),
     author integer default null references flagAuthor(id),
-    type integer not null references flagType(id),
+    type integer not null references flagType(code),
     typeExt integer references flagTypeExt(id),
     displayInterval interval default null,
     description text default null,

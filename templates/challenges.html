@@ -40,18 +40,18 @@
 	  </thead>
 	  <tbody>
 	  {% for challenge in chal %}
-	  {% if challenge[4] == category[0] %}
+	  {% if challenge[6] == category[0] %}
 	  <tr>
 	    <td>
-	      {% if challenge[6] %} 
+	      {% if challenge[8] %} 
 	      <i class="fa fa-check" style="color: green;"></i>
 	      {% else %}
 	      <i class="fa fa-times" style="color: red;"></i>
 	      {% end %}
 	    </td>
 	    <td>{{ challenge[1] }}</td>
-	    <td>{{ challenge[3] }}pts</td>
-	    <td>{{ challenge[7] }}</td>
+	    <td>{{ challenge[5] }}pts</td>
+	    <td>{{ challenge[9] }}</td>
 
 	    <td>{% raw challenge[2] %}</td>
 	  </tr>

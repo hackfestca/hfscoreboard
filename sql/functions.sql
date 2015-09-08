@@ -229,11 +229,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: getFlagPts(flagId,teamId)
     This function does not manage king flags.
 */
-CREATE OR REPLACE FUNCTION getFlagPts(_flagId team.id%TYPE, 
-                                      _teamId flag.id%TYPE DEFAULT NULL)
+CREATE OR REPLACE FUNCTION getFlagPts(_flagId flag.id%TYPE, 
+                                      _teamId team.id%TYPE DEFAULT NULL)
 RETURNS integer AS $$
     DECLARE
-        flagRec RECORD;
+        _flagRec RECORD;
     BEGIN
         -- Logging
         raise notice 'getFlagPts(%,%)',$1,$2;
@@ -243,13 +243,18 @@ RETURNS integer AS $$
                 f.pts,
                 f.type,
                 f.typeExt,
+                ft.code,
                 fte.ptsLimit,
                 fte.ptsStep,
                 fte.groupId,
                 fte.trapCmd,
                 fte.updateCmd
-        INTO flagRec
+        INTO _flagRec
         FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
         LEFT OUTER JOIN (
             SELECT  id,
                     ptsLimit,
@@ -265,35 +270,191 @@ RETURNS integer AS $$
         end if;
 
         -- Contextualize the flag pts based on flag types
-        if flagRec.type = 1 then
-            RETURN flagRec.pts;
-        elsif flagRec.type = 2 then
+        if _flagRec.type = 1 then
+            RETURN _flagRec.pts;
+        elsif _flagRec.type = 2 then -- unique
             -- Check if the flag was already submitted
-
-            RETURN flagRec.pts;
-        elsif flagRec.type = 11 then
+            PERFORM id FROM team_flag WHERE flagId = _flagRec.id;
+            if FOUND then
+                raise exception 'Unique flag already submitted by a team. Too late. :)';
+            end if;
+            RETURN _flagRec.pts;
+        elsif _flagRec.type = 11 then
             RETURN 0;   -- This functions does not manage king flags.
-        elsif flagRec.type = 12 then
+        elsif _flagRec.type = 12 then
             -- Calculate new value
-            RETURN flagRec.pts;
-        elsif flagRec.type = 13 then
+            RETURN getDynamicFlagPts(_flagId,_teamId);
+        elsif _flagRec.type = 13 then
             -- Calculate new value
-            RETURN flagRec.pts;
-        elsif flagRec.type = 21 then
+            RETURN getGroupDynamicFlagPts(_flagId,_teamId);
+        elsif _flagRec.type = 21 then
             -- Calculate new value
-            RETURN flagRec.pts;
-        elsif flagRec.type = 22 then
+            RETURN _flagRec.pts;
+        elsif _flagRec.type = 22 then
             -- Calculate new value
-            RETURN flagRec.pts;
-        elsif flagRec.type = 22 then
+            RETURN _flagRec.pts;
+        elsif _flagRec.type = 22 then
             -- Calculate new value
-            RETURN flagRec.pts;
+            RETURN _flagRec.pts;
         else
-            raise exception 'Unsupported flag type "%"',flagRec.type;
+            raise exception 'Unsupported flag type "%"',_flagRec.type;
         end if;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: getDynamicFlagPts(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION getDynamicFlagPts(_flagId flag.id%TYPE, 
+                                             _teamId team.id%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ct integer;
+        _pts flag.pts%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getDynamicFlagPts(%,%)',$1,$2;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.type,
+                f.typeExt,
+                ft.code,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.groupId,
+                fte.trapCmd,
+                fte.updateCmd
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    ptsLimit,
+                    ptsStep,
+                    groupId,
+                    trapCmd,
+                    updateCmd
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+
+        -- Get count() of this flag's last submission
+        SELECT count(id) INTO _ct FROM team_flag WHERE flagId = _flagId;
+
+        -- Determine pts for the next submit
+        _pts := _flagRec.pts + (_ct * _flagRec.ptsStep);
+        if _flagRec.ptsStep < 0 and _flagRec.ptsLimit > _pts then
+            _pts := _flagRec.ptsLimit;
+        elsif _flagRec.ptsStep > 0 and _flagRec.ptsLimit < _pts then
+            _pts := _flagRec.ptsLimit;
+        end if;
+
+        raise notice 'Team "%" is the %th team to submit flag "%", for %/%pts',
+                        _teamId,(_ct+1),_flagRec.name,_pts,_flagRec.pts;
+
+        RETURN _pts;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getGroupDynamicFlagPts(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION getGroupDynamicFlagPts(_flagId flag.id%TYPE, 
+                                                  _teamId team.id%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ct integer := 0;
+        _pts flag.pts%TYPE;
+        _aFlagIds integer[];
+        _tmpTeamId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getGroupDynamicFlagPts(%,%)',$1,$2;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.type,
+                f.typeExt,
+                ft.code,
+                fte.name AS flagTypeExtName,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.groupId,
+                fte.trapCmd,
+                fte.updateCmd
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    name,
+                    ptsLimit,
+                    ptsStep,
+                    groupId,
+                    trapCmd,
+                    updateCmd
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+        
+        -- Get a list of all flags with the same type extension
+        SELECT array(
+            SELECT id 
+            FROM flag
+            WHERE typeExt = _flagRec.typeExt
+        ) 
+        INTO _aFlagIds;
+
+        -- Get count() of this group of flag's last submission
+        SELECT count(t.ct)
+        FROM (
+            SELECT teamId,
+                   count(flagId) AS ct
+            FROM team_flag
+            WHERE flagId = ANY(_aFlagIds)
+            GROUP BY teamId
+        ) AS t
+        WHERE t.ct = array_length(_aFlagIds,1)
+        INTO _ct;
+
+        -- Make sure _ct is not null
+        if _ct is null then
+            _ct := 0;
+        end if;
+
+        -- Determine pts for the next submit
+        _pts := _flagRec.pts + (_ct * _flagRec.ptsStep);
+        if _flagRec.ptsStep < 0 and _flagRec.ptsLimit > _pts then
+            _pts := _flagRec.ptsLimit;
+        elsif _flagRec.ptsStep > 0 and _flagRec.ptsLimit < _pts then
+            _pts := _flagRec.ptsLimit;
+        end if;
+
+        raise notice '% teams currently completed group "%". Team "%" score for %/%pts',
+                        _ct,_flagRec.flagTypeExtName,_teamId,_pts,_flagRec.pts;
+
+        RETURN _pts;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: addWallet(name,desc,amount)
 */
@@ -416,10 +577,10 @@ RETURNS TABLE (
                          FROM wallet
                      ) AS w2 ON t.dstWalletId= w2.id
                      LEFT OUTER JOIN (
-                         SELECT id,
+                         SELECT code,
                                 name
                          FROM transactionType
-                     ) AS tt ON t.type= tt.id
+                     ) AS tt ON t.type= tt.code
                      ORDER BY t.ts
                     LIMIT _top;
     END;
@@ -470,10 +631,10 @@ RETURNS TABLE (
                          FROM wallet
                      ) AS w2 ON t.dstWalletId= w2.id
                      LEFT OUTER JOIN (
-                         SELECT id,
+                         SELECT code,
                                 name
                          FROM transactionType
-                     ) AS tt ON t.type= tt.id
+                     ) AS tt ON t.type= tt.code
                      WHERE t.srcWalletId = _walletId OR t.dstWalletId = _walletId
                      ORDER BY t.ts
                      LIMIT _top;
@@ -844,13 +1005,12 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: addFlagTypeExt(name,typeExt,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
+    Stored Proc: addFlagTypeExt(name,typeExt,ptsLimit,ptsStep,trapCmd,updateCmd)
 */
 CREATE OR REPLACE FUNCTION addFlagTypeExt(_name flagTypeExt.name%TYPE,
                                           _type flagType.name%TYPE,
                                           _ptsLimit flagTypeExt.ptsLimit%TYPE DEFAULT NULL,
                                           _ptsStep flagTypeExt.ptsStep%TYPE DEFAULT NULL,
-                                          _groupId flagTypeExt.groupId%TYPE DEFAULT NULL,
                                           _trapCmd flagTypeExt.trapCmd%TYPE DEFAULT NULL,
                                           _updateCmd flagTypeExt.updateCmd%TYPE DEFAULT NULL)
 RETURNS integer AS $$
@@ -858,7 +1018,7 @@ RETURNS integer AS $$
         _typeId flagType.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlagTypeExt(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+        raise notice 'addFlagTypeExt(%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6;
 
         -- Get category id from name
         SELECT id INTO _typeId FROM flagType WHERE name = _type;
@@ -867,8 +1027,8 @@ RETURNS integer AS $$
         end if;
 
         -- Insert a new row
-        INSERT INTO flagTypeExt(name,typeId,ptsLimit,ptsStep,groupId,trapCmd,updateCmd)
-                VALUES(_name,_typeId,_ptsLimit,_ptsStep,_groupId,_trapCmd,_updateCmd);
+        INSERT INTO flagTypeExt(name,typeId,ptsLimit,ptsStep,trapCmd,updateCmd)
+                VALUES(_name,_typeId,_ptsLimit,_ptsStep,_trapCmd,_updateCmd);
 
         RETURN 0;
     END;
@@ -895,7 +1055,7 @@ RETURNS integer AS $$
         _hostId host.id%TYPE;
         _catId flagCategory.id%TYPE;
         _authorId flagAuthor.id%TYPE;
-        _typeId flagType.id%TYPE;
+        _typeCode flagType.code%TYPE;
         _typeExtId flagTypeExt.id%TYPE;
         _display flag.displayInterval%TYPE;
     BEGIN
@@ -925,7 +1085,7 @@ RETURNS integer AS $$
         end if;
 
         -- Get type id from name
-        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        SELECT code INTO _typeCode FROM flagType WHERE name = _type;
         if not FOUND then
             raise exception 'Could not find flag type "%"',_type;
         end if;
@@ -956,7 +1116,7 @@ RETURNS integer AS $$
         INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
                         type,typeExt,description)
                 VALUES(_name,_value,_pts,_cash::money,_hostId,_catId,_statusCode,_display,_authorId,
-                        _typeId,_typeExtId,_description);
+                        _typeCode,_typeExtId,_description);
 
         RETURN 0;
     END;
@@ -1119,9 +1279,9 @@ RETURNS TABLE (
                         FROM flagStatus AS s
                         ) AS s ON f.statusCode = s.id
                      LEFT OUTER JOIN (
-                        SELECT ft.id, ft.name
+                        SELECT ft.code, ft.name
                         FROM flagType AS ft
-                        ) AS ft ON f.type = ft.id
+                        ) AS ft ON f.type = ft.code
                      LEFT OUTER JOIN (
                         SELECT fte.id, fte.name
                         FROM flagTypeExt AS fte
@@ -1345,11 +1505,10 @@ RETURNS TABLE (
                                 SELECT tf.flagId,
                                        tf.teamId,
                                        tf.ts,
-                                       f.pts
+                                       tf.pts
                                 FROM team_flag as tf
                                 LEFT OUTER JOIN (
                                     SELECT flag.id,
-                                           flag.pts,
                                            flag.category
                                     FROM flag
                                     ) as f ON tf.flagId = f.id
@@ -1469,12 +1628,11 @@ RETURNS TABLE (
                             SELECT tf.flagId,
                                    tf.teamId,
                                    f.category,
-                                   f.pts
+                                   tf.pts
                             FROM team_flag AS tf
                             LEFT OUTER JOIN (
                                 SELECT f.id,
-                                       f.category,
-                                       f.pts
+                                       f.category
                                 FROM flag AS f
                                 WHERE f.type <> 2
                                 ) as f ON tf.flagId = f.id
@@ -1503,6 +1661,8 @@ RETURNS TABLE (
                 name flag.name%TYPE,
                 description flag.description%TYPE,
                 pts flag.pts%TYPE,
+                flagPts flag.pts%TYPE,
+                displayPts varchar(20),
                 catId flagCategory.id%TYPE,
                 catName flagCategory.name%TYPE,
                 isDone boolean,
@@ -1513,6 +1673,7 @@ RETURNS TABLE (
         _teamId team.id%TYPE;
         _iPlayerIp inet;
         _settings settings%ROWTYPE;
+        KING_FLAG_TYPE flagType.code%TYPE := 11;
     BEGIN
         -- Logging
         raise notice 'getFlagProgressFromIp(%)',$1;
@@ -1536,7 +1697,9 @@ RETURNS TABLE (
         return QUERY SELECT f.id AS id,
                             f.name AS name,
                             f.description AS description,
-                            f.pts AS pts,
+                            tf2.pts AS pts,
+                            f.pts AS flagPts,
+                            (coalesce(tf2.pts,0) || '/' || f.pts)::varchar AS displayPts,
                             f.category AS catId,
                             c.name AS catName,
                             tf2.teamId IS NOT Null AS isDone,
@@ -1553,13 +1716,14 @@ RETURNS TABLE (
                         ) AS c ON f.category = c.id
                      LEFT OUTER JOIN (
                          SELECT tf.flagId,
-                                tf.teamId
+                                tf.teamId,
+                                tf.pts
                          FROM team_flag AS tf
                          WHERE tf.teamId = _teamId
                          ) AS tf2 ON f.id = tf2.flagId
                     WHERE (f.displayInterval is null 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
-                          and f.type <> 2
+                          and f.type <> KING_FLAG_TYPE
                           and c.hidden = False
                     ORDER BY f.name;
     END;
@@ -1577,7 +1741,7 @@ RETURNS TABLE (
                 statusCode flag.statusCode%TYPE
               ) AS $$
     DECLARE
-        KING_FLAG_TYPE integer := 11;
+        KING_FLAG_TYPE flagType.code%TYPE := 11;
     BEGIN
         -- Logging
         raise notice 'getAllKingFlags()';
@@ -1613,7 +1777,7 @@ RETURNS TABLE (
                 statusCode flag.statusCode%TYPE
               ) AS $$
     DECLARE
-        KING_FLAG_TYPE integer := 11;
+        KING_FLAG_TYPE flagType.code%TYPE := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromHost(%)',$1;
@@ -1649,7 +1813,7 @@ RETURNS TABLE (
                 statusCode flag.statusCode%TYPE
               ) AS $$
     DECLARE
-        KING_FLAG_TYPE integer := 11;
+        KING_FLAG_TYPE flagType.code%TYPE := 11;
     BEGIN
         -- Logging
         raise notice 'getKingFlagsFromName(%)',$1;
@@ -1762,19 +1926,14 @@ RETURNS TABLE (
         SELECT sum(sum) AS total
         INTO _teamScore
         FROM (
-                SELECT sum(tf2.pts) AS sum
+                SELECT sum(tf.pts) AS sum
                 FROM (
-                    SELECT tf.flagId,
-                           tf.teamId,
-                           f.pts
-                    FROM team_flag as tf
-                    LEFT OUTER JOIN (
-                        SELECT flag.id,
-                               flag.pts
-                        FROM flag
-                        ) as f ON tf.flagId = f.id
-                    ) AS tf2
-                    WHERE tf2.teamId = _teamRec.id
+                    SELECT flagId,
+                           teamId,
+                           pts
+                    FROM team_flag
+                    WHERE teamId = _teamRec.id
+                    ) AS tf
                 UNION
                 SELECT sum(tfi2.pts) AS sum
                 FROM (
@@ -1861,7 +2020,7 @@ RETURNS TABLE (
                          SELECT tf.ts AS timestamp,
                                 t.name AS TeamName,
                                 f.name AS FlagName,
-                                f.pts AS FlagPts,
+                                tf.pts AS FlagPts,
                                 c.name AS FlagCategory,
                                 1 AS type
                          FROM team_flag as tf
@@ -1872,7 +2031,6 @@ RETURNS TABLE (
                          ) AS t ON tf.teamId = t.id
                          LEFT OUTER JOIN (
                             SELECT id,
-                                   pts,
                                    name,
                                    category
                             FROM flag
@@ -2016,11 +2174,11 @@ RETURNS TABLE (
                     tf.flagId,
                     tf.ts,
                     f.name AS flagName,
-                    f.pts,
+                    tf.pts,
                     t.name as teamName
             FROM team_flag AS tf
             LEFT OUTER JOIN (
-                SELECT id,name,pts FROM flag
+                SELECT id,name FROM flag
             ) AS f ON f.id = tf.flagId
             LEFT OUTER JOIN (
                 SELECT id,name FROM team
