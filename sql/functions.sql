@@ -187,6 +187,140 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: buyLotoTicketFromIp(amount,playerIp)
+*/
+CREATE OR REPLACE FUNCTION buyLotoTicketFromIp(_amount wallet.amount%TYPE, 
+                                                _playerIpStr varchar(20))
+RETURNS integer AS $$
+    DECLARE
+        TR_LOTO_CODE transactionType.code%TYPE := 5;
+        LOTO_ID wallet.id%TYPE := 2;
+        _playerIp inet;
+        _srcWalletId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'buyLotoTicketFromIp(%,%)',$1,$2;
+    
+        _playerIp := _playerIpStr::inet;
+
+        -- Get team from userIp 
+        SELECT wallet INTO _srcWalletId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: processLotoWinner(winnerId)
+*/
+CREATE OR REPLACE FUNCTION processLotoWinner(_winnerId wallet.id%TYPE)
+RETURNS text AS $$
+    DECLARE
+        TR_LOTO_CODE transactionType.code%TYPE := 5;
+        LOTO_ID wallet.id%TYPE := 2;
+        _amount wallet.amount%TYPE;
+        _teamName team.name%TYPE;
+        _lastWinTs transaction.ts%TYPE;
+        _ret text;
+    BEGIN
+        -- Logging
+        raise notice 'processLotoWinner(%)',$1;
+
+        -- Get cash in loto wallet
+        SELECT amount INTO _amount FROM wallet WHERE id = LOTO_ID;
+
+        -- Get team name from wallet
+        SELECT name INTO _teamName FROM team WHERE wallet = _winnerId;
+
+        -- Get last win timestamp
+        SELECT ts
+        INTO _lastWinTs
+        FROM transaction
+        WHERE type = TR_LOTO_CODE
+            and srcWalletId = LOTO_ID
+        ORDER BY ts DESC LIMIT 1;
+
+        -- Check that the winner have bought loto since last win
+        PERFORM id 
+        FROM transaction
+        WHERE ts > _lastWinTs
+            and dstWalletId = LOTO_ID
+            and srcWalletId = _winnerId;
+        if NOT FOUND then
+            raise exception 'The wallet "%" cannot win as it did not participate since %.',
+                            _winnerId,coalesce(to_char(_lastWinTs,'HH24:MI:SS'),'the begining');
+        end if;
+        
+        -- Transfer cash to winner
+        if _amount > 0::money then
+            PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
+            _ret := format('Team "%s" won loto HF for an amount of %s.',_teamName,_amount::text);
+        else
+            raise notice 'Loto wallet was empty. No winner this time.';
+            _ret := 'Loto wallet was empty. No winner this time.';
+        end if;
+
+        RETURN _ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getLotoHistory(_top)
+*/
+CREATE OR REPLACE FUNCTION getLotoHistory(_top integer DEFAULT 30)  
+RETURNS TABLE (
+                srcWallet wallet.name%TYPE,
+                dstWallet wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    DECLARE
+        TR_LOTO_CODE transactionType.code%TYPE := 5;
+        LOTO_ID wallet.id%TYPE := 2;
+    BEGIN
+        -- Logging
+        raise notice 'getLotoHistory(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        RETURN QUERY SELECT
+                            w1.name as srcWallet,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT code,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.code
+                    WHERE t.type = TR_LOTO_CODE
+                    ORDER BY t.ts
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: transferCashFlag(flagId,teamId)
 */
 CREATE OR REPLACE FUNCTION transferCashFlag(_flagId team.id%TYPE, 
@@ -799,35 +933,6 @@ RETURNS wallet.id%TYPE AS $$
         end if;
 
         RETURN _walletId;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: initBank(amount)
-*/
-CREATE OR REPLACE FUNCTION initBank(_amount wallet.amount%TYPE,
-                                    _name wallet.name%TYPE,
-                                    _desc wallet.description%TYPE)
-RETURNS integer AS $$
-    DECLARE
-        _bankWalletId wallet.id%TYPE := 1;
-    BEGIN
-        -- Logging
-        raise notice 'initBank(%,%,%)',$1,$2,$3;
-
-        if _amount < 0::money then
-            raise exception 'Wallet amount cannot be under 0';
-        end if;
-
-        -- Create bank as Wallet #1
-        PERFORM addWallet(_name,_desc,0::money);
-
-        -- Set bank value
-        UPDATE wallet
-        SET amount = _amount
-        WHERE id = _bankWalletId;
-
-        RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1637,7 +1742,8 @@ RETURNS TABLE (
                         SELECT fte.id, fte.name
                         FROM flagTypeExt AS fte
                         ) AS fte ON f.typeExt = fte.id
-                    ORDER BY f.id;
+                    ORDER BY f.id
+                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3641,7 +3747,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- getEvents(lastUpdateTS=None,level=None,facility=None)
 -- addEvent(level,facility,title)
 
--- payLotoTicket()
+-- buyLotoTicket()
 -- transferLotoToWinner()
 
 

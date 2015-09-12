@@ -295,6 +295,6 @@ class AdminController(ClientController.ClientController):
 
         # Write content
         for line in newScore:
-            csvh.writerow([line[0].strftime("%Y-%m-%d %H:%M")] + line[1:])
+            csvh.writerow([line[0].strftime("%Y-%m-%d %H:%M:%S")] + line[1:])
 
         return data.getvalue()

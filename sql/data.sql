@@ -121,9 +121,10 @@ SELECT addTransactionType(4, 'Money Laundering', 'Money received by laundering m
 SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 
 /*
-    Create the bank which act as the wallet #1
+    Create some "NPC" wallets
 */
-SELECT initBank(500000::money,'HF Bank','Default wallet used for cash flags, money laundering, etc.');
+SELECT addWallet(500000::money,'HF Bank','Default wallet used for cash flags, money laundering, etc.');
+SELECT addWallet(0::money,'HF Loto','Default wallet used to manage loto.');
 
 /*
     fake teams for tests
@@ -303,6 +304,18 @@ SELECT submitFlagFromIp('192.168.1.121', getFlagValueFromName('Flag 9'));
 SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 8'));
 SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 9'));
 */
+
+
+
+/*
+    Loto tests
+*/
+SELECT buyLotoTicketFromIp(500::money, '192.168.1.111');
+SELECT buyLotoTicketFromIp(700::money,'192.168.9.111');
+SELECT buyLotoTicketFromIp(100::money,'192.168.10.111');
+
+SELECT processLotoWinner(10);
+
 
 /*
     Testing invalid pts
