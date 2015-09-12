@@ -226,17 +226,22 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getFlagPts(flagId,teamId)
+    Stored Proc: processNonStandardFlag(flagId,teamId)
     This function does not manage king flags.
 */
-CREATE OR REPLACE FUNCTION getFlagPts(_flagId flag.id%TYPE, 
-                                      _teamId team.id%TYPE DEFAULT NULL)
-RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION processNonStandardFlag(_flagId flag.id%TYPE, 
+                                                  _teamId team.id%TYPE,
+                                                  _playerIp team.net%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
     DECLARE
         _flagRec RECORD;
+        _ret text;
     BEGIN
         -- Logging
-        raise notice 'getFlagPts(%,%)',$1,$2;
+        raise notice 'processNonStandardFlag(%,%,%)',$1,$2,$3;
 
         -- Get flag attributes
         SELECT  f.id,
@@ -268,32 +273,35 @@ RETURNS integer AS $$
         end if;
 
         -- Contextualize the flag pts based on flag types
-        if _flagRec.type = 1 then
-            RETURN _flagRec.pts;
-        elsif _flagRec.type = 2 then -- unique
+        if _flagRec.type = 2 then
             -- Check if the flag was already submitted
             PERFORM id FROM team_flag WHERE flagId = _flagRec.id;
             if FOUND then
                 raise exception 'Unique flag already submitted by a team. Too late. :)';
             end if;
-            RETURN _flagRec.pts;
-        elsif _flagRec.type = 11 then
-            RETURN 0;   -- This functions does not manage king flags.
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+            RETURN QUERY SELECT _flagRec.pts,_ret;
         elsif _flagRec.type = 12 then
             -- Calculate new value
-            RETURN getDynamicFlagPts(_flagId,_teamId);
+            RETURN QUERY SELECT * FROM processDynamicFlag(_flagId,_teamId);
         elsif _flagRec.type = 13 then
             -- Calculate new value
-            RETURN getGroupDynamicFlagPts(_flagId,_teamId);
+            RETURN QUERY SELECT * FROM processBonusFlag(_flagId,_teamId,_playerIp);
         elsif _flagRec.type = 21 then
             -- Calculate new value
-            RETURN _flagRec.pts;
+            RETURN QUERY SELECT * FROM processGroupDynamicFlag(_flagId,_teamId);
         elsif _flagRec.type = 22 then
             -- Calculate new value
-            RETURN _flagRec.pts;
-        elsif _flagRec.type = 22 then
+            RETURN QUERY SELECT * FROM processTeamGroupBonusFlag(_flagId,_teamId,_playerIp);
+        elsif _flagRec.type = 31 then
             -- Calculate new value
-            RETURN _flagRec.pts;
+            RETURN QUERY SELECT * FROM processTeamGroupDynamicFlag(_flagId,_teamId);
+        elsif _flagRec.type = 32 then
+            -- Calculate new value
+            RETURN QUERY SELECT * FROM processTeamGroupPokemonFlag(_flagId,_teamId,_playerIp);
+        elsif _flagRec.type = 41 then
+            -- Calculate new value
+            RETURN QUERY SELECT _flagRec.pts,'trap';
         else
             raise exception 'Unsupported flag type "%"',_flagRec.type;
         end if;
@@ -301,18 +309,22 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getDynamicFlagPts(flagId,teamId)
+    Stored Proc: processDynamicFlag(flagId,teamId)
 */
-CREATE OR REPLACE FUNCTION getDynamicFlagPts(_flagId flag.id%TYPE, 
-                                             _teamId team.id%TYPE DEFAULT NULL)
-RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION processDynamicFlag(_flagId flag.id%TYPE, 
+                                              _teamId team.id%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
     DECLARE
         _flagRec RECORD;
         _ct integer;
         _pts flag.pts%TYPE;
+        _ret text;
     BEGIN
         -- Logging
-        raise notice 'getDynamicFlagPts(%,%)',$1,$2;
+        raise notice 'processDynamicFlag(%,%)',$1,$2;
 
         -- Get flag attributes
         SELECT  f.id,
@@ -358,25 +370,114 @@ RETURNS integer AS $$
         raise notice 'Team "%" is the %th team to submit flag "%", for %/%pts',
                         _teamId,(_ct+1),_flagRec.name,_pts,_flagRec.pts;
 
-        RETURN _pts;
+        _ret := format('You are the %sth team to submit flag "%s", for %s/%spts',
+                 (_ct+1),_flagRec.name,_pts,_flagRec.pts);
+
+        RETURN QUERY SELECT _pts,_ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getGroupDynamicFlagPts(flagId,teamId)
+    Stored Proc: processBonusFlag(flagId,teamId)
 */
-CREATE OR REPLACE FUNCTION getGroupDynamicFlagPts(_flagId flag.id%TYPE, 
-                                                  _teamId team.id%TYPE DEFAULT NULL)
-RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION processBonusFlag(_flagId flag.id%TYPE, 
+                                            _teamId team.id%TYPE,
+                                            _playerIp inet)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ct integer;
+        _bonusId flag.id%TYPE;
+        _bonusPts flagTypeExt.pts%TYPE := 0;
+        _ret text;
+    BEGIN
+        -- Logging
+        raise notice 'processBonusFlag(%,%,%)',$1,$2,$3;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.type,
+                f.typeExt,
+                ft.code,
+                fte.pts AS ftePts,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.flagIds
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    fte.pts,
+                    ptsLimit,
+                    ptsStep,
+                    flagIds
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+
+        -- Get count() of this flag's last submission
+        SELECT count(id) INTO _ct FROM team_flag WHERE flagId = _flagId;
+
+        -- Determine bonus id and value
+        SELECT flag.id,flag.pts 
+        INTO _bonusId,_bonusPts
+        FROM flag
+        WHERE flag.id = ANY(_flagRec.flagIds) 
+        ORDER BY pts DESC OFFSET _ct LIMIT 1;
+        if _bonusPts is NULL then
+            _bonusPts := 0;
+        end if;
+
+        if _bonusPts > 0 then
+            -- Assign bonus flag
+            INSERT INTO team_flag(teamId,flagId,pts,playerIp)
+                   VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
+    
+            raise notice 'Team "%" received a bonus of %pts for being the %th team to submit flag "%" with value %pts',
+                            _teamId,_bonusPts,(_ct+1),_flagRec.name,_flagRec.pts;
+    
+            _ret := format('You have received a bonus of %spts for being the %sth team to submit flag "%s" with value %spts',
+                     _bonusPts,(_ct+1),_flagRec.name,_flagRec.pts);
+        else
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+        end if;
+
+        RETURN QUERY SELECT _flagRec.pts,_ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+/*
+    Stored Proc: processGroupDynamicFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION processGroupDynamicFlag(_flagId flag.id%TYPE, 
+                                                  _teamId team.id%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
     DECLARE
         _flagRec RECORD;
         _ct integer := 0;
         _pts flag.pts%TYPE;
+        _ret text;
         _aFlagIds integer[];
         _tmpTeamId team.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'getGroupDynamicFlagPts(%,%)',$1,$2;
+        raise notice 'processGroupDynamicFlag(%,%)',$1,$2;
 
         -- Get flag attributes
         SELECT  f.id,
@@ -446,9 +547,226 @@ RETURNS integer AS $$
         raise notice '% teams currently completed group "%". Team "%" score for %/%pts',
                         _ct,_flagRec.flagTypeExtName,_teamId,_pts,_flagRec.pts;
 
-        RETURN _pts;
+        _ret := format('%s teams currently completed group "%s". You scored for %s/%spts',
+                _ct,_flagRec.flagTypeExtName,_pts,_flagRec.pts);
+
+        RETURN QUERY SELECT _pts,_ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: processTeamGroupBonusFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION processTeamGroupBonusFlag(_flagId flag.id%TYPE, 
+                                                 _teamId team.id%TYPE,
+                                                 _playerIp team.net%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ct integer;
+        _pts flag.pts%TYPE;
+        _bonusId flag.id%TYPE;
+        _bonusPts flagTypeExt.pts%TYPE := 0;
+        _ret text;
+        _aFlagIds integer[];
+        _isLastFlag boolean;
+    BEGIN
+        -- Logging
+        raise notice 'processTeamGroupBonusFlag(%,%,%)',$1,$2,$3;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.type,
+                f.typeExt,
+                ft.code,
+                fte.name AS typeExtName,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.flagIds
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    name,
+                    ptsLimit,
+                    ptsStep,
+                    flagIds
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+
+        -- Get a list of all flags with the same type extension
+        SELECT array(
+            SELECT id 
+            FROM flag
+            WHERE typeExt = _flagRec.typeExt
+        ) 
+        INTO _aFlagIds;
+
+        -- Get count() of this group of flag's last submission, for the current team.
+        SELECT count(flagId) AS ct
+        FROM team_flag
+        WHERE flagId = ANY(_aFlagIds)
+            and teamId = _teamId
+        INTO _ct;
+
+        -- Determine if submitting last flag of group
+        SELECT count(flagId) + 1 = array_length(_aFlagIds,1) AS isLastFlag
+        FROM team_flag
+        WHERE flagId = ANY(_aFlagIds)
+            and teamId = _teamId
+        INTO _isLastFlag;
+
+        -- Determine bonus id and value
+        SELECT flag.id,flag.pts 
+        INTO _bonusId,_bonusPts
+        FROM flag
+        WHERE flag.id = ANY(_flagRec.flagIds) 
+        ORDER BY pts DESC OFFSET _ct LIMIT 1;
+        if _bonusPts is NULL then
+            _bonusPts := 0;
+        end if;
+
+        if _isLastFlag and _bonusPts > 0 then
+            -- Assign bonus flag
+            INSERT INTO team_flag(teamId,flagId,pts,playerIp)
+                   VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
+    
+            raise notice 'Team "%" received a bonus of %pts for being the %th team to complete track "%" and submitting flag "%s" for %pts',
+                         _teamId,_bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts;
+    
+            _ret := format('You have received a bonus of %spts for being the %sth team to complete track "%s" and submitting flag "%s" for %spts',
+                            _bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts);
+        else
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+        end if;
+
+        RETURN QUERY SELECT _flagRec.pts,_ret;
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: processTeamGroupPokemonFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION processTeamGroupPokemonFlag(_flagId flag.id%TYPE, 
+                                                   _teamId team.id%TYPE,
+                                                   _playerIp team.net%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ct integer;
+        _pts flag.pts%TYPE;
+        _bonusId flag.id%TYPE;
+        _bonusPts flagTypeExt.pts%TYPE := 0;
+        _ret text;
+        _aFlagIds integer[];
+        _isLastFlag boolean;
+    BEGIN
+        -- Logging
+        raise notice 'processTeamGroupPokemonFlag(%,%,%)',$1,$2,$3;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.type,
+                f.typeExt,
+                ft.code,
+                fte.name AS typeExtName,
+                fte.ptsLimit,
+                fte.ptsStep,
+                fte.flagIds
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        LEFT OUTER JOIN (
+            SELECT  id,
+                    name,
+                    ptsLimit,
+                    ptsStep,
+                    flagIds
+            FROM flagTypeExt AS fte
+        ) AS fte ON f.typeExt = fte.id
+        WHERE f.id = _flagId;
+        if not FOUND then
+            raise exception 'Could not find flag "%"',_flagId;
+        end if;
+
+        -- Get a list of all flags with the same type extension
+        SELECT array(
+            SELECT id 
+            FROM flag
+            WHERE typeExt = _flagRec.typeExt
+        ) 
+        INTO _aFlagIds;
+
+        -- Get count() of this group of flag's last submission
+        SELECT count(t.ct)
+        FROM (
+            SELECT teamId,
+                   count(flagId) AS ct
+            FROM team_flag
+            WHERE flagId = ANY(_aFlagIds)
+            GROUP BY teamId
+        ) AS t
+        WHERE t.ct = array_length(_aFlagIds,1)
+        INTO _ct;
+
+        -- Determine if submitting last flag of group
+        SELECT count(flagId) + 1 = array_length(_aFlagIds,1) AS isLastFlag
+        FROM team_flag
+        WHERE flagId = ANY(_aFlagIds)
+            and teamId = _teamId
+        INTO _isLastFlag;
+
+        -- Determine bonus id and value
+        SELECT flag.id,flag.pts 
+        INTO _bonusId,_bonusPts
+        FROM flag
+        WHERE flag.id = ANY(_flagRec.flagIds) 
+        LIMIT 1;
+        if _bonusPts is NULL then
+            _bonusPts := 0;
+        end if;
+
+        if _isLastFlag and _bonusPts > 0 then
+            -- Assign bonus flag
+            INSERT INTO team_flag(teamId,flagId,pts,playerIp)
+                   VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
+    
+            raise notice 'Team "%" successfully completed the track "%" for %pts',
+                         _teamId,_flagRec.typeExtName,_bonusPts;
+    
+            _ret := format('You have successfully completed the track "%s" for %spts',
+                            _flagRec.typeExtName,_bonusPts);
+        else
+            _ret = 'You have submitted a pokemon flag. Capture them all to get points.';
+        end if;
+
+        RETURN QUERY SELECT _flagRec.pts,_ret;
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 /*
     Stored Proc: addWallet(name,desc,amount)
 */
@@ -1010,20 +1328,57 @@ CREATE OR REPLACE FUNCTION addFlagTypeExt(_name flagTypeExt.name%TYPE,
                                           _updateCmd flagTypeExt.updateCmd%TYPE DEFAULT NULL)
 RETURNS integer AS $$
     DECLARE
+        _i flag.pts%TYPE;
         _typeId flagType.id%TYPE;
+        _typeCode flagType.code%TYPE;
+        _flagId flag.id%TYPE;
+        _flagName text;
+        _flagDesc text;
+        _flagIds flagTypeExt.flagIds%TYPE := Null;
+        FLAG_AUTHOR text := 'HF Crew';
+        DISPLAY_INTERVAL varchar := '12 hours';
     BEGIN
         -- Logging
         raise notice 'addFlagTypeExt(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
 
         -- Get category id from name
-        SELECT id INTO _typeId FROM flagType WHERE name = _type;
+        SELECT id,code INTO _typeId,_typeCode FROM flagType WHERE name = _type;
         if not FOUND then
             raise exception 'Could not find flag type "%"',_type;
         end if;
 
+        -- If bonus or group bonus, generate bonus flags
+        if _typeCode = 13 then      -- Bonus
+            FOR _i IN SELECT generate_series 
+                FROM generate_series(_pts,1,_ptsStep)
+            LOOP
+                _flagName := _name || '_' || _i::text;
+                _flagDesc := '';
+                _flagId := addRandomFlag(_flagName, _i, NULL, 'scoreboard.hf', 'bonus', 1,
+                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+                _flagIds := array_append(_flagIds,_flagId);
+            END LOOP;
+        elsif _typeCode = 22 then   -- Group Bonus
+            FOR _i IN SELECT generate_series 
+                FROM generate_series(_pts,1,_ptsStep)
+            LOOP
+                _flagName := _name || '_' || _i::text;
+                _flagDesc := '';
+                _flagId := addRandomFlag(_flagName, _i, NULL, 'scoreboard.hf', 'bonus', 1,
+                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+                _flagIds := array_append(_flagIds,_flagId);
+            END LOOP;
+        elsif _typeCode = 32 then   -- Team Group Pokemon
+            _flagName := _name || '_Pokemon';
+            _flagDesc := '';
+            _flagId := addRandomFlag(_flagName, _pts, NULL, 'scoreboard.hf', 'bonus', 1,
+                                   DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+            _flagIds := array_append(_flagIds,_flagId);
+        end if;
+
         -- Insert a new row
-        INSERT INTO flagTypeExt(name,typeId,pts,ptsLimit,ptsStep,trapCmd,updateCmd)
-                VALUES(_name,_typeId,_pts,_ptsLimit,_ptsStep,_trapCmd,_updateCmd);
+        INSERT INTO flagTypeExt(name,typeId,pts,ptsLimit,ptsStep,trapCmd,updateCmd,flagIds)
+                VALUES(_name,_typeId,_pts,_ptsLimit,_ptsStep,_trapCmd,_updateCmd,_flagIds);
 
         RETURN 0;
     END;
@@ -1045,7 +1400,7 @@ CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
                                     _description flag.description%TYPE
                                     ) 
-RETURNS integer AS $$
+RETURNS flag.id%TYPE AS $$
     DECLARE
         _hostId host.id%TYPE;
         _catId flagCategory.id%TYPE;
@@ -1113,7 +1468,7 @@ RETURNS integer AS $$
                 VALUES(_name,_value,_pts,_cash::money,_hostId,_catId,_statusCode,_display,_authorId,
                         _typeCode,_typeExtId,_description);
 
-        RETURN 0;
+        RETURN LASTVAL();
     END;
 $$ LANGUAGE plpgsql;
 
@@ -1132,8 +1487,9 @@ CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
                                     _description flag.description%TYPE
                                     ) 
-RETURNS flag.value%TYPE AS $$
+RETURNS flag.id%TYPE AS $$
     DECLARE
+        _flagId flag.id%TYPE;
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
@@ -1146,10 +1502,10 @@ RETURNS flag.value%TYPE AS $$
                 SELECT random_32() INTO _flagValue;
 
                 -- addFlag
-                PERFORM addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
-                                _displayInterval,_author,_type,_typeExt,_description);
-
-                RETURN _flagValue;
+                SELECT addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
+                                _displayInterval,_author,_type,_typeExt,_description)
+                INTO _flagId;
+                RETURN _flagId;
             EXCEPTION WHEN unique_violation THEN
                 -- Do nothing, and loop to try the addKingFlag again.
                 raise notice 'A collision occured';
@@ -1398,27 +1754,30 @@ RETURNS text AS $$
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount = 1 then
             if _flagRec.tableId = 1 then
-                -- getFlagPts only for non standard flag types
-                if _flagRec.type <> FLAG_TYPE_STANDARD and _flagRec.type <> FLAG_TYPE_KING then
-                    _pts := getFlagPts(_flagRec.id,_teamRec.id);
-                else
+                -- If flag is standard or king, process now. Otherwise, manage in processNonStandardFlag() function.
+                if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
                     _pts := _flagRec.pts;
+                    _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+
+                    -- Give cash if flag contains cash
+                    if _flagRec.cash is not null and _flagRec.cash <> 0::money then
+                        PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
+                        _ret = _ret || 'You also received ' || _flagRec.cash::text || '.';
+                    end if;
+                else
+                    SELECT *
+                    FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)
+                    INTO _pts,_ret;
                 end if;
                 INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                         VALUES(_teamRec.id,_flagRec.id,_pts,_playerIp);
             elsif _flagRec.tableId = 2 then
                 INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp)
-                        VALUES(_teamRec.id, _flagRec.id,_playerIp);
+                        VALUES(_teamRec.id,_flagRec.id,_playerIp);
+                _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
             end if;
-            _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
         else
             raise exception 'Invalid flag';
-        end if;
-
-        -- Give cash if flag contains cash
-        if _flagRec.cash is not null and _flagRec.cash <> 0::money then
-            PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
-            _ret = _ret || 'You also received ' || _flagRec.cash::text || '.';
         end if;
 
         RETURN _ret;
@@ -1563,14 +1922,6 @@ RETURNS flag.value%TYPE AS $$
         RETURN _flagRec.value;
     END;
 $$ LANGUAGE plpgsql;
-
-/*
-    Stored Proc: getKingFlagValueFromFlagName(name)
-*/
-
-/* 
-    Stored Proc: disableFlagFromName(name)
-*/
 
 /*
     Stored Proc: getCatProgressFromIp(varchar)
@@ -3293,3 +3644,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- payLotoTicket()
 -- transferLotoToWinner()
 
+
+/*
+    Stored Proc: getKingFlagValueFromFlagName(name)
+*/
+
+/* 
+    Stored Proc: disableFlagFromName(name)
+*/

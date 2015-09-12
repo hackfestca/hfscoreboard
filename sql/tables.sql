@@ -140,6 +140,7 @@ CREATE TABLE flagTypeExt(
     ptsStep integer default null,    
     trapCmd text default null,                      -- For trap flags only
     updateCmd text default null,                    -- For king flags only
+    flagIds integer[] default null,                 -- For bonus and group bonus only to store bonus flags
     ts timestamp not null default current_timestamp,
     constraint valid_flagTypeExt_name check (name != ''),
     constraint valid_flagTypeExt_pts check (pts >= -700 and pts <= 700),

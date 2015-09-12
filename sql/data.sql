@@ -53,6 +53,7 @@ SELECT addFlagCategory('expl', 'Pwning', 'Exploitation challenges from linux to 
 SELECT addFlagCategory('misc', 'Misconfiguration', 'Misconfiguration challenges');
 SELECT addFlagCategory('net', 'Networking', 'Firewall rule bypass');
 SELECT addFlagCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.',True);
+SELECT addFlagCategory('bonus', 'Bonus', 'Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team',True);
 SELECT addFlagCategory('tca', 'Turmelle, Choquette ', 'Some company to hack');
 SELECT addFlagCategory('electro', 'Electronics', 'CustomCorp electronics challenge near admins table. You may need <a href="/public/arduino-chal.c">this</a>');
 SELECT addFlagCategory('sc', 'Sigmen Corp.', 'Sigmen corp. hacking challenge');
@@ -68,6 +69,7 @@ SELECT addAuthor('Stephane Sigmen', 's1g5');
 SELECT addAuthor('Francois Barrette', 'fbarrette');
 SELECT addAuthor('Jean-Sebastien Grenon', 'jsg');
 SELECT addAuthor('HF Crew', 'HFCrew');
+SELECT addAuthor('Scoreboard', 'Scoreboard');
 
 /* 
     Create flag type definitions
@@ -76,21 +78,26 @@ SELECT addAuthor('HF Crew', 'HFCrew');
 SELECT addFlagType(1,'Standard');       -- Simple (pts + cash)
 -- Scope: Global. Purpose: Let only one team gain pts or cash.
 SELECT addFlagType(2,'Unique');         -- Simple (pts + cash)
+
 -- Scope: Global. Purpose: Define a king flag which will be instanciated on a regular basis on hosts.
 SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
 -- Scope: Global. Purpose: Make the flag be less/more valuable the more it is submitted.
-SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,step)
--- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
-SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + limit,step,extName)
--- Scope: Global. Purpose: Give a bonus when all flags on this group was submitted
-SELECT addFlagType(14,'Group Bonus'); -- Complex (pts + bonus,extName)
+SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,ptsStep)
+-- Scope: Global. Purpose: Give a bonus when a flag is successfully submitted
+SELECT addFlagType(13,'Bonus');       -- Complex (pts + bonus,ptsStep)
 
--- Scope: Team. Purpose: Grant points only when the entire group is submitted.
-SELECT addFlagType(21,'Pokemon Flag');  -- Complex (pts)
--- Scope: Team. Purpose: Make a group of flags be less/more valuable the more it is submitted by a single team.
-SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + limit,step,extName)
+-- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
+SELECT addFlagType(21,'Group Dynamic'); -- Complex (pts + limit,step,extName)
+-- Scope: Global. Purpose: Give a bonus when all flags on this group was submitted
+SELECT addFlagType(22,'Group Bonus'); -- Complex (pts + bonus,ptsStep,extName)
+
+-- Scope: Team. Purpose: Make a group of flags be less/more valuable the more it is submitted, on a per team basis.
+SELECT addFlagType(31,'Team Group Dynamic');    -- Complex (pts + limit,step,extName)
+-- Scope: Team. Purpose: Grant points only when the entire group is submitted, on a per team basis.
+SELECT addFlagType(32,'Team Group Pokemon');  -- Complex (pts)
+
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
-SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
+SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 
 /* 
     Create flag types
@@ -125,9 +132,11 @@ SELECT addTeam('Team HF Crew', '172.16.66.0/24');
 SELECT addTeam('Team Dube', '192.168.1.0/24');
 SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
 SELECT addTeam('Team VPN', '192.168.9.0/24');
-SELECT addTeam('Team VPN 2', '192.168.10.0/24');
+SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
+
+SELECT launderMoneyFromTeamId(4,3001::money);
 
 /*
     Black market   
@@ -255,16 +264,45 @@ SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 2'));
 SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 2'));
 SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 3'));
 */
+
+SELECT addFlagTypeExt('Bonus_Electro_200','Bonus', 200, NULL, -100);
+SELECT addRandomFlag('Flag 5', 100, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Bonus', 'Bonus_Electro_200', 'w44t');
+
 /*
-SELECT addFlagTypeExt('Pokemon_350','Pokemon', 350);
-SELECT addRandomFlag('Flag 5', 0, NULL, 'chaltest.ctf.hf', 're', 1,
-                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc1');
-SELECT addRandomFlag('Flag 6', 0, NULL, 'chaltest.ctf.hf', 're', 1,
-                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc2');
-SELECT addRandomFlag('Flag 7', 0, NULL, 'chaltest.ctf.hf', 're', 1,
-                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc3');
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 5'));
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 5'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 5'));
 */
 
+SELECT addFlagTypeExt('GroupBonus_Electro_100','Group Bonus', 100, NULL, -50);
+SELECT addRandomFlag('Flag 6', 50, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Group Bonus', 'GroupBonus_Electro_100', 'w44t');
+SELECT addRandomFlag('Flag 7', 50, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Group Bonus', 'GroupBonus_Electro_100', 'w00t');
+
+/*
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 7'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 7'));
+SELECT submitFlagFromIp('192.168.1.121', getFlagValueFromName('Flag 6'));
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 6'));
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 7'));
+*/
+
+
+SELECT addFlagTypeExt('Pokemon_350','Team Group Pokemon', 350);
+SELECT addRandomFlag('Flag 8', 0, NULL, 'chaltest.ctf.hf', 're', 1,
+                NULL, 'Martin Dube', 'Team Group Pokemon', 'Pokemon_350', '');
+SELECT addRandomFlag('Flag 9', 0, NULL, 'chaltest.ctf.hf', 're', 1,
+                NULL, 'Martin Dube', 'Team Group Pokemon', 'Pokemon_350', '');
+
+/*
+SELECT submitFlagFromIp('192.168.1.123', getFlagValueFromName('Flag 8'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 8'));
+SELECT submitFlagFromIp('192.168.1.121', getFlagValueFromName('Flag 9'));
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 8'));
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 9'));
+*/
 
 /*
     Testing invalid pts
