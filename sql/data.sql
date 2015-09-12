@@ -14,20 +14,25 @@ SELECT emptyTables();
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
        VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000::money);
 
-/* 
+-- Add EventFacility
+SELECT addEventFacility(0,'global','Global','');
+SELECT addEventFacility(1,'flag','Flag Submissions','');
+SELECT addEventFacility(2,'news','News','');
+SELECT addEventFacility(3,'team','Teams','');
+SELECT addEventFacility(4,'bm','Black Market','');
+SELECT addEventFacility(5,'loto','Loto HF','');
+
+/*
     Create event severity
 */
-SELECT addEventSeverity(0,'Emergency','emerg','System is unusable');
-SELECT addEventSeverity(1,'Alert','alert','Should be corrected immediately');
-SELECT addEventSeverity(2,'Critical','crit','Critical conditions');
-SELECT addEventSeverity(3,'Error','err','Error conditions');
-SELECT addEventSeverity(4,'Warning','warning','May indicate that an error will occur if action is not taken.');
-SELECT addEventSeverity(5,'Notice','notice','Events that are unusual, but not error conditions.');
-SELECT addEventSeverity(6,'Informational','info','Normal operational messages that require no action.');
-SELECT addEventSeverity(7,'Debug','debug','Information useful to developers for debugging the application.');
-
--- Add EventFacility
-
+SELECT addEventSeverity(0,'emerg','Emergency','System is unusable');
+SELECT addEventSeverity(1,'alert','Alert','Should be corrected immediately');
+SELECT addEventSeverity(2,'crit','Critical','Critical conditions');
+SELECT addEventSeverity(3,'err','Error','Error conditions');
+SELECT addEventSeverity(4,'warning','Warning','May indicate that an error will occur if action is not taken.');
+SELECT addEventSeverity(5,'notice','Notice','Events that are unusual, but not error conditions.');
+SELECT addEventSeverity(6,'info','Informational','Normal operational messages that require no action.');
+SELECT addEventSeverity(7,'debug','Debug','Information useful to developers for debugging the application.');
 
 /* 
     Create flag status
@@ -123,8 +128,8 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create some "NPC" wallets
 */
-SELECT addWallet(500000::money,'HF Bank','Default wallet used for cash flags, money laundering, etc.');
-SELECT addWallet(0::money,'HF Loto','Default wallet used to manage loto.');
+SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',500000::money, true);
+SELECT addWallet('HF Loto','Default wallet used to manage loto.',0::money, true);
 
 /*
     fake teams for tests
@@ -157,11 +162,6 @@ SELECT addBMItem('Casino 0-day','admin',1,1,1600::money,NULL,Null,'Wana rape the
 SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100::money,NULL,Null,'Something', 'exploit!'::bytea);
 SELECT addBMItem('Pipeline 0-day','admin',1,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
 SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,'Mouhaha', 'exploit!'::bytea);
-
-/*
-    Insert random data (for scoreboard development)
-*/
---SELECT insertRandomData();
 
 
 /* *****************************************************
@@ -314,7 +314,8 @@ SELECT buyLotoTicketFromIp(500::money, '192.168.1.111');
 SELECT buyLotoTicketFromIp(700::money,'192.168.9.111');
 SELECT buyLotoTicketFromIp(100::money,'192.168.10.111');
 
-SELECT processLotoWinner(10);
+--SELECT processLotoWinner(10);
+
 
 
 /*
@@ -374,3 +375,7 @@ SELECT addNews('Fuck this news', NOW()::timestamp);
 SELECT addNews('This news should never be printed', '2015-01-01 01:01'::timestamp);
 */
 
+/*
+    Insert random data (for scoreboard development)
+*/
+SELECT insertRandomData();

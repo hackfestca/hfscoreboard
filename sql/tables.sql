@@ -27,8 +27,9 @@ DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS flagTypeExt CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
-DROP TABLE IF EXISTS event CASCADE;
+DROP TABLE IF EXISTS eventFacility CASCADE;
 DROP TABLE IF EXISTS eventSeverity CASCADE;
+DROP TABLE IF EXISTS event CASCADE;
 DROP TABLE IF EXISTS team_bmItem CASCADE;
 DROP TABLE IF EXISTS bmItem CASCADE;
 DROP TABLE IF EXISTS bmItemCategory CASCADE;
@@ -348,18 +349,33 @@ CREATE TABLE bmItemStatus_history(
     );
 
 /*
+    Represent an event facility (inspired from syslog)
+*/
+CREATE TABLE eventFacility(
+    id serial primary key,
+    code integer not null unique,
+    name varchar(10) not null unique,
+    displayName varchar(20) not null unique,
+    description text,
+    ts timestamp not null default current_timestamp,
+    constraint valid_eventFacility_code check (code >= 0 and code <= 23),
+    constraint valid_eventFacility_name check (name != ''),
+    constraint valid_eventFacility_displayName check (displayName != '')
+    );
+
+/*
     Represent an event severity (inspired from syslog)
 */
 CREATE TABLE eventSeverity(
     id serial primary key,
     code integer not null unique,
-    name varchar(20) not null unique,
-    keyword varchar(10) not null unique,
+    name varchar(10) not null unique,
+    displayName varchar(20) not null unique,
     description text,
     ts timestamp not null default current_timestamp,
     constraint valid_eventSeverity_code check (code >= 0 and code <= 7),
     constraint valid_eventSeverity_name check (name != ''),
-    constraint valid_eventSeverity_keyword check (keyword != '')
+    constraint valid_eventSeverity_displayName check (displayName != '')
     );
 
 /*
@@ -368,8 +384,9 @@ CREATE TABLE eventSeverity(
 */
 CREATE TABLE event(
     id serial primary key,
-    severity integer not null references eventSeverity(code) on delete cascade,
-    title varchar(150) not null unique,
+    title text not null unique,
+    facility integer references eventFacility(code) on delete cascade,
+    severity integer references eventSeverity(code) on delete cascade,
     ts timestamp not null default current_timestamp,
     constraint valid_title_name check (title != '')
     );

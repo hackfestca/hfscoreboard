@@ -168,19 +168,23 @@ CREATE OR REPLACE FUNCTION launderMoneyFromTeamId(_teamId team.id%TYPE,
                                                   _amount wallet.amount%TYPE)
 RETURNS integer AS $$
     DECLARE
+        _teamName team.name%TYPE;
         _dstWalletId wallet.id%TYPE;
     BEGIN
         -- Logging
         raise notice 'launderMoneyFromTeamId(%,%)',$1,$2;
 
         -- Get team wallet id
-        SELECT wallet INTO _dstWalletId FROM team WHERE id = _teamId;
+        SELECT name,wallet INTO _teamName,_dstWalletId FROM team WHERE id = _teamId;
         if not FOUND then
             raise exception 'Could not find team "%"',_teamId;
         end if;
 
         -- Perform laundering
         PERFORM launderMoney(_dstWalletId,_amount);
+
+        -- DB Logging
+        PERFORM addEvent(format('Team %s have laundered %s$',_teamName,_amount));
 
         RETURN 0;
     END;
@@ -196,6 +200,7 @@ RETURNS integer AS $$
         TR_LOTO_CODE transactionType.code%TYPE := 5;
         LOTO_ID wallet.id%TYPE := 2;
         _playerIp inet;
+        _teamName team.name%TYPE;
         _srcWalletId team.id%TYPE;
     BEGIN
         -- Logging
@@ -204,12 +209,15 @@ RETURNS integer AS $$
         _playerIp := _playerIpStr::inet;
 
         -- Get team from userIp 
-        SELECT wallet INTO _srcWalletId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        SELECT name,wallet INTO _teamName,_srcWalletId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
 
         PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
+
+        -- DB Logging
+        PERFORM addEvent(format('Team %s have bought a loto ticket for %s$',_teamName,_amount),'loto');
 
         RETURN 0;
     END;
@@ -264,6 +272,9 @@ RETURNS text AS $$
             raise notice 'Loto wallet was empty. No winner this time.';
             _ret := 'Loto wallet was empty. No winner this time.';
         end if;
+
+        -- DB Logging
+        PERFORM addEvent(_ret,'loto');
 
         RETURN _ret;
     END;
@@ -348,7 +359,7 @@ RETURNS integer AS $$
         end if;
     
         -- Value cannot be 0$
-        if _flagCashValue is null or _flagCashValue = 0::money then
+        if _flagCashValue is NULL or _flagCashValue = 0::money then
             raise exception 'Cannot transfer a 0$ flag';
         end if;
 
@@ -501,8 +512,8 @@ RETURNS TABLE (
             _pts := _flagRec.ptsLimit;
         end if;
 
-        raise notice 'Team "%" is the %th team to submit flag "%", for %/%pts',
-                        _teamId,(_ct+1),_flagRec.name,_pts,_flagRec.pts;
+        PERFORM addEvent(format('Team "%s" is the %sth team to submit flag "%s", for %s/%spts',
+                        _teamId,(_ct+1),_flagRec.name,_pts,_flagRec.pts),'flag');
 
         _ret := format('You are the %sth team to submit flag "%s", for %s/%spts',
                  (_ct+1),_flagRec.name,_pts,_flagRec.pts);
@@ -579,8 +590,7 @@ RETURNS TABLE (
             INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                    VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
     
-            raise notice 'Team "%" received a bonus of %pts for being the %th team to submit flag "%" with value %pts',
-                            _teamId,_bonusPts,(_ct+1),_flagRec.name,_flagRec.pts;
+            PERFORM addEvent(format('Team "%s" received a bonus of %spts for being the %sth team to submit flag "%s" with value %spts',_teamId,_bonusPts,(_ct+1),_flagRec.name,_flagRec.pts),'flag');
     
             _ret := format('You have received a bonus of %spts for being the %sth team to submit flag "%s" with value %spts',
                      _bonusPts,(_ct+1),_flagRec.name,_flagRec.pts);
@@ -665,8 +675,8 @@ RETURNS TABLE (
         WHERE t.ct = array_length(_aFlagIds,1)
         INTO _ct;
 
-        -- Make sure _ct is not null
-        if _ct is null then
+        -- Make sure _ct is not NULL
+        if _ct is NULL then
             _ct := 0;
         end if;
 
@@ -678,8 +688,7 @@ RETURNS TABLE (
             _pts := _flagRec.ptsLimit;
         end if;
 
-        raise notice '% teams currently completed group "%". Team "%" score for %/%pts',
-                        _ct,_flagRec.flagTypeExtName,_teamId,_pts,_flagRec.pts;
+        PERFORM addEvent(format('%s teams currently completed group "%s". Team "%s" score for %s/%spts',_ct,_flagRec.flagTypeExtName,_teamId,_pts,_flagRec.pts),'flag');
 
         _ret := format('%s teams currently completed group "%s". You scored for %s/%spts',
                 _ct,_flagRec.flagTypeExtName,_pts,_flagRec.pts);
@@ -778,8 +787,7 @@ RETURNS TABLE (
             INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                    VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
     
-            raise notice 'Team "%" received a bonus of %pts for being the %th team to complete track "%" and submitting flag "%s" for %pts',
-                         _teamId,_bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts;
+            PERFORM addEvent(format('Team "%s" received a bonus of %spts for being the %sth team to complete track "%s" and submitting flag "%s" for %spts',_teamId,_bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts),'flag');
     
             _ret := format('You have received a bonus of %spts for being the %sth team to complete track "%s" and submitting flag "%s" for %spts',
                             _bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts);
@@ -887,8 +895,7 @@ RETURNS TABLE (
             INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                    VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
     
-            raise notice 'Team "%" successfully completed the track "%" for %pts',
-                         _teamId,_flagRec.typeExtName,_bonusPts;
+            PERFORM addEvent(format('Team "%s" successfully completed the track "%s" for %spts',_teamId,_flagRec.typeExtName,_bonusPts),'flag');
     
             _ret := format('You have successfully completed the track "%s" for %spts',
                             _flagRec.typeExtName,_bonusPts);
@@ -906,7 +913,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 CREATE OR REPLACE FUNCTION addWallet(_name wallet.name%TYPE,
                                    _desc wallet.description%TYPE, 
-                                   _amount wallet.amount%TYPE) 
+                                   _amount wallet.amount%TYPE,
+                                   _isSystemWallet boolean DEFAULT false) 
 RETURNS wallet.id%TYPE AS $$
     DECLARE
         _walletId wallet.id%TYPE;
@@ -915,8 +923,8 @@ RETURNS wallet.id%TYPE AS $$
         raise notice 'addWallet(%,%,%)',$1,$2,$3;
 
         -- Some checks
-        if _name is null then
-            raise exception 'Name cannot be null';
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
         end if;
 
         if _amount < 0::money then
@@ -928,8 +936,12 @@ RETURNS wallet.id%TYPE AS $$
         _walletId := LASTVAL();
 
         -- Perform first transaction if _amount > 0
-        if _amount > 0::money then
+        if _isSystemWallet = false and _amount > 0::money then
             PERFORM transferMoney(1,_walletId,_amount,1);
+        elsif _isSystemWallet = true then
+            UPDATE wallet
+            SET amount = _amount
+            WHERE id = _walletId;
         end if;
 
         RETURN _walletId;
@@ -1075,8 +1087,8 @@ RETURNS integer AS $$
         _inet := _net::inet;
 
         -- Some checks
-        if _name is null then
-            raise exception 'Name cannot be null';
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
         end if;
 
         if family(_inet) <> 4 then
@@ -1112,12 +1124,12 @@ RETURNS integer AS $$
         _inet := _net::inet;
 
         -- Some checks
-        if _id is null or _id < 1 then
-            raise exception 'ID cannot be null or lower than 1';
+        if _id is NULL or _id < 1 then
+            raise exception 'ID cannot be NULL or lower than 1';
         end if;
 
-        if _name is null or _name = '' then
-            raise exception 'Name cannot be null';
+        if _name is NULL or _name = '' then
+            raise exception 'Name cannot be NULL';
         end if;
 
         if family(_inet) <> 4 then
@@ -1147,7 +1159,8 @@ RETURNS TABLE (
                 net varchar(20),
                 flagPts flag.pts%TYPE,
                 kingFlagPts kingFlag.pts%TYPE,
-                flagTotal flag.pts%TYPE
+                flagTotal flag.pts%TYPE,
+                cash flag.cash%TYPE
               ) AS $$
     BEGIN
         -- Logging
@@ -1161,8 +1174,14 @@ RETURNS TABLE (
                             t.net::varchar AS net,
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
-                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal 
+                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
+                            w.amount AS cash
                      FROM team AS t
+                         LEFT OUTER JOIN (
+                            SELECT w.id,
+                                   w.amount
+                            FROM wallet as w
+                         ) AS w ON t.wallet = w.id
                      LEFT OUTER JOIN (
                         SELECT tf2.teamId,
                                sum(tf2.pts) AS sum
@@ -1225,7 +1244,7 @@ RETURNS integer AS $$
         -- Generate flag
         _flagName := 'Bug Bounty'||current_timestamp::varchar;
         PERFORM addRandomFlag(_flagName, _pts, 'scoreboard.hf', 'bug', 
-                 1::smallint, Null, 'HF Crew', False, _desc);
+                 1::smallint, NULL, 'HF Crew', False, _desc);
 
         -- Assign flag
         SELECT id INTO _flagId FROM flag WHERE name = _flagName LIMIT 1;
@@ -1313,7 +1332,7 @@ RETURNS integer AS $$
         raise notice 'addNews(%,%)',$1,$2;
 
         -- Some validations
-        if _displayTs is null then
+        if _displayTs is NULL then
             _displayTs := current_timestamp;        -- Kinda redundant...
         end if;
 
@@ -1338,15 +1357,15 @@ RETURNS integer AS $$
         raise notice 'modNews(%,%,%)',$1,$2,$3;
 
         -- Some validations
-        if _id is null or _id < 1 then
-            raise exception 'ID cannot be null or lower than 1';
+        if _id is NULL or _id < 1 then
+            raise exception 'ID cannot be NULL or lower than 1';
         end if;
 
-        if _title is null or _title = '' then
-            raise exception 'Title cannot be null';
+        if _title is NULL or _title = '' then
+            raise exception 'Title cannot be NULL';
         end if;
 
-        if _displayTs is null then
+        if _displayTs is NULL then
             _displayTs := current_timestamp;        -- Kinda redundant...
         end if;
 
@@ -1439,7 +1458,7 @@ RETURNS integer AS $$
         _flagId flag.id%TYPE;
         _flagName text;
         _flagDesc text;
-        _flagIds flagTypeExt.flagIds%TYPE := Null;
+        _flagIds flagTypeExt.flagIds%TYPE := NULL;
         FLAG_AUTHOR text := 'HF Crew';
         DISPLAY_INTERVAL varchar := '12 hours';
     BEGIN
@@ -1530,7 +1549,7 @@ RETURNS flag.id%TYPE AS $$
         end if;
 
         -- Get author id from name
-        if _author is not Null then
+        if _author is not NULL then
             SELECT id INTO _authorId FROM flagAuthor WHERE name = _author;
             if not FOUND then
                 raise exception 'Could not find author "%"',_author;
@@ -1546,7 +1565,7 @@ RETURNS flag.id%TYPE AS $$
         end if;
 
         -- Get type ext id from name
-        if _typeExt is not Null then
+        if _typeExt is not NULL then
             SELECT id INTO _typeExtId FROM flagTypeExt WHERE name = _typeExt;
             if not FOUND then
                 raise exception 'Could not find flag type extension "%"',_typeExt;
@@ -1556,14 +1575,14 @@ RETURNS flag.id%TYPE AS $$
         end if;
 
         -- Convert displayInterval
-        if _displayInterval is not Null then
+        if _displayInterval is not NULL then
             _display = _displayInterval::interval;
         else
             _display = _displayInterval;
         end if;
 
         -- Convert cash if NULL
-        if _cash is Null then
+        if _cash is NULL then
             _cash = '0'::money;
         end if;
 
@@ -1647,7 +1666,7 @@ CREATE OR REPLACE FUNCTION addKingFlagFromName( _flagName flag.name%TYPE,
                                                ) 
 RETURNS integer AS $$
     DECLARE
-        _flagId flag.id%TYPE := Null;
+        _flagId flag.id%TYPE := NULL;
     BEGIN
         -- Logging
         raise notice 'addKingFlagFromName(%,%,%)',1,$2,$3;
@@ -1850,7 +1869,7 @@ RETURNS text AS $$
             FROM flag 
             WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 11
               UNION ALL
-            SELECT id,value,pts,Null,Null,Null,2 AS tableId
+            SELECT id,value,pts,NULL,NULL,NULL,2 AS tableId
             FROM kingFlag 
             WHERE value = _flagValue
         ) AS x INTO _flagRec;
@@ -1866,7 +1885,7 @@ RETURNS text AS $$
                     _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
 
                     -- Give cash if flag contains cash
-                    if _flagRec.cash is not null and _flagRec.cash <> 0::money then
+                    if _flagRec.cash is not NULL and _flagRec.cash <> 0::money then
                         PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
                         _ret = _ret || 'You also received ' || _flagRec.cash::text || '.';
                     end if;
@@ -1894,8 +1913,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: getScore(top = 30)
 */
 CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
-                                    _timestamp varchar(30) default Null,
-                                    _category flagCategory.name%TYPE default Null)
+                                    _timestamp varchar(30) default NULL,
+                                    _category flagCategory.name%TYPE default NULL)
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
@@ -1912,7 +1931,7 @@ RETURNS TABLE (
         _rowCount integer;
     BEGIN
         -- Logging
-        if _timestamp is null then          -- Tmp bypass because it logs too much
+        if _timestamp is NULL then          -- Tmp bypass because it logs too much
             raise notice 'getScore(%,%)',$1,$2;
         end if;
    
@@ -1930,13 +1949,13 @@ RETURNS TABLE (
         end if;
 
         -- Prepare filters
-        if _timestamp is Null then
+        if _timestamp is NULL then
             _ts := current_timestamp;
         else
             _ts := _timestamp::timestamp;
         end if;
 
-        if _category is Null then
+        if _category is NULL then
             SELECT array(select flagCategory.id from flagCategory) INTO _aCat;
         else
             SELECT array[flagCategory.id] INTO _aCat FROM flagCategory WHERE name = _category;
@@ -2154,7 +2173,7 @@ RETURNS TABLE (
                             (coalesce(tf2.pts,0) || '/' || f.pts)::varchar AS displayPts,
                             f.category AS catId,
                             c.name AS catName,
-                            tf2.teamId IS NOT Null AS isDone,
+                            tf2.teamId IS NOT NULL AS isDone,
                             a.nick as author,
                             f.displayInterval
                      FROM flag AS f
@@ -2173,7 +2192,7 @@ RETURNS TABLE (
                          FROM team_flag AS tf
                          WHERE tf.teamId = _teamId
                          ) AS tf2 ON f.id = tf2.flagId
-                    WHERE (f.displayInterval is null 
+                    WHERE (f.displayInterval is NULL 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
                           and f.type <> KING_FLAG_TYPE
                           and c.hidden = False
@@ -2447,9 +2466,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getSubmitHistory()
-    _typeFilter: Null=Flag+KingFlag, 1=Flag only, 2=KingFlag only
+    _typeFilter: NULL=Flag+KingFlag, 1=Flag only, 2=KingFlag only
 */
-CREATE OR REPLACE FUNCTION getSubmitHistory(_top integer DEFAULT 10, _typeFilter integer DEFAULT Null)
+CREATE OR REPLACE FUNCTION getSubmitHistory(_top integer DEFAULT 10, _typeFilter integer DEFAULT NULL)
 RETURNS TABLE (
                 ts timestamp,
                 teamName team.name%TYPE,
@@ -2733,7 +2752,7 @@ RETURNS TABLE (
         END IF;
 
         return QUERY SELECT name,
-                            tf.ts IS NOT Null,
+                            tf.ts IS NOT NULL,
                             tf.ts 
                      FROM flag 
                      LEFT OUTER JOIN (
@@ -2769,7 +2788,7 @@ RETURNS TABLE (
         end if;
 
         return QUERY SELECT name,
-                            tf.ts IS NOT Null,
+                            tf.ts IS NOT NULL,
                             tf.ts 
                      FROM team 
                      LEFT OUTER JOIN (
@@ -2816,12 +2835,12 @@ RETURNS TABLE (
         -- Logging
         raise notice 'getScoreProgress(%)',$1;
         
-        if _intLimit is null then
+        if _intLimit is NULL then
             _intLimit := 21;        -- Kinda redundant...
         end if;
 
         if _intLimit < 1 then
-            raise exception 'Interval Limit cannot be null or lower than 1';
+            raise exception 'Interval Limit cannot be NULL or lower than 1';
         end if;
 
         -- Determine minimum timestamp
@@ -2839,7 +2858,7 @@ RETURNS TABLE (
         ) AS x ORDER BY ts DESC LIMIT 1;
 
         -- if min = max, throw an exception
-        if _minTs is null or _minTs = _maxTs then
+        if _minTs is NULL or _minTs = _maxTs then
             _minTs = current_timestamp - '1 minute'::interval;
             _maxTs = current_timestamp;           
         end if;
@@ -2991,8 +3010,10 @@ RETURNS integer AS $$
         FLAG_SUBMIT_RATE        real := 0.11;
         KINGFLAG_SUBMIT_RATE    real := 0.11;
         MAX_PTS                 integer := 10;
-        MAX_HOST                integer := 7;
+        MAX_HOST                integer := 2;
         MAX_CAT                 integer := 9;
+        MAX_TYPE                integer := 9;
+        CASH_START_AMOUNT       money   := 1200::money;
         _teamId team.id%TYPE;
         _net team.net%TYPE;
     BEGIN
@@ -3000,21 +3021,26 @@ RETURNS integer AS $$
         raise notice 'insertRandomData()';
 
         -- Insert random teams
-        INSERT INTO team(name,net) 
-        SELECT 'Team '||id,('172.29.'||id||'.0/32')::inet
+        INSERT INTO team(name,net,wallet) 
+        SELECT 'RTeam '||id,
+                ('172.29.'||id||'.0/24')::inet,
+                addWallet('RTeam '||id, 'Wallet of team '||id, CASH_START_AMOUNT)
         FROM generate_series(1,TEAM_COUNT) as id;
 
         -- Insert random flags 
-        INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
-        SELECT 'Flag '||id,
+        INSERT INTO flag(name,value,pts,cash,host,category,statusCode,type,description) 
+        SELECT 'RFlag '||id,
                 random_32(),
                 random() * (MAX_PTS - 1) + 1,
+                0,
                 random() * (MAX_HOST - 1) + 1,
                 random() * (MAX_CAT - 1) + 1,
+                1,
                 1,
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
         FROM generate_series(1,FLAG_COUNT) as id;
 
+        /*
         -- Insert random king flags
         INSERT INTO flag(name,value,pts,host,category,statusCode,description) 
         SELECT 'Flag '||id,
@@ -3033,12 +3059,14 @@ RETURNS integer AS $$
                 1           --random() * 9 + 1
         FROM flag,generate_series(1,KINGFLAG_PER_FLAG_COUNT)
         WHERE flag.type = 11;
+        */
 
         -- Assign flags to team randomly
         FOR _teamId,_net IN SELECT id,net FROM team LOOP
-            INSERT INTO team_flag(teamId,flagId,playerIp,ts)
+            INSERT INTO team_flag(teamId,flagId,pts,playerIp,ts)
                 SELECT _teamId,
-                       flag.id,
+                        flag.id,
+                        flag.pts,
                         (_net + (random() * PLAYER_IP_MIN + PLAYER_IP_MAX)::integer),
                        current_timestamp - (random() * FLAG_TS_MIN || ' minutes')::interval
                 FROM flag
@@ -3057,6 +3085,7 @@ RETURNS integer AS $$
                 WHERE teamId = _teamId;
         END LOOP;
 
+        /*
         -- Assign king flags to teams randomly
         FOR _teamId IN SELECT id FROM team LOOP
             INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp,ts)
@@ -3079,6 +3108,7 @@ RETURNS integer AS $$
                 ) AS f ON tkf.kingFlagId = f.id
                 WHERE teamId = _teamId;
         END LOOP;
+        */
 
         -- Insert some fake flag submit in submit_history
         FOR _teamId,_net IN SELECT id,net FROM team LOOP
@@ -3195,12 +3225,12 @@ RETURNS integer AS $$
         end if;
 
         -- Verify quantity
-        if _qty is not Null and _qty <= 0 then
+        if _qty is not NULL and _qty <= 0 then
             raise exception 'Black market item quantity cannot be < 0';
         end if;
 
         -- Convert displayInterval
-        if _displayInterval is not Null then
+        if _displayInterval is not NULL then
             _display = _displayInterval::interval;
         else
             _display = _displayInterval;
@@ -3238,10 +3268,10 @@ RETURNS TABLE (
                             i.name AS name,
                             ic.displayName AS category,
                             ist.name AS status,
-                            CASE WHEN ir.rating is null THEN '-' ELSE ir.rating::text || '/5' END,
+                            CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
                             w.name AS owner,
                             i.amount AS cost,
-                            CASE WHEN i.qty is null THEN '-' ELSE i.qty::text END
+                            CASE WHEN i.qty is NULL THEN '-' ELSE i.qty::text END
                      FROM bmItem AS i
                      LEFT OUTER JOIN (
                         SELECT ic.id,ic.displayName 
@@ -3355,7 +3385,7 @@ RETURNS TABLE (
             ) AS w ON i.ownerWallet = w.id
         WHERE i.id = _bmItemId;
 
-        if _ret.qty is null then
+        if _ret.qty is NULL then
             _qty := 'infinite';
         else
             _qty := _ret.qty::varchar;
@@ -3416,7 +3446,7 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: checkItemAvailability(bmItemId,teamId=Null)
+    Stored Proc: checkItemAvailability(bmItemId,teamId=NULL)
 */
 CREATE OR REPLACE FUNCTION checkItemAvailability(_bmItemId bmItem.id%TYPE,
                                                  _teamId team.id%TYPE DEFAULT NULL)
@@ -3446,7 +3476,7 @@ RETURNS integer AS $$
         end if;
 
         -- if a teamId is specified.
-        if _teamId is not null then
+        if _teamId is not NULL then
             -- Determine if the team already bought this item
             PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
             if FOUND then
@@ -3555,7 +3585,7 @@ RETURNS integer AS $$
         end if;
 
         -- Add a new black market item
-        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,Null,_description,_data);
+        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,NULL,_description,_data);
 
         RETURN 0;
     END;
@@ -3691,11 +3721,39 @@ RETURNS bytea AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: addEventSeverity(code,name,keyword,desc)
+    Stored Proc: addEventFacility(code,name,displayName,desc)
+*/
+CREATE OR REPLACE FUNCTION addEventFacility(_code eventSeverity.code%TYPE,
+                                            _name eventSeverity.name%TYPE,
+                                            _displayName eventFacility.displayName%TYPE, 
+                                            _description eventFacility.description%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addEventFacility(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Some checks
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
+        end if;
+
+        if _displayName is NULL then
+            raise exception 'Display name cannot be NULL';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO eventFacility(code,name,displayName,description) VALUES(_code,_name,_displayName,_description);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: addEventSeverity(code,name,displayName,desc)
 */
 CREATE OR REPLACE FUNCTION addEventSeverity(_code eventSeverity.code%TYPE,
                                             _name eventSeverity.name%TYPE,
-                                            _keyword eventSeverity.keyword%TYPE, 
+                                            _displayName eventSeverity.displayName%TYPE, 
                                             _description eventSeverity.description%TYPE)
 RETURNS integer AS $$
     BEGIN
@@ -3703,52 +3761,95 @@ RETURNS integer AS $$
         raise notice 'addEventSeverity(%,%,%,%)',$1,$2,$3,$4;
 
         -- Some checks
-        if _name is null then
-            raise exception 'Name cannot be null';
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
         end if;
 
-        if _keyword is null then
-            raise exception 'Keyword cannot be null';
+        if _displayName is NULL then
+            raise exception 'Display name cannot be NULL';
         end if;
 
         -- Insert a new row
-        INSERT INTO eventSeverity(code,name,keyword,description) VALUES(_code,_name,_keyword,_description);
+        INSERT INTO eventSeverity(code,name,displayName,description) VALUES(_code,_name,_displayName,_description);
 
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getEvents(_lastUpdateTS,_top,level)
+    Stored Proc: addEvent(title,facility,severity)
 */
-CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp,
-                                     _top integer DEFAULT 30,
-                                     _level integer DEFAULT 0)  
-RETURNS TABLE (
-                srcWallet wallet.name%TYPE,
-                dstWallet wallet.name%TYPE,
-                amount transaction.amount%TYPE,
-                transactionType transactionType.name%TYPE,
-                ts timestamp
-              ) AS $$
+CREATE OR REPLACE FUNCTION addEvent(_title event.title%TYPE,
+                                            _facility eventFacility.name%TYPE DEFAULT NULL,
+                                            _severity eventSeverity.name%TYPE DEFAULT NULL)
+RETURNS integer AS $$
+    DECLARE
+        _facilityCode eventFacility.code%TYPE := NULL;
+        _severityCode eventSeverity.code%TYPE := NULL;
     BEGIN
         -- Logging
-        raise notice 'getTransactionHistory(%)',$1;
+        raise notice 'addEvent(%,%,%)',$1,$2,$3;
 
-        -- Some check 
-        if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        -- Get facilityCode if name is specified
+        if _facility is not NULL then
+            SELECT code INTO _facilityCode FROM eventFacility WHERE name = _facility;
+            if NOT FOUND then
+                raise exception 'Could not find facility "%s"',_facility;
+            end if;
         end if;
 
+        -- Get severityCode if name is specified
+        if _severity is not NULL then
+            SELECT code INTO _severityCode FROM eventSeverity WHERE name = _severity;
+            if NOT FOUND then
+                raise exception 'Could not find severity "%s"',_severity;
+            end if;
+        end if;
+
+        -- Insert a new row
+        INSERT INTO event(title,facility,severity) 
+        VALUES(_title,_facilityCode,_severityCode);
+
+        RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- ** others **
--- getEvents(lastUpdateTS=None,level=None,facility=None)
--- addEvent(level,facility,title)
+/*
+    Stored Proc: getEvents(lastUpdateTS,facility,severity,top)
+*/
+CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp DEFAULT NULL,
+                                     _facility eventFacility.name%TYPE DEFAULT NULL,
+                                     _severity eventSeverity.name%TYPE DEFAULT NULL,
+                                     _top integer DEFAULT 30)
+RETURNS TABLE (
+                id event.id%TYPE,
+                title event.title%TYPE,
+                facility eventFacility.name%TYPE,
+                severity eventSeverity.name%TYPE,
+                ts event.ts%TYPE
+              ) AS $$
 
--- buyLotoTicket()
--- transferLotoToWinner()
+    BEGIN
+        return QUERY SELECT e.id AS id,
+                            e.title AS title,
+                            ef.name AS facility,
+                            es.name AS severity,
+                            e.ts AS ts
+                     FROM event AS e
+                     LEFT OUTER JOIN (
+                        SELECT ef.code,ef.name
+                        FROM eventFacility AS ef
+                        ) AS ef ON e.facility = ef.code
+                     LEFT OUTER JOIN (
+                        SELECT es.code,es.name
+                        FROM eventSeverity AS es
+                        ) AS es ON e.severity = es.code
+                    ORDER BY e.ts
+                    LIMIT _top;
+        -- TODOO Make a union with news table.
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 /*
