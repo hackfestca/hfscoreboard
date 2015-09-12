@@ -26,6 +26,9 @@ SELECT addEventSeverity(5,'Notice','notice','Events that are unusual, but not er
 SELECT addEventSeverity(6,'Informational','info','Normal operational messages that require no action.');
 SELECT addEventSeverity(7,'Debug','debug','Information useful to developers for debugging the application.');
 
+-- Add EventFacility
+
+
 /* 
     Create flag status
 */
@@ -78,21 +81,23 @@ SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
 -- Scope: Global. Purpose: Make the flag be less/more valuable the more it is submitted.
 SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,step)
 -- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
-SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + limit,step,groupId)
+SELECT addFlagType(13,'Group Dynamic'); -- Complex (pts + limit,step,extName)
+-- Scope: Global. Purpose: Give a bonus when all flags on this group was submitted
+SELECT addFlagType(14,'Group Bonus'); -- Complex (pts + bonus,extName)
 
 -- Scope: Team. Purpose: Grant points only when the entire group is submitted.
-SELECT addFlagType(21,'Pokemon Flag');  -- Complex (pts + groupId)
+SELECT addFlagType(21,'Pokemon Flag');  -- Complex (pts)
 -- Scope: Team. Purpose: Make a group of flags be less/more valuable the more it is submitted by a single team.
-SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + limit,step,groupId)
+SELECT addFlagType(22,'Team Group Dynamic');    -- Complex (pts + limit,step,extName)
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
 SELECT addFlagType(23,'Trap');          -- Complex (trapCmd)
 
 /* 
     Create flag types
 */
-SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
-SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
-SELECT addFlagTypeExt('King','King');          -- I know it's redundant.
+--SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
+--SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
+--SELECT addFlagTypeExt('King','King');          -- I know it's redundant.
 
 /*
     Add a starting news
@@ -216,8 +221,8 @@ SELECT reviewBMItem(6,1,5,'this is a good item');
 /*
     Test specific flag types
 */
-SELECT addFlagTypeExt('Decrement_-1','Dynamic', 100, -100);
-SELECT addFlagTypeExt('Decrement_-2','Dynamic', 100, -200);
+SELECT addFlagTypeExt('Decrement_-1','Dynamic', NULL, 100, -100);
+SELECT addFlagTypeExt('Decrement_-2','Dynamic', NULL, 100, -200);
 SELECT addFlag('Flag 1', 'vvvvvvvvvvvvvv', 300, NULL, 'chaltest.ctf.hf', 'web', 1,
                 NULL, 'Martin Dube', 'Dynamic', 'Decrement_-2', 'descccccc');
 
@@ -229,7 +234,7 @@ SELECT submitFlagFromIp('192.168.13.21', getFlagValueFromName('Flag 1'));
 SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 1'));
 */
 
-SELECT addFlagTypeExt('GroupDecrement_-100','Group Dynamic', 100, -100);
+SELECT addFlagTypeExt('GroupDecrement_-100','Group Dynamic', NULL, 100, -100);
 SELECT addRandomFlag('Flag 2', 200, NULL, 'chaltest.ctf.hf', 'electro', 1,
                 NULL, 'Martin Dube', 'Group Dynamic', 'GroupDecrement_-100', 'descccccc1');
 SELECT addRandomFlag('Flag 3', 300, NULL, 'chaltest.ctf.hf', 'electro', 1,
@@ -250,10 +255,15 @@ SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Flag 2'));
 SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 2'));
 SELECT submitFlagFromIp('127.0.0.1', getFlagValueFromName('Flag 3'));
 */
-
--- notte: remove groupId from flagTypeExt.
--- add pts as a value for pokemon flag and others
-
+/*
+SELECT addFlagTypeExt('Pokemon_350','Pokemon', 350);
+SELECT addRandomFlag('Flag 5', 0, NULL, 'chaltest.ctf.hf', 're', 1,
+                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc1');
+SELECT addRandomFlag('Flag 6', 0, NULL, 'chaltest.ctf.hf', 're', 1,
+                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc2');
+SELECT addRandomFlag('Flag 7', 0, NULL, 'chaltest.ctf.hf', 're', 1,
+                NULL, 'Martin Dube', 'Pokemon', 'Pokemon_350', 'descccccc3');
+*/
 
 
 /*

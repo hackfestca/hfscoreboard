@@ -135,12 +135,14 @@ CREATE TABLE flagTypeExt(
     id serial primary key,
     name varchar(50) not null unique,
     typeId integer not null references flagType(id),
+    pts integer default null,
     ptsLimit integer default null,    
     ptsStep integer default null,    
     trapCmd text default null,                      -- For trap flags only
     updateCmd text default null,                    -- For king flags only
     ts timestamp not null default current_timestamp,
     constraint valid_flagTypeExt_name check (name != ''),
+    constraint valid_flagTypeExt_pts check (pts >= -700 and pts <= 700),
     constraint valid_flagTypeExt_ptsLimit check (ptsLimit > 0),
     constraint valid_flagTypeExt_ptsStep check (ptsStep <> 0)
     );

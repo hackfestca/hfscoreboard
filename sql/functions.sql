@@ -246,7 +246,6 @@ RETURNS integer AS $$
                 ft.code,
                 fte.ptsLimit,
                 fte.ptsStep,
-                fte.groupId,
                 fte.trapCmd,
                 fte.updateCmd
         INTO _flagRec
@@ -259,7 +258,6 @@ RETURNS integer AS $$
             SELECT  id,
                     ptsLimit,
                     ptsStep,
-                    groupId,
                     trapCmd,
                     updateCmd
             FROM flagTypeExt AS fte
@@ -325,7 +323,6 @@ RETURNS integer AS $$
                 ft.code,
                 fte.ptsLimit,
                 fte.ptsStep,
-                fte.groupId,
                 fte.trapCmd,
                 fte.updateCmd
         INTO _flagRec
@@ -338,7 +335,6 @@ RETURNS integer AS $$
             SELECT  id,
                     ptsLimit,
                     ptsStep,
-                    groupId,
                     trapCmd,
                     updateCmd
             FROM flagTypeExt AS fte
@@ -392,7 +388,6 @@ RETURNS integer AS $$
                 fte.name AS flagTypeExtName,
                 fte.ptsLimit,
                 fte.ptsStep,
-                fte.groupId,
                 fte.trapCmd,
                 fte.updateCmd
         INTO _flagRec
@@ -406,7 +401,6 @@ RETURNS integer AS $$
                     name,
                     ptsLimit,
                     ptsStep,
-                    groupId,
                     trapCmd,
                     updateCmd
             FROM flagTypeExt AS fte
@@ -1009,6 +1003,7 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION addFlagTypeExt(_name flagTypeExt.name%TYPE,
                                           _type flagType.name%TYPE,
+                                          _pts flagTypeExt.pts%TYPE DEFAULT NULL,
                                           _ptsLimit flagTypeExt.ptsLimit%TYPE DEFAULT NULL,
                                           _ptsStep flagTypeExt.ptsStep%TYPE DEFAULT NULL,
                                           _trapCmd flagTypeExt.trapCmd%TYPE DEFAULT NULL,
@@ -1018,7 +1013,7 @@ RETURNS integer AS $$
         _typeId flagType.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlagTypeExt(%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6;
+        raise notice 'addFlagTypeExt(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
 
         -- Get category id from name
         SELECT id INTO _typeId FROM flagType WHERE name = _type;
@@ -1027,8 +1022,8 @@ RETURNS integer AS $$
         end if;
 
         -- Insert a new row
-        INSERT INTO flagTypeExt(name,typeId,ptsLimit,ptsStep,trapCmd,updateCmd)
-                VALUES(_name,_typeId,_ptsLimit,_ptsStep,_trapCmd,_updateCmd);
+        INSERT INTO flagTypeExt(name,typeId,pts,ptsLimit,ptsStep,trapCmd,updateCmd)
+                VALUES(_name,_typeId,_pts,_ptsLimit,_ptsStep,_trapCmd,_updateCmd);
 
         RETURN 0;
     END;
@@ -3292,8 +3287,8 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ** others **
--- getEvents(lastUpdateTS=None,level=None)
--- addEvent(level, title)
+-- getEvents(lastUpdateTS=None,level=None,facility=None)
+-- addEvent(level,facility,title)
 
 -- payLotoTicket()
 -- transferLotoToWinner()
