@@ -312,7 +312,12 @@ class DashboardHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            jsArray = self.client.getJsDataScoreProgress()
+            jsArray2 = ""
+            jsArray = self.client.getCsvScoreProgress()
+            # Formatting into javascript string.
+            for i in jsArray.split("\r\n"):
+                jsArray2 += "\"" + i + "\\n\" + \n"
+            jsArray = jsArray2[:-12]
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
