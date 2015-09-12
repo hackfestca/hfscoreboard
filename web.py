@@ -37,9 +37,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Python version validation
 import sys
-if sys.version_info < (3,2,0):
+if sys.version_info < (3, 2, 0):
     print('Python version 3.2 or later is needed for this script')
-    exit(1);
+    exit(1)
 
 sys.path.insert(0, 'lib')
 del sys
@@ -59,6 +59,7 @@ import re
 import random
 from postgresql.exceptions import *
 
+
 class Logger(logging.getLoggerClass()):
 
     def __init__(self, name):
@@ -74,17 +75,18 @@ class Logger(logging.getLoggerClass()):
         info_file = logging.FileHandler("logs/infos.log", encoding="utf-8")
         info_file.setLevel(logging.INFO)
         info_formatter = logging.Formatter('%(asctime)s - %(message)s')
-        info_file.setFormatter(info_formatter)        
+        info_file.setFormatter(info_formatter)
 
         self.logger.addHandler(error_file)
         self.logger.addHandler(info_file)
 
     def error(self, msg):
         self.logger.error(msg)
-        
+
     def info(self, msg):
         self.logger.info(msg)
-    
+
+
 class BaseHandler(tornado.web.RequestHandler):
 
     def initialize(self, sponsors_imgs, logger):
@@ -125,12 +127,11 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             msg = "{}".format(exc_obj.message)
 
-
-        #self.logger.error("{}:{}:{}".format(self.request.remote_ip,
+        # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
         #                                    exc_obj.message))
         self.render("templates/error.html", error_msg=msg)
-        
+
     def _connect(self):
         self.client = WebController()
 
@@ -149,21 +150,21 @@ class BaseHandler(tornado.web.RequestHandler):
         try:
             self.client.close()
         except AttributeError:
-            pass # The connection was never established
-            
+            pass  # The connection was never established
+
     def prepare(self):
         self._connect()
-                            
+
     def on_finish(self):
         self._disconnect()
 
     def render(self, template_name, **kwargs):
         self._getTeamInfo()
         super().render(template_name,
-                        team_name=self.team_name,
-                        team_ip=self.team_ip,
-                        team_score=self.team_score,
-                        **kwargs)
+                       team_name=self.team_name,
+                       team_ip=self.team_ip,
+                       team_score=self.team_score,
+                       **kwargs)
 
     def getInsult(self, index):
         return self._insults[index]
@@ -187,7 +188,7 @@ class BaseHandler(tornado.web.RequestHandler):
     @logger.setter
     def logger(self, arg):
         self._logger = arg
-        
+
     @property
     def team_name(self):
         return self._team_name
@@ -211,7 +212,8 @@ class BaseHandler(tornado.web.RequestHandler):
     @team_score.setter
     def team_score(self, arg):
         self._team_score = arg
-        
+
+
 class ScoreHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
@@ -225,9 +227,9 @@ class ScoreHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/score.html', score_table = list(score))
+            self.render('templates/score.html', score_table=list(score))
 
-            
+
 class ChallengesHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
@@ -241,8 +243,11 @@ class ChallengesHandler(BaseHandler):
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
-        else:    
-            self.render('templates/challenges.html', cat=list(categories), chal=list(challenges))
+        else:
+            self.render('templates/challenges.html',
+                        cat=list(categories),
+                        chal=list(challenges))
+
 
 class IndexHandler(BaseHandler):
 
@@ -259,15 +264,20 @@ class IndexHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors)
-            
+            self.render('templates/index.html',
+                        table=score,
+                        news=valid_news,
+                        sponsors=self.sponsors)
+
     def post(self):
         flag = self.get_argument("flag")
         valid_news = self.client.getNews()
 
-
         try:
-            submit_message = self.client.submitFlagFromIp(self.request.remote_ip, flag)
+            submit_message = self.client.submitFlagFromIp(
+                self.request.remote_ip,
+                flag)
+
         except UniqueError:
             submit_message = "Flag already submitted"
             flag_is_valid = False
@@ -280,16 +290,21 @@ class IndexHandler(BaseHandler):
             self.set_status(500)
             self.render('templates/error.html', error_msg="Error")
         else:
-            #submit_message = "Flag successfully submitted"
+            # submit_message = "Flag successfully submitted"
             flag_is_valid = True
 
         match = re.search("^(FLAG\-|flag\-)", flag)
         if match:
-            submit_message = "Are you fucking kidding me ? \"Your flag without 'FLAG-'\""
+            submit_message = "Are you fucking kidding me ? " + \
+              "\"Your flag without 'FLAG-'\""
 
-        score = self.client.getScore(top=15)            
-        self.render('templates/index.html', table=score, news=valid_news, sponsors=self.sponsors, \
-                    flag_is_valid=flag_is_valid, submit_message=submit_message)
+        score = self.client.getScore(top=15)
+        self.render('templates/index.html',
+                    table=score,
+                    news=valid_news,
+                    sponsors=self.sponsors,
+                    flag_is_valid=flag_is_valid,
+                    submit_message=submit_message)
 
 
 class DashboardHandler(BaseHandler):
@@ -306,7 +321,9 @@ class DashboardHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/dashboard.html', sponsors=self.sponsors, jsArray=jsArray)
+            self.render('templates/dashboard.html',
+                        sponsors=self.sponsors,
+                        jsArray=jsArray)
 
 
 class BlackMarketItemHandler(BaseHandler):
@@ -316,7 +333,9 @@ class BlackMarketItemHandler(BaseHandler):
         privateId = self.get_argument("privateId")
 
         try:
-            bmItemData = self.client.getBMItemDataFromIp(privateId,self.request.remote_ip)
+            bmItemData = self.client.getBMItemDataFromIp(privateId,
+                                                         self.request.remote_ip
+                                                         )
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
@@ -326,12 +345,13 @@ class BlackMarketItemHandler(BaseHandler):
             self.render('templates/error.html', error_msg="Error")
         else:
             self.set_header('Content-Type', 'application/octet-stream')
-            self.set_header('Content-Disposition', 'attachment; filename=' + privateId)
-            #buf_size = 4096
-            #while True:
-            #    data = bmItemData.read(buf_size)        # to test
-            #    if not data:
-            #        break
+            self.set_header('Content-Disposition',
+                            'attachment; filename=' + privateId)
+            # buf_size = 4096
+            # while True:
+            #     data = bmItemData.read(buf_size)        # to test
+            #     if not data:
+            #         break
             self.write(bmItemData)
             self.finish()
 
@@ -343,15 +363,17 @@ class Error404Handler(BaseHandler):
         self._team_name = None
         self._team_ip = None
         self._team_score = None
-    
+
     def get(self):
         # Cedrick Chaput don't want me to tell you when you're wrong
         self.redirect('/')
+
 
 class RulesHandler(BaseHandler):
 
     def get(self):
         self.render('templates/rules.html')
+
 
 class IndexProjectorHandler(BaseHandler):
 
@@ -362,13 +384,15 @@ class IndexProjectorHandler(BaseHandler):
             valid_news = self.client.getNews()
         except PLPGSQLRaiseError as e:
             message = e.message
-            self.render('templates/error.html', error_msg=message) 
+            self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/projector.html', table=score, news=valid_news)
+            self.render('templates/projector.html',
+                        table=score,
+                        news=valid_news)
 
 
 class DashboardProjectorHandler(BaseHandler):
@@ -386,12 +410,14 @@ class DashboardProjectorHandler(BaseHandler):
             self.render('templates/error.html', error_msg="Error")
         else:
             self.render('templates/projector_js.html', jsArray=jsArray)
-                        
+
+
 class SponsorsProjectorHandler(BaseHandler):
 
     @tornado.web.addslash
     def get(self):
-        self.render('templates/projector_sponsors.html', sponsors=self.sponsors)
+        self.render('templates/projector_sponsors.html',
+                    sponsors=self.sponsors)
 
 if __name__ == '__main__':
     # For the CSS
@@ -400,14 +426,16 @@ if __name__ == '__main__':
     # test
     tornado.log.enable_pretty_logging()
 
-    sponsors_imgs_path = os.path.join(os.path.dirname(__file__), "static/sponsors")
-    sponsors_imgs = [ "/static/sponsors/" + f for f in os.listdir(sponsors_imgs_path) \
-                        if os.path.isfile(os.path.join(sponsors_imgs_path, f)) ]
+    sponsors_imgs_path = os.path.join(os.path.dirname(__file__),
+                                      "static/sponsors")
+    sponsors_imgs = ["/static/sponsors/" +
+                     f for f in os.listdir(sponsors_imgs_path)
+                     if os.path.isfile(os.path.join(sponsors_imgs_path, f))]
 
     logger = Logger("HF2k15_Logger")
 
     args = dict(logger=logger, sponsors_imgs=sponsors_imgs)
-    
+
     app = tornado.web.Application([
             (r"/", IndexHandler, args),
             (r"/challenges/?", ChallengesHandler, args),
@@ -421,12 +449,12 @@ if __name__ == '__main__':
         ],
          debug=True,
          static_path=os.path.join(root, 'static'),
-         default_handler_class=Error404Handler # 404 Handling
+         default_handler_class=Error404Handler  # 404 Handling
          )
 
     server = tornado.httpserver.HTTPServer(app,
                                            xheaders=True
-                        )
-        
+                                           )
+
     server.listen(5000)
     tornado.ioloop.IOLoop.instance().start()
