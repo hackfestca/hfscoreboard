@@ -113,7 +113,7 @@ class AdminController(ClientController.ClientController):
             return self._oDB.proc('rewardTeam(integer,varchar,integer)')(id,name,pts)
 
     def getTeamList(self,top=config.DEFAULT_TOP_VALUE):
-        title = ['ID','Name','Net','FlagPts','FlagInstPts','Total'] 
+        title = ['ID','Name','Net','FlagPts','KingFlag','Total','Cash'] 
         score = self.listTeams(top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
