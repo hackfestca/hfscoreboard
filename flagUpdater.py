@@ -57,7 +57,7 @@ import argparse
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard flag updater. Use this tool to update flags on koth boxes'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 

@@ -56,7 +56,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard player xml rpc api. Start this script to enable the use of player.py.'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2014-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 

@@ -9,7 +9,7 @@ This script is the main interface for admins to manage CTF
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ import argparse
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard admin client. Use this tool to manage the CTF'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 
@@ -72,12 +72,18 @@ parser_team_action.add_argument('--mod', action='store', dest='mod', default='',
 parser_team_action.add_argument('--reward', action='store', dest='reward', default='', type=str, metavar='\'DESC|PTS\'', \
                                  help='Reward a team. Use with --id to identity which team to reward. \
                                        Example: --reward \'For having raised a sqli in the scoreboard|300\' --id 4')
+parser_team_action.add_argument('--launder', action='store', dest='launder', default=None, type=float, metavar='\'AMOUNT\'', \
+                                 help='Launder money for a team. Use with --id to identity which team to give money. \
+                                       Example: --launder 500 --id 4')
 parser_team_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List teams.')
+parser_team_action.add_argument('--variables', action='store_true', dest='variables', default=False, help='List team variables.')
+parser_team_option.add_argument('--grep', action='store', dest='grep', default=None, type=str, metavar='STR', \
+                                help='For --list only. Filter result by searching a specific string.')
 parser_team_option.add_argument('-t', '--top', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
                                 type=int, metavar='NUM', \
                                 help='For --list only. Use to specify number of rows to display. Default is 30.')
 parser_team_option.add_argument('-i', '--id', action='store', dest='id', default=0, type=int, \
-                                help='For --mod only. Used to identify which team to update. \
+                                help='For --mod,--reward,--launder. Use to identify which team to update. \
                                       Example: --mod \'NewTeamName!\' --id 1.')
 
 parser_news = subparsers.add_parser('news', help='Manage news.')
@@ -90,11 +96,11 @@ parser_news_action.add_argument('--mod', action='store', dest='mod', default='',
                                       Example: --mod \'This is another news\' --id 2.')
 parser_news_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, help='List news.')
 parser_news_option.add_argument('-t', '--ts', action='store', dest='timestamp', metavar='\'TS\'', default='', type=str, \
-                                help='For --add only. Used to specify when to display the news. \
+                                help='For --add only. Use to specify when to display the news. \
                                       Date and time must be specified. \
                                       Example: --add \'Challenge D is unlocked!\' --ts \'2014-11-08 23:00\'.')
 parser_news_option.add_argument('-i', '--id', action='store', dest='id', default=0, type=int, 
-                                help='For --mod only. Used to identify which news to update.')
+                                help='For --mod only. Use to identify which news to update.')
 
 parser_flag = subparsers.add_parser('flag', help='Manage flags.')
 parser_flag_action = parser_flag.add_argument_group("action")
@@ -238,9 +244,20 @@ try:
                 print('Return Code: '+str(rc))
             except ValueError:
                 print('[-] Invalid input. Please RTFM')
+        elif args.launder:
+            try:
+                cash = args.launder
+                print('Rewarding team for '+str(cash)+'$ where id='+str(args.id))
+                rc = c.launderMoney(args.id,cash)
+                print('Return Code: '+str(rc))
+            except ValueError:
+                print('[-] Invalid input. Please RTFM')
         elif args.list:
-            print('Displaying teams informations (top '+str(args.top)+')')
-            print(c.getTeamList(args.top))
+            print('Displaying teams informations (grep "'+str(args.grep)+'",top '+str(args.top)+')')
+            print(c.getFormatTeamList(args.grep,args.top))
+        elif args.variables:
+            print('Displaying team variables (id '+str(args.id)+')')
+            print(c.getFormatTeamsVariables(args.grep,args.top))
         else: 
             parser.print_help()
             print('No subaction choosen')

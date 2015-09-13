@@ -87,6 +87,13 @@ $$
 $$ LANGUAGE sql IMMUTABLE;
 
 /*
+    formatCash()
+*/
+CREATE OR REPLACE FUNCTION formatCash(cash NUMERIC(9,2)) returns NUMERIC(9,2) AS $$
+    SELECT cash::NUMERIC(9,2);
+$$ LANGUAGE SQL STRICT IMMUTABLE;
+
+/*
     Stored Proc: transferMoney(srcWalletId,dstWalletId,amount,transactionType)
 */
 CREATE OR REPLACE FUNCTION transferMoney(_srcWalletId wallet.id%TYPE,
@@ -109,8 +116,16 @@ RETURNS integer AS $$
             raise exception 'Could not find the destination wallet "%"',_dstWalletId;
         end if;
 
-        if _amount < 0::money then
+        if _amount < 0.01 then
+            raise exception 'Cannot transfer less than 0.01$';
+        end if;
+
+        if _amount < 0 then
             raise exception 'Cannot transfer negative value';
+        end if;
+
+        if _amount = 0 then
+            raise exception 'Cannot transfer a null value';
         end if;
 
         PERFORM code FROM transactionType WHERE code = _transactionTypeCode;
@@ -119,7 +134,7 @@ RETURNS integer AS $$
         end if;
 
         -- Verify source wallet has enough money to transfer the amount
-        PERFORM id,amount FROM wallet WHERE id = _srcWalletId and (amount - _amount) >= 0::money;
+        PERFORM id,amount FROM wallet WHERE id = _srcWalletId and (amount - _amount) >= 0;
         if not FOUND then
             raise exception 'Sender does not have enough money';
         end if;
@@ -174,6 +189,10 @@ RETURNS integer AS $$
         -- Logging
         raise notice 'launderMoneyFromTeamId(%,%)',$1,$2;
 
+        -- Must force numeric because python send huge crap
+        -- For example, 1.1 becomes 1.100000000000000088817841970012523233890533447265625
+        _amount := formatCash(_amount);
+
         -- Get team wallet id
         SELECT name,wallet INTO _teamName,_dstWalletId FROM team WHERE id = _teamId;
         if not FOUND then
@@ -184,7 +203,7 @@ RETURNS integer AS $$
         PERFORM launderMoney(_dstWalletId,_amount);
 
         -- DB Logging
-        PERFORM addEvent(format('Team %s have laundered %s.',_teamName,_amount),'cash');
+        PERFORM addEvent(format('Team %s have laundered %s$.',_teamName,_amount),'cash');
 
         RETURN 0;
     END;
@@ -217,7 +236,7 @@ RETURNS integer AS $$
         PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
 
         -- DB Logging
-        PERFORM addEvent(format('Team %s have bought a loto ticket for %s.',_teamName,_amount),'loto');
+        PERFORM addEvent(format('Team %s have bought a loto ticket for %s$.',_teamName,_amount),'loto');
 
         RETURN 0;
     END;
@@ -265,9 +284,9 @@ RETURNS text AS $$
         end if;
         
         -- Transfer cash to winner
-        if _amount > 0::money then
+        if _amount > 0 then
             PERFORM transferMoney(LOTO_ID,_winnerId,_amount,TR_LOTO_CODE);
-            _ret := format('Team "%s" won loto HF for an amount of %s.',_teamName,_amount::text);
+            _ret := format('Team "%s" won loto HF for an amount of %s$.',_teamName,_amount::text);
         else
             raise notice 'Loto wallet was empty. No winner this time.';
             _ret := 'Loto wallet was empty. No winner this time.';
@@ -362,7 +381,7 @@ RETURNS integer AS $$
         end if;
     
         -- Value cannot be 0$
-        if _flagCashValue is NULL or _flagCashValue = 0::money then
+        if _flagCashValue is NULL or _flagCashValue = 0 then
             raise exception 'Cannot transfer a 0$ flag';
         end if;
 
@@ -931,16 +950,16 @@ RETURNS wallet.id%TYPE AS $$
             raise exception 'Name cannot be NULL';
         end if;
 
-        if _amount < 0::money then
+        if _amount < 0 then
             raise exception 'Wallet amount cannot be under 0';
         end if;
 
         -- Insert a new row
-        INSERT INTO wallet(publicId,name,description,amount) VALUES(random_64(),_name,_desc,0::money);
+        INSERT INTO wallet(publicId,name,description,amount) VALUES(random_64(),_name,_desc,0);
         _walletId := LASTVAL();
 
         -- Perform first transaction if _amount > 0
-        if _isSystemWallet = false and _amount > 0::money then
+        if _isSystemWallet = false and _amount > 0then
             PERFORM transferMoney(1,_walletId,_amount,1);
         elsif _isSystemWallet = true then
             UPDATE wallet
@@ -1156,7 +1175,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: listTeam(top = 30)
 */
-CREATE OR REPLACE FUNCTION listTeams(_top integer default 30) 
+CREATE OR REPLACE FUNCTION listTeams(_grep varchar(30) DEFAULT NULL,
+                                     _top integer default 30) 
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
@@ -1218,6 +1238,7 @@ RETURNS TABLE (
                             ) AS tfi2
                         GROUP BY tfi2.teamId
                         ) AS tfi3 ON t.id = tfi3.teamId
+                     WHERE (_grep IS NULL OR t.name LIKE '%'||_grep||'%' OR t.net::text LIKE '%'||_grep||'%')
                      ORDER BY t.id 
                      LIMIT _top;
     END;
@@ -1247,14 +1268,13 @@ RETURNS integer AS $$
 
         -- Generate flag
         _flagName := 'Bug Bounty'||current_timestamp::varchar;
-        PERFORM addRandomFlag(_flagName, _pts, 'scoreboard.hf', 'bug', 
-                 1::smallint, NULL, 'HF Crew', False, _desc);
+        _flagId := addRandomFlag(_flagName, _pts, NULL, 'scoreboard.hf', 'bug', 1, 
+                                 NULL, 'HF Crew', 'Standard', NULL, _desc);
 
         -- Assign flag
-        SELECT id INTO _flagId FROM flag WHERE name = _flagName LIMIT 1;
         raise notice 'team net: %s',_teamNet+1;
-        INSERT INTO team_flag(teamId,flagId,playerIp)
-               VALUES(_teamId, _flagId,_teamNet+1);
+        INSERT INTO team_flag(teamId,flagId,pts,playerIp)
+               VALUES(_teamId, _flagId,_pts,_teamNet+1);
 
         -- Create news
         _newsMsg := 'Thanks to '||_teamName||' for raising an issue to admins ('||_pts||' pts)';
@@ -1518,7 +1538,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE, 
                                     _value flag.value%TYPE, 
                                     _pts flag.pts%TYPE,
-                                    _cash varchar(20),
+                                    _cash flag.cash%TYPE,
                                     _host host.name%TYPE,
                                     _category flagCategory.name%TYPE,
                                     _statusCode flagStatus.code%TYPE,
@@ -1587,13 +1607,13 @@ RETURNS flag.id%TYPE AS $$
 
         -- Convert cash if NULL
         if _cash is NULL then
-            _cash = '0'::money;
+            _cash = 0;
         end if;
 
         -- Insert a new row
         INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
                         type,typeExt,description)
-                VALUES(_name,_value,_pts,_cash::money,_hostId,_catId,_statusCode,_display,_authorId,
+                VALUES(_name,_value,_pts,_cash,_hostId,_catId,_statusCode,_display,_authorId,
                         _typeCode,_typeExtId,_description);
 
         RETURN LASTVAL();
@@ -1605,7 +1625,7 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
-                                    _cash varchar(20),
+                                    _cash flag.cash%TYPE,
                                     _host host.name%TYPE,
                                     _category flagCategory.name%TYPE,
                                     _statusCode flagStatus.code%TYPE,
@@ -1889,9 +1909,9 @@ RETURNS text AS $$
                     _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
 
                     -- Give cash if flag contains cash
-                    if _flagRec.cash is not NULL and _flagRec.cash <> 0::money then
+                    if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
                         PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
-                        _ret = _ret || 'You also received ' || _flagRec.cash::text || '.';
+                        _ret = _ret || 'You also received ' || _flagRec.cash::text || '$.';
                     end if;
                 else
                     SELECT *
@@ -1927,7 +1947,7 @@ RETURNS TABLE (
                 flagPts flag.pts%TYPE,
                 kingFlagPts kingFlag.pts%TYPE,
                 flagTotal flag.pts%TYPE,
-                cash wallet.amount%TYPE
+                cash text
               ) AS $$
     DECLARE
         _settings settings%ROWTYPE;
@@ -1976,7 +1996,7 @@ RETURNS TABLE (
                             coalesce(tf3.sum::integer,0) AS flagPts,
                             coalesce(tfi3.sum::integer,0) AS kingFlagPts,
                             (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
-                            w.amount AS cash
+                            w.amount::text || ' $' AS cash
                          FROM team AS t
                          LEFT OUTER JOIN (
                             SELECT w.id,
@@ -2039,13 +2059,11 @@ CREATE OR REPLACE FUNCTION getFlagValueFromName(_name flag.name%TYPE)
 RETURNS flag.value%TYPE AS $$
     DECLARE
         _flagRec RECORD;
-        _rowCount smallint;
     BEGIN
         -- Logging
         raise notice 'getFlagValueFromName(%)',$1;
     
         SELECT name,value INTO _flagRec FROM flag where name = _name LIMIT 1;
-        --GET DIAGNOSTICS rowCount = ROW_COUNT;
         if not FOUND then
             raise exception 'Could not find flag "%".',_name;
         end if;
@@ -3027,7 +3045,7 @@ RETURNS integer AS $$
         MAX_HOST                integer := 2;
         MAX_CAT                 integer := 9;
         MAX_TYPE                integer := 9;
-        CASH_START_AMOUNT       money   := 1200::money;
+        CASH_START_AMOUNT       wallet.amount%TYPE := 1200;
         _teamId team.id%TYPE;
         _net team.net%TYPE;
     BEGIN
@@ -3234,7 +3252,7 @@ RETURNS integer AS $$
         end if;
 
         -- Verify amount
-        if _amount <= 0::money then
+        if _amount <= 0 then
             raise exception 'Black market item cannot cost < 0';
         end if;
 
@@ -3892,15 +3910,15 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: addTeamSettings(teamId,name,value)
+    Stored Proc: addTeamVariables(teamId,name,value)
 */
-CREATE OR REPLACE FUNCTION addTeamSettings(_teamId team.id%TYPE,
-                                           _name teamSettings.value%TYPE,
-                                           _value teamSettings.value%TYPE)
+CREATE OR REPLACE FUNCTION addTeamVariables(_teamId team.id%TYPE,
+                                           _name teamVariables.value%TYPE,
+                                           _value teamVariables.value%TYPE)
 RETURNS integer AS $$
     BEGIN
         -- Logging
-        raise notice 'addTeamSettings(%,%,%)',$1,$2,$3;
+        raise notice 'addTeamVariables(%,%,%)',$1,$2,$3;
 
         -- Some checks
         if _name is NULL then
@@ -3908,26 +3926,64 @@ RETURNS integer AS $$
         end if;
 
         -- Insert a new row
-        INSERT INTO teamSettings(teamId,name,value) VALUES(_teamId,_name,_value);
+        INSERT INTO teamVariables(teamId,name,value) VALUES(_teamId,_name,_value);
 
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getTeamSettingsFromIp(playerIp)
+    Stored Proc: getTeamVariables(grep,top)
 */
-CREATE OR REPLACE FUNCTION getTeamSettingsFromIp(_playerIpStr varchar) 
+CREATE OR REPLACE FUNCTION getTeamsVariables(_grep varchar(30) DEFAULT NULL,
+                                            _top integer DEFAULT 30) 
+RETURNS TABLE (                             
+                TeamName team.name%TYPE,
+                name teamVariables.name%TYPE,
+                value teamVariables.value%TYPE
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTeamsVariables(%,%)',$1,$2;
+
+        -- Get team's settings
+        return QUERY SELECT a.teamName,
+                            a.name,
+                            a.value
+                     FROM (
+                         SELECT tv.teamId,
+                                tv.name,
+                                tv.value,
+                                t.name AS teamName
+                         FROM teamVariables AS tv
+                         LEFT OUTER JOIN (
+                            SELECT t.id,
+                                   t.name
+                            FROM team AS t
+                            ) AS t ON t.id = tv.teamId
+                         WHERE (_grep IS NULL 
+                                OR t.name LIKE '%'||_grep||'%' 
+                                OR tv.name LIKE '%'||_grep||'%'
+                                OR tv.value LIKE '%'||_grep||'%')
+                     ) AS a
+                     LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamVariablesFromIp(playerIp)
+*/
+CREATE OR REPLACE FUNCTION getTeamVariablesFromIp(_playerIpStr varchar) 
 RETURNS TABLE (
-                name teamSettings.name%TYPE,
-                value teamSettings.value%TYPE
+                name teamVariables.name%TYPE,
+                value teamVariables.value%TYPE
               ) AS $$
     DECLARE
         _playerIp inet;
         _teamId team.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'getTeamSettingsFromIp(%)',$1;
+        raise notice 'getTeamVariablesFromIp(%)',$1;
 
         -- Convert player IP
         _playerIp := _playerIpStr::inet;
@@ -3941,7 +3997,7 @@ RETURNS TABLE (
         -- Get team's settings
         return QUERY SELECT ts.name,
                             ts.value
-                     FROM teamSettings
+                     FROM teamVariables
                      WHERE teamId = _teamId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

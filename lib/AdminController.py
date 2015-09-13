@@ -102,11 +102,11 @@ class AdminController(ClientController.ClientController):
         else:
             return self._oDB.proc('modTeam(integer,varchar,varchar)')(id,name,net)
 
-    def listTeams(self,top=config.DEFAULT_TOP_VALUE):
+    def getTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc('listTeams(integer)'),top)
+            return self._benchmark(self._oDB.proc('listTeams(varchar,integer)'),grep,top)
         else:
-            return self._oDB.proc('listTeams(integer)')(top)
+            return self._oDB.proc('listTeams(varchar,integer)')(grep,top)
 
     def rewardTeam(self,id,name,pts):
         if self._bDebug:
@@ -114,12 +114,36 @@ class AdminController(ClientController.ClientController):
         else:
             return self._oDB.proc('rewardTeam(integer,varchar,integer)')(id,name,pts)
 
-    def getTeamList(self,top=config.DEFAULT_TOP_VALUE):
-        title = ['ID','Name','Net','FlagPts','KingFlag','Total','Cash'] 
-        score = self.listTeams(top)
+    def launderMoney(self,id,cash):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('launderMoneyFromTeamId(integer,numeric)'),id,cash)
+        else:
+            return self._oDB.proc('launderMoneyFromTeamId(integer,numeric)')(id,cash)
+
+    def getFormatTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
+        title = ['ID','Name','Net','FlagPts','KFlagPts','Total','Cash'] 
+        score = self.listTeams(grep,top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
         x.align['Net'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x
+
+    def getTeamsVariables(self,grep,top=config.DEFAULT_TOP_VALUE):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getTeamsVariables(varchar,integer)'),grep,top)
+        else:
+            return self._oDB.proc('getTeamsVariables(varchar,integer)')(grep,top)
+
+    def getFormatTeamsVariables(self,grep=None,top=config.DEFAULT_TOP_VALUE):
+        title = ['Team Name','Name','Value']
+        score = self.getTeamsVariables(grep,top)
+        x = PrettyTable(title)
+        x.align['Team Name'] = 'l'
+        x.align['Name'] = 'l'
+        x.align['Value'] = 'l'
         x.padding_width = 1
         for row in score:
             x.add_row(row)
@@ -301,15 +325,15 @@ class AdminController(ClientController.ClientController):
 
         return data.getvalue()
 
-    def getEvents(self,lastUpdate=None,facility=None,severity=None,top=config.DEFAULT_TOP_VALUE):
+    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc('getEvents(timestamp,varchar,varchar,integer)'),lastUpdate,facility,severity,top)
+            return self._benchmark(self._oDB.proc('getEvents(timestamp,varchar,varchar,varchar,integer)'),lastUpdate,facility,severity,grep,top)
         else:
-            return self._oDB.proc('getEvents(timestamp,varchar,varchar,integer)')(lastUpdate,facility,severity,top)
+            return self._oDB.proc('getEvents(timestamp,varchar,varchar,varchar,integer)')(lastUpdate,facility,severity,grep,top)
 
-    def getFormatEvents(self,lastUpdate=None,facility=None,severity=None,top=config.DEFAULT_TOP_VALUE):
+    def getFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
         title = ['Title', 'Facility', 'Severity', 'Ts']
-        events = self.getEvents(lastUpdate,facility,severity,top)
+        events = self.getEvents(lastUpdate,facility,severity,grep,top)
         x = PrettyTable(title)
         x.align['Title'] = 'l'
         x.padding_width = 1
@@ -317,10 +341,10 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,top=300,refresh=10):
+    def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
         title = ['Title', 'Facility', 'Severity', 'Ts']
         # Print first draft with header
-        events = self.getEvents(lastUpdate,facility,severity,top)
+        events = self.getEvents(lastUpdate,facility,severity,grep,top)
         x = PrettyTable(title)
         x.align['Title'] = 'l'
         x.padding_width = 1
@@ -333,7 +357,7 @@ class AdminController(ClientController.ClientController):
 
         while True:
             # Print every refresh without headers
-            events = list(self.getEvents(lastUpdate,facility,severity,top))
+            events = list(self.getEvents(lastUpdate,facility,severity,grep,top))
             if len(events) > 0:
                 x = PrettyTable(title)
                 x.align['Title'] = 'l'

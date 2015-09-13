@@ -57,7 +57,7 @@ from xmlrpc.client import Fault
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard player client. Use this tool to submit flags and display score'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 

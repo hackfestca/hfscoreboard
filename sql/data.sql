@@ -12,7 +12,7 @@ SELECT emptyTables();
     Set game start timestamp and other variables
 */
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000::money);
+       VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000);
 
 -- Add EventFacility
 SELECT addEventFacility(0,'global','Global','');
@@ -122,8 +122,8 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create some "NPC" wallets
 */
-SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',500000::money, true);
-SELECT addWallet('HF Loto','Default wallet used to manage loto.',0::money, true);
+SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',500000, true);
+SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
 
 /*
     fake teams for tests
@@ -145,7 +145,7 @@ SELECT identifyPlayerFromIp('mdube','192.168.1.102');
 SELECT identifyPlayerFromIp('mdube','127.0.0.1');
 
 -- Money for team eko
-SELECT launderMoneyFromTeamId(4,3001::money);
+SELECT launderMoneyFromTeamId(4,3001);
 
 /*
     Black market   
@@ -160,11 +160,11 @@ SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market b
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
 SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 
-SELECT addBMItem('Military base leak','admin',1,1,800::money,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
-SELECT addBMItem('Casino 0-day','admin',1,1,1600::money,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
-SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100::money,NULL,Null,'Something', 'exploit!'::bytea);
-SELECT addBMItem('Pipeline 0-day','admin',1,1,3700::money,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
-SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,'Mouhaha', 'exploit!'::bytea);
+SELECT addBMItem('Military base leak','admin',1,1,800,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
+SELECT addBMItem('Casino 0-day','admin',1,1,1600,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
+SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100,NULL,Null,'Something', 'exploit!'::bytea);
+SELECT addBMItem('Pipeline 0-day','admin',1,1,3700,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
+SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000,NULL,Null,'Mouhaha', 'exploit!'::bytea);
 
 
 /* *****************************************************
@@ -203,15 +203,15 @@ SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000::money,NULL,Null,
 
 
 -- Launder money
-SELECT launderMoneyFromTeamId(1,2000::money);
-SELECT launderMoneyFromTeamId(2,2000::money);
-SELECT launderMoneyFromTeamId(3,2000::money);
+SELECT launderMoneyFromTeamId(1,2000);
+SELECT launderMoneyFromTeamId(2,2000);
+SELECT launderMoneyFromTeamId(3,2000);
 
 -- Buy an admin item
 SELECT buyBMItemFromIp(1,'192.168.1.100');
 
 -- Sell an item
-SELECT sellBMItemFromIp('My item',1500::money,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
+SELECT sellBMItemFromIp('My item',1500,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
 
 -- Attempt to buy an un-reviewed item (tested:work)
 --SELECT buyBMItemFromIp(6,'172.16.66.155');
@@ -312,9 +312,9 @@ SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 9'));
 /*
     Loto tests
 */
-SELECT buyLotoTicketFromIp(500::money, '192.168.1.111');
-SELECT buyLotoTicketFromIp(700::money,'192.168.9.111');
-SELECT buyLotoTicketFromIp(100::money,'192.168.10.111');
+SELECT buyLotoTicketFromIp(500, '192.168.1.111');
+SELECT buyLotoTicketFromIp(700,'192.168.9.111');
+SELECT buyLotoTicketFromIp(100,'192.168.10.111');
 
 -- SELECT processLotoWinner(10);     -- Should not work
 SELECT processLotoWinner(4);     -- Should work

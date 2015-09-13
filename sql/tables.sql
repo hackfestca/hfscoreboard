@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS flagStatus CASCADE;
 DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS flagTypeExt CASCADE;
 DROP TABLE IF EXISTS player CASCADE;
-DROP TABLE IF EXISTS teamSettings CASCADE;
+DROP TABLE IF EXISTS teamVariables CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
 DROP TABLE IF EXISTS eventFacility CASCADE;
@@ -49,10 +49,10 @@ CREATE TABLE wallet(
     publicId varchar(64) not null unique,
     name varchar(50) not null,
     description text,
-    amount money not null,
+    amount NUMERIC(9,2) not null,
     ts timestamp not null default current_timestamp,
     constraint valid_wallet_name check (name != ''),
-    constraint valid_wallet_amount check (amount >= 0::money)
+    constraint valid_wallet_amount check (amount >= 0)
     );
 
 /*
@@ -71,14 +71,14 @@ CREATE TABLE team(
 /*
     Represent a team settings (variables). Useful to give unique information on a per-team basis.
 */
-CREATE TABLE teamSettings(
+CREATE TABLE teamVariables(
     id serial primary key,
     teamId integer not null references team(id),
     name varchar(100) not null,
     value varchar(100) not null,
     ts timestamp not null default current_timestamp,
-    constraint valid_teamSettings_name check (name != ''),
-    constraint valid_teamSettings_value check (value != '')
+    constraint valid_teamVariables_name check (name != ''),
+    constraint valid_teamVariables_value check (value != '')
     );
 
 /*
@@ -185,7 +185,7 @@ CREATE TABLE flag(
     name varchar(50) not null unique,
     value varchar(64) not null unique,
     pts integer not null,
-    cash money not null,
+    cash NUMERIC(9,2) not null,
     host integer not null references host(id),
     category integer not null references flagCategory(id),
     statusCode integer not null references flagStatus(code),
@@ -198,7 +198,7 @@ CREATE TABLE flag(
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
     constraint valid_flag_pts check (pts >= -700 and pts <= 700),
-    constraint valid_flag_cash check (cash >= 0::money),
+    constraint valid_flag_cash check (cash >= 0),
     constraint valid_flag_displayTs check (displayInterval > '0 hours'::interval)
     );
 
@@ -286,7 +286,7 @@ CREATE TABLE transaction(
     id serial primary key,
     srcWalletId integer not null references wallet(id) on delete cascade,
     dstWalletId integer not null references wallet(id) on delete cascade,
-    amount money not null,
+    amount NUMERIC(9,2) not null,
     type integer not null references transactionType(code) on delete cascade,
     description text,
     ts timestamp not null default current_timestamp
@@ -340,7 +340,7 @@ CREATE TABLE bmItem(
     statusCode integer not null references bmItemStatus(code) on delete cascade,
     review integer default null references bmItemReview(id) on delete cascade,
     ownerWallet integer not null references wallet(id) on delete cascade,
-    amount money not null,
+    amount NUMERIC(9,2) not null,
     qty integer default null,
     displayInterval interval default null,
     description text,
@@ -350,7 +350,7 @@ CREATE TABLE bmItem(
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
     constraint valid_bmItem_data check (data != ''),
-    constraint valid_bmItem_amount check (amount > 0::money),
+    constraint valid_bmItem_amount check (amount > 0),
     constraint valid_bmItem_displayTs check (displayInterval > '0 hours'::interval)
     );
 
@@ -437,6 +437,6 @@ CREATE TABLE settings(
     id serial primary key,
     gameStartTs timestamp not null,
     gameEndTs timestamp not null,
-    teamStartMoney money not null default 0,
+    teamStartMoney NUMERIC(9,2) not null default 0,
     ts timestamp not null default current_timestamp
     ); 

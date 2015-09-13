@@ -86,7 +86,7 @@ class InitController(ClientController.ClientController):
             addFlag = self._oDB.proc('addFlag(varchar, \
                                     varchar, \
                                     integer, \
-                                    varchar, \
+                                    numeric, \
                                     varchar, \
                                     varchar, \
                                     integer, \
@@ -97,7 +97,7 @@ class InitController(ClientController.ClientController):
                                     text)')
             addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
                                     integer, \
-                                    varchar, \
+                                    numeric, \
                                     varchar, \
                                     varchar, \
                                     integer, \
@@ -127,7 +127,7 @@ class InitController(ClientController.ClientController):
                             addFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fvalue,'str'), \
                                     self._sanitize(fpts,'int'), \
-                                    self._sanitize(fcash,'str'), \
+                                    self._sanitize(fcash,'float'), \
                                     self._sanitize(fhost,'str'), \
                                     self._sanitize(fcat,'str'), \
                                     self._sanitize(fstatus,'int'), \
@@ -139,7 +139,7 @@ class InitController(ClientController.ClientController):
                         else:
                             addRandomFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fpts,'int'), \
-                                    self._sanitize(cash,'str'), \
+                                    self._sanitize(cash,'float'), \
                                     self._sanitize(fhost,'str'), \
                                     self._sanitize(fcat,'str'), \
                                     self._sanitize(fstatus,'int'), \
@@ -155,7 +155,7 @@ class InitController(ClientController.ClientController):
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
             addTeam = self._oDB.proc('addTeam(varchar,varchar)')
-            addTeamSettings = self._oDB.proc('addTeamSettings(integer,varchar,varchar)')
+            addTeamVariables = self._oDB.proc('addTeamVariables(integer,varchar,varchar)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
@@ -166,7 +166,7 @@ class InitController(ClientController.ClientController):
                         teamId = addTeam(self._sanitize(tname,'str'), \
                                          self._sanitize(tnet,'str'))
                         for i in range(SETTINGS_COLS_START,len(headers)):
-                            addTeamSettings(teamId,\
+                            addTeamVariables(teamId,\
                                             self._sanitize(headers[i],'str'),\
                                             self._sanitize(row[i],'str'))
 

@@ -40,7 +40,7 @@ GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.listTeams(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.listTeams(varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.rewardTeam(integer,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addNews(varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modNews(integer,varchar,varchar) TO hfadmins;
@@ -53,7 +53,9 @@ GRANT EXECUTE ON FUNCTION scoreboard.getFlagsSubmitCount(varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamProgress(team.id%TYPE) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgress(flag.name%TYPE) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listFlags(integer) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,varchar,integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.launderMoneyFromTeamId(integer,numeric) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getTeamsVariables(varchar,integer) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;

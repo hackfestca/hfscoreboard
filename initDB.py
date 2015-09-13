@@ -57,7 +57,7 @@ import argparse
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2014-11-25)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 
