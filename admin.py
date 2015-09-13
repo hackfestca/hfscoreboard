@@ -158,6 +158,13 @@ parser_stats_option.add_argument('--id', action='store', dest='id', default=0, t
                                 help='For --teamProgress only. Use to specify which team to print progression for. Example: --id 14')
 parser_stats_option.add_argument('--flagName', action='store', dest='flagName', default='', type=str, metavar='FLAG_NAME', \
                                 help='For --flagProgress only. Use to specify which flags to search for. Example: --flagName \'ssh01\'')
+parser_events = subparsers.add_parser('events', help='Display game events.')
+parser_events_action = parser_events.add_argument_group("action")
+parser_events_option = parser_events.add_argument_group("option")
+parser_events_action.add_argument('-l', '--list', action='store_true', dest='list', default=False, \
+                                help='List events')
+parser_events_action.add_argument('--live', action='store_true', dest='live', default=False, \
+                                help='List events as they appear in the database.')
 parser_bench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
 parser_bench.add_argument('-n', action='store', dest='reqNum', default=100, \
                                 type=int, metavar='NB_OF_REQ', \
@@ -321,6 +328,16 @@ try:
         else:
             print("Displaying stats")
             print(c.getFormatGameStats())
+    elif args.action == 'events':
+        if args.list:
+            print("Displaying events")
+            print(c.getFormatEvents())
+        elif args.live:
+            print("Displaying events IRL")
+            c.printLiveFormatEvents()
+        else:
+            print("Displaying events")
+            print(c.getFormatEvents())
     elif args.action == 'bench':
         print("Benchmarking database")
         c.benchmarkDB(args.reqNum)
@@ -329,6 +346,9 @@ try:
         c.benchmarkDBCon(args.reqNum,args.reqCon)
     else:
         parser.print_help()
+except KeyboardInterrupt:
+    print("Bye")
+    sys.exit()
 except postgresql.exceptions.PLPGSQLRaiseError as e:
     print('[-] ('+str(e.code)+') '+e.message)
 except postgresql.exceptions.InsufficientPrivilegeError:

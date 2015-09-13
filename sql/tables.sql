@@ -384,7 +384,7 @@ CREATE TABLE eventSeverity(
 */
 CREATE TABLE event(
     id serial primary key,
-    title text not null unique,
+    title text not null,
     facility integer references eventFacility(code) on delete cascade,
     severity integer references eventSeverity(code) on delete cascade,
     ts timestamp not null default current_timestamp,

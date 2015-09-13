@@ -95,9 +95,9 @@ class ClientController():
         self._oDB.settings['search_path'] = config.DB_SCHEMA
 #        self._oDB.settings['client_min_messages'] = 'NOTICE'
 
-    def __del__(self):
-        if self._oDB:
-            self.close()
+#    def __del__(self):
+#        if self._oDB:
+#            self.close()
 
     def _benchmark(self,f, *args):
         t1 = time.time()

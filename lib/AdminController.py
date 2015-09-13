@@ -42,6 +42,8 @@ import threading
 from prettytable import PrettyTable 
 from io import StringIO
 import csv
+from time import sleep
+from datetime import datetime
 
 # Used for benchmark test only
 class MyThread(threading.Thread):
@@ -298,3 +300,47 @@ class AdminController(ClientController.ClientController):
             csvh.writerow([line[0].strftime("%Y-%m-%d %H:%M:%S")] + line[1:])
 
         return data.getvalue()
+
+    def getEvents(self,lastUpdate=None,facility=None,severity=None,top=config.DEFAULT_TOP_VALUE):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc('getEvents(timestamp,varchar,varchar,integer)'),lastUpdate,facility,severity,top)
+        else:
+            return self._oDB.proc('getEvents(timestamp,varchar,varchar,integer)')(lastUpdate,facility,severity,top)
+
+    def getFormatEvents(self,lastUpdate=None,facility=None,severity=None,top=config.DEFAULT_TOP_VALUE):
+        title = ['Title', 'Facility', 'Severity', 'Ts']
+        events = self.getEvents(lastUpdate,facility,severity,top)
+        x = PrettyTable(title)
+        x.align['Title'] = 'l'
+        x.padding_width = 1
+        for row in events:
+            x.add_row(row)
+        return x
+
+    def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,top=300,refresh=10):
+        title = ['Title', 'Facility', 'Severity', 'Ts']
+        # Print first draft with header
+        events = self.getEvents(lastUpdate,facility,severity,top)
+        x = PrettyTable(title)
+        x.align['Title'] = 'l'
+        x.padding_width = 1
+        for row in events:
+            x.add_row(row)
+        print(x)
+        x = None
+        lastUpdate = datetime.now()
+        sleep(refresh)
+
+        while True:
+            # Print every refresh without headers
+            events = list(self.getEvents(lastUpdate,facility,severity,top))
+            if len(events) > 0:
+                x = PrettyTable(title)
+                x.align['Title'] = 'l'
+                x.padding_width = 1
+                x.header = False
+                for row in events:
+                    x.add_row(row)
+                print(x)
+                lastUpdate = datetime.now()
+            sleep(refresh)

@@ -184,7 +184,7 @@ RETURNS integer AS $$
         PERFORM launderMoney(_dstWalletId,_amount);
 
         -- DB Logging
-        PERFORM addEvent(format('Team %s have laundered %s$',_teamName,_amount));
+        PERFORM addEvent(format('Team %s have laundered %s.',_teamName,_amount),'cash');
 
         RETURN 0;
     END;
@@ -217,7 +217,7 @@ RETURNS integer AS $$
         PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
 
         -- DB Logging
-        PERFORM addEvent(format('Team %s have bought a loto ticket for %s$',_teamName,_amount),'loto');
+        PERFORM addEvent(format('Team %s have bought a loto ticket for %s.',_teamName,_amount),'loto');
 
         RETURN 0;
     END;
@@ -256,7 +256,7 @@ RETURNS text AS $$
         -- Check that the winner have bought loto since last win
         PERFORM id 
         FROM transaction
-        WHERE ts > _lastWinTs
+        WHERE (ts > _lastWinTs or _lastWinTs is null)
             and dstWalletId = LOTO_ID
             and srcWalletId = _winnerId;
         if NOT FOUND then
@@ -266,7 +266,7 @@ RETURNS text AS $$
         
         -- Transfer cash to winner
         if _amount > 0::money then
-            PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
+            PERFORM transferMoney(LOTO_ID,_winnerId,_amount,TR_LOTO_CODE);
             _ret := format('Team "%s" won loto HF for an amount of %s.',_teamName,_amount::text);
         else
             raise notice 'Loto wallet was empty. No winner this time.';
@@ -285,8 +285,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 CREATE OR REPLACE FUNCTION getLotoHistory(_top integer DEFAULT 30)  
 RETURNS TABLE (
-                srcWallet wallet.name%TYPE,
-                dstWallet wallet.name%TYPE,
+                srcId wallet.id%TYPE,
+                srcName wallet.name%TYPE,
+                dstId wallet.id%TYPE,
+                dstName wallet.name%TYPE,
                 amount transaction.amount%TYPE,
                 transactionType transactionType.name%TYPE,
                 ts timestamp
@@ -303,8 +305,9 @@ RETURNS TABLE (
             raise exception '_top argument cannot be a negative value. _top=%',_top;
         end if;
 
-        RETURN QUERY SELECT
+        RETURN QUERY SELECT t.srcWalletId,
                             w1.name as srcWallet,
+                            t.dstWalletId,
                             w2.name as dstWallet,
                             t.amount,
                             tt.name as transactionType,
@@ -425,6 +428,7 @@ RETURNS TABLE (
                 raise exception 'Unique flag already submitted by a team. Too late. :)';
             end if;
             _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+            PERFORM addEvent(_ret,'flag');
             RETURN QUERY SELECT _flagRec.pts,_ret;
         elsif _flagRec.type = 12 then
             -- Calculate new value
@@ -1904,6 +1908,8 @@ RETURNS text AS $$
         else
             raise exception 'Invalid flag';
         end if;
+
+        PERFORM addEvent(_ret,'flag');
 
         RETURN _ret;
     END;
@@ -3511,8 +3517,10 @@ RETURNS integer AS $$
     DECLARE
         _playerIp inet;
         _teamId team.id%TYPE;
+        _teamName team.name%TYPE;
         _teamWalletId wallet.id%TYPE;
         _ownerWalletId wallet.id%TYPE;
+        _bmItemName bmItem.name%TYPE;
         _bmItemAmount bmItem.amount%TYPE;
         _bmItemQty bmItem.qty%TYPE;
         BMI_SOLD_STATUS bmItemStatus.code%TYPE := 2;
@@ -3523,7 +3531,7 @@ RETURNS integer AS $$
 
         -- Get team from userIp 
         _playerIp := _playerIpStr::inet;
-        SELECT id INTO _teamId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        SELECT id,name INTO _teamId,_teamName FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
@@ -3534,9 +3542,12 @@ RETURNS integer AS $$
         -- Check item availability
         PERFORM checkItemAvailability(_bmItemId,_teamId);
 
-        -- Transfer money
+        -- Get team wallet ID
         SELECT wallet INTO _teamWalletId FROM team WHERE id = _teamId;
-        SELECT ownerWallet,amount,qty INTO _ownerWalletId,_bmItemAmount,_bmItemQty FROM bmItem WHERE id = _bmItemId;
+
+        -- Transfer money
+        SELECT name,ownerWallet,amount,qty INTO _bmItemName,_ownerWalletId,_bmItemAmount,_bmItemQty 
+        FROM bmItem WHERE id = _bmItemId;
         PERFORM transferMoney(_teamWalletId,_ownerWalletId,_bmItemAmount,TR_BOUGHT_CODE);
 
         -- Assign item
@@ -3552,6 +3563,8 @@ RETURNS integer AS $$
         if _bmItemQty = 1 then
             PERFORM setBMItemStatus(_bmItemId,BMI_SOLD_STATUS);
         end if;
+
+        PERFORM addEvent(format('Team "%s" successfully bought item "%s" on the black market',_teamName,_bmItemName),'bm');
 
         RETURN 0;
     END;
@@ -3569,6 +3582,7 @@ CREATE OR REPLACE FUNCTION sellBMItemFromIp(_name bmItem.name%TYPE,
 RETURNS integer AS $$
     DECLARE
         _playerIp inet;
+        _teamName team.name%TYPE;
         _ownerWalletId bmItem.ownerWallet%TYPE;
         _catId bmItemCategory.id%TYPE;
         _catName bmItemCategory.name%TYPE := 'player';
@@ -3579,13 +3593,15 @@ RETURNS integer AS $$
 
         -- Get team from userIp 
         _playerIp := _playerIpStr::inet;
-        SELECT wallet INTO _ownerWalletId FROM team where _playerIp << net ORDER BY wallet DESC LIMIT 1;
+        SELECT name,wallet INTO _teamName,_ownerWalletId FROM team where _playerIp << net ORDER BY wallet DESC LIMIT 1;
         if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
 
         -- Add a new black market item
         PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,NULL,_description,_data);
+
+        PERFORM addEvent(format('Team "%s" submitted an item "%s" on the black market.',_teamName,_name),'bm');
 
         RETURN 0;
     END;
@@ -3601,13 +3617,15 @@ CREATE OR REPLACE FUNCTION reviewBMItem(_bmItemId bmItem.id%TYPE,
 RETURNS integer AS $$
     DECLARE
         _reviewId bmItemReview.id%TYPE;
+        _bmItemName bmItem.name%TYPE;
         CAT_PLAYER bmItemCategory.name%TYPE := 'player';
     BEGIN
         -- Logging
         raise notice 'reviewBMItem(%,%,%,%)',$1,$2,$3,$4;
 
         -- Can only review player items
-        PERFORM bmi.id,bmi.category 
+        SELECT bmi.name
+        INTO _bmItemName
         FROM bmItem AS bmi
         LEFT OUTER JOIN (
             SELECT id,
@@ -3632,6 +3650,8 @@ RETURNS integer AS $$
 
         -- Update status
         PERFORM setBMItemStatus(_bmItemId,_statusCode);
+
+        PERFORM addEvent(format('Item "%s" was reviewed by an admin.',_bmItemName),'bm');
 
         RETURN 0;
     END;
@@ -3794,7 +3814,7 @@ RETURNS integer AS $$
         if _facility is not NULL then
             SELECT code INTO _facilityCode FROM eventFacility WHERE name = _facility;
             if NOT FOUND then
-                raise exception 'Could not find facility "%s"',_facility;
+                raise exception 'Could not find facility "%"',_facility;
             end if;
         end if;
 
@@ -3802,7 +3822,7 @@ RETURNS integer AS $$
         if _severity is not NULL then
             SELECT code INTO _severityCode FROM eventSeverity WHERE name = _severity;
             if NOT FOUND then
-                raise exception 'Could not find severity "%s"',_severity;
+                raise exception 'Could not find severity "%"',_severity;
             end if;
         end if;
 
@@ -3820,9 +3840,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp DEFAULT NULL,
                                      _facility eventFacility.name%TYPE DEFAULT NULL,
                                      _severity eventSeverity.name%TYPE DEFAULT NULL,
-                                     _top integer DEFAULT 30)
+                                     _top integer DEFAULT 300)
 RETURNS TABLE (
-                id event.id%TYPE,
                 title event.title%TYPE,
                 facility eventFacility.name%TYPE,
                 severity eventSeverity.name%TYPE,
@@ -3830,8 +3849,8 @@ RETURNS TABLE (
               ) AS $$
 
     BEGIN
-        return QUERY SELECT e.id AS id,
-                            e.title AS title,
+        return QUERY SELECT * FROM (
+                     (SELECT e.title AS title,
                             ef.name AS facility,
                             es.name AS severity,
                             e.ts AS ts
@@ -3844,7 +3863,18 @@ RETURNS TABLE (
                         SELECT es.code,es.name
                         FROM eventSeverity AS es
                         ) AS es ON e.severity = es.code
-                    ORDER BY e.ts
+                     )
+                        UNION ALL
+                     (
+                     SELECT n.title,
+                            'news',
+                            NULL,
+                            n.displayTs
+                     FROM news AS n
+                     )
+                     ) AS t
+                    WHERE (t.ts >= _lastUpdateTs or _lastUpdateTs is null)
+                    ORDER BY t.ts
                     LIMIT _top;
         -- TODOO Make a union with news table.
 

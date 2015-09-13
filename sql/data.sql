@@ -21,6 +21,7 @@ SELECT addEventFacility(2,'news','News','');
 SELECT addEventFacility(3,'team','Teams','');
 SELECT addEventFacility(4,'bm','Black Market','');
 SELECT addEventFacility(5,'loto','Loto HF','');
+SELECT addEventFacility(6,'cash','Cash related','');
 
 /*
     Create event severity
@@ -104,17 +105,10 @@ SELECT addFlagType(32,'Team Group Pokemon');  -- Complex (pts)
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
 SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 
-/* 
-    Create flag types
-*/
---SELECT addFlagTypeExt('Standard','Standard');  -- I know it's redundant.
---SELECT addFlagTypeExt('Unique','Unique');      -- I know it's redundant.
---SELECT addFlagTypeExt('King','King');          -- I know it's redundant.
-
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to iHack CTF 2015 !', NOW()::timestamp);
+SELECT addNews('Welcome to Hackfest CTF 2015 !', NOW()::timestamp);
 
 /*
     Add transaction types
@@ -142,6 +136,7 @@ SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
 
+-- Money for team eko
 SELECT launderMoneyFromTeamId(4,3001::money);
 
 /*
@@ -226,7 +221,7 @@ SELECT reviewBMItem(6,4,0,'this is a malicious item. nice try');
 SELECT reviewBMItem(6,1,5,'this is a good item');
 
 -- Attempt to buy the approuved item (tested:work)
---SELECT buyBMItemFromIp(6,'172.16.66.250'); 
+SELECT buyBMItemFromIp(6,'172.16.66.250'); 
 
 /*
     Test specific flag types
@@ -306,7 +301,6 @@ SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 9'));
 */
 
 
-
 /*
     Loto tests
 */
@@ -314,39 +308,9 @@ SELECT buyLotoTicketFromIp(500::money, '192.168.1.111');
 SELECT buyLotoTicketFromIp(700::money,'192.168.9.111');
 SELECT buyLotoTicketFromIp(100::money,'192.168.10.111');
 
---SELECT processLotoWinner(10);
+-- SELECT processLotoWinner(10);     -- Should not work
+SELECT processLotoWinner(4);     -- Should work
 
-
-
-/*
-    Testing invalid pts
-*/
---SELECT addFlag('Test Flag 2014-10-25', 'KOTH-TESTTEST', 100::smallint, '172.28.72.4', 'misc', 
---                1::smallint, Null, Null, True, '', '',
---                'echo $FLAG > /home/hf/flag-koth.txt && chown root:hf /home/hf/flag-koth.txt && chmod 640 /home/hf/flag-koth.txt', 
---                'wget http://dathost/test');
-
-
-/*
-    Testing invalid status
-*/
---SELECT addFlag('Flag 1', random_32(), 1, 'dathost', 'ssh root@$HOST "echo $FLAG > /root/flag.txt"', 'wget http://dathost/test', 4);
--- Testing invalid pts
---SELECT addFlag('Flag 1', random_32(), 11, 'dathost', 'ssh root@$HOST "echo $FLAG > /root/flag.txt"', 'wget http://dathost/test');
-
-/*
-    Add test flags
-*/
-/*
-SELECT addFlag('Test 4.1', 'prepuce', 1::smallint, '172.28.72.4', 'rev', 1::smallint, Null, Null, True, '', '',
-                'echo $FLAG > /root/flag4.1.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.2', 'agres', 2::smallint, '172.28.72.4', 'rev', 1::smallint, Null, Null, True, '', '',
-                'echo $FLAG > /root/flag4.2.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.3', 'noob', 3::smallint, '172.28.72.4', 'rev', 1::smallint, Null, Null, True, '', '',
-                'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
-SELECT addFlag('Test 4.4', ':|!+"/_"!$)("/%*%$?&', 3::smallint, '172.28.72.4', 'rev', 1::smallint, Null, Null, True, '', ''
-                'echo $FLAG > /root/flag4.3.txt', 'wget http://dathost/test');
-*/
 
 /*
     Submit tests

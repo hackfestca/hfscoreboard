@@ -53,6 +53,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getFlagsSubmitCount(varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamProgress(team.id%TYPE) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgress(flag.name%TYPE) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listFlags(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,integer) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
