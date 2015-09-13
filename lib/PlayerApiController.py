@@ -52,26 +52,32 @@ class PlayerApiController(WebController.WebController):
         super().__init__()
     
     def getFormatCatProgressFromIp(self,playerIp):
-        title = ['CatId','Category','DisplayName', 'Description','Score','Total','Hidden'] 
+        keepCols = [2,3,4,5]
+        title = ['Category','Description','Score','Category Total'] 
         score = self.getCatProgressFromIp(playerIp)
+        newScore = [[row[i] for i in keepCols] for row in score]
         x = PrettyTable(title)
         x.align['Category'] = 'l'
-        x.align['DisplayName'] = 'l'
         x.align['Description'] = 'l'
         x.padding_width = 1
-        for row in score:
+        for row in newScore:
             x.add_row(row)
         return x
 
     def getFormatFlagProgressFromIp(self,playerIp):
-        title = ['id','Name','Description','pts','CatId','CatName','isDone','Author','DisplayInterval'] 
-        score = self.getFlagProgressFromIp(playerIp)
+        keepCols = [1,2,5,7,8,9]
+        #title = ['id','Name','Description','pts','FlagPts','DisplayPts','CatId','CatName','isDone','Author','DisplayInterval'] 
+        title = ['Name','Description','Score','Category','isDone','Author']
+        score = list(self.getFlagProgressFromIp(playerIp))
+        newScore = [[row[i] for i in keepCols] for row in score]
         x = PrettyTable(title)
         x.align['Name'] = 'l'
         x.align['Description'] = 'l'
-        x.align['CatName'] = 'l'
+        x.align['Category'] = 'l'
+        x.align['isDone'] = 'l'
+        x.align['Author'] = 'l'
         x.padding_width = 1
-        for row in score:
+        for row in newScore:
             x.add_row(row)
         return x
 

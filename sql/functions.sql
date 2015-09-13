@@ -1079,7 +1079,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
                                    _net varchar(20)) 
-RETURNS integer AS $$
+RETURNS team.id%TYPE AS $$
     DECLARE
         _inet inet;
         _walletId wallet.id%TYPE;
@@ -1108,7 +1108,7 @@ RETURNS integer AS $$
         -- Insert a new row
         INSERT INTO team(name,net,wallet) VALUES(_name,_inet,_walletId);
 
-        RETURN 0;
+        RETURN LASTVAL();
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1909,7 +1909,7 @@ RETURNS text AS $$
             raise exception 'Invalid flag';
         end if;
 
-        PERFORM addEvent(_ret,'flag');
+        -- PERFORM addEvent(_ret,'flag');
 
         RETURN _ret;
     END;
@@ -2351,8 +2351,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 */
 CREATE OR REPLACE FUNCTION getTeamInfoFromIp(_playerIpStr varchar(20))
 RETURNS TABLE (
-                info varchar(30),
-                value varchar(100)
+                info varchar(50),
+                value varchar(200)
               ) AS $$
     DECLARE
         _rowCount integer;
@@ -2360,6 +2360,7 @@ RETURNS TABLE (
         _teamRec team%ROWTYPE;
         _activePlayerCt integer;
         _teamFlagSubmitCt integer;
+        _playerNick player.nick%TYPE;
         _playerFlagSubmitCt integer;
         _teamScore flag.pts%TYPE;
         _teamMoney wallet.amount%TYPE;
@@ -2392,6 +2393,12 @@ RETURNS TABLE (
         INTO _teamFlagSubmitCt
         FROM submit_history 
         WHERE playerip << _teamRec.net;
+
+        -- Get player nick
+        SELECT nick
+        INTO _playerNick
+        FROM player
+        WHERE ip = _playerIp;
         
         -- Get team submitted flag count
         SELECT count(*)
@@ -2441,6 +2448,7 @@ RETURNS TABLE (
         -- Return
         RETURN QUERY SELECT 'ID'::varchar, _teamRec.id::varchar
                      UNION ALL SELECT 'Name'::varchar, _teamRec.name
+                     UNION ALL SELECT 'Player Nick'::varchar, _playerNick
                      UNION ALL SELECT 'Net'::varchar, _teamRec.net::varchar
                      UNION ALL SELECT 'Active Players'::varchar, _activePlayerCt::varchar
                      UNION ALL SELECT 'Team Submit Attempts'::varchar, _teamFlagSubmitCt::varchar
@@ -3835,11 +3843,12 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getEvents(lastUpdateTS,facility,severity,top)
+    Stored Proc: getEvents(lastUpdateTS,facility,severity,grep,top)
 */
 CREATE OR REPLACE FUNCTION getEvents(_lastUpdateTS timestamp DEFAULT NULL,
                                      _facility eventFacility.name%TYPE DEFAULT NULL,
                                      _severity eventSeverity.name%TYPE DEFAULT NULL,
+                                     _grep varchar(30) DEFAULT NULL,
                                      _top integer DEFAULT 300)
 RETURNS TABLE (
                 title event.title%TYPE,
@@ -3873,19 +3882,114 @@ RETURNS TABLE (
                      FROM news AS n
                      )
                      ) AS t
-                    WHERE (t.ts >= _lastUpdateTs or _lastUpdateTs is null)
+                    WHERE (_lastUpdateTs IS NULL OR t.ts >= _lastUpdateTs)
+                        AND (_facility IS NULL OR t.facility LIKE '%'||_facility||'%')
+                        AND (_severity IS NULL OR t.severity LIKE '%'||_severity||'%')
+                        AND (_grep IS NULL OR t.title LIKE '%'||_grep||'%')
                     ORDER BY t.ts
                     LIMIT _top;
-        -- TODOO Make a union with news table.
-
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: addTeamSettings(teamId,name,value)
+*/
+CREATE OR REPLACE FUNCTION addTeamSettings(_teamId team.id%TYPE,
+                                           _name teamSettings.value%TYPE,
+                                           _value teamSettings.value%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addTeamSettings(%,%,%)',$1,$2,$3;
+
+        -- Some checks
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO teamSettings(teamId,name,value) VALUES(_teamId,_name,_value);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getKingFlagValueFromFlagName(name)
+    Stored Proc: getTeamSettingsFromIp(playerIp)
 */
+CREATE OR REPLACE FUNCTION getTeamSettingsFromIp(_playerIpStr varchar) 
+RETURNS TABLE (
+                name teamSettings.name%TYPE,
+                value teamSettings.value%TYPE
+              ) AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamSettingsFromIp(%)',$1;
 
-/* 
-    Stored Proc: disableFlagFromName(name)
+        -- Convert player IP
+        _playerIp := _playerIpStr::inet;
+
+        -- Determine player's team
+        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Get team's settings
+        return QUERY SELECT ts.name,
+                            ts.value
+                     FROM teamSettings
+                     WHERE teamId = _teamId;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: identifyPlayerFromIp(nick,playerIp)
 */
+CREATE OR REPLACE FUNCTION identifyPlayerFromIp(_nick player.nick%TYPE,
+                                                _playerIpStr varchar) 
+RETURNS text AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _playerRec player%ROWTYPE;
+        _ret text;
+    BEGIN
+        -- Logging
+        raise notice 'identifyPlayerFromIp(%,%)',$1,$2;
+    
+        -- Convert player IP
+        _playerIp := _playerIpStr::inet;
+
+        -- Determine player's team
+        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Determine if IP is already used
+        SELECT id,teamId,nick,ip 
+        INTO _playerRec
+        FROM player
+        WHERE _playerIp = ip
+        LIMIT 1;
+
+        -- if IP is already used, overwrite
+        if FOUND then
+            UPDATE player
+            SET nick = _nick
+            WHERE id = _playerRec.id;
+
+            _ret := format('IP %s was already identified to %s. Updating to %s.',_playerIpStr,_playerRec.nick,_nick);
+        else
+        -- if not, insert new entry
+            INSERT INTO player(teamId,nick,ip) VALUES(_teamId,_nick,_playerIp);
+            _ret := format('IP %s was assigned to %s.',_playerIpStr,_nick);
+        end if;
+
+        RETURN _ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

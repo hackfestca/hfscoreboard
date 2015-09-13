@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS host CASCADE;
 DROP TABLE IF EXISTS flagStatus CASCADE;
 DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS flagTypeExt CASCADE;
+DROP TABLE IF EXISTS player CASCADE;
+DROP TABLE IF EXISTS teamSettings CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
 DROP TABLE IF EXISTS eventFacility CASCADE;
@@ -64,6 +66,32 @@ CREATE TABLE team(
     hide boolean not null default false,
     ts timestamp not null default current_timestamp,
     constraint valid_team_name check (name != '')
+    );
+
+/*
+    Represent a team settings (variables). Useful to give unique information on a per-team basis.
+*/
+CREATE TABLE teamSettings(
+    id serial primary key,
+    teamId integer not null references team(id),
+    name varchar(100) not null,
+    value varchar(100) not null,
+    ts timestamp not null default current_timestamp,
+    constraint valid_teamSettings_name check (name != ''),
+    constraint valid_teamSettings_value check (value != '')
+    );
+
+/*
+    Represent a player. Mostly used to map a nickname to an IP.
+*/
+CREATE TABLE player(
+    id serial primary key,
+    teamId integer not null references team(id),
+    nick varchar(50) not null,
+    ip inet not null unique,
+    ts timestamp not null default current_timestamp,
+    constraint valid_player_nick check (nick != ''),
+    constraint u_player_constraint unique (nick,ip)
     );
 
 /*

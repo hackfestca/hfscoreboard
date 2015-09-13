@@ -91,7 +91,6 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             raise Fault(e.code, 'Something insecure was detected. Please contact an admin') 
             exit(1);
         except Exception as e:
-            print(e)
             exit(1)
 
     def _dbClose(self):

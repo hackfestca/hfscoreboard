@@ -136,6 +136,14 @@ SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
 SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 SELECT addTeam('Team Eko', '127.0.0.1/8');
 
+/*
+    Identify fake names
+*/
+SELECT identifyPlayerFromIp('mdube','192.168.1.100');
+SELECT identifyPlayerFromIp('mdube','192.168.1.101');
+SELECT identifyPlayerFromIp('mdube','192.168.1.102');
+SELECT identifyPlayerFromIp('mdube','127.0.0.1');
+
 -- Money for team eko
 SELECT launderMoneyFromTeamId(4,3001::money);
 

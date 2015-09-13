@@ -150,9 +150,12 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(fdesc,'str'))
 
     def importTeams(self):
+        SETTINGS_COLS_START = 2
         with open(self._teamsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            headers = reader.__next__()
             addTeam = self._oDB.proc('addTeam(varchar,varchar)')
+            addTeamSettings = self._oDB.proc('addTeamSettings(integer,varchar,varchar)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
@@ -160,8 +163,12 @@ class InitController(ClientController.ClientController):
                     tnet = row[1]
                     
                     if tname != 'Team Name':
-                        addTeam(self._sanitize(tname,'str'), \
-                                self._sanitize(tnet,'str'))
+                        teamId = addTeam(self._sanitize(tname,'str'), \
+                                         self._sanitize(tnet,'str'))
+                        for i in range(SETTINGS_COLS_START,len(headers)):
+                            addTeamSettings(teamId,\
+                                            self._sanitize(headers[i],'str'),\
+                                            self._sanitize(row[i],'str'))
 
     def importSecurity(self):
         sql = ''.join(open(config.SQL_SEC_FILE, 'r').readlines())
