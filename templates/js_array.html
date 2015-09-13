@@ -1,11 +1,39 @@
 <div class="main-row">
   <div class="jumbotron">
     <div class="container">
-      <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined-dev.js"></script>
       <div id="chart_div" style="height: 650px;"></div>
       <script type="text/javascript" src="/static/js/dashboard.js"></script>
+      <style type="text/css">
+        #chart_div .dygraph-legend {
+	  width: 100px;
+          background-color: transparent !important;
+            left: 80px !important;
+	    top: 40px !important;
+        }
+      </style>
       <script type="text/javascript">
-	google.setOnLoadCallback(drawChart({% raw jsArray %}));
+      
+
+	function data() {
+	return {% raw jsArray %};
+	}
+	
+	new Dygraph(
+	    document.getElementById("chart_div"),
+	    data,
+	    {
+	        /*customBars: true,*/
+	        title: 'Hackfest 2015 CTF',
+	        ylabel: 'Score',
+	        axisLabelColor: 'white',
+	        strokeWidth: 2.0,
+	        legend: 'always',
+	        labelsSeparateLines: true,
+	        //labelsDivStyles: { 'textAlign': 'right' },
+	        showRangeSelector: true
+	    });
+
       </script>
     </div>
   </div>
