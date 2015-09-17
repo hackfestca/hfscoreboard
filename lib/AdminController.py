@@ -91,38 +91,75 @@ class AdminController(ClientController.ClientController):
             t.join()
 
     def addTeam(self,name,net):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('addTeam(varchar,varchar)'),name,net)
-        else:
-            return self._oDB.proc('addTeam(varchar,varchar)')(name,net)
+        return self._exec('addTeam(varchar,varchar)',name,net)
 
     def modTeam(self,id,name,net):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('modTeam(integer,varchar,varchar)'),id,name,net)
-        else:
-            return self._oDB.proc('modTeam(integer,varchar,varchar)')(id,name,net)
+        return self._exec('modTeam(integer,varchar,varchar)',id,name,net)
 
     def getTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('listTeams(varchar,integer)'),grep,top)
-        else:
-            return self._oDB.proc('listTeams(varchar,integer)')(grep,top)
+        return self._exec('listTeams(varchar,integer)',grep,top)
 
     def rewardTeam(self,id,name,pts):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('rewardTeam(integer,varchar,integer)'),id,name,pts)
-        else:
-            return self._oDB.proc('rewardTeam(integer,varchar,integer)')(id,name,pts)
+        return self._exec('rewardTeam(integer,varchar,integer)',id,name,pts)
 
     def launderMoney(self,id,cash):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('launderMoneyFromTeamId(integer,numeric)'),id,cash)
-        else:
-            return self._oDB.proc('launderMoneyFromTeamId(integer,numeric)')(id,cash)
+        return self._exec('launderMoneyFromTeamid(integer,numeric)',id,cash)
+
+    def getTeamsVariables(self,grep,top=config.DEFAULT_TOP_VALUE):
+        return self._exec('getTeamsVariables(varchar,integer)',grep,top)
+
+    def addNews(self,desc,ts):
+        return self._exec('addNews(varchar,varchar)',desc,ts)
+
+    def modNews(self,id,desc,ts):
+        return self._exec('modNews(integer,varchar,varchar)',id,desc,ts)
+
+    def checkFlag(self,flagValue):
+        return self._exec('checkFlag(varchar)',flagValue)
+
+    def getFlagList(self,top=config.DEFAULT_TOP_VALUE):
+        return self._exec('getFlagList(integer)',top)
+
+    def getFlagsSubmitCount(self,nameFilter):
+        return self._exec('getFlagsSubmitCount(varchar)',nameFilter)
+
+    def getGameStats(self):
+        return self._exec('getGameStats()')
+
+    def getTeamProgress(self,teamId):
+        return self._exec('getTeamProgress(integer)',teamId)
+
+    def getFlagProgress(self,flagName):
+        return self._exec('getFlagProgress(varchar)',flagName)
+
+    # def getFlagTypeList(self):
+
+    def getScoreProgress(self):
+        return self._exec('getScoreProgress(integer)',None)
+
+    def startGame(self):
+        return self._exec('startGame()')
+
+    def setSetting(self,attr,value,type):
+        return self._exec('setSetting(text,text,varchar)',attr,value,type)
+
+    def getSettings(self):
+        return self._exec('getSettings()')
+
+    def getSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
+        return self._exec('getSubmitHistory(integer,integer)',top,type)
+
+    # def getTransactionHistory(self)
+
+    # getLotoHistory
+
+    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
+        return self._exec('getEvents(timestamp,varchar,varchar,varchar,integer)',\
+                            lastUpdate,facility,severity,grep,top)
 
     def getFormatTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
         title = ['ID','Name','Net','FlagPts','KFlagPts','Total','Cash'] 
-        score = self.listTeams(grep,top)
+        score = self.getTeamList(grep,top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
         x.align['Net'] = 'l'
@@ -130,12 +167,6 @@ class AdminController(ClientController.ClientController):
         for row in score:
             x.add_row(row)
         return x
-
-    def getTeamsVariables(self,grep,top=config.DEFAULT_TOP_VALUE):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getTeamsVariables(varchar,integer)'),grep,top)
-        else:
-            return self._oDB.proc('getTeamsVariables(varchar,integer)')(grep,top)
 
     def getFormatTeamsVariables(self,grep=None,top=config.DEFAULT_TOP_VALUE):
         title = ['Team Name','Name','Value']
@@ -149,21 +180,9 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def addNews(self,desc,ts):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('addNews(varchar,varchar)'),desc,ts)
-        else:
-            return self._oDB.proc('addNews(varchar,varchar)')(desc,ts)
-
-    def listFlags(self,top=config.DEFAULT_TOP_VALUE):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('listFlags(integer)'),top)
-        else:
-            return self._oDB.proc('listFlags(integer)')(top)
-
-    def getFlagList(self,top=config.DEFAULT_TOP_VALUE):
+    def getFormatFlagList(self,top=config.DEFAULT_TOP_VALUE):
         title = ['ID','Name','Pts','Cash','Category','Status','Type','TypeExt','Author','Display Int.','Description'] 
-        score = self.listFlags(top)
+        score = self.getFlagList(top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
         x.align['Category'] = 'l'
@@ -184,12 +203,6 @@ class AdminController(ClientController.ClientController):
         graph = Pyasciigraph()
         return '\n'.join(graph.graph('', score))
 
-    def getFlagsSubmitCount(self,nameFilter):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getFlagsSubmitCount(varchar)'),nameFilter)
-        else:
-            return self._oDB.proc('getFlagsSubmitCount(varchar)')(nameFilter)
-
     def getFormatFlagsSubmitCount(self,nameFilter):
         title = ['Flag','Submit Count']
         info = self.getFlagsSubmitCount(nameFilter)
@@ -200,12 +213,6 @@ class AdminController(ClientController.ClientController):
         for row in info:
             x.add_row(row)
         return x
-
-    def getGameStats(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getGameStats()'))
-        else:
-            return self._oDB.proc('getGameStats()')()
 
     def getFormatGameStats(self):
         title = ['Info','Value']
@@ -218,12 +225,6 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def getTeamProgress(self,teamId):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getTeamProgress(integer)'),teamId)
-        else:
-            return self._oDB.proc('getTeamProgress(integer)')(teamId)
-
     def getFormatTeamProgress(self,teamId):
         title = ['Flag','isDone','Submit timestamp']
         info = self.getTeamProgress(teamId)
@@ -234,12 +235,6 @@ class AdminController(ClientController.ClientController):
         for row in info:
             x.add_row(row)
         return x
-
-    def getFlagProgress(self,flagName):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getFlagProgress(varchar)'),flagName)
-        else:
-            return self._oDB.proc('getFlagProgress(varchar)')(flagName)
 
     def getFormatFlagProgress(self,flagName):
         title = ['Team','isDone','Submit timestamp']
@@ -252,12 +247,6 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
-    def getScoreProgress(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getScoreProgress(integer)'),None)
-        else:
-            return self._oDB.proc('getScoreProgress(integer)')(None)
-
     def getFormatScoreProgress(self):
         info = self.getScoreProgress()
         x = PrettyTable()
@@ -265,24 +254,6 @@ class AdminController(ClientController.ClientController):
         for row in info:
             x.add_row(row)
         return x
-
-    def startGame(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('startGame()'))
-        else:
-            return self._oDB.proc('startGame()')()
-
-    def setSetting(self,attr,value,type):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('setSetting(text,text,varchar)'),attr,value,type)
-        else:
-            return self._oDB.proc('setSetting(text,text,varchar)')(attr,value,type)
-
-    def getSettings(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getSettings()'))
-        else:
-            return self._oDB.proc('getSettings()')()
 
     def getFormatSettings(self):
         title = ['Key', 'Value']
@@ -292,12 +263,6 @@ class AdminController(ClientController.ClientController):
         for row in settings:
             x.add_row(row)
         return x
-
-    def getSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getSubmitHistory(integer,integer)'),top,type)
-        else:
-            return self._oDB.proc('getSubmitHistory(integer,integer)')(top,type)
 
     def getFormatSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
         title = ['Timestamp', 'TeamName', 'FlagName', 'Pts', 'Category', 'Type']
@@ -324,12 +289,6 @@ class AdminController(ClientController.ClientController):
             csvh.writerow([line[0].strftime("%Y-%m-%d %H:%M:%S")] + line[1:])
 
         return data.getvalue()
-
-    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getEvents(timestamp,varchar,varchar,varchar,integer)'),lastUpdate,facility,severity,grep,top)
-        else:
-            return self._oDB.proc('getEvents(timestamp,varchar,varchar,varchar,integer)')(lastUpdate,facility,severity,grep,top)
 
     def getFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
         title = ['Title', 'Facility', 'Severity', 'Ts']

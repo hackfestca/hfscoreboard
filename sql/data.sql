@@ -234,6 +234,14 @@ SELECT buyBMItemFromIp(6,'172.16.66.250');
 /*
     Test specific flag types
 */
+-- Unique
+SELECT addRandomFlag('Unique Flag', 200, NULL, 'chaltest.ctf.hf', 'electro', 1,
+                NULL, 'Martin Dube', 'Unique', NULL, 'descccccc1');
+SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Unique Flag'));
+SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Unique Flag'));
+
+
+
 SELECT addFlagTypeExt('Decrement_-1','Dynamic', NULL, 100, -100);
 SELECT addFlagTypeExt('Decrement_-2','Dynamic', NULL, 100, -200);
 SELECT addFlag('Flag 1', 'vvvvvvvvvvvvvv', 300, NULL, 'chaltest.ctf.hf', 'web', 1,

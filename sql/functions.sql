@@ -1663,6 +1663,25 @@ RETURNS flag.id%TYPE AS $$
 $$ LANGUAGE plpgsql;
 
 /*
+    Stored Proc: checkFlag(value)
+*/
+CREATE OR REPLACE FUNCTION checkFlag( _flagValue flag.value%TYPE) 
+RETURNS text AS $$
+    BEGIN
+        -- Logging
+        raise notice 'checkFlag(%)',$1;
+    
+        PERFORM id FROM flag WHERE value = _flagValue;
+        if FOUND then
+            return 'The flag is valid';
+        else
+            return 'The flag is not valid';
+        end if;
+
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: addKingFlagFromId(flagId,value,pts)
 */
 CREATE OR REPLACE FUNCTION addKingFlagFromId( _flagId flag.id%TYPE, 
@@ -1735,9 +1754,9 @@ RETURNS kingFlag.value%TYPE AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: listFlags()
+    Stored Proc: getFlagList()
 */
-CREATE OR REPLACE FUNCTION listFlags(_top integer DEFAULT 30) 
+CREATE OR REPLACE FUNCTION getFlagList(_top integer DEFAULT 30) 
 RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
@@ -2333,9 +2352,9 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getNews()
+    Stored Proc: getNewsList()
 */
-CREATE OR REPLACE FUNCTION getNews() 
+CREATE OR REPLACE FUNCTION getNewsList() 
 RETURNS TABLE (
                 id news.id%TYPE,
                 displayTs news.displayTs%TYPE,
@@ -2345,7 +2364,7 @@ RETURNS TABLE (
         _settings settings%ROWTYPE;
     BEGIN
         -- Logging
-        raise notice 'getNews()';
+        raise notice 'getNewsList()';
 
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
@@ -3281,9 +3300,9 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: listBMItems(_top)
+    Stored Proc: getBMItemList(_top)
 */
-CREATE OR REPLACE FUNCTION listBMItems(_top integer DEFAULT 30)
+CREATE OR REPLACE FUNCTION getBMItemList(_top integer DEFAULT 30)
 RETURNS TABLE (
                 id bmItem.id%TYPE,
                 name bmItem.name%TYPE,
@@ -3327,9 +3346,9 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: listBMItemsUpdater(_top)
+    Stored Proc: getBMItemListUpdater(_top)
 */
-CREATE OR REPLACE FUNCTION listBMItemsUpdater(_top integer DEFAULT 30)
+CREATE OR REPLACE FUNCTION getBMItemListUpdater(_top integer DEFAULT 30)
 RETURNS TABLE (
                 id bmItem.id%TYPE,
                 name bmItem.name%TYPE,
@@ -4049,3 +4068,6 @@ RETURNS text AS $$
         RETURN _ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- getAuthorList()

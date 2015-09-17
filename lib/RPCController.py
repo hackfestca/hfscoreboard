@@ -164,3 +164,17 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         ret = self._dbExec(self._oC.getFormatTeamInfoFromIp,clientIP)
         self._dbClose()
         return ret
+
+    # identifyPlayerFromIp
+
+    # get team variables
+
+    # list bm items
+
+    # sell bm item
+
+    # buy bm item
+
+    # getTeamTransactionsFromIp
+
+    # buy loto

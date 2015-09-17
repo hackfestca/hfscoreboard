@@ -428,7 +428,7 @@ if __name__ == '__main__':
     # For the CSS
     root = os.path.dirname(__file__)
 
-    # test
+    # Prety stdout logs
     tornado.log.enable_pretty_logging()
 
     sponsors_imgs_path = os.path.join(os.path.dirname(__file__),

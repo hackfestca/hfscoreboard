@@ -99,6 +99,12 @@ class ClientController():
 #        if self._oDB:
 #            self.close()
 
+    def _exec(self, funcDef, *args):
+        if self._bDebug:
+            return self._benchmark(self._oDB.proc(funcDef),*args)
+        else:
+            return self._oDB.proc(funcDef)(*args)
+
     def _benchmark(self,f, *args):
         t1 = time.time()
         if len(args) > 0:
@@ -127,10 +133,22 @@ class ClientController():
         self._bDebug = debug
         
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getScore(integer,varchar,varchar)'),top,ts,cat)
-        else:
-            return self._oDB.proc('getScore(integer,varchar,varchar)')(top,ts,cat)
+        return self._exec('getScore(integer,varchar,varchar)',top,ts,cat)
+
+    def getCatProgress(self):
+        return self._exec('getCatProgress()')
+
+    def getTeamInfo(self):
+        return self._exec('getTeamInfo()')
+
+    def getFlagProgress(self):
+        return self._exec('getFlagProgress()')
+
+    def getNewsList(self):
+        return self._exec('getNewsList()')
+
+    def getAuthorList(self):
+        return self._exec('getAuthorList()')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         title = ['ID','TeamName','FlagPts','KFlagPts','Total','Cash'] 
@@ -141,12 +159,6 @@ class ClientController():
         for row in score:
             x.add_row(row)
         return x
-
-    def getCatProgress(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getCatProgress()'))
-        else:
-            return self._oDB.proc('getCatProgress()')()
 
     def getFormatCatProgress(self):
         title = ['CatId','Category','DisplayName', 'Description','Score','Total','IsHidden'] 
@@ -160,12 +172,6 @@ class ClientController():
             x.add_row(row)
         return x
 
-    def getFlagProgress(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getFlagProgress()'))
-        else:
-            return self._oDB.proc('getFlagProgress()')()
-
     def getFormatFlagProgress(self):
         title = ['id','Name','Description','pts','CatId','CatName','isDone','DisplayInterval'] 
         score = self.getFlagProgress()
@@ -178,15 +184,9 @@ class ClientController():
             x.add_row(row)
         return x
 
-    def getNews(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getNews()'))
-        else:
-            return self._oDB.proc('getNews()')()
-
     def getFormatNews(self):
         title = ['id','Release date&time', 'News']
-        score = self.getNews()
+        score = self.getNewsList()
         x = PrettyTable(title)
         x.align['Release date&time'] = 'l'
         x.align['News'] = 'l'
@@ -194,12 +194,6 @@ class ClientController():
         for row in score:
             x.add_row(row)
         return x
-
-    def getTeamInfo(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getTeamInfo()'))
-        else:
-            return self._oDB.proc('getTeamInfo()')()
 
     def getFormatTeamInfo(self):
         title = ['Info','Value']
