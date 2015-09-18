@@ -212,6 +212,7 @@ SELECT buyBMItemFromIp(1,'192.168.1.100');
 
 -- Sell an item
 SELECT sellBMItemFromIp('My item',1500,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
+--SELECT sellBMItemFromIp('My item 2',1500,1,'this is an epic item. Buy it now!','The secret is: haha owned','192.168.1.11');
 
 -- Attempt to buy an un-reviewed item (tested:work)
 --SELECT buyBMItemFromIp(6,'172.16.66.155');
@@ -237,9 +238,10 @@ SELECT buyBMItemFromIp(6,'172.16.66.250');
 -- Unique
 SELECT addRandomFlag('Unique Flag', 200, NULL, 'chaltest.ctf.hf', 'electro', 1,
                 NULL, 'Martin Dube', 'Unique', NULL, 'descccccc1');
+/*
 SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Unique Flag'));
 SELECT submitFlagFromIp('192.168.10.21', getFlagValueFromName('Unique Flag'));
-
+*/
 
 
 SELECT addFlagTypeExt('Decrement_-1','Dynamic', NULL, 100, -100);

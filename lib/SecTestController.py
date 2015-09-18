@@ -70,7 +70,7 @@ class SecTestController(ClientController.ClientController):
                             (self._oDB.proc('getScore(integer,varchar,varchar)'),[30,None,None]), \
                             (self._oDB.proc('getCatProgressFromIp(varchar)'),['10.0.0.1']), \
                             (self._oDB.proc('getFlagProgressFromIp(varchar)'),['10.0.0.1']), \
-                            (self._oDB.proc('getNews()'),[]) \
+                            (self._oDB.proc('getNewsList()'),[]) \
                           ], \
               'P_NO_ACCESS': [ \
                                (self._oDB.proc('addTeam(varchar,varchar)'),['Team Name', '192.168.1.0/24']), \

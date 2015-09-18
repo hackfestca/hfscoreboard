@@ -1395,7 +1395,7 @@ RETURNS integer AS $$
 
         -- Update
         UPDATE news 
-        SET title=_title,displayTs=_displayTs
+        SET title=_title,displayTs=_displayTs::timestamp
         WHERE id=_id;
         IF not found THEN
             raise exception 'Could not find news with id %i', _id;
@@ -3195,6 +3195,25 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
+    Stored Proc: getBMItemCategoryList()
+*/
+CREATE OR REPLACE FUNCTION getBMItemCategoryList()
+RETURNS TABLE (
+                id bmItemCategory.id%TYPE,
+                name bmItemCategory.name%TYPE,
+                description bmItemCategory.description%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT c.id,
+                            c.name,
+                            c.description
+                    FROM bmItemCategory AS c
+                    ORDER BY c.id;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: addBMItemStatus(code,name,description)
 */
 CREATE OR REPLACE FUNCTION addBMItemStatus(_code bmItemStatus.code%TYPE,
@@ -3213,6 +3232,25 @@ RETURNS integer AS $$
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql;
+
+/*
+    Stored Proc: getBMItemStatusList()
+*/
+CREATE OR REPLACE FUNCTION getBMItemStatusList()
+RETURNS TABLE (
+                code bmItemStatus.code%TYPE,
+                name bmItemStatus.name%TYPE,
+                description bmItemStatus.description%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT s.code,
+                            s.name,
+                            s.description
+                    FROM bmItemStatus AS s
+                    ORDER BY s.code;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: setBMItemStatus(_bmItemId,_bmItemStatusCode)
@@ -3238,7 +3276,7 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: addBMItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,desc)
+    Stored Proc: addBMItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,desc,data)
 */
 CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE, 
                                     _category bmItemCategory.name%TYPE,
@@ -3256,7 +3294,7 @@ RETURNS integer AS $$
         _display bmItem.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addBMItem(%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7;
+        raise notice 'addBMItem(%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,'data';
 
         -- Get category id from name
         SELECT id INTO _catId FROM bmItemCategory WHERE name = _category;
@@ -3297,7 +3335,53 @@ RETURNS integer AS $$
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: modBMItem(id,name,amount,qty,displayInterval,desc,data)
+*/
+CREATE OR REPLACE FUNCTION modBMItem(_id bmItem.id%TYPE,
+                                    _name bmItem.name%TYPE, 
+                                    _amount bmItem.amount%TYPE,
+                                    _qty bmItem.qty%TYPE,
+                                    _displayInterval varchar(20),
+                                    _description bmItem.description%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _display bmItem.displayInterval%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'modBMItem(%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6;
+
+        -- Verify amount
+        if _amount <= 0 then
+            raise exception 'Black market item cannot cost < 0';
+        end if;
+
+        -- Verify quantity
+        if _qty is not NULL and _qty <= 0 then
+            raise exception 'Black market item quantity cannot be < 0';
+        end if;
+
+        -- Convert displayInterval
+        if _displayInterval is not NULL then
+            _display = _displayInterval::interval;
+        else
+            _display = _displayInterval;
+        end if;
+
+        -- Insert a new row
+        UPDATE bmItem
+        SET name = _name,
+            amount = _amount,
+            qty = _qty,
+            displayInterval = _display,
+            description = _description
+        WHERE id = _id;
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getBMItemList(_top)
@@ -3455,6 +3539,70 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Qty'::varchar, _qty;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemData(privateId,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemData(_id bmItem.id%TYPE)
+RETURNS bytea AS $$
+    DECLARE
+        _data bmItem.data%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemData(%)',$1;
+
+        -- Return data
+        SELECT data INTO _data FROM bmItem WHERE id = _id;
+        return _data;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemDataFromIp(privateId,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemDataFromIp(_privateId bmItem.privateId%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS bytea AS $$
+    DECLARE
+        _bmItemId bmItem.id%TYPE;
+        _teamId team.id%TYPE;
+        _playerIp inet;
+        _data bmItem.data%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemDataFromIp(%,%)',$1,$2;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get bmItemId FROM privateId
+        SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Get teamId FROM playerIp
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Verify that the team have successfuly bought the item
+        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+
+            -- Reset the item's private ID is an authorized access was performed
+            UPDATE bmItem
+            SET privateId = random(64)
+            WHERE id = _bmItemId;
+        end if;
+
+        -- Return data
+        SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
+        return _data;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 /*
     Stored Proc: checkTeamSolvency(teamId,itemId)
 */
@@ -3736,52 +3884,6 @@ RETURNS integer AS $$
         PERFORM setBMItemStatus(_bmItemId,BMI_FORSALE_STATUS);
 
         RETURN 0;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getBMItemDataFromIp(privateId,playerIp)
-*/
-CREATE OR REPLACE FUNCTION getBMItemDataFromIp(_privateId bmItem.privateId%TYPE,
-                                               _playerIpStr varchar(20))
-RETURNS bytea AS $$
-    DECLARE
-        _bmItemId bmItem.id%TYPE;
-        _teamId team.id%TYPE;
-        _playerIp inet;
-        _data bmItem.data%TYPE;
-    BEGIN
-        -- Logging
-        raise notice 'getBMItemDataFromIp(%,%)',$1,$2;
-
-        _playerIp := _playerIpStr::inet;
-
-        -- Get bmItemId FROM privateId
-        SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
-        if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
-        end if;
-
-        -- Get teamId FROM playerIp
-        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
-        if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
-        end if;
-
-        -- Verify that the team have successfuly bought the item
-        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
-        if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
-
-            -- Reset the item's private ID is an authorized access was performed
-            UPDATE bmItem
-            SET privateId = random(64)
-            WHERE id = _bmItemId;
-        end if;
-
-        -- Return data
-        SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
-        return _data;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

@@ -70,7 +70,7 @@ class AdminController(ClientController.ClientController):
         print('Testing getScore()')
         self._benchmarkMany(reqNum,self._oDB.proc('getScore(integer,varchar,varchar)'),config.DEFAULT_TOP_VALUE,None,None)
         print('Testing getNews()')
-        self._benchmarkMany(reqNum,self._oDB.proc('getNews()'))
+        self._benchmarkMany(reqNum,self._oDB.proc('getNewsList()'))
 
     def benchmarkDBCon(self,reqNum=config.BENCH_DEFAULT_REQ_NUM,reqCon=config.BENCH_DEFAULT_CON_NUM):
         aThreads = []
@@ -123,19 +123,43 @@ class AdminController(ClientController.ClientController):
     def getFlagsSubmitCount(self,nameFilter):
         return self._exec('getFlagsSubmitCount(varchar)',nameFilter)
 
-    def getGameStats(self):
-        return self._exec('getGameStats()')
+    def addBMItem(self,name,amount,qty,disp,desc,data):
+        category = 'admin'
+        status = 1
+        wallet = 1
+        return self._exec('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,bytea)',\
+                          name,category,status,wallet,amount,qty,disp,desc,data)
 
-    def getTeamProgress(self,teamId):
-        return self._exec('getTeamProgress(integer)',teamId)
+    def modBMItem(self,id,name,amount,qty,disp,desc):
+        return self._exec('modBMItem(integer,varchar,numeric,integer,varchar,text)',\
+                          id,name,amount,qty,disp,desc)
 
-    def getFlagProgress(self,flagName):
-        return self._exec('getFlagProgress(varchar)',flagName)
+    def getBMItemInfo(self,id):
+        return self._exec('getBMItemInfo(integer)',id)
 
-    # def getFlagTypeList(self):
+    def getBMItemData(self,id):
+        return self._exec('getBMItemData(integer)',id)
 
-    def getScoreProgress(self):
-        return self._exec('getScoreProgress(integer)',None)
+    def reviewBMItem(self,id,status,rating,comments):
+        return self._exec('reviewBMItem(integer,integer,integer,text)',id,status,rating,comments)
+
+    def setBMItemStatus(self,id,status):
+        return self._exec('setBMItemStatus(integer,integer)',id,status)
+
+    def getBMItemList(self,top):
+        return self._exec('getBMItemList(integer)',top)
+
+    def getBMItemCategoryList(self):
+        return self._exec('getBMItemCategoryList()')
+    
+    def getBMItemStatusList(self):
+        return self._exec('getBMItemStatusList()')
+
+    def getTransactionHistory(self,top):
+        return self._exec('getTransactionHistory(integer)',top)
+
+    def getLotoHistory(self,top):
+        return self._exec('getLotoHistory(integer)',top)
 
     def startGame(self):
         return self._exec('startGame()')
@@ -146,12 +170,23 @@ class AdminController(ClientController.ClientController):
     def getSettings(self):
         return self._exec('getSettings()')
 
+    def getGameStats(self):
+        return self._exec('getGameStats()')
+
+    def getTeamProgress(self,teamId):
+        return self._exec('getTeamProgress(integer)',teamId)
+
+    def getFlagProgress(self,flagName):
+        return self._exec('getFlagProgress(varchar)',flagName)
+
+    def getFlagTypeList(self):
+        return self._exec('getFlagTypeList()')
+
+    def getScoreProgress(self):
+        return self._exec('getScoreProgress(integer)',None)
+
     def getSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
         return self._exec('getSubmitHistory(integer,integer)',top,type)
-
-    # def getTransactionHistory(self)
-
-    # getLotoHistory
 
     def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
         return self._exec('getEvents(timestamp,varchar,varchar,varchar,integer)',\
@@ -209,6 +244,75 @@ class AdminController(ClientController.ClientController):
         x = PrettyTable(title)
         x.align['Flag'] = 'l'
         x.align['Submit Count'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatBMItemList(self,top):
+        title = ['id','name','category','status','rating','owner','cost','qty']
+        info = self.getBMItemList(top)
+        x = PrettyTable(title)
+        x.align['name'] = 'l'
+        x.align['category'] = 'l'
+        x.align['status'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatBMItemCategoryList(self):
+        title = ['id','name','description']
+        info = self.getBMItemCategoryList()
+        x = PrettyTable(title)
+        x.align['name'] = 'l'
+        x.align['description'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatBMItemStatusList(self):
+        title = ['code','name','description']
+        info = self.getBMItemStatusList()
+        x = PrettyTable(title)
+        x.align['name'] = 'l'
+        x.align['description'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatBMItemInfo(self,id):
+        title = ['Info','Value']
+        info = self.getBMItemInfo(id)
+        x = PrettyTable(title)
+        x.align['Info'] = 'l'
+        x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatTransactionHistory(self,top):
+        title = ['Src Wallet','Dst Wallet','Amount','Type','TS']
+        info = self.getTransactionHistory(top)
+        x = PrettyTable(title)
+        x.align['Src Wallet'] = 'l'
+        x.align['Dst Wallet'] = 'l'
+        x.align['Type'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
+    def getFormatLotoHistory(self,top):
+        title = ['Src id','Src Wallet','Dst ID','Dst Wallet','Amount','Type','TS']
+        info = self.getLotoHistory(top)
+        x = PrettyTable(title)
+        x.align['Src Wallet'] = 'l'
+        x.align['Dst Wallet'] = 'l'
+        x.align['Type'] = 'l'
         x.padding_width = 1
         for row in info:
             x.add_row(row)
@@ -301,29 +405,17 @@ class AdminController(ClientController.ClientController):
         return x
 
     def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
-        title = ['Title', 'Facility', 'Severity', 'Ts']
-        # Print first draft with header
+        formatStr = "%s %s %s %s"
         events = self.getEvents(lastUpdate,facility,severity,grep,top)
-        x = PrettyTable(title)
-        x.align['Title'] = 'l'
-        x.padding_width = 1
         for row in events:
-            x.add_row(row)
-        print(x)
-        x = None
+            print(formatStr % (row[3],row[1],row[2],row[0]))
         lastUpdate = datetime.now()
         sleep(refresh)
 
         while True:
-            # Print every refresh without headers
             events = list(self.getEvents(lastUpdate,facility,severity,grep,top))
             if len(events) > 0:
-                x = PrettyTable(title)
-                x.align['Title'] = 'l'
-                x.padding_width = 1
-                x.header = False
                 for row in events:
-                    x.add_row(row)
-                print(x)
-                lastUpdate = datetime.now()
+                    print(formatStr % (row[3],row[1],row[2],row[0]))
+                    lastUpdate = datetime.now()
             sleep(refresh)

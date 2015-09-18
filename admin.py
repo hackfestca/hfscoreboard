@@ -51,6 +51,7 @@ from lib import SecTestController
 # System imports
 import postgresql.exceptions
 import argparse
+import os.path
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -59,85 +60,121 @@ parser = argparse.ArgumentParser(description=description)
 parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
-
 subparsers = parser.add_subparsers(dest='action')
-pteam = subparsers.add_parser('team', help='Manage teams.')
+pteamDesc = '''\
+variables:
+    ID          int - Id of the team. Use --list to find the correct id.
+    NAME        str - Name of the team. 
+    NET         str - Network of the team. Ex: 172.29.102.0/24
+    DESC        str - Description of the reward. Just explain why the team was rewarded.
+    PTS         int - Number of points to give as a reward.
+    AMOUNT      float - Amount of money to give for money laundering.
+'''
+pteamEpi = '''\
+example: 
+    --add 'TeamName|172.29.23.0/24'
+
+    --mod '12|NewTeamName|172.29.23.0/24'
+
+    --reward '31|For having raised a sqli in the scoreboard|300'
+
+    --launder '25|500'
+'''
+pteam = subparsers.add_parser('team', description=pteamDesc, epilog=pteamEpi, 
+                              formatter_class=argparse.RawDescriptionHelpFormatter, help='Manage teams.')
 pteam_a = pteam.add_argument_group("Action")
 pteam_o = pteam.add_argument_group("Option")
-pteam_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NAME|SUBNET\'', \
-                     help='Add a team. Example: --add \'TeamName|172.29.23.0/24\'.')
-pteam_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'ID|NAME|SUBNET\'', \
-                     help='Modify a team. Example: --mod \'12|NewTeamName|172.29.23.0/24\'')
+pteam_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NAME|NET\'', \
+                     help='Add a team.')
+pteam_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'ID|NAME|NET\'', \
+                     help='Modify a team.')
 pteam_a.add_argument('--reward', action='store', dest='reward', default='', type=str, metavar='\'ID|DESC|PTS\'', \
-                     help='Reward a team. Example: --reward \'31|For having raised a sqli in the scoreboard|300\'')
+                     help='Reward a team. ')
 pteam_a.add_argument('--launder', action='store', dest='launder', default=None, type=str, metavar='\'ID|AMOUNT\'', \
-                     help='Launder money for a team. Example: --launder \'4|500\'')
+                     help='Launder money for a team. ')
 pteam_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List teams.')
 pteam_a.add_argument('--variables', action='store_true', dest='variables', default=False, help='List team variables.')
 pteam_o.add_argument('--grep', action='store', dest='grep', default=None, type=str, metavar='STR', \
                      help='For --list only. Filter result by searching a specific string.')
-pteam_o.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-                     type=int, metavar='NUM', \
-                     help='For --list only. Use to specify number of rows to display. Default is 30.')
 
-pnews = subparsers.add_parser('news', help='Manage news.')
+pnewsDesc = '''\
+variables:
+    ID          int - Id of the team. Use --list to find the correct id.
+    NEWS        str - News title.
+    TS          timestamp - (optional) Timestamp at which the news will be displayed.
+'''
+pnewsEpi = '''\
+example: 
+    --add 'Team A is dominating!'
+    --add 'Huge leak have appeared on the black market!|2015-11-07 23:00'
+
+    --mod '6|Team B is dominating!'
+'''
+pnews = subparsers.add_parser('news', description=pnewsDesc, epilog=pnewsEpi,
+                              formatter_class=argparse.RawDescriptionHelpFormatter, help='Manage news.')
 pnews_a = pnews.add_argument_group("action")
 pnews_o = pnews.add_argument_group("option")
-pnews_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NEWS\'', \
-                     help='Add a news. Example: --add \'Team A is dominating!\'.')
-pnews_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'NEWS\'', \
-                     help='Modify a news. Use with --id to identify which news to update. \
-                           Example: --mod \'This is another news\' --id 2.')
+pnews_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NEWS|TS\'', \
+                     help='Add a news.')
+pnews_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'ID|NEWS|TS\'', \
+                     help='Modify a news.')
 pnews_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List news.')
-pnews_o.add_argument('-t', '--ts', action='store', dest='timestamp', metavar='\'TS\'', default='', type=str, \
-                     help='For --add only. Use to specify when to display the news. \
-                           Date and time must be specified. \
-                           Example: --add \'Challenge D is unlocked!\' --ts \'2014-11-08 23:00\'.')
-pnews_o.add_argument('--id', '-i', action='store', dest='id', default=0, type=int, 
-                     help='For --mod only. Use to identify which news to update.')
 
-pflag = subparsers.add_parser('flag', help='Manage flags.')
+pflagDesc = '''\
+variables:
+    FLAG        str - Some flag value. It should be 64 character long.
+'''
+pflagEpi = '''\
+example: 
+    --check 274e69de8ccaf3c13d36dc31b2d862996ba89a0e
+'''
+pflag = subparsers.add_parser('flag', description=pflagDesc, epilog=pflagEpi,
+                              formatter_class=argparse.RawDescriptionHelpFormatter, help='Manage flags.')
 pflag_a = pflag.add_argument_group("action")
 pflag_o = pflag.add_argument_group("option")
 pflag_a.add_argument('--check', action='store', dest='check', default='', type=str, metavar='\'FLAG\'', \
                      help='Check if this is a valid flag or not.')
 pflag_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List flags.')
-pflag_o.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-                     type=int, metavar='NUM', \
-                     help='For --list only. Use to specify number of rows to display. Default is 30.')
 
 pbmDesc = '''\
 variables:
+    ID          int - Item id. 
     NAME        str - Name of the item. Make it short and sweet.
-    DESCRIPTION str - Description of the item. Make it teasy!
+    DESC        str - Description of the item. Make it teasy!
     PATH        str - Path to the file to be uploaded. All format are supported.
     AMOUNT      float - Cost of the item. Cannot be < 0.
-    QTY         int - Max number of time the item can get bought. Cannot be < 0. Default = 0 (no limit).
-    DISP        interval - Display interval. Format: '2015-11-07 22:00'. Default = Null
+    QTY         int - (optional) Max number of time the item can get bought. Cannot be < 0. Default = 0 (no limit).
+    DISP        interval - (optional) Display interval. Format: '2015-11-07 22:00'. Default = Null
 
-    STATUS      str - Item status. Use --list-status to see full list.
+    STATUS      int - Item status code. Use --list-status to see full list.
     RATING      int - Rating from 0 to 5, 0 being shit and 5 being awesome.
     COMMENTS    str - Put comments to describe what you think of this item.
-
 '''
 pbmEpi = '''\
 examples:
     --add 'Track 1 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000'
+    --add 'Track 1 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000|2'
+    --add 'Track 1 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000|2|5 hours'
 
-    --review '1|For Sale|4|Good item. Seem legit and functional'
-    --review '2|For Sale|1|This item looks like bullshit'
-    --review '3|Refused by admin|0|You cannot hide flags in your items'
+    --mod 'Track 2 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000|2|5 hours'
+
+    --review '1|1|5|Good item. Seem legit and functional'
+    --review '2|1|1|This item looks like bullshit'
+    --review '3|5|0|You cannot hide flags in your items'
+
+    --setStatus '3|1'   # Set item id 3 for sale
+    --setStatus '3|5'   # Remove item id 3 from game
 '''
 pbm = subparsers.add_parser('bm', description=pbmDesc, epilog=pbmEpi,\
                             formatter_class=argparse.RawDescriptionHelpFormatter,\
                             help='Manage black market items.')
 pbm_a = pbm.add_argument_group("action")
 pbm_o = pbm.add_argument_group("option")
-pbm_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NAME|DESCRIPTION|PATH|AMOUNT|QTY|DISP\'', \
+pbm_a.add_argument('--add', action='store', dest='add', default='', type=str, metavar='\'NAME|DESC|PATH|AMOUNT|QTY|DISP\'', \
                    help='Add an item on the black market.')
-pbm_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'ID|NAME|DESCRIPTION|PATH|AMOUNT|QTY|DISP\'', \
+pbm_a.add_argument('--mod', action='store', dest='mod', default='', type=str, metavar='\'ID|NAME|DESC|AMOUNT|QTY|DISP\'', \
                    help='Modify an item on the black market.')
-pbm_a.add_argument('--show', action='store', dest='show', default='', metavar='\'ID\'', \
+pbm_a.add_argument('--info', action='store', dest='info', default='', metavar='\'ID\'', \
                    help='Show an item information.')
 pbm_a.add_argument('--get', action='store', dest='get', default='', metavar='\'ID\'', \
                    help='Download an item.')
@@ -145,38 +182,49 @@ pbm_a.add_argument('--review', action='store', dest='review', default='', type=s
                    help='Review an item.')
 pbm_a.add_argument('--setStatus', action='store', dest='setStatus', default='', type=str, metavar='\'ID|STATUS\'', \
                    help='Change status of an item.')
-pbm_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List flags.')
-pbm_a.add_argument('--list-transactions', action='store_true', dest='listTransactions', default=False, help='List black market transactions.')
+pbm_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List black market items.')
 pbm_a.add_argument('--list-categories', action='store_true', dest='listCategories', default=False, help='List item categories.')
 pbm_a.add_argument('--list-status', action='store_true', dest='listStatus', default=False, help='List item status.')
-pbm_o.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-                   type=int, metavar='NUM', \
-                   help='For --list only. Use to specify number of rows to display. Default is 30.')
 
-pwallet = subparsers.add_parser('wallet', help='Manage wallets (cash).')
+pwallet = subparsers.add_parser('cash', help='Manage cash (wallet and loto).')
 pwallet_a = pwallet.add_argument_group("action")
-pwallet_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List transaction history.')
+pwallet_a.add_argument('--list-transactions', action='store_true', dest='listTransactions', default=False, help='List transaction history.')
+pwallet_a.add_argument('--list-loto', action='store_true', dest='listLoto', default=False, help='List loto history.')
 
-ploto = subparsers.add_parser('loto', help='Manage lotos.')
-ploto_a = ploto.add_argument_group("action")
-ploto_a.add_argument('--randomWinner', action='store_true', dest='randomWinner', default=False, help='Set a random winner.')
-ploto_a.add_argument('--winner', action='store_true', dest='winner', default=False, help='Set a specific winner.')
-ploto_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List transaction history.')
-
-psettings = subparsers.add_parser('settings', help='Manage game settings.')
-psettings.add_argument('--startAt', action='store', dest='gameStart', default='', type=str, \
-                       metavar='TIMESTAMP', 
-                       help='Set a game start date/time. Example: --startAt \'2014-11-08 10:00\'')
-psettings.add_argument('--startNow', action='store_true', dest='startNow', default=False, \
+psettingsDesc = '''\
+variables:
+    TS      timestamp - Date format. Example: '2015-11-07 18:00'
+'''
+psettingsEpi = '''\
+examples:
+    --startNow
+    --startAt '2015-11-07 16:00'
+    --endNow
+    --endAt '2015-11-08 02:30'
+'''
+psettings = subparsers.add_parser('settings', description=psettingsDesc, epilog=psettingsEpi,\
+                            formatter_class=argparse.RawDescriptionHelpFormatter,\
+                            help='Manage game settings.')
+psettings_a = psettings.add_argument_group("action")
+psettings_a.add_argument('--startAt', action='store', dest='gameStart', default='', type=str, \
+                       metavar='TS', 
+                       help='Set a game start date/time.')
+psettings_a.add_argument('--startNow', action='store_true', dest='startNow', default=False, \
                        help='Start the game now!')
-psettings.add_argument('--endAt', action='store', dest='gameEnd', default='', type=str, \
-                       metavar='TIMESTAMP', 
-                       help='Set a game end date/time. Example: --endAt \'2014-11-08 10:00\'')
-psettings.add_argument('--endNow', action='store_true', dest='endNow', default=False, \
+psettings_a.add_argument('--endAt', action='store', dest='gameEnd', default='', type=str, \
+                       metavar='TS', 
+                       help='Set a game end date/time.')
+psettings_a.add_argument('--endNow', action='store_true', dest='endNow', default=False, \
                        help='End the game now!')
-psettings.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List settings.')
+psettings_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List settings.')
 
-pscore = subparsers.add_parser('score', help='Print score table (table, matrix).')
+pscoreDesc = '''\
+variables:
+    TS      timestamp - Date format. Example: '2015-11-07 18:00'
+'''
+pscore = subparsers.add_parser('score', description=psettingsDesc,
+                               formatter_class=argparse.RawDescriptionHelpFormatter,
+                               help='Print score table (table, matrix).')
 pscore_a = pscore.add_argument_group("action")
 pscore_o = pscore.add_argument_group("option")
 pscore_a.add_argument('--table', action='store_true', dest='table', default=False, \
@@ -187,36 +235,43 @@ pscore_a.add_argument('--matrix', action='store_true', dest='matrix', default=Fa
                       help='Print progression matrix.')
 pscore_a.add_argument('--csv', action='store_true', dest='csv', default=False, \
                       help='Print progression in csv format.')
-pscore_o.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-                      type=int, metavar='NUM', \
-                      help='Use to specify number of rows to display. Default is 30.')
-pscore_o.add_argument('--ts', '-s', action='store', dest='ts', default=None, \
-                      type=str, metavar='TIMESTAMP', \
+pscore_o.add_argument('--ts', action='store', dest='ts', default=None, \
+                      type=str, metavar='TS', \
                       help='Use to get the score at a specific time. Default is now.')
-phistory = subparsers.add_parser('history', help='Print Submit History.')
-phistory.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-                      type=int, metavar='NUM', \
-                      help='Use to specify number of rows to display. Default is 30.')
-phistory.add_argument('--type', action='store', dest='type', default=None, \
-                      type=int, metavar='NUM', \
-                      help='Specify flag type to display (None=all, 1=Flag, 2=KingFlag).')
-pstats = subparsers.add_parser('stat', help='Display game stats.')
+
+pstatDesc = '''\
+variables:
+    FILTER  str - (optional) Filter which flag to print progression. Example: ssh%
+    T_ID    int - Team id
+    F_NAME  str - Flag name. Example: re01
+'''
+pstatEpi = '''\
+examples:
+    --general
+    --flagsSubmitHistory
+    --flagsSubmitCount 'ssh%'
+    --teamProgress 12           # Print progression of team 12
+    --flagProgress re03         # Print who successfully submitted flag re03
+'''
+pstats = subparsers.add_parser('stat', description=pstatDesc, epilog=pstatEpi,
+                               formatter_class=argparse.RawDescriptionHelpFormatter,
+                               help='Display game stats, progression, history')
 pstats_a = pstats.add_argument_group("action")
 pstats_o = pstats.add_argument_group("option")
-pstats_a.add_argument('--general', action='store_true', dest='general', default=False, \
-                      help='Print general stats about the game (flags qty, submit attempts, etc.)')
-pstats_a.add_argument('--flagsSubmitCount', action='store_true', dest='flagsSubmitCount', default=False, \
+pstats_a.add_argument('--flagsSubmitHistory', action='store_true', dest='flagsSubmitHistory', default=False,\
+                      help='Print history of successfully submitted flags.')
+pstats_a.add_argument('--flagsSubmitCount', action='store', dest='flagsSubmitCount',\
+                      default='', type=str, metavar='FILTER', \
                       help='Print number of successful submit per challenge.')
-pstats_a.add_argument('--teamProgress', action='store_true', dest='teamProgress', default=False, \
+pstats_a.add_argument('--teamProgress', action='store', dest='teamProgress',\
+                      default='', type=str, metavar='T_ID',\
                       help='Print all submitted flags of a specific team.')
-pstats_a.add_argument('--flagProgress', action='store_true', dest='flagProgress', default=False, \
+pstats_a.add_argument('--flagProgress', action='store', dest='flagProgress',\
+                      default='', type=str, metavar='F_NAME',\
                       help='Print all teams who successfuly submitted a specific flag.')
-pstats_o.add_argument('--flagFilter', action='store', dest='flagFilter', default='%', type=str, metavar='SQL_FILTER', \
-                      help='For --flagsSubmitCount only. Use to specify which flag to print progression. Example: --flagFilter \'ssh%%\'')
-pstats_o.add_argument('--id', action='store', dest='id', default=0, type=int, metavar='TEAM_ID', \
-                      help='For --teamProgress only. Use to specify which team to print progression for. Example: --id 14')
-pstats_o.add_argument('--flagName', action='store', dest='flagName', default='', type=str, metavar='FLAG_NAME', \
-                      help='For --flagProgress only. Use to specify which flags to search for. Example: --flagName \'ssh01\'')
+pstats_a.add_argument('--list', '-l', action='store_true', dest='general', default=False, \
+                      help='Print general stats about the game (flags qty, submit attempts, etc.)')
+
 pevents = subparsers.add_parser('events', help='Display game events.')
 pevents_a = pevents.add_argument_group("action")
 pevents_o = pevents.add_argument_group("option")
@@ -224,6 +279,7 @@ pevents_a.add_argument('--list', '-l', action='store_true', dest='list', default
                        help='List events')
 pevents_a.add_argument('--live', action='store_true', dest='live', default=False, \
                        help='List events as they appear in the database.')
+
 pbench = subparsers.add_parser('bench', help='Benchmark some db stored procedure.')
 pbench.add_argument('-n', action='store', dest='reqNum', default=100, \
                     type=int, metavar='NB_OF_REQ', \
@@ -276,55 +332,59 @@ except Exception as e:
 try:
     if args.action == 'team':
         if args.add:
-            name,net = args.add.split('|',2)
+            name,net = args.add.split('|',1)
             print('Adding team with name=%s, net=%s' % (name,net))
             rc = c.addTeam(name,net)
         elif args.mod:
-            id,name,net = args.mod.split('|',3)
-            assert id.isdigit(), "id is not an integer: %r" % id
-            assert type(name) is str, "name is not a string: %r" % name
-            assert type(net) is str, "net is not a string: %r" % net
-            print('Modifying team with name=%s, net=%s where id=%s' % (name,net,id))
+            id,name,net = args.mod.split('|',2)
+            assert id.isdigit(), "ID is not an integer: %r" % id
+            assert type(name) is str, "NAME is not a string: %r" % name
+            assert type(net) is str, "NET is not a string: %r" % net
             rc = c.modTeam(int(id),name,net)
         elif args.reward:
-            id,desc,pts = args.reward.split('|',3)
-            assert id.isdigit(), "id is not an integer: %r" % id
-            assert type(desc) is str, "description is not a string: %r" % desc
-            assert pts.isdigit(), "pts is not a integer: %r" % pts
-            print('Rewarding team with desc=%s, pts=%s where id=%s' % (id,desc,pts))
+            id,desc,pts = args.reward.split('|',2)
+            assert id.isdigit(), "ID is not an integer: %r" % id
+            assert type(desc) is str, "DESC is not a string: %r" % desc
+            assert pts.isdigit(), "PTS is not a integer: %r" % pts
             rc = c.rewardTeam(int(id),desc,int(pts))
         elif args.launder:
-            id,cash = args.launder.split('|',2)
-            assert id.isdigit(), "id is not an integer: %r" % id
-            assert float(cash), "cash is not a float: %r" % cash
-            print('Rewarding team for %s$ where id=%s' % (id,cash))
+            id,cash = args.launder.split('|',1)
+            assert id.isdigit(), "ID is not an integer: %r" % id
+            assert float(cash), "CASH is not a float: %r" % cash
             rc = c.launderMoney(int(id),float(cash))
         elif args.list:
-            print('Displaying teams informations (grep "'+str(args.grep)+'",top '+str(args.top)+')')
-            print(c.getFormatTeamList(args.grep,args.top))
+            print('[+] Displaying teams informations (grep "'+str(args.grep)+'",top '+str(config.DEFAULT_TOP_VALUE)+')')
+            print(c.getFormatTeamList(args.grep,config.DEFAULT_TOP_VALUE))
         elif args.variables:
-            print('Displaying teams variables (grep "'+str(args.grep)+'",top '+str(args.top)+')')
-            print(c.getFormatTeamsVariables(args.grep,args.top))
+            print('[+] Displaying teams variables (grep "'+str(args.grep)+'",top '+str(config.DEFAULT_TOP_VALUE)+')')
+            print(c.getFormatTeamsVariables(args.grep,config.DEFAULT_TOP_VALUE))
         else: 
             parser.print_help()
             print('No subaction choosen')
     elif args.action == 'news':
         if args.add != '':
-            if args.timestamp != '':
-                rc = c.addNews(args.add,args.timestamp)
-            else:
-                rc = c.addNews(args.add,None)
-                print('Return Code: '+str(rc))
+            try:
+                news,ts = args.add.split('|',1)
+            except ValueError:
+                news = args.add
+                ts = None
+            assert type(news) is str, "NEWS is not a string: %r" % news
+            assert type(ts) is str or ts == None, "TS is not a string: %r" % ts
+            rc = c.addNews(news,ts)
+            print('Return Code: '+str(rc))
         elif args.mod:
             try:
-                title = args.mod
-                print('Modifying news with title='+title+' where id='+str(args.id))
-                rc = c.modNews(args.id,title,args.timestamp)
-                print('Return Code: '+str(rc))
+                id,news,ts = args.mod.split('|',2)
             except ValueError:
-                print('[-] Invalid input. Please RTFM')
+                id,news = args.mod.split('|',1)
+                ts = None
+            assert id.isdigit(), "ID is not a integer: %r" % id
+            assert type(news) is str, "NEWS is not a string: %r" % news
+            assert type(ts) is str or ts == None, "TS is not a string: %r" % ts
+            rc = c.modNews(int(id),news,ts)
+            print('Return Code: '+str(rc))
         elif args.list:
-            print("Displaying news")
+            print("[+] Displaying news")
             print(c.getFormatNews())
         else: 
             parser.print_help()
@@ -332,11 +392,116 @@ try:
     elif args.action == 'flag':
         if args.check != '':
             flag = args.check
-            print("Checking flag validity")
+            assert type(flag) is str, "FLAG is not a string: %r" % flag
+            print("[+] Checking flag validity")
             print(c.checkFlag(flag))
         elif args.list:
-            print("Displaying flags")
+            print("[+] Displaying flags")
             print(c.getFormatFlagList())
+        else: 
+            parser.print_help()
+            print('No subaction choosen')
+    elif args.action == 'bm':
+        if args.add != '':
+            try:
+                name,desc,path,amount,qty,disp = args.add.split('|',5)
+            except ValueError:
+                try:
+                    name,desc,path,amount,qty = args.add.split('|',4)
+                    disp = None
+                except ValueError:
+                    name,desc,path,amount = args.add.split('|',3)
+                    disp = None
+                    qty = None
+            assert type(name) is str, "NAME is not a string: %r" % name
+            assert type(desc) is str, "DESC is not a string: %r" % desc
+            assert os.path.exists(path), "PATH is not a valid path: %r" % path
+            assert float(amount), "AMOUNT is not a float: %r" % amount
+            assert qty == None or qty.isdigit()  , "QTY is not an integer: %r" % qty
+            assert type(disp) is str or disp == None, "DISP is not a string: %r" % disp
+
+            # Read file and create byte array
+            data = b''
+            with open(path, 'rb') as f:
+                byte = f.read(1024)
+                while byte != b'':
+                    data += byte
+                    byte = f.read(1024)
+            f.close()
+
+            rc = c.addBMItem(name,amount,int(qty),disp,desc,data)
+            print('Return Code: '+str(rc))
+        elif args.mod:
+            try:
+                id,name,desc,amount,qty,disp = args.mod.split('|',5)
+            except ValueError:
+                try:
+                    id,name,desc,amount,qty = args.mod.split('|',4)
+                    disp = None
+                except ValueError:
+                    id,name,desc,amount = args.mod.split('|',3)
+                    disp = None
+                    qty = None
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            assert type(name) is str, "NAME is not a string: %r" % name
+            assert type(desc) is str, "DESC is not a string: %r" % desc
+            assert float(amount), "AMOUNT is not a float: %r" % amount
+            assert qty == None or qty.isdigit()  , "QTY is not an integer: %r" % qty
+            assert type(disp) is str or disp == None, "DISP is not a string: %r" % disp
+
+            rc = c.modBMItem(int(id),name,amount,int(qty),disp,desc)
+            print('Return Code: '+str(rc))
+        elif args.info != '':
+            id = args.info
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Displaying black market item information")
+            print(c.getFormatBMItemInfo(int(id)))
+        elif args.get != '':
+            id = args.get
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Downloading black market item")
+            data = c.getBMItemData(int(id))
+
+            # Parse byte array and write file
+            path = 'BlackMarketItem_%s' % id
+            with open(path, 'wb') as f:
+                f.write(bytes(x for x in data))
+            f.close()
+
+            print("[+] %s bytes were saved at %s" % (len(data),path))
+        elif args.review != '':
+            id,status,rating,comments = args.review.split('|',3)
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            assert status.isdigit(), "STATUS is not an integer : %r" % status
+            assert rating.isdigit(), "RATING is not an integer : %r" % rating
+            assert type(comments) is str, "COMMENTS is not a string: %r" % comments
+            print("[+] Reviewing black market item")
+            rc = c.reviewBMItem(int(id),int(status),int(rating),comments)
+        elif args.setStatus != '':
+            id,status = args.setStatus.split('|',1)
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            assert status.isdigit(), "STATUS is not an integer : %r" % status
+            print("[+] Changing status of a black market item")
+            rc = c.setBMItemStatus(int(id),int(status))
+        elif args.list:
+            print("[+] Displaying black market items")
+            print(c.getFormatBMItemList(config.DEFAULT_TOP_VALUE))
+        elif args.listCategories:
+            print("[+] Displaying black market item categories")
+            print(c.getFormatBMItemCategoryList())
+        elif args.listStatus:
+            print("[+] Displaying black market item status")
+            print(c.getFormatBMItemStatusList())
+        else: 
+            parser.print_help()
+            print('No subaction choosen')
+    elif args.action == 'cash':
+        if args.listTransactions:
+            print("[+] Displaying transactions history")
+            print(c.getFormatTransactionHistory(config.DEFAULT_TOP_VALUE))
+        elif args.listLoto:
+            print("[+] Displaying loto history")
+            print(c.getFormatLotoHistory(config.DEFAULT_TOP_VALUE))
         else: 
             parser.print_help()
             print('No subaction choosen')
@@ -345,66 +510,66 @@ try:
             c.startGame()
         elif args.gameStart:
             c.setSetting('gameStartTs',args.gameStart,'timestamp')
-        if args.endNow:
+        elif args.endNow:
             c.endGame()
         elif args.gameEnd:
             c.setSetting('gameEndTs',args.gameEnd,'timestamp')
         elif args.list:
-            print("Displaying settings")
+            print("[+] Displaying settings")
             print(c.getFormatSettings())
         else: 
             parser.print_help()
             print('No subaction choosen')
     elif args.action == 'score':
         if args.table:
-            print('Displaying score (top '+str(args.top)+')')
-            print(c.getFormatScore(args.top,args.ts))
+            print('[+] Displaying score (top '+str(config.DEFAULT_TOP_VALUE)+')')
+            print(c.getFormatScore(config.DEFAULT_TOP_VALUE,args.ts))
         elif args.graph:
-            print('Displaying graph (top '+str(args.top)+')')
-            print(c.getGraphScore(args.top))
+            print('[+] Displaying graph (top '+str(config.DEFAULT_TOP_VALUE)+')')
+            print(c.getGraphScore(config.DEFAULT_TOP_VALUE))
         elif args.matrix:
-            print("Displaying progression matrix")
+            print("[+] Displaying progression matrix")
             print(c.getFormatScoreProgress())
         elif args.csv:
-            print("Displaying progression in csv format")
+            print("[+] Displaying progression in csv format")
             print(c.getCsvScoreProgress())
         else:
-            print('Displaying score (top '+str(args.top)+')')
-            print(c.getFormatScore(args.top,args.ts))
+            print('[+] Displaying score (top '+str(config.DEFAULT_TOP_VALUE)+')')
+            print(c.getFormatScore(config.DEFAULT_TOP_VALUE,args.ts))
     elif args.action == 'history':
-        print('Displaying submit history(top '+str(args.top)+', type '+str(args.type)+')')
-        print(c.getFormatSubmitHistory(args.top,args.type))
+        print('[+] Displaying submit history(top '+str(config.DEFAULT_TOP_VALUE)+', type '+str(args.type)+')')
+        print(c.getFormatSubmitHistory(config.DEFAULT_TOP_VALUE,args.type))
     elif args.action == 'stat':
         if args.general:
-            print("Displaying games stats")
+            print("[+] Displaying games stats")
             print(c.getFormatGameStats())
         elif args.flagsSubmitCount:
-            print("Displaying flags submit count")
+            print("[+] Displaying flags submit count")
             print(c.getFormatFlagsSubmitCount(args.flagFilter))
         elif args.teamProgress:
             if args.id:
-                print("Displaying team progression")
+                print("[+] Displaying team progression")
                 print(c.getFormatTeamProgress(args.id))
             else:
                 print('You must specify a team id with --id')
         elif args.flagProgress:
             if args.flagName:
-                print("Displaying flag progression")
+                print("[+] Displaying flag progression")
                 print(c.getFormatFlagProgress(args.flagName))
             else:
                 print('You must specify a flag name with --flagName')
         else:
-            print("Displaying stats")
+            print("[+] Displaying stats")
             print(c.getFormatGameStats())
     elif args.action == 'events':
         if args.list:
-            print("Displaying events")
+            print("[+] Displaying events")
             print(c.getFormatEvents())
         elif args.live:
-            print("Displaying events IRL")
+            print("[+] Displaying events IRL")
             c.printLiveFormatEvents()
         else:
-            print("Displaying events")
+            print("[+] Displaying events")
             print(c.getFormatEvents())
     elif args.action == 'bench':
         print("Benchmarking database")
@@ -442,9 +607,10 @@ except postgresql.message.Message as e:
 except Exception as e:
     print(e)
 else:
-    if args.debug:
+    if rc == 0:
         print('[+] Job completed')
-        print('Return Code: '+str(rc))
+    else:
+        print('An error occured. Return Code: '+str(rc))
 
 c.close()
 
