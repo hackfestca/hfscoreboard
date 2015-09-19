@@ -60,36 +60,26 @@ class WebController(ClientController.ClientController):
         self._benchmarkMany(callLimit,self._oDB.proc('getScoreProgress(integer)'),None)
 
     def submitFlagFromIp(self,playerIp,flagValue):
-        if self._bDebug:
-            self._benchmark(self._oDB.proc('logSubmit(varchar,varchar)'),playerIp,flagValue)
-            return self._benchmark(self._oDB.proc('submitFlagFromIp(varchar,varchar)'),playerIp,flagValue)
-        else:
-            self._oDB.proc('logSubmit(varchar,varchar)')(playerIp,flagValue)
-            return self._oDB.proc('submitFlagFromIp(varchar,varchar)')(playerIp,flagValue)
+        self._exec('logSubmit(varchar,varchar)',playerIp,flagValue)
+        return self._exec('submitFlagFromIp(varchar,varchar)',playerIp,flagValue)
 
     def getCatProgressFromIp(self,playerIp):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getCatProgressFromIp(varchar)'),playerIp)
-        else:
-            return self._oDB.proc('getCatProgressFromIp(varchar)')(playerIp)
+        return self._exec('getCatProgressFromIp(varchar)',playerIp)
 
     def getFlagProgressFromIp(self,playerIp):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getFlagProgressFromIp(varchar)'),playerIp)
-        else:
-            return self._oDB.proc('getFlagProgressFromIp(varchar)')(playerIp)
+        return self._exec('getFlagProgressFromIp(varchar)',playerIp)
 
     def getScoreProgress(self):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getScoreProgress(integer)'),None)
-        else:
-            return self._oDB.proc('getScoreProgress(integer)')(None)
+        return self._exec('getScoreProgress(integer)',None)
 
     def getTeamInfo(self,playerIp):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getTeamInfoFromIp(varchar)'),playerIp)
-        else:
-            return self._oDB.proc('getTeamInfoFromIp(varchar)')(playerIp)
+        return self._exec('getTeamInfoFromIp(varchar)',playerIp)
+
+    def getTeamSecrets(self,playerIp):
+        return self._exec('getTeamSecretsFromIp(varchar)',playerIp)
+
+    def getBMItemDataFromIp(self,privateId,playerIp):
+        return self._exec('getBMItemDataFromIp(varchar,varchar)',privateId,playerIp)
 
     def getJsDataScoreProgress(self):
         s = "[\n"
@@ -122,10 +112,4 @@ class WebController(ClientController.ClientController):
             csvh.writerow([line[0].strftime("%Y/%m/%d %H:%M:%S")] + line[1:])
 
         return data.getvalue()
-
-    def getBMItemDataFromIp(self,privateId,playerIp):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('getBMItemDataFromIp(varchar,varchar)'),privateId,playerIp)
-        else:
-            return self._oDB.proc('getBMItemDataFromIp(varchar,varchar)')(privateId,playerIp)
 

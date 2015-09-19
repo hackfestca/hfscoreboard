@@ -98,7 +98,11 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
 
     def _dbExec(self,func,*args):
         try:
-            return str(func(*args))
+            ret = ''
+            self._dbConnect()
+            ret = str(func(*args))
+            self._dbClose()
+            return ret
         except postgresql.exceptions.PLPGSQLRaiseError as e:
             print('[-] ('+str(e.code)+') '+e.message)
             raise Fault(e.code, e.message) 
@@ -119,62 +123,74 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
 
     @expose()
     def submitFlag(self,clientIP,flagValue):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.submitFlagFromIp,clientIP,flagValue)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.submitFlagFromIp,clientIP,flagValue)
 
     @expose()
     def getScore(self,clientIP,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None,ip=None):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.getFormatScore,top,ts,cat)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.getFormatScore,top,ts,cat)
 
     @expose()
     def getCatProgress(self,clientIP):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.getFormatCatProgressFromIp,clientIP)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.getFormatCatProgressFromIp,clientIP)
 
     @expose()
     def getFlagProgress(self,clientIP):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.getFormatFlagProgressFromIp,clientIP)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.getFormatFlagProgressFromIp,clientIP)
 
     @expose()
     def getNews(self,clientIP):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.getFormatNews)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.getFormatNews)
 
     @expose()
     def getTeamInfo(self,clientIP):
-        ret = ''
-        self._dbConnect()
-        ret = self._dbExec(self._oC.getFormatTeamInfoFromIp,clientIP)
-        self._dbClose()
-        return ret
+        return self._dbExec(self._oC.getFormatTeamInfoFromIp,clientIP)
 
-    # identifyPlayerFromIp
+    @expose()
+    def buyBMItem(self,clientIP,bmItemId):
+        return self._dbExec(self._oC.buyBMItemFromIp,clientIP,bmItemId)
 
-    # get team variables
+    @expose()
+    def sellBMItem(self,clientIP,name,amount,qty,desc,data):
+        return self._dbExec(self._oC.sellBMItemFromIp,clientIP,name,amount,qty,desc,data)
 
-    # list bm items
+    @expose()
+    def getBMItemInfo(self,clientIP,bmItemId):
+        return self._dbExec(self._oC.getFormatBMItemInfo,bmItemId)
 
-    # sell bm item
+    @expose()
+    def getBMItemData(self,clientIP,bmItemId):
+        return self._dbExec(self._oC.getBMItemDataFromIp,clientIP,bmItemId)
 
-    # buy bm item
+    @expose()
+    def getBMItemList(self,clientIP,top):
+        return self._dbExec(self._oC.getFormatBMItemListFromIp,clientIP,top)
+
+    @expose()
+    def getBMItemCategoryList(self,clientIP):
+        return self._dbExec(self._oC.getFormatBMItemCategoryList)
+
+    @expose()
+    def getBMItemStatusList(self,clientIP):
+        return self._dbExec(self._oC.getFormatBMItemStatusList)
+
+    @expose()
+    def buyLoto(self,clientIP,amount):
+        return self._dbExec(self._oC.buyLotoFromIp,clientIP,amount)
+
+    @expose()
+    def getLotoHistory(self,clientIP):
+        return self._dbExec(self._oC.getFormatLotoHistory)
+
+    @expose()
+    def getLotoInfo(self,clientIP):
+        return self._dbExec(self._oC.getFormatLotoInfo)
+
+    @expose()
+    def getTeamSecrets(self,clientIP):
+        return self._dbExec(self._oC.getFormatTeamSecretsFromIp,clientIP)
+
+    @expose()
+    def getEvents(self,clientIP):
+        return self._dbExec(self._oC.getFormatEvents)
 
     # getTeamTransactionsFromIp
-
-    # buy loto

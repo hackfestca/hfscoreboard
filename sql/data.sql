@@ -360,4 +360,4 @@ SELECT addNews('This news should never be printed', '2015-01-01 01:01'::timestam
 /*
     Insert random data (for scoreboard development)
 */
-SELECT insertRandomData();
+--SELECT insertRandomData();

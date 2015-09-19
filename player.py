@@ -55,33 +55,81 @@ from xmlrpc.client import Fault
 
 # Get args
 usage = 'usage: %prog action [options]'
-description = 'HF Scoreboard player client. Use this tool to submit flags and display score'
+description = 'HF Scoreboard player client. Use this tool to submit flags, display score, buy loto tickets and use the black market.'
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
+subparsers = parser.add_subparsers(dest='action')
 
-actGrp = parser.add_argument_group("Action", "Select one of these action")
-actGrp.add_argument('--submit', '-s',  action='store', dest='flag', default='',\
-              type=str, help='Submit a flag')
-actGrp.add_argument('--score', action='store_true', dest='score', default=False, \
-              help='Display score')
-actGrp.add_argument('--catProg', '-c', action='store_true', dest='catProgress', default=False, \
-              help='Display category progression')
-actGrp.add_argument('--flagProg', '-f', action='store_true', dest='flagProgress', default=False, \
-              help='Display flag progression')
-actGrp.add_argument('--news', '-n', action='store_true', dest='news', 
-              default=False, help='Display news')
-actGrp.add_argument('--info', '-i', action='store_true', dest='info', 
-              default=False, help='Display team information')
+psubmit = subparsers.add_parser('submit', help='Submit a flag')
+psubmit.add_argument('flag', type=str,\
+                     metavar='FLAG', help='Flag to submit.')
 
-optGrp = parser.add_argument_group("Option", "Use any depending on choosen action")
-optGrp.add_argument('--top', '-t', action='store', dest='top', default=config.DEFAULT_TOP_VALUE, \
-              type=int, help='Limit --score number of rows')
-optGrp.add_argument('--cat', action='store', dest='cat', default=None, \
-              type=str, help='Print results only for this category name')
+pscore = subparsers.add_parser('score', help='Display score')
+
+pbmDesc = '''\
+variables:
+    ID          int - Item id. 
+    NAME        str - Name of the item. Make it short and sweet.
+    DESC        str - Description of the item. Make it teasy!
+    PATH        str - Path to the file to be uploaded. All format are supported.
+    AMOUNT      float - Cost of the item. Cannot be < 0.
+    QTY         int - (optional) Max number of time the item can get bought. Cannot be < 0. Default = 0 (no limit).
+'''
+pbmEpi = '''\
+examples:
+    --buy 5
+
+    --sell 'Track 1 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000'    # without qty
+    --sell 'Track 1 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000|2'  # with qty
+'''
+pbm = subparsers.add_parser('bm', description=pbmDesc, epilog=pbmEpi,\
+                            formatter_class=argparse.RawDescriptionHelpFormatter,\
+                            help='Manage black market items')
+pbm_a = pbm.add_argument_group("action")
+pbm_o = pbm.add_argument_group("option")
+pbm_a.add_argument('--buy', action='store', dest='buy', default='', metavar='\'ID\'', \
+                   help='Buy an item.')
+pbm_a.add_argument('--sell', action='store', dest='sell', default='', type=str, metavar='\'NAME|DESC|PATH|AMOUNT|QTY\'', \
+                   help='Sell an item on the black market.')
+pbm_a.add_argument('--info', action='store', dest='info', default='', metavar='\'ID\'', \
+                   help='Show an item information.')
+pbm_a.add_argument('--get', action='store', dest='get', default='', metavar='\'ID\'', \
+                   help='Download an item.')
+pbm_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List black market items.')
+pbm_a.add_argument('--list-categories', action='store_true', dest='listCategories', default=False, help='List item categories.')
+pbm_a.add_argument('--list-status', action='store_true', dest='listStatus', default=False, help='List item status.')
+
+ploto = subparsers.add_parser('loto', help='Buy loto tickets. See information on drawing')
+ploto_a = ploto.add_argument_group("action")
+ploto_a.add_argument('--buy', action='store', dest='buy', default=False, help='Buy a loto ticket.')
+ploto_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List lottery history.')
+ploto_a.add_argument('--info', '-i', action='store_true', dest='info', default=False, help='Display information on current drawing.')
+
+pcatProg = subparsers.add_parser('catProg', help='Display category progression')
+
+pflagProg = subparsers.add_parser('flagProg', help='Display flag progression')
+
+pnews = subparsers.add_parser('news', help='Display flag progression')
+
+pinfo = subparsers.add_parser('info', help='Display team information and statistics')
+
+psecrets = subparsers.add_parser('secrets', help='Display team secrets')
+psecrets_a = psecrets.add_argument_group("action")
+psecrets_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List settings.')
+
+pevents = subparsers.add_parser('events', help='Display game events.')
+pevents_a = pevents.add_argument_group("action")
+pevents_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, \
+                       help='List events')
+pevents_a.add_argument('--live', action='store_true', dest='live', default=False, \
+                       help='List events as they appear in the database.')
 
 args = parser.parse_args()
+
+if args.debug:
+    print('[-] Arguments: ' + str(args))
 
 # Step 1: Connect to API
 try:
@@ -92,24 +140,110 @@ except Exception as e:
 
 # Step 2: Process user request
 try:
-    if args.flag != '':
-        print("Submitting flag")
-        print(c.submitFlag(args.flag))
-    elif args.score:
-        print('Displaying score')
-        print(c.getScore(args.top,None,args.cat))
-    elif args.catProgress:
-        print('Displaying category progression')
+    if args.action == 'submit':
+        flag = args.flag
+        assert type(flag) is str, "FLAG is not a string: %r" % flag
+        print('[-] Submitting flag')
+        print(c.submitFlag(flag))
+    elif args.action == 'score':
+        print('[-] Displaying score')
+        print(c.getScore(config.DEFAULT_TOP_VALUE))
+    elif args.action == 'bm':
+        if args.buy != '':
+            id = args.buy
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Buying black market item")
+            print(c.buyBMItem(int(id)))
+        elif args.sell != '':
+            try:
+                name,desc,path,amount,qty = args.add.split('|',4)
+            except ValueError:
+                name,desc,path,amount = args.add.split('|',3)
+                qty = None
+            assert type(name) is str, "NAME is not a string: %r" % name
+            assert type(desc) is str, "DESC is not a string: %r" % desc
+            assert os.path.exists(path), "PATH is not a valid path: %r" % path
+            assert float(amount), "AMOUNT is not a float: %r" % amount
+            assert qty == None or qty.isdigit()  , "QTY is not an integer: %r" % qty
+
+            # Read file and create byte array
+            data = b''
+            with open(path, 'rb') as f:
+                byte = f.read(1024)
+                while byte != b'':
+                    data += byte
+                    byte = f.read(1024)
+            f.close()
+
+            rc = c.sellBMItem(name,amount,int(qty),desc,data)
+            print('Return Code: '+str(rc))
+        elif args.info != '':
+            id = args.info
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Displaying black market item information")
+            print(c.getBMItemInfo(int(id)))
+        elif args.get != '':
+            id = args.get
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Downloading black market item")
+            data = c.getBMItemData(int(id))
+
+            # Parse byte array and write file
+            path = 'BlackMarketItem_%s' % id
+            with open(path, 'wb') as f:
+                f.write(bytes(x for x in data))
+            f.close()
+
+            print("[+] %s bytes were saved at %s" % (len(data),path))
+        elif args.list:
+            print("[+] Displaying black market items")
+            print(c.getBMItemList(config.DEFAULT_TOP_VALUE))
+        elif args.listCategories:
+            print("[+] Displaying black market item categories")
+            print(c.getBMItemCategoryList())
+        elif args.listStatus:
+            print("[+] Displaying black market item status")
+            print(c.getBMItemStatusList())
+        else: 
+            parser.print_help()
+            print('No subaction choosen')
+    elif args.action == 'loto':
+        if args.buy != '':
+            id = args.buy
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            print("[+] Buying tickets")
+            print(c.buyLoto(int(id)))
+        elif args.history:
+            print("[+] Displaying lottery history")
+            print(c.getLotoHistory(config.DEFAULT_TOP_VALUE))
+        elif args.info:
+            print("[+] Displaying information on the current drawing")
+            print(c.getLotoInfo())
+    elif args.action == 'catProg':
+        print('[-] Displaying category progression')
         print(c.getCatProgress())
-    elif args.flagProgress:
-        print('Displaying flag progression')
+    elif args.action == 'flagProg':
+        print('[-] Displaying flag progression')
         print(c.getFlagProgress())
-    elif args.news:
-        print("Displaying news")
+    elif args.action == 'news':
+        print('[-] Displaying news')
         print(c.getNews())
-    elif args.info:
-        print("Displaying team informations")
+    elif args.action == 'info':
+        print('[-] Displaying team informations')
         print(c.getTeamInfo())
+    elif args.action == 'secrets':
+        print('[-] Displaying team\'s secrets')
+        print(c.getTeamSecrets())
+    elif args.action == 'events':
+        if args.list:
+            print("[+] Displaying events")
+            print(c.getEvents())
+        elif args.live:
+            print("[+] Displaying events IRL")
+            c.printLiveEvents()
+        else:
+            print("[+] Displaying events")
+            print(c.getEvents())
     else:
         parser.print_help()
 except socket.error as e:

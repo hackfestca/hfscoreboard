@@ -129,6 +129,9 @@ class ClientController():
                   +str((t2-t1).__round__(4))+'ms')
         return ret
 
+    def close(self):
+        self._oDB.close()
+
     def setDebug(self,debug):
         self._bDebug = debug
         
@@ -205,7 +208,4 @@ class ClientController():
         for row in info:
             x.add_row(row)
         return x
-
-    def close(self):
-        self._oDB.close()
 

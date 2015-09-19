@@ -3088,7 +3088,7 @@ RETURNS integer AS $$
                 random() * (MAX_CAT - 1) + 1,
                 1,
                 1,
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elementum sem non porttitor vestibulum.'
+                'Lorem ipsum dolor sit amet.' 
         FROM generate_series(1,FLAG_COUNT) as id;
 
         /*

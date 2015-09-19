@@ -65,29 +65,16 @@ class FlagUpdaterController(ClientController.ClientController):
         return cmd.replace('$FLAG', 'KOTH-'+flag)
     
     def _getAllKingFlags(self):
-        if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getAllKingFlags()')))
-        else:
-            return list(self._oDB.proc('getAllKingFlags()')())
+        return list(self._exec('getAllKingFlags()'))
 
     def _getKingFlagsFromHost(self,host):
-        if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getKingFlagsFromHost(varchar)'),host))
-        else:
-            return list(self._oDB.proc('getKingFlagsFromHost(varchar)')(host))
+        return list(self._exec('getKingFlagsFromHost(varchar)',host)
 
     def _getKingFlagFromName(self,name):
-        if self._bDebug:
-            return list(self._benchmark(self._oDB.proc('getKingFlagsFromName(varchar)'),name))
-        else:
-            return list(self._oDB.proc('getKingFlagsFromName(varchar)')(name))
+        return list(self._exec('getKingFlagsFromName(varchar)',name)
 
     def _addRandomKingFlagFromId(self,flagId):
-        if self._bDebug:
-            return self._benchmark(self._oDB.proc('addRandomKingFlagFromId(integer,integer)'),flagId,self.KING_FLAG_VALUE)
-        else:
-            return self._oDB.proc('addRandomKingFlagFromId(integer,integer)')(flagId,self.KING_FLAG_VALUE)
-        
+        return self._exec('addRandomKingFlagFromId(integer,integer)',flagId,self.KING_FLAG_VALUE)
     
     def _remoteExec(self,host,cmd):
         try:

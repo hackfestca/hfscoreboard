@@ -66,7 +66,6 @@ class PlayerApiController(WebController.WebController):
 
     def getFormatFlagProgressFromIp(self,playerIp):
         keepCols = [1,2,5,7,8,9]
-        #title = ['id','Name','Description','pts','FlagPts','DisplayPts','CatId','CatName','isDone','Author','DisplayInterval'] 
         title = ['Name','Description','Score','Category','isDone','Author']
         score = list(self.getFlagProgressFromIp(playerIp))
         newScore = [[row[i] for i in keepCols] for row in score]

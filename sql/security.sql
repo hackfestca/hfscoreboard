@@ -58,6 +58,9 @@ GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,varchar
 GRANT EXECUTE ON FUNCTION scoreboard.launderMoneyFromTeamId(integer,numeric) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamsVariables(varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,bytea) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getBMItemCategoryList() TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getBMItemStatusList() TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
