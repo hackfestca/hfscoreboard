@@ -50,6 +50,21 @@ class PlayerApiController(WebController.WebController):
         self._sCrtFile = config.DB_PLAYER_CRT_FILE
         self._sKeyFile = config.DB_PLAYER_KEY_FILE
         super().__init__()
+
+    def buyBMItemFromIp(self,bmItemId,playerIp):
+        return self._exec('buyBMItemFromIp(integer,varchar)',bmItemId,playerIp)
+    
+    def sellBMItemFromIp(self,name,amount,qty,desc,data,playerIp):
+        return self._exec('sellBMItemFromIp(varchar,numeric,integer,text,bytea,varchar)',name,amount,qty,desc,data,playerIp)
+
+    def getBMItemInfoFromIp(self,id,playerIp):
+        return self._exec('getBMItemInfoFromIp(integer,varchar)',id,playerIp)
+
+    def getBMItemDataFromIp(self,id,playerIp):
+        return self._exec('getBMItemDataFromIp(integer,varchar)',id,playerIp)
+
+    def getBMItemListFromIp(self,top,playerIp):
+        return self._exec('getBMItemListFromIp(integer,varchar)',top,playerIp)
     
     def getFormatCatProgressFromIp(self,playerIp):
         keepCols = [2,3,4,5]
@@ -82,7 +97,7 @@ class PlayerApiController(WebController.WebController):
 
     def getFormatTeamInfoFromIp(self,playerIp):
         title = ['Info','Value']
-        info = self.getTeamInfo(playerIp)
+        info = self.getTeamInfoFromIp(playerIp)
         x = PrettyTable(title)
         x.align['Info'] = 'l'
         x.align['Value'] = 'l'
@@ -91,3 +106,26 @@ class PlayerApiController(WebController.WebController):
             x.add_row(row)
         return x
 
+    def getFormatBMItemInfoFromIp(self,id,playerIp):
+        title = ['Info','Value']
+        score = self.getBMItemInfoFromIp(id,playerIp)
+        x = PrettyTable(title)
+        x.align['Info'] = 'l'
+        x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x
+
+    def getFormatBMItemListFromIp(self,top,playerIp):
+        title = ['id','Name','Category','Status','Rating','Owner','Cost','qty','bought?']
+        score = self.getBMItemListFromIp(top,playerIp)
+        x = PrettyTable(title)
+        x.align['Name'] = 'l'
+        x.align['Category'] = 'l'
+        x.align['Status'] = 'l'
+        x.align['Owner'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x

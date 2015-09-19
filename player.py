@@ -52,6 +52,7 @@ from lib import PlayerController
 import argparse
 import socket
 from xmlrpc.client import Fault
+import os.path
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -156,9 +157,9 @@ try:
             print(c.buyBMItem(int(id)))
         elif args.sell != '':
             try:
-                name,desc,path,amount,qty = args.add.split('|',4)
+                name,desc,path,amount,qty = args.sell.split('|',4)
             except ValueError:
-                name,desc,path,amount = args.add.split('|',3)
+                name,desc,path,amount = args.sell.split('|',3)
                 qty = None
             assert type(name) is str, "NAME is not a string: %r" % name
             assert type(desc) is str, "DESC is not a string: %r" % desc
@@ -186,7 +187,7 @@ try:
             id = args.get
             assert id.isdigit(), "ID is not an integer : %r" % id
             print("[+] Downloading black market item")
-            data = c.getBMItemData(int(id))
+            data = c.getBMItemData(int(id)).data
 
             # Parse byte array and write file
             path = 'BlackMarketItem_%s' % id

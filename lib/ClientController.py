@@ -138,50 +138,20 @@ class ClientController():
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         return self._exec('getScore(integer,varchar,varchar)',top,ts,cat)
 
-    def getCatProgress(self):
-        return self._exec('getCatProgress()')
-
-    def getTeamInfo(self):
-        return self._exec('getTeamInfo()')
-
-    def getFlagProgress(self):
-        return self._exec('getFlagProgress()')
-
     def getNewsList(self):
         return self._exec('getNewsList()')
 
-    def getAuthorList(self):
-        return self._exec('getAuthorList()')
+    def getBMItemCategoryList(self):
+        return self._exec('getBMItemCategoryList()')
+    
+    def getBMItemStatusList(self):
+        return self._exec('getBMItemStatusList()')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         title = ['ID','TeamName','FlagPts','KFlagPts','Total','Cash'] 
         score = self.getScore(top,ts,cat)
         x = PrettyTable(title)
         x.align['TeamName'] = 'l'
-        x.padding_width = 1
-        for row in score:
-            x.add_row(row)
-        return x
-
-    def getFormatCatProgress(self):
-        title = ['CatId','Category','DisplayName', 'Description','Score','Total','IsHidden'] 
-        score = self.getCatProgress()
-        x = PrettyTable(title)
-        x.align['Category'] = 'l'
-        x.align['DisplayName'] = 'l'
-        x.align['Description'] = 'l'
-        x.padding_width = 1
-        for row in score:
-            x.add_row(row)
-        return x
-
-    def getFormatFlagProgress(self):
-        title = ['id','Name','Description','pts','CatId','CatName','isDone','DisplayInterval'] 
-        score = self.getFlagProgress()
-        x = PrettyTable(title)
-        x.align['Name'] = 'l'
-        x.align['Description'] = 'l'
-        x.align['CatName'] = 'l'
         x.padding_width = 1
         for row in score:
             x.add_row(row)
@@ -198,14 +168,24 @@ class ClientController():
             x.add_row(row)
         return x
 
-    def getFormatTeamInfo(self):
-        title = ['Info','Value']
-        info = self.getTeamInfo()
+    def getFormatBMItemCategoryList(self):
+        title = ['Name', 'Description']
+        score = self.getBMItemCategoryList()
         x = PrettyTable(title)
-        x.align['Info'] = 'l'
-        x.align['Value'] = 'l'
+        x.align['Name'] = 'l'
+        x.align['Description'] = 'l'
         x.padding_width = 1
-        for row in info:
+        for row in score:
             x.add_row(row)
         return x
 
+    def getFormatBMItemStatusList(self):
+        title = ['code','Name', 'Description']
+        score = self.getBMItemStatusList()
+        x = PrettyTable(title)
+        x.align['Name'] = 'l'
+        x.align['Description'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x

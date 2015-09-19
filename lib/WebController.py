@@ -59,9 +59,12 @@ class WebController(ClientController.ClientController):
     def benchScoreProgress(self,callLimit=config.BENCH_DEFAULT_REQ_NUM):
         self._benchmarkMany(callLimit,self._oDB.proc('getScoreProgress(integer)'),None)
 
-    def submitFlagFromIp(self,playerIp,flagValue):
-        self._exec('logSubmit(varchar,varchar)',playerIp,flagValue)
-        return self._exec('submitFlagFromIp(varchar,varchar)',playerIp,flagValue)
+    def submitFlagFromIp(self,flagValue,playerIp):
+        self._exec('logSubmit(varchar,varchar)',flagValue,playerIp)
+        return self._exec('submitFlagFromIp(varchar,varchar)',flagValue,playerIp)
+
+    def getBMItemDataFromIp(self,privateId,playerIp):
+        return self._exec('getBMItemDataFromIp(varchar,varchar)',privateId,playerIp)
 
     def getCatProgressFromIp(self,playerIp):
         return self._exec('getCatProgressFromIp(varchar)',playerIp)
@@ -72,14 +75,11 @@ class WebController(ClientController.ClientController):
     def getScoreProgress(self):
         return self._exec('getScoreProgress(integer)',None)
 
-    def getTeamInfo(self,playerIp):
+    def getTeamInfoFromIp(self,playerIp):
         return self._exec('getTeamInfoFromIp(varchar)',playerIp)
 
-    def getTeamSecrets(self,playerIp):
+    def getTeamSecretsFromIp(self,playerIp):
         return self._exec('getTeamSecretsFromIp(varchar)',playerIp)
-
-    def getBMItemDataFromIp(self,privateId,playerIp):
-        return self._exec('getBMItemDataFromIp(varchar,varchar)',privateId,playerIp)
 
     def getJsDataScoreProgress(self):
         s = "[\n"

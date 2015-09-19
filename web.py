@@ -137,7 +137,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def _getTeamInfo(self):
         try:
-            team_info = list(self.client.getTeamInfo(self.request.remote_ip))
+            team_info = list(self.client.getTeamInfoFromIp(self.request.remote_ip))
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
             self.team_score = team_info[6][1]

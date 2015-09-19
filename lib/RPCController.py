@@ -97,12 +97,15 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         self._oC.close()
 
     def _dbExec(self,func,*args):
+        #try:
+        ret = ''
+        self._dbConnect()
+        #ret = str(getattr(self._oC,func)(*args))
+        ret = getattr(self._oC,func)(*args)
+        self._dbClose()
+        return ret
         try:
-            ret = ''
-            self._dbConnect()
-            ret = str(func(*args))
-            self._dbClose()
-            return ret
+            pass
         except postgresql.exceptions.PLPGSQLRaiseError as e:
             print('[-] ('+str(e.code)+') '+e.message)
             raise Fault(e.code, e.message) 
@@ -123,74 +126,74 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
 
     @expose()
     def submitFlag(self,clientIP,flagValue):
-        return self._dbExec(self._oC.submitFlagFromIp,clientIP,flagValue)
+        return self._dbExec('submitFlagFromIp',flagValue,clientIP)
 
     @expose()
     def getScore(self,clientIP,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None,ip=None):
-        return self._dbExec(self._oC.getFormatScore,top,ts,cat)
-
-    @expose()
-    def getCatProgress(self,clientIP):
-        return self._dbExec(self._oC.getFormatCatProgressFromIp,clientIP)
-
-    @expose()
-    def getFlagProgress(self,clientIP):
-        return self._dbExec(self._oC.getFormatFlagProgressFromIp,clientIP)
-
-    @expose()
-    def getNews(self,clientIP):
-        return self._dbExec(self._oC.getFormatNews)
-
-    @expose()
-    def getTeamInfo(self,clientIP):
-        return self._dbExec(self._oC.getFormatTeamInfoFromIp,clientIP)
+        return self._dbExec('getFormatScore',top,ts,cat)
 
     @expose()
     def buyBMItem(self,clientIP,bmItemId):
-        return self._dbExec(self._oC.buyBMItemFromIp,clientIP,bmItemId)
+        return self._dbExec('buyBMItemFromIp',int(bmItemId),clientIP)
 
     @expose()
     def sellBMItem(self,clientIP,name,amount,qty,desc,data):
-        return self._dbExec(self._oC.sellBMItemFromIp,clientIP,name,amount,qty,desc,data)
+        return self._dbExec('sellBMItemFromIp',name,amount,qty,desc,data.data,clientIP)
 
     @expose()
     def getBMItemInfo(self,clientIP,bmItemId):
-        return self._dbExec(self._oC.getFormatBMItemInfo,bmItemId)
+        return self._dbExec('getFormatBMItemInfoFromIp',bmItemId,clientIP)
 
     @expose()
     def getBMItemData(self,clientIP,bmItemId):
-        return self._dbExec(self._oC.getBMItemDataFromIp,clientIP,bmItemId)
+        return self._dbExec('getBMItemDataFromIp',bmItemId,clientIP)
 
     @expose()
     def getBMItemList(self,clientIP,top):
-        return self._dbExec(self._oC.getFormatBMItemListFromIp,clientIP,top)
+        return self._dbExec('getFormatBMItemListFromIp',top,clientIP)
 
     @expose()
     def getBMItemCategoryList(self,clientIP):
-        return self._dbExec(self._oC.getFormatBMItemCategoryList)
+        return self._dbExec('getFormatBMItemCategoryList')
 
     @expose()
     def getBMItemStatusList(self,clientIP):
-        return self._dbExec(self._oC.getFormatBMItemStatusList)
+        return self._dbExec('getFormatBMItemStatusList')
 
     @expose()
     def buyLoto(self,clientIP,amount):
-        return self._dbExec(self._oC.buyLotoFromIp,clientIP,amount)
+        return self._dbExec('buyLotoFromIp',amount,clientIP)
 
     @expose()
     def getLotoHistory(self,clientIP):
-        return self._dbExec(self._oC.getFormatLotoHistory)
+        return self._dbExec('getFormatLotoHistory')
 
     @expose()
     def getLotoInfo(self,clientIP):
-        return self._dbExec(self._oC.getFormatLotoInfo)
+        return self._dbExec('getFormatLotoInfo')
+
+    @expose()
+    def getCatProgress(self,clientIP):
+        return self._dbExec('getFormatCatProgressFromIp',clientIP)
+
+    @expose()
+    def getFlagProgress(self,clientIP):
+        return self._dbExec('getFormatFlagProgressFromIp',clientIP)
+
+    @expose()
+    def getNews(self,clientIP):
+        return self._dbExec('getFormatNews')
+
+    @expose()
+    def getTeamInfo(self,clientIP):
+        return self._dbExec('getFormatTeamInfoFromIp',clientIP)
 
     @expose()
     def getTeamSecrets(self,clientIP):
-        return self._dbExec(self._oC.getFormatTeamSecretsFromIp,clientIP)
+        return self._dbExec('getFormatTeamSecretsFromIp',clientIP)
 
     @expose()
     def getEvents(self,clientIP):
-        return self._dbExec(self._oC.getFormatEvents)
+        return self._dbExec('getFormatEvents')
 
     # getTeamTransactionsFromIp

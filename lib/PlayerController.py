@@ -38,6 +38,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import config
 import socket
 from xmlrpc.client import ServerProxy
+from time import sleep
+from datetime import datetime
 
 class PlayerController():
     """
@@ -61,6 +63,36 @@ class PlayerController():
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         return self._oRPC.getScore(top,ts,cat)
 
+    def buyBMItem(self,bmItemId):
+        return self._oRPC.buyBMItem(bmItemId)
+
+    def sellBMItem(self,name,amount,qty,desc,data):
+        return self._oRPC.sellBMItem(name,amount,qty,desc,data)
+
+    def getBMItemInfo(self,bmItemId):
+        return self._oRPC.getBMItemInfo(bmItemId)
+
+    def getBMItemData(self,bmItemId):
+        return self._oRPC.getBMItemData(bmItemId)
+
+    def getBMItemList(self,top):
+        return self._oRPC.getBMItemList(top)
+
+    def getBMItemCategoryList(self):
+        return self._oRPC.getBMItemCategoryList()
+
+    def getBMItemStatusList(self):
+        return self._oRPC.getBMItemStatusList()
+
+    def buyLoto(self,amount):
+        return self._oRPC.buyLoto(amount)
+
+    def getLotoHistory(self,top):
+        return self._oRPC.getLotoHistory(top)
+
+    def getLotoInfo(self):
+        return self._oRPC.getLotoInfo()
+
     def getCatProgress(self):
         return str(self._oRPC.getCatProgress())
 
@@ -72,4 +104,26 @@ class PlayerController():
 
     def getTeamInfo(self):
         return self._oRPC.getTeamInfo()
+
+    def getTeamSecrets(self):
+        return self._oRPC.getTeamSecrets()
+
+    def getEvents(self):
+        return self._oRPC.getEvents()
+
+    def printLiveEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
+        formatStr = "%s %s %s %s"
+        events = self.getEvents(lastUpdate,facility,severity,grep,top)
+        for row in events:
+            print(formatStr % (row[3],row[1],row[2],row[0]))
+        lastUpdate = datetime.now()
+        sleep(refresh)
+
+        while True:
+            events = list(self.getEvents(lastUpdate,facility,severity,grep,top))
+            if len(events) > 0:
+                for row in events:
+                    print(formatStr % (row[3],row[1],row[2],row[0]))
+                    lastUpdate = datetime.now()
+            sleep(refresh)
 

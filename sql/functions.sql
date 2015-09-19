@@ -1812,8 +1812,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /* 
     Stored Proc: logSubmit(playerip,flagValue)
 */ 
-CREATE OR REPLACE FUNCTION logSubmit( _playerIpStr varchar(20),
-                                      _flagValue flag.value%TYPE)
+CREATE OR REPLACE FUNCTION logSubmit(_flagValue flag.value%TYPE,
+                                     _playerIpStr varchar(20))
 RETURNS integer AS $$
     DECLARE
         _playerIp inet;
@@ -1841,9 +1841,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /* 
     Stored Proc: submitFlagFromIp(userIp,flagValue)
 */ 
-CREATE OR REPLACE FUNCTION submitFlagFromIp( _playerIpStr varchar(20), 
-                                             _flagValue flag.value%TYPE
-                                           ) 
+CREATE OR REPLACE FUNCTION submitFlagFromIp(_flagValue flag.value%TYPE,
+                                             _playerIpStr varchar(20)) 
 RETURNS text AS $$
     DECLARE
         _teamRec team%ROWTYPE;
@@ -2493,25 +2492,6 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar
                      UNION ALL SELECT 'Team money'::varchar, _teamMoney::varchar;
                      --ORDER BY 1;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getTeamInfo()
-*/
-CREATE OR REPLACE FUNCTION getTeamInfo()
-RETURNS TABLE (
-                info varchar(20),
-                value varchar(100)
-              ) AS $$
-    DECLARE
-        _playerIp inet;
-    BEGIN
-        -- Logging
-        raise notice 'getTeamInfo()';
-
-        _playerIp := inet_client_addr();
-        RETURN QUERY SELECT * FROM getTeamInfoFromIp(_playerIp::varchar);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3292,6 +3272,9 @@ RETURNS integer AS $$
         _bmItemId bmItem.id%TYPE;
         _catId bmItemCategory.id%TYPE;
         _display bmItem.displayInterval%TYPE;
+        _privateId bmItem.privateId%TYPE;
+        _dlLink bmItem.dlLink%TYPE;
+        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/bmi/?privateId=%s';
     BEGIN
         -- Logging
         raise notice 'addBMItem(%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,'data';
@@ -3325,9 +3308,15 @@ RETURNS integer AS $$
             _display = _displayInterval;
         end if;
 
+        -- Set privateId
+        _privateId := random_64();
+
+        -- Set download link
+        _dlLink := format(DL_LINK,_privateId);
+
         -- Insert a new row
-        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,data)
-                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,random_64(),_data);
+        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,data,dlLink)
+                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_privateId,_data,_dlLink);
         _bmItemId := LASTVAL();
 
         -- Set initial status
@@ -3380,96 +3369,6 @@ RETURNS integer AS $$
         WHERE id = _id;
 
         RETURN 0;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getBMItemList(_top)
-*/
-CREATE OR REPLACE FUNCTION getBMItemList(_top integer DEFAULT 30)
-RETURNS TABLE (
-                id bmItem.id%TYPE,
-                name bmItem.name%TYPE,
-                category bmItemCategory.displayName%TYPE,
-                status bmItemStatus.name%TYPE,
-                rating text,
-                owner wallet.name%TYPE,
-                cost bmItem.amount%TYPE,
-                qty text
-              ) AS $$
-
-    BEGIN
-        return QUERY SELECT i.id AS id,
-                            i.name AS name,
-                            ic.displayName AS category,
-                            ist.name AS status,
-                            CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
-                            w.name AS owner,
-                            i.amount AS cost,
-                            CASE WHEN i.qty is NULL THEN '-' ELSE i.qty::text END
-                     FROM bmItem AS i
-                     LEFT OUTER JOIN (
-                        SELECT ic.id,ic.displayName 
-                        FROM bmItemCategory AS ic
-                        ) AS ic ON i.category = ic.id
-                     LEFT OUTER JOIN (
-                        SELECT ist.code,ist.name
-                        FROM bmItemStatus AS ist
-                        ) AS ist ON i.statusCode = ist.code
-                     LEFT OUTER JOIN (
-                        SELECT ir.id,ir.rating
-                        FROM bmItemReview AS ir
-                        ) AS ir ON i.review = ir.id
-                     LEFT OUTER JOIN (
-                        SELECT w.id,w.name
-                        FROM wallet AS w
-                        ) AS w ON i.ownerWallet = w.id
-                    ORDER BY i.id
-                    LIMIT _top;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getBMItemListUpdater(_top)
-*/
-CREATE OR REPLACE FUNCTION getBMItemListUpdater(_top integer DEFAULT 30)
-RETURNS TABLE (
-                id bmItem.id%TYPE,
-                name bmItem.name%TYPE,
-                category bmItemCategory.name%TYPE,
-                status bmItemStatus.code%TYPE,
-                statusName bmItemStatus.name%TYPE,
-                owner wallet.name%TYPE,
-                qty bmItem.qty%TYPE,
-                privateId bmItem.privateId%TYPE,
-                dlLink bmItem.dlLink%TYPE
-              ) AS $$
-
-    BEGIN
-        return QUERY SELECT i.id AS id,
-                            i.name AS name,
-                            ic.name AS category,
-                            ist.code AS status,
-                            ist.name AS statusName,
-                            w.name AS owner,
-                            i.qty AS qty,
-                            i.privateId as privateId,
-                            i.dlLink as dlLink
-                     FROM bmItem AS i
-                     LEFT OUTER JOIN (
-                        SELECT ic.id,ic.name
-                        FROM bmItemCategory AS ic
-                        ) AS ic ON i.category = ic.id
-                     LEFT OUTER JOIN (
-                        SELECT ist.code,ist.name
-                        FROM bmItemStatus AS ist
-                        ) AS ist ON i.statusCode = ist.code
-                     LEFT OUTER JOIN (
-                        SELECT w.id,w.name
-                        FROM wallet AS w
-                        ) AS w ON i.ownerWallet = w.id
-                    ORDER BY i.id
-                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3541,6 +3440,98 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: getBMItemInfo()
+*/
+CREATE OR REPLACE FUNCTION getBMItemInfoFromIp(_bmItemId bmItem.id%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS TABLE (
+                info varchar(30),
+                value varchar(100)
+              ) AS $$
+    DECLARE
+        _ret RECORD;
+        _qty varchar(20);
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _link varchar;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemInfo(%)',$1;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get teamId FROM playerIp
+        SELECT team.id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'Your team does not exist';
+        end if;
+
+        SELECT i.id AS id,
+                i.name AS name,
+                i.description AS description,
+                ic.name AS catName,
+                ic.displayName AS catDisplay,
+                ist.code AS statusCode,
+                ist.name AS statusName,
+                ir.rating AS rating,
+                ir.comments AS comments,
+                w.name AS owner,
+                i.amount AS cost,
+                i.qty AS qty,
+                i.dlLink AS link
+         INTO _ret
+         FROM bmItem AS i
+         LEFT OUTER JOIN (
+            SELECT ic.id,ic.name,ic.displayName 
+            FROM bmItemCategory AS ic
+            ) AS ic ON i.category = ic.id
+         LEFT OUTER JOIN (
+            SELECT ist.code,ist.name
+            FROM bmItemStatus AS ist
+            ) AS ist ON i.statusCode = ist.code
+         LEFT OUTER JOIN (
+            SELECT ir.id,ir.rating,ir.comments
+            FROM bmItemReview AS ir
+            ) AS ir ON i.review = ir.id
+         LEFT OUTER JOIN (
+            SELECT w.id,w.name
+            FROM wallet AS w
+            ) AS w ON i.ownerWallet = w.id
+        WHERE i.id = _bmItemId;
+
+        if _ret.qty is NULL then
+            _qty := 'infinite';
+        else
+            _qty := _ret.qty::varchar;
+        end if;
+
+        -- Check if the item was bought
+        -- if bought, set _link variable
+        PERFORM id FROM team_bmItem
+        WHERE teamId = _teamId
+            and bmItemId = _bmItemId;
+        if FOUND then
+            _link = _ret.link;
+        else
+            _link = NULL;
+        end if;
+
+        -- Return
+        RETURN QUERY SELECT 'ID'::varchar, _ret.id::varchar
+                     UNION ALL SELECT 'Name'::varchar, _ret.name
+                     UNION ALL SELECT 'Description'::varchar, _ret.description
+                     UNION ALL SELECT 'Category'::varchar, _ret.catDisplay
+                     UNION ALL SELECT 'Status'::varchar, _ret.statusName
+                     UNION ALL SELECT 'Rating'::varchar, _ret.rating::varchar
+                     UNION ALL SELECT 'Comments'::varchar, _ret.comments
+                     UNION ALL SELECT 'Owner'::varchar, _ret.owner
+                     UNION ALL SELECT 'Cost'::varchar, _ret.cost::varchar 
+                     UNION ALL SELECT 'Qty'::varchar, _qty
+                     UNION ALL SELECT 'Link'::varchar, _link;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: getBMItemData(privateId,playerIp)
 */
 CREATE OR REPLACE FUNCTION getBMItemData(_id bmItem.id%TYPE)
@@ -3553,6 +3544,45 @@ RETURNS bytea AS $$
 
         -- Return data
         SELECT data INTO _data FROM bmItem WHERE id = _id;
+        return _data;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemDataFromIp(id,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemDataFromIp(_bmItemId bmItem.id%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS bytea AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+        _playerIp inet;
+        _data bmItem.data%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemDataFromIp(%,%)',$1,$2;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get teamId FROM playerIp
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Verify that the team have successfuly bought the item
+        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+
+            -- Reset the item's private ID is an authorized access was performed
+            UPDATE bmItem
+            SET privateId = random(64)
+            WHERE id = _bmItemId;
+        end if;
+
+        -- Return data
+        SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
         return _data;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -3600,6 +3630,158 @@ RETURNS bytea AS $$
         -- Return data
         SELECT data INTO _data FROM bmItem WHERE id = _bmItemId;
         return _data;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemList(_top)
+*/
+CREATE OR REPLACE FUNCTION getBMItemList(_top integer DEFAULT 30)
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.displayName%TYPE,
+                status bmItemStatus.name%TYPE,
+                rating text,
+                owner wallet.name%TYPE,
+                cost bmItem.amount%TYPE,
+                qty text
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.displayName AS category,
+                            ist.name AS status,
+                            CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
+                            w.name AS owner,
+                            i.amount AS cost,
+                            CASE WHEN i.qty is NULL THEN '-' ELSE i.qty::text END
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.displayName 
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT ir.id,ir.rating
+                        FROM bmItemReview AS ir
+                        ) AS ir ON i.review = ir.id
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemListFromIp(top,playerIp)
+*/
+CREATE OR REPLACE FUNCTION getBMItemListFromIp(_top integer,
+                                         _playerIpStr varchar(20))
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.displayName%TYPE,
+                status bmItemStatus.name%TYPE,
+                rating text,
+                owner wallet.name%TYPE,
+                cost bmItem.amount%TYPE,
+                qty text,
+                bought boolean
+              ) AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _aTeamItems integer[];
+    BEGIN
+        _playerIp := _playerIpStr::inet;
+
+        -- Get teamId FROM playerIp
+        SELECT team.id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'Your team does not exist';
+        end if;
+
+        -- Get list of item already bought
+        SELECT array(select bmItemId from team_bmItem WHERE teamId = _teamId) INTO _aTeamItems;
+        
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.displayName AS category,
+                            ist.name AS status,
+                            CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
+                            w.name AS owner,
+                            i.amount AS cost,
+                            CASE WHEN i.qty is NULL THEN '-' ELSE i.qty::text END,
+                            CASE WHEN i.id = ANY(_aTeamItems) THEN true ELSE false END
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.displayName 
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT ir.id,ir.rating
+                        FROM bmItemReview AS ir
+                        ) AS ir ON i.review = ir.id
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+/*
+    Stored Proc: getBMItemListUpdater(_top)
+*/
+CREATE OR REPLACE FUNCTION getBMItemListUpdater(_top integer DEFAULT 30)
+RETURNS TABLE (
+                id bmItem.id%TYPE,
+                name bmItem.name%TYPE,
+                category bmItemCategory.name%TYPE,
+                status bmItemStatus.code%TYPE,
+                statusName bmItemStatus.name%TYPE,
+                owner wallet.name%TYPE,
+                qty bmItem.qty%TYPE,
+                privateId bmItem.privateId%TYPE,
+                dlLink bmItem.dlLink%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT i.id AS id,
+                            i.name AS name,
+                            ic.name AS category,
+                            ist.code AS status,
+                            ist.name AS statusName,
+                            w.name AS owner,
+                            i.qty AS qty,
+                            i.privateId as privateId,
+                            i.dlLink as dlLink
+                     FROM bmItem AS i
+                     LEFT OUTER JOIN (
+                        SELECT ic.id,ic.name
+                        FROM bmItemCategory AS ic
+                        ) AS ic ON i.category = ic.id
+                     LEFT OUTER JOIN (
+                        SELECT ist.code,ist.name
+                        FROM bmItemStatus AS ist
+                        ) AS ist ON i.statusCode = ist.code
+                     LEFT OUTER JOIN (
+                        SELECT w.id,w.name
+                        FROM wallet AS w
+                        ) AS w ON i.ownerWallet = w.id
+                    ORDER BY i.id
+                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3729,11 +3911,11 @@ RETURNS integer AS $$
             raise exception 'Team not found for %',_playerIp;
         end if;
 
-        -- Check team solvency
-        PERFORM checkTeamSolvency(_teamId,_bmItemId);
-
         -- Check item availability
         PERFORM checkItemAvailability(_bmItemId,_teamId);
+
+        -- Check team solvency
+        PERFORM checkTeamSolvency(_teamId,_bmItemId);
 
         -- Get team wallet ID
         SELECT wallet INTO _teamWalletId FROM team WHERE id = _teamId;

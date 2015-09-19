@@ -143,17 +143,11 @@ class AdminController(ClientController.ClientController):
     def reviewBMItem(self,id,status,rating,comments):
         return self._exec('reviewBMItem(integer,integer,integer,text)',id,status,rating,comments)
 
-    def setBMItemStatus(self,id,status):
-        return self._exec('setBMItemStatus(integer,integer)',id,status)
-
     def getBMItemList(self,top):
         return self._exec('getBMItemList(integer)',top)
 
-    def getBMItemCategoryList(self):
-        return self._exec('getBMItemCategoryList()')
-    
-    def getBMItemStatusList(self):
-        return self._exec('getBMItemStatusList()')
+    def setBMItemStatus(self,id,status):
+        return self._exec('setBMItemStatus(integer,integer)',id,status)
 
     def getTransactionHistory(self,top):
         return self._exec('getTransactionHistory(integer)',top)
@@ -249,6 +243,17 @@ class AdminController(ClientController.ClientController):
             x.add_row(row)
         return x
 
+    def getFormatBMItemInfo(self,id):
+        title = ['Info','Value']
+        info = self.getBMItemInfo(id)
+        x = PrettyTable(title)
+        x.align['Info'] = 'l'
+        x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x
+
     def getFormatBMItemList(self,top):
         title = ['id','name','category','status','rating','owner','cost','qty']
         info = self.getBMItemList(top)
@@ -256,39 +261,6 @@ class AdminController(ClientController.ClientController):
         x.align['name'] = 'l'
         x.align['category'] = 'l'
         x.align['status'] = 'l'
-        x.padding_width = 1
-        for row in info:
-            x.add_row(row)
-        return x
-
-    def getFormatBMItemCategoryList(self):
-        title = ['id','name','description']
-        info = self.getBMItemCategoryList()
-        x = PrettyTable(title)
-        x.align['name'] = 'l'
-        x.align['description'] = 'l'
-        x.padding_width = 1
-        for row in info:
-            x.add_row(row)
-        return x
-
-    def getFormatBMItemStatusList(self):
-        title = ['code','name','description']
-        info = self.getBMItemStatusList()
-        x = PrettyTable(title)
-        x.align['name'] = 'l'
-        x.align['description'] = 'l'
-        x.padding_width = 1
-        for row in info:
-            x.add_row(row)
-        return x
-
-    def getFormatBMItemInfo(self,id):
-        title = ['Info','Value']
-        info = self.getBMItemInfo(id)
-        x = PrettyTable(title)
-        x.align['Info'] = 'l'
-        x.align['Value'] = 'l'
         x.padding_width = 1
         for row in info:
             x.add_row(row)
