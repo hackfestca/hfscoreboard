@@ -255,7 +255,7 @@ class IndexHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore(top=15)
-            valid_news = self.client.getNews()
+            valid_news = self.client.getNewsList()
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
@@ -271,7 +271,7 @@ class IndexHandler(BaseHandler):
 
     def post(self):
         flag = self.get_argument("flag")
-        valid_news = self.client.getNews()
+        valid_news = self.client.getNewsList()
 
         try:
             submit_message = self.client.submitFlagFromIp(
@@ -386,7 +386,7 @@ class IndexProjectorHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore(top=15)
-            valid_news = self.client.getNews()
+            valid_news = self.client.getNewsList()
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
