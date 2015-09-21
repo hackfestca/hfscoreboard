@@ -36,10 +36,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import config
-import socket
 from xmlrpc.client import ServerProxy
 from time import sleep
 from datetime import datetime
+import ssl
 
 class PlayerController():
     """
@@ -48,14 +48,16 @@ class PlayerController():
     _oRPC = None
 
     def __init__(self):
-        # Quick of host existence in DNS
-        try:
-            ip = socket.gethostbyname(config.PLAYER_API_HOST)
-        except socket.gaierror as e:
-            print('[-] Could not resolve %s' % (config.PLAYER_API_HOST))
-            exit(1)
-
-        self._oRPC = ServerProxy('http://%s:%i' % (config.PLAYER_API_HOST,config.PLAYER_API_PORT),allow_none=True)
+        # Setup SSL context
+        if config.PLAYER_API_URI.startswith('https'):
+            context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            context.verify_mode = ssl.CERT_REQUIRED
+            context.check_hostname = True
+            #context.load_default_certs()       # To use installed CAs on the machine
+            context.load_verify_locations(config.PLAYER_API_SSL_ROOT_CA)
+        else:
+            context = None
+        self._oRPC = ServerProxy(config.PLAYER_API_URI,allow_none=True,use_builtin_types=True,context=context)
 
     def submitFlag(self,flagValue):
         return self._oRPC.submitFlag(flagValue)
@@ -108,22 +110,22 @@ class PlayerController():
     def getTeamSecrets(self):
         return self._oRPC.getTeamSecrets()
 
-    def getEvents(self):
-        return self._oRPC.getEvents()
+    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
+        return self._oRPC.getEvents(lastUpdate,facility,severity,grep,top)
+
+    def getLogEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
+        return self._oRPC.getLogEvents(lastUpdate,facility,severity,grep,top)
 
     def printLiveEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
-        formatStr = "%s %s %s %s"
-        events = self.getEvents(lastUpdate,facility,severity,grep,top)
-        for row in events:
-            print(formatStr % (row[3],row[1],row[2],row[0]))
+        events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
+        print(events)
         lastUpdate = datetime.now()
         sleep(refresh)
 
         while True:
-            events = list(self.getEvents(lastUpdate,facility,severity,grep,top))
+            events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
             if len(events) > 0:
-                for row in events:
-                    print(formatStr % (row[3],row[1],row[2],row[0]))
-                    lastUpdate = datetime.now()
+                print(events)
+                lastUpdate = datetime.now()
             sleep(refresh)
 

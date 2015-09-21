@@ -51,6 +51,14 @@ from lib import RPCController
 # System imports
 import argparse
 from xmlrpc.server import SimpleXMLRPCServer
+from xmlrpc.client import Marshaller
+from decimal import Decimal
+
+def dump_decimal(self, value, write):
+    write("<value><double>")
+    write(str(value))
+    write("</double></value>\n")
+Marshaller.dispatch[Decimal] = dump_decimal
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -67,7 +75,7 @@ args = parser.parse_args()
 
 # Run requested action
 if args.start:
-    server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_PORT),requestHandler=RPCController.RPCHandler,allow_none=True,logRequests=True)
+    server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=RPCController.RPCHandler,allow_none=True,logRequests=True,use_builtin_types=True)
     print("RPC server started.")
     try:
         server.serve_forever()

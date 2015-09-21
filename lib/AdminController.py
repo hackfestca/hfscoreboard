@@ -152,9 +152,6 @@ class AdminController(ClientController.ClientController):
     def getTransactionHistory(self,top):
         return self._exec('getTransactionHistory(integer)',top)
 
-    def getLotoHistory(self,top):
-        return self._exec('getLotoHistory(integer)',top)
-
     def startGame(self):
         return self._exec('startGame()')
 
@@ -195,7 +192,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatTeamsVariables(self,grep=None,top=config.DEFAULT_TOP_VALUE):
         title = ['Team Name','Name','Value']
@@ -207,7 +204,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatFlagList(self,top=config.DEFAULT_TOP_VALUE):
         title = ['ID','Name','Pts','Cash','Category','Status','Type','TypeExt','Author','Display Int.','Description'] 
@@ -220,7 +217,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getGraphScore(self,top=config.DEFAULT_TOP_VALUE):
         try:
@@ -241,7 +238,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemInfo(self,id):
         title = ['Info','Value']
@@ -252,7 +249,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemList(self,top):
         title = ['id','name','category','status','rating','owner','cost','qty']
@@ -264,7 +261,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatTransactionHistory(self,top):
         title = ['Src Wallet','Dst Wallet','Amount','Type','TS']
@@ -276,19 +273,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
-
-    def getFormatLotoHistory(self,top):
-        title = ['Src id','Src Wallet','Dst ID','Dst Wallet','Amount','Type','TS']
-        info = self.getLotoHistory(top)
-        x = PrettyTable(title)
-        x.align['Src Wallet'] = 'l'
-        x.align['Dst Wallet'] = 'l'
-        x.align['Type'] = 'l'
-        x.padding_width = 1
-        for row in info:
-            x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatGameStats(self):
         title = ['Info','Value']
@@ -299,7 +284,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatTeamProgress(self,teamId):
         title = ['Flag','isDone','Submit timestamp']
@@ -310,7 +295,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatFlagProgress(self,flagName):
         title = ['Team','isDone','Submit timestamp']
@@ -321,7 +306,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatScoreProgress(self):
         info = self.getScoreProgress()
@@ -329,7 +314,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatSettings(self):
         title = ['Key', 'Value']
@@ -338,7 +323,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in settings:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
         title = ['Timestamp', 'TeamName', 'FlagName', 'Pts', 'Category', 'Type']
@@ -347,7 +332,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in history:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getCsvScoreProgress(self):
         data = StringIO()
@@ -374,7 +359,7 @@ class AdminController(ClientController.ClientController):
         x.padding_width = 1
         for row in events:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
         formatStr = "%s %s %s %s"

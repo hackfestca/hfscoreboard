@@ -56,7 +56,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.checkFlag(varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagList(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.launderMoneyFromTeamId(integer,numeric) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.getTeamsVariables(varchar,integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getTeamsSecrets(varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,bytea) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemInfo(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
@@ -87,6 +87,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getBMItemListFromIp(integer,varchar) TO hfp
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getTeamSecretsFromIp(varchar) TO hfplayers;
 
 -- Grants for multiple groups
 GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,flagCategory.name%TYPE) TO hfplayers,hfscore,hfadmins;

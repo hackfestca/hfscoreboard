@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS flagStatus CASCADE;
 DROP TABLE IF EXISTS flagType CASCADE;
 DROP TABLE IF EXISTS flagTypeExt CASCADE;
 DROP TABLE IF EXISTS player CASCADE;
-DROP TABLE IF EXISTS teamVariables CASCADE;
+DROP TABLE IF EXISTS teamSecrets CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
 DROP TABLE IF EXISTS eventFacility CASCADE;
@@ -71,14 +71,14 @@ CREATE TABLE team(
 /*
     Represent a team settings (variables). Useful to give unique information on a per-team basis.
 */
-CREATE TABLE teamVariables(
+CREATE TABLE teamSecrets(
     id serial primary key,
     teamId integer not null references team(id),
     name varchar(100) not null,
     value varchar(100) not null,
     ts timestamp not null default current_timestamp,
-    constraint valid_teamVariables_name check (name != ''),
-    constraint valid_teamVariables_value check (value != '')
+    constraint valid_teamSecrets_name check (name != ''),
+    constraint valid_teamSecrets_value check (value != '')
     );
 
 /*

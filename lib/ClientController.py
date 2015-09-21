@@ -138,14 +138,20 @@ class ClientController():
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         return self._exec('getScore(integer,varchar,varchar)',top,ts,cat)
 
-    def getNewsList(self):
-        return self._exec('getNewsList()')
-
     def getBMItemCategoryList(self):
         return self._exec('getBMItemCategoryList()')
     
     def getBMItemStatusList(self):
         return self._exec('getBMItemStatusList()')
+
+    def getLotoHistory(self,top):
+        return self._exec('getLotoHistory(integer)',top)
+
+    def getLotoInfo(self):
+        return self._exec('getLotoInfo()')
+
+    def getNewsList(self):
+        return self._exec('getNewsList()')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         title = ['ID','TeamName','FlagPts','KFlagPts','Total','Cash'] 
@@ -155,7 +161,7 @@ class ClientController():
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatNews(self):
         title = ['id','Release date&time', 'News']
@@ -166,7 +172,7 @@ class ClientController():
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemCategoryList(self):
         title = ['Name', 'Description']
@@ -177,7 +183,7 @@ class ClientController():
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemStatusList(self):
         title = ['code','Name', 'Description']
@@ -188,4 +194,28 @@ class ClientController():
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
+
+    def getFormatLotoHistory(self,top):
+        title = ['Src id','Src Wallet','Dst ID','Dst Wallet','Amount','Type','TS']
+        info = self.getLotoHistory(top)
+        x = PrettyTable(title)
+        x.align['Src Wallet'] = 'l'
+        x.align['Dst Wallet'] = 'l'
+        x.align['Type'] = 'l'
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x.get_string()
+
+    def getFormatLotoInfo(self):
+        title = ['Info', 'Value']
+        score = self.getLotoInfo()
+        x = PrettyTable(title)
+        x.align['Info'] = 'l'
+        x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x.get_string()
+

@@ -97,15 +97,17 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         self._oC.close()
 
     def _dbExec(self,func,*args):
-        #try:
         ret = ''
         self._dbConnect()
-        #ret = str(getattr(self._oC,func)(*args))
         ret = getattr(self._oC,func)(*args)
         self._dbClose()
         return ret
         try:
-            pass
+            ret = ''
+            self._dbConnect()
+            ret = getattr(self._oC,func)(*args)
+            self._dbClose()
+            return ret
         except postgresql.exceptions.PLPGSQLRaiseError as e:
             print('[-] ('+str(e.code)+') '+e.message)
             raise Fault(e.code, e.message) 
@@ -138,7 +140,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
 
     @expose()
     def sellBMItem(self,clientIP,name,amount,qty,desc,data):
-        return self._dbExec('sellBMItemFromIp',name,amount,qty,desc,data.data,clientIP)
+        return self._dbExec('sellBMItemFromIp',name,amount,qty,desc,data,clientIP)
 
     @expose()
     def getBMItemInfo(self,clientIP,bmItemId):
@@ -165,8 +167,8 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         return self._dbExec('buyLotoFromIp',amount,clientIP)
 
     @expose()
-    def getLotoHistory(self,clientIP):
-        return self._dbExec('getFormatLotoHistory')
+    def getLotoHistory(self,clientIP,top):
+        return self._dbExec('getFormatLotoHistory',top)
 
     @expose()
     def getLotoInfo(self,clientIP):
@@ -193,7 +195,9 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         return self._dbExec('getFormatTeamSecretsFromIp',clientIP)
 
     @expose()
-    def getEvents(self,clientIP):
-        return self._dbExec('getFormatEvents')
+    def getEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
+        return self._dbExec('getFormatEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
 
-    # getTeamTransactionsFromIp
+    @expose()
+    def getLogEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
+        return self._dbExec('getLogEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)

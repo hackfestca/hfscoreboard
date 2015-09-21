@@ -66,6 +66,15 @@ class PlayerApiController(WebController.WebController):
     def getBMItemListFromIp(self,top,playerIp):
         return self._exec('getBMItemListFromIp(integer,varchar)',top,playerIp)
     
+    def buyLotoFromIp(self,amount,playerIp):
+        return self._exec('buyLotoFromIp(numeric,varchar)',amount,playerIp)
+
+    def getTeamSecretsFromIp(self,playerIp):
+        return self._exec('getTeamSecretsFromIp(varchar)',playerIp)
+
+    def getEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
+        return self._exec('getEventsFromIp(timestamp,varchar,varchar,varchar,integer,varchar)',lastUpdate,facility,severity,grep,top,playerIp)
+    
     def getFormatCatProgressFromIp(self,playerIp):
         keepCols = [2,3,4,5]
         title = ['Category','Description','Score','Category Total'] 
@@ -77,7 +86,7 @@ class PlayerApiController(WebController.WebController):
         x.padding_width = 1
         for row in newScore:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatFlagProgressFromIp(self,playerIp):
         keepCols = [1,2,5,7,8,9]
@@ -93,7 +102,7 @@ class PlayerApiController(WebController.WebController):
         x.padding_width = 1
         for row in newScore:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatTeamInfoFromIp(self,playerIp):
         title = ['Info','Value']
@@ -104,7 +113,7 @@ class PlayerApiController(WebController.WebController):
         x.padding_width = 1
         for row in info:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemInfoFromIp(self,id,playerIp):
         title = ['Info','Value']
@@ -115,7 +124,7 @@ class PlayerApiController(WebController.WebController):
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
 
     def getFormatBMItemListFromIp(self,top,playerIp):
         title = ['id','Name','Category','Status','Rating','Owner','Cost','qty','bought?']
@@ -128,4 +137,32 @@ class PlayerApiController(WebController.WebController):
         x.padding_width = 1
         for row in score:
             x.add_row(row)
-        return x
+        return x.get_string()
+
+    def getFormatTeamSecretsFromIp(self,playerIp):
+        title = ['Secret','Value']
+        score = self.getTeamSecretsFromIp(playerIp)
+        x = PrettyTable(title)
+        x.align['Secret'] = 'l'
+        x.align['Value'] = 'l'
+        x.padding_width = 1
+        for row in score:
+            x.add_row(row)
+        return x.get_string()
+
+    def getFormatEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
+        title = ['Title', 'Facility', 'Severity', 'Ts']
+        events = self.getEventsFromIp(lastUpdate,facility,severity,grep,top,playerIp)
+        x = PrettyTable(title)
+        x.align['Title'] = 'l'
+        x.padding_width = 1
+        for row in events:
+            x.add_row(row)
+        return x.get_string()
+
+    def getLogEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
+        events = self.getEventsFromIp(lastUpdate,facility,severity,grep,top,playerIp)
+        ret = ''
+        for row in events:
+            ret += "%s %s %s %s\n" % (row[3],row[1],row[2],row[0])
+        return str(ret)

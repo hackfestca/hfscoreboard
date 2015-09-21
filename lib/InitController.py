@@ -155,7 +155,7 @@ class InitController(ClientController.ClientController):
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
             addTeam = self._oDB.proc('addTeam(varchar,varchar)')
-            addTeamVariables = self._oDB.proc('addTeamVariables(integer,varchar,varchar)')
+            addTeamSecrets = self._oDB.proc('addTeamSecrets(integer,varchar,varchar)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
@@ -166,7 +166,7 @@ class InitController(ClientController.ClientController):
                         teamId = addTeam(self._sanitize(tname,'str'), \
                                          self._sanitize(tnet,'str'))
                         for i in range(SETTINGS_COLS_START,len(headers)):
-                            addTeamVariables(teamId,\
+                            addTeamSecrets(teamId,\
                                             self._sanitize(headers[i],'str'),\
                                             self._sanitize(row[i],'str'))
 

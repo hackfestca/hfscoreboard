@@ -210,9 +210,9 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: buyLotoTicketFromIp(amount,playerIp)
+    Stored Proc: buyLotoFromIp(amount,playerIp)
 */
-CREATE OR REPLACE FUNCTION buyLotoTicketFromIp(_amount wallet.amount%TYPE, 
+CREATE OR REPLACE FUNCTION buyLotoFromIp(_amount wallet.amount%TYPE, 
                                                 _playerIpStr varchar(20))
 RETURNS integer AS $$
     DECLARE
@@ -223,7 +223,7 @@ RETURNS integer AS $$
         _srcWalletId team.id%TYPE;
     BEGIN
         -- Logging
-        raise notice 'buyLotoTicketFromIp(%,%)',$1,$2;
+        raise notice 'buyLotoFromIp(%,%)',$1,$2;
     
         _playerIp := _playerIpStr::inet;
 
@@ -350,6 +350,45 @@ RETURNS TABLE (
                     WHERE t.type = TR_LOTO_CODE
                     ORDER BY t.ts
                     LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getLotoInfo(_top)
+*/
+CREATE OR REPLACE FUNCTION getLotoInfo()
+RETURNS TABLE (
+                info varchar(50),
+                value varchar(250)
+              ) AS $$
+    DECLARE
+        TR_LOTO_CODE transactionType.code%TYPE := 5;
+        LOTO_ID wallet.id%TYPE := 2;
+        _drawingAmount transaction.amount%TYPE;
+        _lastWinTs transaction.ts%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getLotoInfo()';
+
+        -- Get last win timestamp
+        SELECT ts
+        INTO _lastWinTs
+        FROM transaction
+        WHERE type = TR_LOTO_CODE
+            and srcWalletId = LOTO_ID
+        ORDER BY ts DESC LIMIT 1;
+
+        -- Get current drawing amount
+        SELECT SUM(amount)
+        INTO _drawingAmount
+        FROM transaction
+        WHERE type = TR_LOTO_CODE
+            and srcWalletId = LOTO_ID
+            and ts > _lastWinTs;
+
+        -- Return
+        RETURN QUERY SELECT 'Amount'::varchar, coalesce(_drawingAmount,0)::varchar
+                     UNION ALL SELECT 'Last Win time'::varchar, coalesce(to_char(_lastWinTs,'HH24:MI:SS'),'not won yet')::varchar;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3020,8 +3059,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: insertRandomData()
-
-    TODOO : Make this function work again. It's broken.
 */
 CREATE OR REPLACE FUNCTION insertRandomData() 
 RETURNS integer AS $$
@@ -3179,14 +3216,12 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION getBMItemCategoryList()
 RETURNS TABLE (
-                id bmItemCategory.id%TYPE,
                 name bmItemCategory.name%TYPE,
                 description bmItemCategory.description%TYPE
               ) AS $$
 
     BEGIN
-        return QUERY SELECT c.id,
-                            c.name,
+        return QUERY SELECT c.name,
                             c.description
                     FROM bmItemCategory AS c
                     ORDER BY c.id;
@@ -4070,6 +4105,147 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: addTeamSecrets(teamId,name,value)
+*/
+CREATE OR REPLACE FUNCTION addTeamSecrets(_teamId team.id%TYPE,
+                                           _name teamSecrets.value%TYPE,
+                                           _value teamSecrets.value%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addTeamSecrets(%,%,%)',$1,$2,$3;
+
+        -- Some checks
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO teamSecrets(teamId,name,value) VALUES(_teamId,_name,_value);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamSecrets(grep,top)
+*/
+CREATE OR REPLACE FUNCTION getTeamsSecrets(_grep varchar(30) DEFAULT NULL,
+                                            _top integer DEFAULT 30) 
+RETURNS TABLE (                             
+                TeamName team.name%TYPE,
+                name teamSecrets.name%TYPE,
+                value teamSecrets.value%TYPE
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTeamsSecrets(%,%)',$1,$2;
+
+        -- Get team's settings
+        return QUERY SELECT a.teamName,
+                            a.name,
+                            a.value
+                     FROM (
+                         SELECT tv.teamId,
+                                tv.name,
+                                tv.value,
+                                t.name AS teamName
+                         FROM teamSecrets AS tv
+                         LEFT OUTER JOIN (
+                            SELECT t.id,
+                                   t.name
+                            FROM team AS t
+                            ) AS t ON t.id = tv.teamId
+                         WHERE (_grep IS NULL 
+                                OR t.name LIKE '%'||_grep||'%' 
+                                OR tv.name LIKE '%'||_grep||'%'
+                                OR tv.value LIKE '%'||_grep||'%')
+                     ) AS a
+                     LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamSecretsFromIp(playerIp)
+*/
+CREATE OR REPLACE FUNCTION getTeamSecretsFromIp(_playerIpStr varchar) 
+RETURNS TABLE (
+                name teamSecrets.name%TYPE,
+                value teamSecrets.value%TYPE
+              ) AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamSecretsFromIp(%)',$1;
+
+        -- Convert player IP
+        _playerIp := _playerIpStr::inet;
+
+        -- Determine player's team
+        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Get team's settings
+        return QUERY SELECT ts.name,
+                            ts.value
+                     FROM teamSecrets AS ts
+                     WHERE ts.teamId = _teamId;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: identifyPlayerFromIp(nick,playerIp)
+*/
+CREATE OR REPLACE FUNCTION identifyPlayerFromIp(_nick player.nick%TYPE,
+                                                _playerIpStr varchar) 
+RETURNS text AS $$
+    DECLARE
+        _playerIp inet;
+        _teamId team.id%TYPE;
+        _playerRec player%ROWTYPE;
+        _ret text;
+    BEGIN
+        -- Logging
+        raise notice 'identifyPlayerFromIp(%,%)',$1,$2;
+    
+        -- Convert player IP
+        _playerIp := _playerIpStr::inet;
+
+        -- Determine player's team
+        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
+        if NOT FOUND then
+            raise exception 'Team not found for %',_playerIp;
+        end if;
+
+        -- Determine if IP is already used
+        SELECT id,teamId,nick,ip 
+        INTO _playerRec
+        FROM player
+        WHERE _playerIp = ip
+        LIMIT 1;
+
+        -- if IP is already used, overwrite
+        if FOUND then
+            UPDATE player
+            SET nick = _nick
+            WHERE id = _playerRec.id;
+
+            _ret := format('IP %s was already identified to %s. Updating to %s.',_playerIpStr,_playerRec.nick,_nick);
+        else
+        -- if not, insert new entry
+            INSERT INTO player(teamId,nick,ip) VALUES(_teamId,_nick,_playerIp);
+            _ret := format('IP %s was assigned to %s.',_playerIpStr,_nick);
+        end if;
+
+        RETURN _ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: addEventFacility(code,name,displayName,desc)
 */
 CREATE OR REPLACE FUNCTION addEventFacility(_code eventSeverity.code%TYPE,
@@ -4213,145 +4389,57 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: addTeamVariables(teamId,name,value)
+    Stored Proc: getEventsFromIp(lastUpdateTS,facility,severity,grep,top)
+    TODOO: Restrict specific events
 */
-CREATE OR REPLACE FUNCTION addTeamVariables(_teamId team.id%TYPE,
-                                           _name teamVariables.value%TYPE,
-                                           _value teamVariables.value%TYPE)
-RETURNS integer AS $$
-    BEGIN
-        -- Logging
-        raise notice 'addTeamVariables(%,%,%)',$1,$2,$3;
-
-        -- Some checks
-        if _name is NULL then
-            raise exception 'Name cannot be NULL';
-        end if;
-
-        -- Insert a new row
-        INSERT INTO teamVariables(teamId,name,value) VALUES(_teamId,_name,_value);
-
-        RETURN 0;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getTeamVariables(grep,top)
-*/
-CREATE OR REPLACE FUNCTION getTeamsVariables(_grep varchar(30) DEFAULT NULL,
-                                            _top integer DEFAULT 30) 
-RETURNS TABLE (                             
-                TeamName team.name%TYPE,
-                name teamVariables.name%TYPE,
-                value teamVariables.value%TYPE
-              ) AS $$
-    BEGIN
-        -- Logging
-        raise notice 'getTeamsVariables(%,%)',$1,$2;
-
-        -- Get team's settings
-        return QUERY SELECT a.teamName,
-                            a.name,
-                            a.value
-                     FROM (
-                         SELECT tv.teamId,
-                                tv.name,
-                                tv.value,
-                                t.name AS teamName
-                         FROM teamVariables AS tv
-                         LEFT OUTER JOIN (
-                            SELECT t.id,
-                                   t.name
-                            FROM team AS t
-                            ) AS t ON t.id = tv.teamId
-                         WHERE (_grep IS NULL 
-                                OR t.name LIKE '%'||_grep||'%' 
-                                OR tv.name LIKE '%'||_grep||'%'
-                                OR tv.value LIKE '%'||_grep||'%')
-                     ) AS a
-                     LIMIT _top;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: getTeamVariablesFromIp(playerIp)
-*/
-CREATE OR REPLACE FUNCTION getTeamVariablesFromIp(_playerIpStr varchar) 
+CREATE OR REPLACE FUNCTION getEventsFromIp(_lastUpdateTS timestamp,
+                                     _facility eventFacility.name%TYPE,
+                                     _severity eventSeverity.name%TYPE,
+                                     _grep varchar(30),
+                                     _top integer, 
+                                     _playerIpStr varchar(20))
 RETURNS TABLE (
-                name teamVariables.name%TYPE,
-                value teamVariables.value%TYPE
+                title event.title%TYPE,
+                facility eventFacility.name%TYPE,
+                severity eventSeverity.name%TYPE,
+                ts event.ts%TYPE
               ) AS $$
     DECLARE
         _playerIp inet;
-        _teamId team.id%TYPE;
     BEGIN
-        -- Logging
-        raise notice 'getTeamVariablesFromIp(%)',$1;
-
-        -- Convert player IP
         _playerIp := _playerIpStr::inet;
 
-        -- Determine player's team
-        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
-        if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
-        end if;
-
-        -- Get team's settings
-        return QUERY SELECT ts.name,
-                            ts.value
-                     FROM teamVariables
-                     WHERE teamId = _teamId;
+        return QUERY SELECT * FROM (
+                     (SELECT e.title AS title,
+                            ef.name AS facility,
+                            es.name AS severity,
+                            e.ts AS ts
+                     FROM event AS e
+                     LEFT OUTER JOIN (
+                        SELECT ef.code,ef.name
+                        FROM eventFacility AS ef
+                        ) AS ef ON e.facility = ef.code
+                     LEFT OUTER JOIN (
+                        SELECT es.code,es.name
+                        FROM eventSeverity AS es
+                        ) AS es ON e.severity = es.code
+                     )
+                        UNION ALL
+                     (
+                     SELECT n.title,
+                            'news',
+                            NULL,
+                            n.displayTs
+                     FROM news AS n
+                     )
+                     ) AS t
+                    WHERE (_lastUpdateTs IS NULL OR t.ts >= _lastUpdateTs)
+                        AND (_facility IS NULL OR t.facility LIKE '%'||_facility||'%')
+                        AND (_severity IS NULL OR t.severity LIKE '%'||_severity||'%')
+                        AND (_grep IS NULL OR t.title LIKE '%'||_grep||'%')
+                    ORDER BY t.ts
+                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: identifyPlayerFromIp(nick,playerIp)
-*/
-CREATE OR REPLACE FUNCTION identifyPlayerFromIp(_nick player.nick%TYPE,
-                                                _playerIpStr varchar) 
-RETURNS text AS $$
-    DECLARE
-        _playerIp inet;
-        _teamId team.id%TYPE;
-        _playerRec player%ROWTYPE;
-        _ret text;
-    BEGIN
-        -- Logging
-        raise notice 'identifyPlayerFromIp(%,%)',$1,$2;
-    
-        -- Convert player IP
-        _playerIp := _playerIpStr::inet;
-
-        -- Determine player's team
-        SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
-        if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
-        end if;
-
-        -- Determine if IP is already used
-        SELECT id,teamId,nick,ip 
-        INTO _playerRec
-        FROM player
-        WHERE _playerIp = ip
-        LIMIT 1;
-
-        -- if IP is already used, overwrite
-        if FOUND then
-            UPDATE player
-            SET nick = _nick
-            WHERE id = _playerRec.id;
-
-            _ret := format('IP %s was already identified to %s. Updating to %s.',_playerIpStr,_playerRec.nick,_nick);
-        else
-        -- if not, insert new entry
-            INSERT INTO player(teamId,nick,ip) VALUES(_teamId,_nick,_playerIp);
-            _ret := format('IP %s was assigned to %s.',_playerIpStr,_nick);
-        end if;
-
-        RETURN _ret;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
 
 -- getAuthorList()

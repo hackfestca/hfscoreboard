@@ -144,6 +144,11 @@ SELECT identifyPlayerFromIp('mdube','192.168.1.101');
 SELECT identifyPlayerFromIp('mdube','192.168.1.102');
 SELECT identifyPlayerFromIp('mdube','127.0.0.1');
 
+/*
+    Add secrets
+*/
+SELECT addTeamSecrets(7,'Test','Blabla secret');
+
 -- Money for team eko
 SELECT launderMoneyFromTeamId(4,3001);
 
@@ -322,9 +327,9 @@ SELECT submitFlagFromIp('192.168.9.21', getFlagValueFromName('Flag 9'));
 /*
     Loto tests
 */
-SELECT buyLotoTicketFromIp(500, '192.168.1.111');
-SELECT buyLotoTicketFromIp(700,'192.168.9.111');
-SELECT buyLotoTicketFromIp(100,'192.168.10.111');
+SELECT buyLotoFromIp(500, '192.168.1.111');
+SELECT buyLotoFromIp(700,'192.168.9.111');
+SELECT buyLotoFromIp(100,'192.168.10.111');
 
 -- SELECT processLotoWinner(10);     -- Should not work
 SELECT processLotoWinner(4);     -- Should work
