@@ -97,11 +97,6 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         self._oC.close()
 
     def _dbExec(self,func,*args):
-        ret = ''
-        self._dbConnect()
-        ret = getattr(self._oC,func)(*args)
-        self._dbClose()
-        return ret
         try:
             ret = ''
             self._dbConnect()
