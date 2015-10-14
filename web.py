@@ -275,8 +275,8 @@ class IndexHandler(BaseHandler):
 
         try:
             submit_message = self.client.submitFlagFromIp(
-                self.request.remote_ip,
-                flag)
+                flag,
+                self.request.remote_ip)
 
         except UniqueError:
             submit_message = "Flag already submitted"
