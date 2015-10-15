@@ -45,16 +45,19 @@ CREATE ROLE hfadmins NOINHERIT;     -- Admins of the KotH
 CREATE ROLE hfplayers NOINHERIT;    -- Players of the KotH
 CREATE ROLE hfscore NOINHERIT;      -- Scoreboard access
 CREATE ROLE hfflagupdater NOINHERIT;-- FlagUpdater access
+CREATE ROLE hfrpi NOINHERIT;        -- Rpi access (Model)
 
 CREATE ROLE player LOGIN INHERIT PASSWORD 'player';
 CREATE ROLE web LOGIN INHERIT PASSWORD 'web';
 CREATE ROLE flagupdater LOGIN INHERIT PASSWORD 'flagUpdater';
+CREATE ROLE rpi LOGIN INHERIT PASSWORD 'wggYUV5f9wEgBsPbCk1ToifhkLYRVwHk';
 
 GRANT hfadmins to owner;
 GRANT hfplayers to player;
 GRANT hfscore to web;
 GRANT hfflagupdater to flagupdater;
+GRANT hfrpi to rpi;
 
 -- Create yourself a role here. Replace admin by something else on both lines.
-CREATE ROLE admin LOGIN INHERIT PASSWORD '<CHANGE_ME>';
+CREATE ROLE admin LOGIN INHERIT PASSWORD 'zWMmhIpSQlcFlNOu8rfpr';
 GRANT hfadmins to admin;

@@ -27,14 +27,14 @@ REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfscore;
 --REVOKE ALL PRIVILEGES ON SCHEMA public FROM PUBLIC;     -- Why not...
 
 -- Grant privileges
-GRANT CONNECT ON DATABASE scoreboard TO owner,hfadmins,hfplayers,hfscore,hfflagupdater;
+GRANT CONNECT ON DATABASE scoreboard TO owner,hfadmins,hfplayers,hfscore,hfflagupdater,hfrpi;
 
 --GRANT ALL PRIVILEGES ON SCHEMA scoreboard TO owner;
 --GRANT ALL PRIVILEGES ON SCHEMA pgcrypto TO owner;
 
-GRANT USAGE ON SCHEMA scoreboard TO hfadmins,hfplayers,hfscore,hfflagupdater;
-GRANT USAGE ON SCHEMA pgcrypto TO hfadmins,hfplayers,hfscore;
-GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore;
+GRANT USAGE ON SCHEMA scoreboard TO hfadmins,hfplayers,hfscore,hfflagupdater,hfrpi;
+GRANT USAGE ON SCHEMA pgcrypto TO hfadmins,hfplayers,hfscore,hfrpi;
+GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore,hfrpi;
 
 -- Grants for admins only
 GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
@@ -75,6 +75,11 @@ GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromHost(varchar) TO hfflagupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromName(varchar) TO hfflagupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO hfflagupdater;
+
+-- Grants for rpi
+GRANT EXECUTE ON FUNCTION scoreboard.getModelCountDown() TO hfrpi;
+--GRANT EXECUTE ON FUNCTION scoreboard.getModelNews() TO hfrpi;
+--GRANT EXECUTE ON FUNCTION scoreboard.getModelTopTeams() TO hfrpi;
 
 -- Grants for players only
 GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfplayers;

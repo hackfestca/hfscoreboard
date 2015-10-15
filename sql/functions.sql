@@ -4443,3 +4443,26 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- getAuthorList()
+
+/* 
+    Model related
+*/
+
+/*
+    Stored Proc: getModelCountDown()
+*/
+CREATE OR REPLACE FUNCTION getModelCountDown()
+RETURNS TEXT AS $$
+    DECLARE
+        _ret TEXT;
+    BEGIN
+        -- Logging
+        raise notice 'getModelCountDown()';
+
+        _ret := 'test';
+        
+        -- Return
+        RETURN _ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
