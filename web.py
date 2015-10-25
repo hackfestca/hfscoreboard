@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 '''
@@ -94,6 +94,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self._logger = logger
         self._team_name = None
         self._team_ip = None
+        self.remote_ip = self.request.headers.get('X-Forwarded-For', self.request.headers.get('X-Real-Ip', self.request.remote_ip))
         self._team_score = None
         self._sponsors = sponsors_imgs
         self._insults = [
@@ -137,7 +138,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def _getTeamInfo(self):
         try:
-            team_info = list(self.client.getTeamInfoFromIp(self.request.remote_ip))
+            team_info = list(self.client.getTeamInfoFromIp(self.remote_ip))
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
             self.team_score = team_info[6][1]
@@ -234,8 +235,8 @@ class ChallengesHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            categories = self.client.getCatProgressFromIp(self.request.remote_ip)
-            challenges = self.client.getFlagProgressFromIp(self.request.remote_ip)
+            categories = self.client.getCatProgressFromIp(self.remote_ip)
+            challenges = self.client.getFlagProgressFromIp(self.remote_ip)
         except PLPGSQLRaiseError as e:
             message = e.message
             self.render('templates/error.html', error_msg=message)
@@ -276,7 +277,7 @@ class IndexHandler(BaseHandler):
         try:
             submit_message = self.client.submitFlagFromIp(
                 flag,
-                self.request.remote_ip)
+                self.remote_ip)
 
         except UniqueError:
             submit_message = "Flag already submitted"
@@ -339,7 +340,7 @@ class BlackMarketItemHandler(BaseHandler):
 
         try:
             bmItemData = self.client.getBMItemDataFromIp(privateId,
-                                                         self.request.remote_ip
+                                                         self.remote_ip
                                                          )
         except PLPGSQLRaiseError as e:
             message = e.message

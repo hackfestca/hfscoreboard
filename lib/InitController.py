@@ -94,6 +94,7 @@ class InitController(ClientController.ClientController):
                                     varchar, \
                                     varchar, \
                                     varchar, \
+                                    text, \
                                     text)')
             addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
                                     integer, \
@@ -105,6 +106,7 @@ class InitController(ClientController.ClientController):
                                     varchar, \
                                     varchar, \
                                     varchar, \
+                                    text, \
                                     text)')
             with self._oDB.xact():
                 for row in reader:
@@ -121,6 +123,7 @@ class InitController(ClientController.ClientController):
                     ftype = row[8]
                     ftypeext = row[9]
                     fdesc = row[10]
+                    fnews = row[11]
                     
                     if fname != 'Flag Name':
                         if fvalue != '':
@@ -135,7 +138,8 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(fauthor,'str'), \
                                     self._sanitize(ftype,'str'), \
                                     self._sanitize(ftypeext,'str'), \
-                                    self._sanitize(fdesc,'str'))
+                                    self._sanitize(fdesc,'str'), \
+                                    self._sanitize(fnews,'str'))
                         else:
                             addRandomFlag(self._sanitize(fname,'str'), \
                                     self._sanitize(fpts,'int'), \
@@ -147,7 +151,8 @@ class InitController(ClientController.ClientController):
                                     self._sanitize(fauthor,'str'), \
                                     self._sanitize(ftype,'str'), \
                                     self._sanitize(ftypeext,'str'), \
-                                    self._sanitize(fdesc,'str'))
+                                    self._sanitize(fdesc,'str'), \
+                                    self._sanitize(fnews,'str'))
 
     def importTeams(self):
         SETTINGS_COLS_START = 2

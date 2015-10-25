@@ -194,6 +194,7 @@ CREATE TABLE flag(
     typeExt integer references flagTypeExt(id),
     displayInterval interval default null,
     description text default null,
+    news text default null,
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),

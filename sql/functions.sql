@@ -486,7 +486,7 @@ RETURNS TABLE (
                 raise exception 'Unique flag already submitted by a team. Too late. :)';
             end if;
             _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
-            PERFORM addEvent(_ret,'flag');
+            --PERFORM addEvent(_ret,'flag');
             RETURN QUERY SELECT _flagRec.pts,_ret;
         elsif _flagRec.type = 12 then
             -- Calculate new value
@@ -1582,10 +1582,11 @@ CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE,
                                     _category flagCategory.name%TYPE,
                                     _statusCode flagStatus.code%TYPE,
                                     _displayInterval varchar(20),
-                                    _author flagAuthor.name%TYPE,
+                                    _author flagAuthor.nick%TYPE,
                                     _type flagType.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
-                                    _description flag.description%TYPE
+                                    _description flag.description%TYPE,
+                                    _news flag.news%TYPE
                                     ) 
 RETURNS flag.id%TYPE AS $$
     DECLARE
@@ -1597,7 +1598,7 @@ RETURNS flag.id%TYPE AS $$
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -1613,7 +1614,7 @@ RETURNS flag.id%TYPE AS $$
 
         -- Get author id from name
         if _author is not NULL then
-            SELECT id INTO _authorId FROM flagAuthor WHERE name = _author;
+            SELECT id INTO _authorId FROM flagAuthor WHERE nick = _author;
             if not FOUND then
                 raise exception 'Could not find author "%"',_author;
             end if;
@@ -1651,9 +1652,9 @@ RETURNS flag.id%TYPE AS $$
 
         -- Insert a new row
         INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
-                        type,typeExt,description)
+                        type,typeExt,description,news)
                 VALUES(_name,_value,_pts,_cash,_hostId,_catId,_statusCode,_display,_authorId,
-                        _typeCode,_typeExtId,_description);
+                        _typeCode,_typeExtId,_description,_news);
 
         RETURN LASTVAL();
     END;
@@ -1669,10 +1670,11 @@ CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE,
                                     _category flagCategory.name%TYPE,
                                     _statusCode flagStatus.code%TYPE,
                                     _displayInterval varchar(20),
-                                    _author flagAuthor.name%TYPE,
+                                    _author flagAuthor.nick%TYPE,
                                     _type flagType.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
-                                    _description flag.description%TYPE
+                                    _description flag.description%TYPE,
+                                    _news flag.news%TYPE
                                     ) 
 RETURNS flag.id%TYPE AS $$
     DECLARE
@@ -1680,7 +1682,7 @@ RETURNS flag.id%TYPE AS $$
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -1690,7 +1692,7 @@ RETURNS flag.id%TYPE AS $$
 
                 -- addFlag
                 SELECT addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
-                                _displayInterval,_author,_type,_typeExt,_description)
+                                _displayInterval,_author,_type,_typeExt,_description,_news)
                 INTO _flagId;
                 RETURN _flagId;
             EXCEPTION WHEN unique_violation THEN
@@ -1888,10 +1890,13 @@ RETURNS text AS $$
         _flagRec RECORD;
         _rowCount smallint;
         _teamAttempts smallint;
+        _flagSbtCt integer;
         _playerIp inet;
         _settings settings%ROWTYPE;
         _pts flag.pts%TYPE;
         _ret text := '';
+        _retEvent text := '';
+        _news text := '';
         ANTI_BF_INT interval := '20 second';
         ANTI_BF_LIMIT integer := 20;
         STATUS_CODE_OK integer := 1;
@@ -1913,7 +1918,7 @@ RETURNS text AS $$
         end if;
 
         -- Get team from userIp 
-        SELECT id,net INTO _teamRec FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        SELECT id,name,net INTO _teamRec FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
             raise exception 'Team not found for %',_playerIp;
         end if;
@@ -1946,14 +1951,16 @@ RETURNS text AS $$
         -- Flag statusCode must be equal 1
         -- tableId 1 = flag, category 2 = kingFlag
         SELECT * FROM (
-            SELECT id,value,pts,cash,statusCode,type,1 AS tableId
+            SELECT id,value,pts,cash,statusCode,type,news,1 AS tableId
             FROM flag 
             WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 11
               UNION ALL
-            SELECT id,value,pts,NULL,NULL,NULL,2 AS tableId
+            SELECT id,value,pts,NULL,NULL,NULL,NULL,2 AS tableId
             FROM kingFlag 
             WHERE value = _flagValue
         ) AS x INTO _flagRec;
+
+        
 
         -- if the flag is found, determine if it is a flag or a kingFlag
         -- then assign the flag
@@ -1964,29 +1971,44 @@ RETURNS text AS $$
                 if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
                     _pts := _flagRec.pts;
                     _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+                    _retEvent = _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
 
                     -- Give cash if flag contains cash
                     if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
                         PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
                         _ret = _ret || 'You also received ' || _flagRec.cash::text || '$.';
+                        _retEvent = _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
                     end if;
                 else
                     SELECT *
                     FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)
                     INTO _pts,_ret;
                 end if;
+
+                -- Get number of time it was submitted
+                SELECT count(*) INTO _flagSbtCt 
+                FROM team_flag 
+                WHERE flagId = _flagRec.id;
+                -- Add news if first submit.
+                if _flagRec.news is not null and _flagRec.news != '' and _flagSbtCt = 0 then
+                    _news := replace(_flagRec.news, '$team', _teamRec.name);
+                    PERFORM addNews(_news, NULL);
+                    -- replace(string text, from text, to text)
+                end if;
                 INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                         VALUES(_teamRec.id,_flagRec.id,_pts,_playerIp);
             elsif _flagRec.tableId = 2 then
                 INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp)
                         VALUES(_teamRec.id,_flagRec.id,_playerIp);
+                
                 _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+                _retEvent = _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
             end if;
         else
             raise exception 'Invalid flag';
         end if;
-
-        -- PERFORM addEvent(_ret,'flag');
+ 
+        PERFORM addEvent(_retEvent,'flag');
 
         RETURN _ret;
     END;
@@ -3608,7 +3630,7 @@ RETURNS bytea AS $$
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            raise exception 'You have not bought the item yet.';
 
             -- Reset the item's private ID is an authorized access was performed
             UPDATE bmItem
@@ -3654,7 +3676,7 @@ RETURNS bytea AS $$
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            raise exception 'You have not bought the item yet.';
 
             -- Reset the item's private ID is an authorized access was performed
             UPDATE bmItem

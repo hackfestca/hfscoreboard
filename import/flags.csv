@@ -1,37 +1,93 @@
-Flag Name,Flag Value,Pts,Cash,Flag Location,Category (see tab #2),displayInterval,Author,FlagType,FlagTypeExt,isKing,Description,UpdateCmd,How to,
-tca04,so9TaRKmiLPBb4f8wI2a,300,0,scoreboard.hf,tca,Null,Cedrick Chaput,Standard,Null,FALSE,"Find list of all Turmelle, Choquette and Associate clients.  http://tca.ctf.hf.  You must find tc01 before",Null,dans le vpn utilisé exploit wordpress,
-wifi01,A362EE636A,100,0,dd-wrt,misc,Null,Cedrick Chaput,Standard,Null,FALSE,[*** Local only ****]Break Serge access point. ,Null,simple wep,
-tca01,91c8d83d74bcd3a281908f5ff02e72a2,100,0,scoreboard.hf,tca,Null,Cedrick Chaput,Standard,Null,FALSE,"Find the way in Turmelle, Choquette and Associate internal network. Our spy found that serge.ctf.hf  access TCA network. See if you can hack it.",Null,utiliser ms-08-067 sur le windows xp pour devenir root dans sa openvpn,
-tca02,9B55EEF34798AF24BF2AE950AB35242D,200,0,scoreboard.hf,tca,Null,Jean-Sebastien Grenon,Standard,Null,FALSE,Find wordpress DMZ network range. You must find tc01 before,Null,zone transfert,
-tca03,QmNwuXR7aN8w,100,0,scoreboard.hf,tca,Null,Jean-Sebastien Grenon,Standard,Null,FALSE,Find Peter Gene password. you must find tc01 before,Null,,
-fw01,46dcec266a1ab888986659f957214d72,100,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8888  <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,le source poste doit etre 443 ,
-fw02,1fdae0cc71e12f61c729238ed6bd945b,200,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8887 <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,"chaput@garde-Barriere:~$ nc 172.28.73.20 3128
-GET http://127.0.0.1:8887 HTTP/1.0",
-fw03,7deea0b57cc0ca1c71e696424307bc3c,300,0,scoreboard.hf,net,Null,Cedrick Chaput,Standard,Null,FALSE,"This firewall compagny challenge you to bypass they ""master"" configuration. Try to connect to fw.ctf.hf on port 8889  <a href=""https://scoreboard.hf/public/fw.tar.gz"">Hint</a> ",Null,"port knoking 7000,8000,9000",
-for01,d5858027b0b4256ed26fb0df74fe830d,25,0,scoreboard.hf,for,Null,Cedrick Chaput,Standard,Null,FALSE,"Excel securityByPass <a href=""https://scoreboard.hf/public/caramoulk.xlsx "">Excel</a> ",Null,le excel est sécurité sur le workspace,
-php01,69b11d35af9e229ccd58808cbac10224,150,0,scoreboard.hf,web,Null,Cedrick Chaput,Standard,Null,FALSE,"try to log as admin in  <a href=""http://web.ctf.hf/chal1/index.php"">link</a> Hint: there must be some info on php some were",Null,le cookie de session est /session/ pour devenir admin,
-php02,fd5a63ceb5ce5b9eb76a115bb2b49166,100,0,scoreboard.hf,web,Null,Cedrick Chaput,Standard,Null,FALSE,"Find the flag in the database  <a href=""http://web.ctf.hf/chal2/index.php"">link</a> ",Null,"bob' UNION SELECT flag,value FROM ""FLAG""  -- ",
-re01,eba6e024f83706ac12f0a87914e37d26d65dc7d6,100,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"Very basic crackme. <a href=""https://scoreboard.hf/public/re01"">re01</a>
-",Null,"Basic RE, anti-debug, data packing.",
-re02,APOCdee456DSArwQwere,400,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"Can't crack this <a href=""https://scoreboard.hf/public/re02"">re02</a>
-",Null,./re 134 322 1112 299,
-re03,7901836a6d41f62bca232834c4a68ec246526b209c23f39e2,500,0,scoreboard.hf,re,Null,Jessy Campos,Standard,Null,FALSE,"You shouldn't waste your time reversing this manually. <a href=""https://scoreboard.hf/public/re03"">re03</a>
-",Null,"Advanced RE, pas assez de temps de le faire à la main, utilisation de DBI ou de script obligatoire (exemple: execution symbolique)",
-pwn01,274e69de8ccaf3c13d36dc31b2d862996ba89a0e,100,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"Basic pwnable, ASLR + RX bypass required. <a href=""https://scoreboard.hf/public/pwn01"">pwn01</a>. ssh level1@lostunicorn.ctf.hf password: level1
-",Null,Stack smashing ROP classique.,
-pwn02,asdf9823ulirasDFQ24sadfaser,200,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"Basic pwnable. ASLR + NX bypass required. Level2 <a href=""https://scoreboard.hf/public/pwn02"">pwn02</a>. ssh level2@lostunicorn.ctf.hf password: level1 FLAG",Null,ROP mon heap bitch. Utilisation d'un stack pivot pour tomber dans le heap et péter le bazar.,
-pwn03,4b3b8ace354b685fc77e682c563475b132374b38,300,0,scoreboard.hf,expl,Null,Jessy Campos,Standard,Null,FALSE,"I love cookies.<a href=""https://scoreboard.hf/public/pwn03"">pwn03</a>. ssh level3@lostunicorn.ctf.hf password: level2 FLAG",Null,"advanced, utilisation d'une sandbox pour réduire la surface d'exploitation
-",
-elec01,d1g1t4ll0ck,100,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] These guys built their own digital lock at the entrance. Ho noes!,Null,Run the combination lock which is hardcoded in the code,
-elec02,und3rc0v3rz,100,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Hmm a TV in a conference room. Ever heard of TV's secret menus?,Null,"Using IR, run the right combination. Find that the last signal can be found by holding any key.",
-elec03,chr1stm4str,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Party Time!,Null,"Turn all lights ON by solving any challenge, sending an IR signal and holding button #2.",
-elec04,r4c3abcc0nd,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Enough recon. Build your way to the core of the system. You are allowed to connect a single GPIO wire on the arduino. ,Null,Build a custom made serial port using python and a raspberry pi or an arduino.,
-elec05,aas3r14lbbc,300,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,[*** Local only ****] Exploit the race condition with a single cable.,Null,Plug the cable in G42 and B59. Set potentiometer to 0 and increase slowly until it reach 1000.,"
-"
-elec06,f1r3burnw00,200,0,scoreboard.hf,electro,Null,Martin Dube,Standard,Null,FALSE,"[*** Local only ****] Finally, trigger the fire alarm before leaving. You are allowed to move the DALLAS temperature sensor. ",Null,Switch the sensor in the opposite side. This will make the sensor very hot. Then plug it back. ,
-win01,flagVMWXKlcVtP15RYV,100,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Can you find local accounts username on this windows b0x 172.28.17.75,Null,,
-win02,flagxyVgfnBfLlxb123,100,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Sharing cool stuff on corporate workstation is bad - 172.28.17.76,Null,,
-win03,flagjWVR6M330ODNoSmX3eln,200,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,Bad admin always put sensitive information in Active Directory GPO (humm you need a simple domain account to dig here),Null,,
-win04,flagyZWCYGv0Ega1IDX3UTTF,400,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,"A lame domain admin browse the public share ""shareforall"" on 172.28.17.76 every minute. With this information, you should be able to setup a client side attack to capitalize on his creds and get a shell DC01  (172.28.17.70). Your prize is c:\flag.txt. Hint - smb signature is disabled on DC01.",Null,,
-win05,DCD0E1E8D951953999969DDF6CB79ACF,200,0,scoreboard.hf,sc,Null,Stephane Sigmen,Standard,Null,FALSE,"If you pwned DC01, dump password hash.  Uppercase NTLM part of FlagUser's hash is your prize.",Null,,
-misc01,ILoveBeer!,50,0,scoreboard.hf,misc,Null,Jessy Campos,Standard,Null,FALSE,[*** Local only ***] Find the flag in the room.,Null,,
+Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
+csa1,Hs17K6LakjDeTeLlwoQ5gVGP,100,0,scoreboard.hf,demat,Null,flr,Unique,Null,<h3>Call Home -</h3> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,This_is_an_automated_news$team,CALL HOME
+csa2,0AB2C8DZzO7W0zo0WdRrS6mv,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
+network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""http://192.168.0.1/"", ""method"" : ""GET"", ""flag"" : ""0AB2C8DZzO7W0zo0WdRrS6mv""},"
+csa3,U2PHFyGFxWcV3vbRGnrv5B4H,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
+network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""file://192.168.20.9/"", ""method"" : ""GET"", ""flag"" : ""U2PHFyGFxWcV3vbRGnrv5B4H""}"
+csa4,E9N2ocEZ21ZaCDfYWNu4EZGO,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
+network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""https://192.168.53.53/"", ""method"" : ""GET"", ""flag"" : ""E9N2ocEZ21ZaCDfYWNu4EZGO""}"
+csa5,VvGZEg6GQmvYVx6yEWTW0Jvc,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
+network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""ftp://192.168.53.194:1025/"", ""method"" : ""GET"", ""flag"" : ""VvGZEg6GQmvYVx6yEWTW0Jvc""}"
+csa6,KxSIVhHctS3MpuGdff5QNQcH,300,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 1 -</h3> For one of the identified service, a common Web application is running. Identified it!<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" with the URI parameter set to the URI describing the service and the application. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;application_path&gt;",,"{""url"":""https://192.168.53.53/phpMyAdmin"", ""method"" : ""GET"", ""flag"" : ""KxSIVhHctS3MpuGdff5QNQcH""}"
+csa7,Db9Xu4yGytwQUR3QKDgE3CFF,500,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 2 -</h3> A common vulnerability has been added to an existing feature of the Web application. Find it!
+
+The flag is somewhere in the source code of the vulnerable page.",,
+csa8,gDk99jmKRsRIRWlIDwKJY4NC,400,0,scoreboard.hf,demat,Null,flr,Unique,Null,"<h3>Mini level up 3 -</h3> Try to log in the Web application.<p/>
+
+To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;",,
+csa9,3UvDr8lpgeEFpXxZZclTLfUX,400,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 4 -</h3> Look inside the Web application for valuable information.
+",,
+teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,100,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
+teaser2,bq4TALp8TvAXuOPZ6FInZA==,100,100,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
+teaser3,Gratz!SeeYouInNovember,100,100,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
+instruction1,447addca18a1e9099e8dac715e1136b6,0,100,scoreboard.hf,thirdparty,12 hours,chaput,Standard,Null,Read the instruction ,,hidden flag in player instruction
+babyfoot1,77e7cddf7f28a57459778b9e5718c109,0,1000,scoreboard.hf,thirdparty,12 hours,patoff,Standard,Null,babyfoot01,,BabyFoot tournament of Security Compass(Pat)
+hydrohf1,X8J5drognjMhjTzw4gAxZGIuSPBD1qke,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had access to the switch Hydro_HF_Core_01 and Hydro_HF_Core_02. There are probably communications between computer, try to discover how to shutdown the power. Come near the model.",,switch mac flood
+hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had acces to the switch Hydro_HF_Dam_01 and Hydro_HF_Dam_02, you have to find the host that listening. Come near the model.",,switch vlan uppping
+hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
+hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"
+Your goal is near, you have found the information about certain employees, you must now shutdown the Dam.",,Bypass 2FA - connect with winrm
+phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+lotohf1,0dbcadc23ba311d1698382eba06dec1e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""lotohf.ctf.hf""> lotohf.ctf.hf</a> ",,
+lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to pivot in lan subnet. ,,
+lotohf3,6235401daa92365013116dac3eddc38e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try have a Domain User access,,
+lotohf4,c41da8273f46eab41694111de52b4a39,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get the ms-sql user account password ,,
+lotohf5,93181fa8565af6e79b6208778b90a3c7,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,,
+nssa1,d5b3a9bcaa0539509cf45cdca959ef4e,100,100,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
+nssa2,b1a6ceb4bc344c80fb697d559f320047,200,200,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
+nssa3,d06f1adb6acbc9b955f47c0398947a91,300,300,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
+nssa4,74290bbf62a177509f728a81f0c16cb4,400,400,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
+re1,whatever34345345345,200,100,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re2,dfif8f98utf8fj,200,200,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re3,whateverdin3n3njf,300,300,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re4,ff61acc62c312edd2211739f9927268c,400,400,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+lock1,098bbc25fd30692492bd33986078e826,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
+lock2,d21c4c7507d792b50e356ec348adaff0,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
+lock3,whatever123egregergerg,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
+pipe01,FLAGoTd6mkNfT0qdQZH5xMZK,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe01,,
+pipe02,FLAGQ3RBc95fYPFXuFxPX2Qs,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe02,,
+pipe03,USERhashisflag1,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe03,,
+pipe04,FLAG0FJWTgLyLZCUvyHA11pk,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe04,,
+pipe05,USERhashisflag2,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe05,,
+pipe06,FLAGYSByxqVZ00KsKSljIEoH,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe06,,
+pipe07,USERhashisflag3,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe07,,
+pipe08,FLAGu6HYwtkpnReVfWeHrBse,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe08,,
+pipe09,USERhashisflag,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe09,,
+pipe10,FLAGH1iq8NEN7n4OoWFLMzse,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe10,,
+pipe11,FLAGyhF0jjCjlz6zMVa5JzVg,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe11,,
+fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,gp,Standard,Null,FM01,,
+cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash03,646bc3da08eeec46d8e592b1e3434be2,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash04,ea847f9a7eeb7e45a9f6bdf7abf2f984,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash05,d7987c318242d9ad84d26b4b883bbaba,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash06,6786e4b0e52a02fa43f30d18d416d6f6,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash07,aa4a116609c90ef483aaf07be59a6ff6,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash08,81e3f44c6e9024cc18acf5aedcf55aaf,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash09,249edba0590c41d0d19e684eee1b6cb7,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash10,16cb6dc8b19520e59c94d3e37e373edf,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash11,8e7ee81b711f92746a5e6642f2693e46,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash12,3b3e0b2394509f418d7edaeb20e2e9ee,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash13,f697164603aab7636b6386427c4484b5,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash14,471b676d57a6251b48fc6337d826cbd7,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash15,cbedb58759421557e51000230ccb9f47,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash16,f246af282bd62dc010b5fa05bd8308cf,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash17,2dfd1302355efc9c40796cb971f69860,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash18,4a7e7d10c8865a94702704ac426950bd,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash19,bd7fc09a3a52a43fb69c7086a87484b5,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash20,a96ac74db2326634f36c4704d3b614de,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,

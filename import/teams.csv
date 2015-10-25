@@ -1,28 +1,63 @@
-Team Name,Team Net,PHOENIX_USER,PHOENIX_PASS,PHOENIX_HOST
-_TMIH_,172.28.101.0/24,user1,pass1,11.22.33.101
-return ENEEDGIN;,172.28.102.0/24,user2,pass2,11.22.33.102
-DCIETS,172.28.103.0/24,user3,pass3,11.22.33.103
-Hack ULaval,172.28.104.0/24,user4,pass4,11.22.33.104
-Shellbleedoodleshock,172.28.105.0/24,user5,pass5,11.22.33.105
-Eliteroot,172.28.106.0/24,user6,pass6,11.22.33.106
-EMTA XIDLESYC GODS !,172.28.107.0/24,user7,pass7,11.22.33.107
-Flaggots,172.28.108.0/24,user8,pass8,11.22.33.108
-GLO in the dark,172.28.109.0/24,user9,pass9,11.22.33.109
-Good Work IOIextreme,172.28.110.0/24,user10,pass10,11.22.33.110
-crackmayorsecurity,172.28.111.0/24,user11,pass11,11.22.33.111
-In the middle man ,172.28.112.0/24,user12,pass12,11.22.33.112
-l33tb33s,172.28.113.0/24,user13,pass13,11.22.33.113
-Packet Drop,172.28.114.0/24,user14,pass14,11.22.33.114
-Ping Master,172.28.115.0/24,user15,pass15,11.22.33.115
-PolyHack,172.28.116.0/24,user16,pass16,11.22.33.116
-Quick Overflow ,172.28.117.0/24,user17,pass17,11.22.33.117
-Relentless Penguin Uprising,172.28.118.0/24,user18,pass18,11.22.33.118
-@dminPr0tect n friends,172.28.119.0/24,user19,pass19,11.22.33.119
-Sea and Tea,172.28.120.0/24,user20,pass20,11.22.33.120
-Shell investigator,172.28.121.0/24,user21,pass21,11.22.33.121
-BonziBuddy,172.28.122.0/24,user22,pass22,11.22.33.122
-thinker^or^die,172.28.123.0/24,user23,pass23,11.22.33.123
-Unicorn as a service,172.28.124.0/24,user24,pass24,11.22.33.124
-Freethinker1,172.28.125.0/24,user25,pass25,11.22.33.125
-Freethinker2,172.28.126.0/24,user26,pass26,11.22.33.126
-usedoils,172.28.127.0/24,user27,pass27,11.22.33.127
+Team Name,Team Net,PHOENIX_USER,PHOENIX_PASS,PHOENIX_HOST,PHOENIX_PORT
+_TMIH_,172.28.101.0/24,user1,pass1,hf01.cloudblabla,444
+return ENEEDGIN;,172.28.102.0/24,user2,pass2,hf01.cloudblabla,444
+DCIETS,172.28.103.0/24,user3,pass3,hf01.cloudblabla,444
+Hack ULaval,172.28.104.0/24,user4,pass4,hf01.cloudblabla,444
+Shellbleedoodleshock,172.28.105.0/24,user5,pass5,hf01.cloudblabla,444
+Eliteroot,172.28.106.0/24,user6,pass6,hf01.cloudblabla,444
+EMTA XIDLESYC GODS !,172.28.107.0/24,user7,pass7,hf01.cloudblabla,444
+Flaggots,172.28.108.0/24,user8,pass8,hf01.cloudblabla,444
+GLO in the dark,172.28.109.0/24,user9,pass9,hf01.cloudblabla,444
+Good Work IOIextreme,172.28.110.0/24,user10,pass10,hf01.cloudblabla,444
+crackmayorsecurity,172.28.111.0/24,user11,pass11,hf01.cloudblabla,444
+In the middle man ,172.28.112.0/24,user12,pass12,hf01.cloudblabla,444
+l33tb33s,172.28.113.0/24,user13,pass13,hf01.cloudblabla,444
+Packet Drop,172.28.114.0/24,user14,pass14,hf01.cloudblabla,444
+Ping Master,172.28.115.0/24,user15,pass15,hf01.cloudblabla,444
+PolyHack,172.28.116.0/24,user16,pass16,hf01.cloudblabla,444
+Quick Overflow ,172.28.117.0/24,user17,pass17,hf01.cloudblabla,444
+Relentless Penguin Uprising,172.28.118.0/24,user18,pass18,hf01.cloudblabla,444
+@dminPr0tect n friends,172.28.119.0/24,user19,pass19,hf01.cloudblabla,444
+Sea and Tea,172.28.120.0/24,user20,pass20,hf01.cloudblabla,444
+Shell investigator,172.28.121.0/24,user21,pass21,hf01.cloudblabla,444
+BonziBuddy,172.28.122.0/24,user22,pass22,hf01.cloudblabla,444
+thinker^or^die,172.28.123.0/24,user23,pass23,hf01.cloudblabla,444
+Unicorn as a service,172.28.124.0/24,user24,pass24,hf01.cloudblabla,444
+Freethinker1,172.28.125.0/24,user25,pass25,hf01.cloudblabla,444
+Freethinker2,172.28.126.0/24,user26,pass26,hf01.cloudblabla,444
+usedoils,172.28.127.0/24,user27,pass27,hf01.cloudblabla,444
+team28,172.28.128.0/24,user28,pass28,hf01.cloudblabla,444
+team29,172.28.129.0/24,user29,pass29,hf01.cloudblabla,444
+team30,172.28.130.0/24,user30,pass30,hf01.cloudblabla,444
+team31,172.28.131.0/24,user31,pass31,hf01.cloudblabla,444
+team32,172.28.132.0/24,user32,pass32,hf01.cloudblabla,444
+team33,172.28.133.0/24,user33,pass33,hf01.cloudblabla,444
+team34,172.28.134.0/24,user34,pass34,hf01.cloudblabla,444
+team35,172.28.135.0/24,user35,pass35,hf01.cloudblabla,444
+team36,172.28.136.0/24,user36,pass36,hf01.cloudblabla,444
+team37,172.28.137.0/24,user37,pass37,hf01.cloudblabla,444
+team38,172.28.138.0/24,user38,pass38,hf01.cloudblabla,444
+team39,172.28.139.0/24,user39,pass39,hf01.cloudblabla,444
+team40,172.28.140.0/24,user40,pass40,hf01.cloudblabla,444
+team41,172.28.141.0/24,user41,pass41,hf01.cloudblabla,444
+team42,172.28.142.0/24,user42,pass42,hf01.cloudblabla,444
+team43,172.28.143.0/24,user43,pass43,hf01.cloudblabla,444
+team44,172.28.144.0/24,user44,pass44,hf01.cloudblabla,444
+team45,172.28.145.0/24,user45,pass45,hf01.cloudblabla,444
+team46,172.28.146.0/24,user46,pass46,hf01.cloudblabla,444
+team47,172.28.147.0/24,user47,pass47,hf01.cloudblabla,444
+team48,172.28.148.0/24,user48,pass48,hf01.cloudblabla,444
+team49,172.28.149.0/24,user49,pass49,hf01.cloudblabla,444
+team50,172.28.150.0/24,user50,pass50,hf01.cloudblabla,444
+team51,172.28.151.0/24,user51,pass51,hf01.cloudblabla,444
+team52,172.28.152.0/24,user52,pass52,hf01.cloudblabla,444
+team53,172.28.153.0/24,user53,pass53,hf01.cloudblabla,444
+team54,172.28.154.0/24,user54,pass54,hf01.cloudblabla,444
+team55,172.28.155.0/24,user55,pass55,hf01.cloudblabla,444
+Team HF Crew,172.16.66.0/24,user56,pass56,hf01.cloudblabla,444
+Team Dube,192.168.1.0/24,user57,pass57,hf01.cloudblabla,444
+Team HF DMZ,192.168.6.0/24,user58,pass58,hf01.cloudblabla,444
+Team VPN,192.168.9.0/24,user59,pass59,hf01.cloudblabla,444
+Team VPN Dube,192.168.10.0/24,user60,pass60,hf01.cloudblabla,444
+Team VPN Pie,192.168.13.0/24,user61,pass61,hf01.cloudblabla,444
+Team Eko,127.0.0.1/8,user62,pass62,hf01.cloudblabla,444
