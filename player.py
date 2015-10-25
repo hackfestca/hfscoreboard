@@ -112,7 +112,7 @@ pcatProg = subparsers.add_parser('catProg', help='Display category progression')
 
 pflagProg = subparsers.add_parser('flagProg', help='Display flag progression')
 
-pnews = subparsers.add_parser('news', help='Display flag progression')
+pnews = subparsers.add_parser('news', help='Display News')
 
 pinfo = subparsers.add_parser('info', help='Display team information and statistics')
 
