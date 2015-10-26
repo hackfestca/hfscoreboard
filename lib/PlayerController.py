@@ -40,6 +40,7 @@ from xmlrpc.client import ServerProxy
 from time import sleep
 from datetime import datetime
 import ssl
+import sys
 
 class PlayerController():
     """
@@ -49,15 +50,19 @@ class PlayerController():
 
     def __init__(self):
         # Setup SSL context
-        if config.PLAYER_API_URI.startswith('https'):
+        if sys.version_info >= (3,4,0) and config.PLAYER_API_URI_HTTPS.startswith('https'):
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-            context.verify_mode = ssl.CERT_REQUIRED
             context.check_hostname = True
+            context.verify_mode = ssl.CERT_REQUIRED
             #context.load_default_certs()       # To use installed CAs on the machine
             context.load_verify_locations(config.PLAYER_API_SSL_ROOT_CA)
         else:
             context = None
-        self._oRPC = ServerProxy(config.PLAYER_API_URI,allow_none=True,use_builtin_types=True,context=context)
+
+        if sys.version_info >= (3,4,0):
+            self._oRPC = ServerProxy(config.PLAYER_API_URI,allow_none=True,use_builtin_types=True,context=context)
+        else:
+            self._oRPC = ServerProxy(config.PLAYER_API_URI_OLD,allow_none=True,use_datetime=True)
 
     def submitFlag(self,flagValue):
         return self._oRPC.submitFlag(flagValue)
@@ -128,4 +133,5 @@ class PlayerController():
                 print(events)
                 lastUpdate = datetime.now()
             sleep(refresh)
+
 

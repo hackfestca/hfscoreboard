@@ -37,10 +37,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 DEFAULT_TOP_VALUE = 300
 
-PLAYER_API_LISTEN_ADDR = '0.0.0.0'
+PLAYER_API_LISTEN_ADDR = '127.0.0.1'
 PLAYER_API_LISTEN_PORT = 8000
-#PLAYER_API_URI = 'https://scoreboard.hf'
-PLAYER_API_URI = 'http://127.0.0.1:8000'
+PLAYER_API_URI = 'https://scoreboard.hf'
+#PLAYER_API_URI = 'http://127.0.0.1:8000'
+PLAYER_API_URI_OLD = 'http://scoreboard.hf'   # python < 3.4.0
 PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
 
 DB_HOST = 'db.hf'
