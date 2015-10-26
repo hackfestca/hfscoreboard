@@ -72,6 +72,8 @@ actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=F
               help='Import flags only (from csv file: import/flags.csv)')
 actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=False, \
               help='Import teams only (from csv file: import/teams.csv)')
+actGrp.add_argument('--black-market','-b', action='store_true', dest='blackmarket', default=False, \
+              help='Import black market items (from csv file: import/blackmarket.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
 actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
@@ -118,6 +120,9 @@ try:
     elif args.teams:
         print('Importing teams')
         c.importTeams()
+    elif args.blackmarket:
+        print('Importing black market items')
+        c.importBlackMarketItems()
     elif args.security:
         print('Importing database security')
         c.importSecurity()

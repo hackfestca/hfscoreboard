@@ -36,13 +36,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import config
-import ClientController
+import UpdaterController
 import time
-import socket
-import libssh2
 from prettytable import PrettyTable 
 
-class FlagUpdaterController(ClientController.ClientController):
+class FlagUpdaterController(UpdaterController.UpdaterController):
     """
     Flag updater controller class used by flagUpdater.py
     """
@@ -59,6 +57,11 @@ class FlagUpdaterController(ClientController.ClientController):
         self._sPass = config.DB_FU_PASS
         self._sCrtFile = config.DB_FU_CRT_FILE
         self._sKeyFile = config.DB_FU_KEY_FILE
+
+        self._sSSHUser = config.SSH_FU_USER
+        self._sSSHPubKey = config.SSH_FU_PUB_KEY
+        self._sSSHPrivKey= config.SSH_FU_PRIV_KEY
+        self._sSSHPrivKeyPwd = config.SSH_FU_PRIV_PWD
         super().__init__()
 
     def _substituteCmd(self,cmd,flag):
@@ -76,32 +79,6 @@ class FlagUpdaterController(ClientController.ClientController):
     def _addRandomKingFlagFromId(self,flagId):
         return self._exec('addRandomKingFlagFromId(integer,integer)',flagId,self.KING_FLAG_VALUE)
     
-    def _remoteExec(self,host,cmd):
-        try:
-            if self._bDebug:
-                print('[+] Connecting to %s' % host)
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.connect((host, 22))
-            
-            session = libssh2.Session()
-            session.startup(sock)
-            #session.userauth_password('john', '******')
-
-            session.userauth_publickey_fromfile(config.FLAG_UPDATER_SSH_USER, \
-                                                config.FLAG_UPDATER_SSH_PUB_KEY, \
-                                                config.FLAG_UPDATER_SSH_PRIV_KEY, \
-                                                config.FLAG_UPDATER_SSH_PRIV_PWD)
-            channel = session.channel()
-            channel.execute(cmd)
-            if self._bDebug:
-                print('[+] Debug: SSH cmd output: '+str(channel.read(1024)))
-        except socket.error as e:
-            return (1,e)
-        except libssh2.Error as e:
-            return (1,e)
-
-        return (0,None)
-
     def _updateFromList(self,flags):
         if len(list(flags)) != 0:
 

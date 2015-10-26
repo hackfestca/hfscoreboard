@@ -133,7 +133,7 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create some "NPC" wallets
 */
-SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',500000, true);
+SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',1000000, true);
 SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
 
 /*
@@ -177,12 +177,13 @@ SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market b
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
 SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 
+/*
 SELECT addBMItem('Military base leak','admin',1,1,800,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);
 SELECT addBMItem('Casino 0-day','admin',1,1,1600,NULL,Null,'Wana rape the casino? Buy this shit.', 'exploit!'::bytea);
 SELECT addBMItem('Hydroelectric dam helper','admin',1,1,2100,NULL,Null,'Something', 'exploit!'::bytea);
 SELECT addBMItem('Pipeline 0-day','admin',1,1,3700,NULL,Null,'pop that chèvre', 'exploit!'::bytea);
 SELECT addBMItem('Phoenix corp takeover logs','admin',1,1,5000,NULL,Null,'Mouhaha', 'exploit!'::bytea);
-
+*/
 
 /* *****************************************************
 *

@@ -85,10 +85,19 @@ SQL_FUNC_FILE = 'sql/functions.sql'
 SQL_TABLE_FILE = 'sql/tables.sql'
 SQL_SEC_FILE = 'sql/security.sql'
 
-FLAG_UPDATER_SSH_USER = 'root'
-FLAG_UPDATER_SSH_PUB_KEY = 'certs/id_rsa.hf2014.pub'
-FLAG_UPDATER_SSH_PRIV_KEY = 'certs/id_rsa.hf2014'
-FLAG_UPDATER_SSH_PRIV_PWD = ''
+SSH_FU_USER = 'root'
+SSH_FU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
+SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_FU_PRIV_PWD = ''
+
+SSH_BMU_USER = 'scoreboard'
+SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
+SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_BMU_PRIV_PWD = ''
+
+BMI_HOSTS = ['scoreboard.hf']
+BMI_LOCAL_PATH = './blackmarket'
+BMI_REMOTE_PATH = '/var/www/htdocs/blackmarket'
 
 COMPETITION_MODE = True
 '''
@@ -101,4 +110,5 @@ BENCH_DEFAULT_CON_NUM = 30
 
 FLAGS_FILE = 'import/flags.csv'
 TEAMS_FILE = 'import/teams.csv'
+BMI_FILE = 'import/blackMarketItems.csv'
 

@@ -36,11 +36,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import config
-import ClientController
+import UpdaterController
 import postgresql
 import csv
+import os
 
-class InitController(ClientController.ClientController):
+class InitController(UpdaterController.UpdaterController):
     """
     Init controller class used by initDB.py.
     """
@@ -52,6 +53,12 @@ class InitController(ClientController.ClientController):
         self._sKeyFile = config.DB_INIT_KEY_FILE
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
+        self._bmiFile = config.BMI_FILE
+
+        self._sSSHUser = config.SSH_BMU_USER
+        self._sSSHPubKey = config.SSH_BMU_PUB_KEY
+        self._sSSHPrivKey= config.SSH_BMU_PRIV_KEY
+        self._sSSHPrivKeyPwd = config.SSH_BMU_PRIV_PWD
         super().__init__()
         
     def __del__(self):
@@ -172,8 +179,66 @@ class InitController(ClientController.ClientController):
                                          self._sanitize(tnet,'str'))
                         for i in range(SETTINGS_COLS_START,len(headers)):
                             addTeamSecrets(teamId,\
-                                            self._sanitize(headers[i],'str'),\
-                                            self._sanitize(row[i],'str'))
+                                           self._sanitize(headers[i],'str'),\
+                                           self._sanitize(row[i],'str'))
+
+    def importBlackMarketItems(self):
+        with open(self._bmiFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            headers = reader.__next__()
+            
+            # Delete already existing items on web servers
+            cmd = 'rm ' + config.BMI_REMOTE_PATH + '/*'
+            for host in config.BMI_HOSTS:
+                print('Deleting black market items on %s' % host)
+                self._remoteExec(host,cmd)
+
+            #_category bmItemCategory.name%TYPE,
+            #_statusCode bmItemStatus.code%TYPE,
+            #_ownerWallet bmItem.ownerWallet%TYPE,
+            #_amount bmItem.amount%TYPE,
+            #_qty bmItem.qty%TYPE,
+            #_displayInterval varchar(20),
+            #_description bmItem.description%TYPE,
+            #_importName bmItem.importName%TYPE
+            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar)')
+            with self._oDB.xact():
+                for row in reader:
+                    #print('|'.join(row))
+                    bmiName = row[0]
+                    bmiCat = 'admin'
+                    bmiStatusCode = 1
+                    bmiOwnerWallet = 1
+                    bmiAmount = row[2]
+                    bmiQty = row[3]
+                    bmiDispInt = row[4]
+                    bmiDesc = row[1]
+                    bmiImportName = row[5]
+
+                    bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
+                    
+                    if bmiName != 'Name':
+                        if os.path.isfile(bmiLocalPath):
+                            # Import in database
+                            print('Importing item "%s"' % bmiName)
+                            privateId = addBMItem(self._sanitize(bmiName,'str'), \
+                                               self._sanitize(bmiCat,'str'), \
+                                               self._sanitize(bmiStatusCode,'int'), \
+                                               self._sanitize(bmiOwnerWallet,'int'), \
+                                               self._sanitize(bmiAmount,'float'), \
+                                               self._sanitize(bmiQty,'int'), \
+                                               self._sanitize(bmiDispInt,'str'), \
+                                               self._sanitize(bmiDesc,'str'), \
+                                               self._sanitize(bmiImportName,'str'))
+
+
+                            # Send on web servers
+                            bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+                            for host in config.BMI_HOSTS:
+                                print('Uploading %s on %s' % (privateId,host))
+                                self._remotePut(host,bmiLocalPath,bmiRemotePath)
+                        else:
+                            print('File "%s" not found. Import of "%s" was canceled' % (bmiImportName,bmiName))
 
     def importSecurity(self):
         sql = ''.join(open(config.SQL_SEC_FILE, 'r').readlines())
@@ -185,5 +250,6 @@ class InitController(ClientController.ClientController):
         self.importData()
         self.importFlags()
         self.importTeams()
+        self.importBlackMarketItems()
         self.importSecurity()
 

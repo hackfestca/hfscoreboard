@@ -3323,15 +3323,16 @@ CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE,
                                     _qty bmItem.qty%TYPE,
                                     _displayInterval varchar(20),
                                     _description bmItem.description%TYPE,
-                                    _data bmItem.data%TYPE) 
-RETURNS integer AS $$
+                                    _importName bmItem.importName%TYPE) 
+RETURNS bmItem.privateId%TYPE AS $$
     DECLARE
         _bmItemId bmItem.id%TYPE;
         _catId bmItemCategory.id%TYPE;
         _display bmItem.displayInterval%TYPE;
         _privateId bmItem.privateId%TYPE;
         _dlLink bmItem.dlLink%TYPE;
-        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/bmi/?privateId=%s';
+        -- DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/bmi/?privateId=%s';
+        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarket/%s';
     BEGIN
         -- Logging
         raise notice 'addBMItem(%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,'data';
@@ -3372,14 +3373,14 @@ RETURNS integer AS $$
         _dlLink := format(DL_LINK,_privateId);
 
         -- Insert a new row
-        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,data,dlLink)
-                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_privateId,_data,_dlLink);
+        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,importName,dlLink)
+                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_privateId,_importName,_dlLink);
         _bmItemId := LASTVAL();
 
         -- Set initial status
         PERFORM setBMItemStatus(_bmItemId,_statusCode);
 
-        RETURN 0;
+        RETURN _privateId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

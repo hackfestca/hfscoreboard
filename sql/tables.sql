@@ -345,12 +345,14 @@ CREATE TABLE bmItem(
     qty integer default null,
     displayInterval interval default null,
     description text,
+    importName varchar(150) not null unique,
     privateId varchar(64) not null unique,  -- Should be secured
-    data bytea not null,                    -- Should be secured
+    data bytea null,                    -- Should be secured. Should be empty.
     dlLink text default null,               -- Should be secured
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
-    constraint valid_bmItem_data check (data != ''),
+    -- constraint valid_bmItem_data check (data != ''),
+    constraint valid_bmItem_importName check (importName != ''),
     constraint valid_bmItem_amount check (amount > 0),
     constraint valid_bmItem_displayTs check (displayInterval > '0 hours'::interval)
     );

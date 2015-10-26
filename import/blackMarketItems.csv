@@ -1,0 +1,14 @@
+Name,Description,Cost,Quantity,DisplayInterval,PathToItem (relative to scoreboard git repo)
+ssh backdoor,the backdoor ssh user on loto hf web server,50000,Null,Null,91e02cd2b8621d0c05197f645668c5c4.txt
+LotoHF Network Diagram,LotoHF Network diagram with all,20000,Null,Null,5b55e088f1c532ef55b12218d395f663.pdf
+Pipeline Emergency Circuit photo,a,10000,Null,Null,a
+Pipeline Emergency Circuit schema (more quality),b,10000,Null,Null,b
+Robotic Arm circuit,c,10000,Null,Null,c
+Some model hint,Description,10000,Null,Null,d
+PhantomJS Client Side Attack Emulator,Code for creating a client side attack track in a CTF event using phantomJS. If you found security issues in it you will receive extra points.,100000,Null,Null,e
+Client Side Attack C&C Client,A C&C client for performing client side attacks,10000,Null,Null,f
+Client Side Attack C&C Server,A C&C server for performing client side attacks,50000,Null,Null,g
+"Leaked ""be a qualified customer"" requests of demat",We've hack demat !!! Get the latest requests for being a qualified customer.,25000,Null,Null,h
+Phenix,A windows old trick.,25000,Null,Null,phenix1.txt
+HydroDam switch 1 Config,The switch configuration for HydroDam switch core 01,25000,Null,Null,i
+HydroDam switch 2 Config,The switch configuration for HydroDam switch core 02,25000,Null,Null,j
