@@ -67,6 +67,8 @@ parser = argparse.ArgumentParser(description=description)
 parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2014-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
+parser.add_argument('--behind-proxy', action='store_true', dest='behindProxy', default=False, \
+                    help='Run the api behind a proxy. It will use X-Real-IP or X-Forwarded-For headers to identify players instead of client IP.')
 
 actGrp = parser.add_argument_group("Action", "Select one of these action")
 actGrp.add_argument('--start', '-s',  action='store_true', dest='start', default=False,\
@@ -75,7 +77,9 @@ args = parser.parse_args()
 
 # Run requested action
 if args.start:
-    server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=RPCController.RPCHandler,allow_none=True,logRequests=True,use_builtin_types=True)
+    rh = RPCController.RPCHandler
+    rh.behindProxy = args.behindProxy
+    server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=rh,allow_none=True,logRequests=True,use_builtin_types=True)
     print("RPC server started.")
     try:
         server.serve_forever()

@@ -41,6 +41,8 @@ import postgresql.exceptions
 from xmlrpc.server import SimpleXMLRPCRequestHandler,Fault
 from lib import PlayerApiController
 
+import re
+
 def expose(*args, **kwargs):
     """ 
     A decorator to identify which methods are exposed (accessible from player.py)
@@ -60,6 +62,7 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
     '''
     _bDebug = False
     _oC = None
+    behindProxy = False
 
     def _dispatch(self, method, params):
         # Find the method
@@ -71,11 +74,10 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
 
         # if a valid method is found, process.
         if func:
-            clientIP = self.client_address[0]
-            for a in dir(self):
-                print(a + ' ' + str(getattr(self,a)))
-            print(dir(self))
-            print(self.client_address)
+            if self.behindProxy:
+                clientIP = self._getProxiedClientIp()
+            else:
+                clientIP = self.client_address[0]
             return func(clientIP, *params)
 
     def _dbConnect(self):
@@ -124,6 +126,16 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             raise Fault(e.code, 'The specified function does not exist. Please contact an admin') 
         except postgresql.message.Message as e:
             print(e)
+
+    def _getProxiedClientIp(self):
+        h = dict(re.findall(r"(?P<name>.*?): (?P<value>.*?)\n", str(self.headers)))
+        if 'X-Real-IP' in h:
+            return h['X-Real-IP']
+        elif 'X-Forwarded-For' in h:
+            return h['X-Forwarded-For']
+        else:
+            print('Error: Received a request without X-Real-IP or X-Forwarded-For headers')
+            return None
 
     @expose()
     def submitFlag(self,clientIP,flagValue):
@@ -200,3 +212,4 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
     @expose()
     def getLogEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
         return self._dbExec('getLogEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
+
