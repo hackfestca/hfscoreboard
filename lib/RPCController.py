@@ -72,6 +72,10 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         # if a valid method is found, process.
         if func:
             clientIP = self.client_address[0]
+            for a in dir(self):
+                print(a + ' ' + str(getattr(self,a)))
+            print(dir(self))
+            print(self.client_address)
             return func(clientIP, *params)
 
     def _dbConnect(self):
