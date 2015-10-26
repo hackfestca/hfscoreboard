@@ -50,10 +50,10 @@ class PlayerController():
 
     def __init__(self):
         # Setup SSL context
-        if sys.version_info >= (3,4,0) and config.PLAYER_API_URI_HTTPS.startswith('https'):
+        if sys.version_info >= (3,4,0) and config.PLAYER_API_URI.startswith('https'):
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-            context.check_hostname = True
             context.verify_mode = ssl.CERT_REQUIRED
+            context.check_hostname = True
             #context.load_default_certs()       # To use installed CAs on the machine
             context.load_verify_locations(config.PLAYER_API_SSL_ROOT_CA)
         else:
