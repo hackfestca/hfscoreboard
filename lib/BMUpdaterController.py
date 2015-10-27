@@ -102,7 +102,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                         print(dir(ret))
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+                        self._uploadBMItemOnScoreboard(bmImportName,privateId)
                 # Send a reminder in the events
                 elif bmItemStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     self._addReviewReminder()
