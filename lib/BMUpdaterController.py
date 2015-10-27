@@ -104,7 +104,9 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                     if bmiUpdCmd != None and bmiUpdCmd != '':
                         print('[+] Item can be updated. Updating.')
                         # Run the updateCmd
-                        ret = self._localExec(bmiUpdCmd)
+                        commands = bmiUpdCmd.split('&&')
+                        for cmd in commands:
+                            ret = self._localExec(cmd)
 
                         # Send on web servers
                         self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)

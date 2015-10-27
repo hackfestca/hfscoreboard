@@ -55,8 +55,7 @@ class UpdaterController(ClientController.ClientController):
         super().__init__()
 
     def _localExec(self,cmd):
-        print(cmd)
-        print(cmd.split())
+        print('[+] Executing: %s' % cmd)
         if cmd != '':
             return call(cmd.split())
         else:
