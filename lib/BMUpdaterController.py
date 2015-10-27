@@ -94,15 +94,17 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                 # Remove items
                 if bmiStatusCode == config.BMI_STATUS_REMOVED or \
                     bmiStatusCode == config.BMI_STATUS_SOLD:
+                    print('[+] %s Item "%s" was deleted or sold. Removing.' % (timestamp,bmiName))
                     self._removeBMItemFromScoreboard(bmiPrivateId)
                 # Publish new items
                 elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
+                    print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))
                     self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Item is for sale
                 elif bmiStatusCode == config.BMI_STATUS_FOR_SALE:
                     if bmiUpdCmd != None and bmiUpdCmd != '':
-                        print('[+] Item can be updated. Updating.')
+                        print('[+] %s Item "%s" can be updated. Updating.' % (timestamp,bmiName))
                         # Run the updateCmd
                         commands = bmiUpdCmd.split('&&')
                         for cmd in commands:
@@ -112,6 +114,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                         self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
                 # Send a reminder in the events
                 elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
+                    print('[+] %s Item "%s" is waiting for approval. Adding reminder event.' % (timestamp,bmiName))
                     self._addReviewReminder()
                 # Refused items
                 elif bmiStatusCode == config.BMI_STATUS_REFUSED:
