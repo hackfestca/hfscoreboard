@@ -3310,7 +3310,7 @@ RETURNS integer AS $$
 
         RETURN 0;
     END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: addBMItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,desc,data)
@@ -3324,6 +3324,7 @@ CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE,
                                     _displayInterval varchar(20),
                                     _description bmItem.description%TYPE,
                                     _importName bmItem.importName%TYPE,
+                                    _data bmItem.data%TYPE,
                                     _updateCmd bmItem.updateCmd%TYPE) 
 RETURNS bmItem.id%TYPE AS $$
     DECLARE
@@ -3336,7 +3337,7 @@ RETURNS bmItem.id%TYPE AS $$
         DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarket/%s';
     BEGIN
         -- Logging
-        raise notice 'addBMItem(%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,'data';
+        raise notice 'addBMItem(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,'data',$11;
 
         -- Get category id from name
         SELECT id INTO _catId FROM bmItemCategory WHERE name = _category;
@@ -3375,9 +3376,9 @@ RETURNS bmItem.id%TYPE AS $$
 
         -- Insert a new row
         INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,
-                    qty,displayInterval,description,privateId,importName,dlLink,updateCmd)
+                    qty,displayInterval,description,privateId,importName,data,dlLink,updateCmd)
                 VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,
-                        _qty,_display,_description,_privateId,_importName,_dlLink,_updateCmd);
+                        _qty,_display,_description,_privateId,_importName,_data,_dlLink,_updateCmd);
         _bmItemId := LASTVAL();
 
         -- Set initial status
@@ -3701,6 +3702,7 @@ CREATE OR REPLACE FUNCTION getBMItemList(_top integer DEFAULT 30)
 RETURNS TABLE (
                 id bmItem.id%TYPE,
                 name bmItem.name%TYPE,
+                description bmItem.description%TYPE,
                 category bmItemCategory.displayName%TYPE,
                 status bmItemStatus.name%TYPE,
                 rating text,
@@ -3712,6 +3714,7 @@ RETURNS TABLE (
     BEGIN
         return QUERY SELECT i.id AS id,
                             i.name AS name,
+                            i.description AS description,
                             ic.displayName AS category,
                             ist.name AS status,
                             CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
@@ -3748,6 +3751,7 @@ CREATE OR REPLACE FUNCTION getBMItemListFromIp(_top integer,
 RETURNS TABLE (
                 id bmItem.id%TYPE,
                 name bmItem.name%TYPE,
+                description bmItem.description%TYPE,
                 category bmItemCategory.displayName%TYPE,
                 status bmItemStatus.name%TYPE,
                 rating text,
@@ -3774,6 +3778,7 @@ RETURNS TABLE (
         
         return QUERY SELECT i.id AS id,
                             i.name AS name,
+                            i.description AS description,
                             ic.displayName AS category,
                             ist.name AS status,
                             CASE WHEN ir.rating is NULL THEN '-' ELSE ir.rating::text || '/5' END,
@@ -4045,7 +4050,7 @@ RETURNS integer AS $$
         BMI_APPROVAL_STATUS bmItemStatus.code%TYPE := 3;
     BEGIN
         -- Logging
-        raise notice 'sellBMItemFromIp(%,%,%,%,%)',$1,$2,$3,$4,$5;
+        raise notice 'sellBMItemFromIp(%,%,%,%,%,%)',$1,$2,$3,$4,'data',$6;
 
         -- Get team from userIp 
         _playerIp := _playerIpStr::inet;
@@ -4055,7 +4060,7 @@ RETURNS integer AS $$
         end if;
 
         -- Add a new black market item
-        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,NULL,_description,_data);
+        PERFORM addBMItem(_name,_catName,BMI_APPROVAL_STATUS,_ownerWalletId,_amount,_qty,NULL,_description,random_32(),_data,NULL);
 
         PERFORM addEvent(format('Team "%s" submitted an item "%s" on the black market.',_teamName,_name),'bm');
 
@@ -4067,17 +4072,25 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: reviewBMItem(bmItemId,bmItemStatus,rating,comments)
 */
 CREATE OR REPLACE FUNCTION reviewBMItem(_bmItemId bmItem.id%TYPE,
-                                        _statusCode bmItemStatus.code%TYPE,
+                                        _approve boolean,
                                         _rating bmItemReview.rating%TYPE,
                                         _comments bmItemReview.comments%TYPE)
 RETURNS integer AS $$
     DECLARE
         _reviewId bmItemReview.id%TYPE;
         _bmItemName bmItem.name%TYPE;
+        _statusCode bmItemStatus.code%TYPE;
         CAT_PLAYER bmItemCategory.name%TYPE := 'player';
     BEGIN
         -- Logging
         raise notice 'reviewBMItem(%,%,%,%)',$1,$2,$3,$4;
+
+        -- Get status code from _approve
+        if _approve then
+            _statusCode = 7;    -- 7 = READY TO RETRIEVE
+        else
+            _statusCode = 4;    -- 4 = REFUSED BY ADMIN
+        end if;
 
         -- Can only review player items
         SELECT bmi.name

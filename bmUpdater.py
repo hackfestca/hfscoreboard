@@ -62,6 +62,10 @@ parser.add_argument('--debug', action='store_true', dest='debug', default=False,
                     help='Run the tool in debug mode')
 
 actGrp = parser.add_argument_group("Action", "Select one of these action")
+actGrp.add_argument('--updateForApproval', '-p', action='store_true', dest='updateForApproval', default=False, \
+              help='Update all items that have status "For Approval"')
+actGrp.add_argument('--updateToRetrieve', '-r', action='store_true', dest='updateToRetrieve', default=False, \
+              help='Update all items that have status "Ready to retrieve"')
 actGrp.add_argument('--updateToPublish', '-u', action='store_true', dest='updateToPublish', default=False, \
               help='Update all items that have status "Ready to publish"')
 actGrp.add_argument('--updateSold', '-s', action='store_true', dest='updateSold', default=False, \
@@ -97,7 +101,13 @@ c.setDebug(args.debug)
 
 # Run requested action
 try:
-    if args.updateToPublish:
+    if args.updateForApproval:
+        print('Updating black market items with status "For Approval"')
+        ret = c.updateForApproval()
+    elif args.updateToRetrieve:
+        print('Updating black market items with status "Ready to retrieve"')
+        ret = c.updateToRetrieve()
+    elif args.updateToPublish:
         print('Updating black market items with status "Ready to publish"')
         ret = c.updateToPublish()
     elif args.updateSold:

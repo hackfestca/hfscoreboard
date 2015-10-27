@@ -72,9 +72,19 @@ class BMUpdaterController(UpdaterController.UpdaterController):
         return [x[self.BMI_STATUS_COL_ID] == config.BMI_STATUS_REMOVED for x in self._getBMItems()]
 
     def _addReviewReminder(self,bmiId):
-        msg = 'The Black Market Item %s is waiting for a review'
+        msg = 'The Black Market Item %s is waiting for a review' % bmiId
         return self._exec('addEvent(text,varchar,varchar)',msg,'bm','warning')
 
+    def _getBMItemData(self,bmiId):
+        return self._exec('getBMItemData(integer)',bmiId)
+    
+    def _saveBMItemData(self,bmiId,fileName):
+        data = self._getBMItemData(bmiId)
+
+        with open(config.BMI_LOCAL_PATH + '/' + fileName, 'wb') as f:
+            f.write(bytes(x for x in data))
+        f.close()
+        
     def _updateFromList(self,bmItems):
         if len(list(bmItems)) != 0:
 
@@ -96,6 +106,11 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                     bmiStatusCode == config.BMI_STATUS_SOLD:
                     print('[+] %s Item "%s" was deleted or sold. Removing.' % (timestamp,bmiName))
                     self._removeBMItemFromScoreboard(bmiPrivateId)
+                # Retrieve player's items
+                elif bmiStatusCode == config.BMI_STATUS_TO_RETRIEVE:
+                    print('[+] %s Item "%s" must be retrieved. Downloading from DB.' % (timestamp,bmiName))
+                    self._saveBMItemData(bmiId,bmiImportName)
+                    self._updateBMItemStatus(bmiId,config.BMI_STATUS_TO_PUBLISH)
                 # Publish new items
                 elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
                     print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))
@@ -115,7 +130,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                 # Send a reminder in the events
                 elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     print('[+] %s Item "%s" is waiting for approval. Adding reminder event.' % (timestamp,bmiName))
-                    self._addReviewReminder()
+                    self._addReviewReminder(bmiId)
                 # Refused items
                 elif bmiStatusCode == config.BMI_STATUS_REFUSED:
                     pass
@@ -135,10 +150,16 @@ class BMUpdaterController(UpdaterController.UpdaterController):
             x.add_row(row)
         return x
 
+    def updateForApproval(self):
+        return self._updateFromList(self._getBMItemsFromStatus(config.BMI_STATUS_FOR_APPROVAL))
+
+    def updateToRetrieve(self):
+        return self._updateFromList(self._getBMItemsFromStatus(config.BMI_STATUS_TO_RETRIEVE))
+
     def updateToPublish(self):
         return self._updateFromList(self._getBMItemsFromStatus(config.BMI_STATUS_TO_PUBLISH))
 
-    def updateSold(self,host):
+    def updateSold(self):
         return self._updateFromList(self._getBMItemsFromStatus(config.BMI_STATUS_SOLD))
 
     def updateAll(self):

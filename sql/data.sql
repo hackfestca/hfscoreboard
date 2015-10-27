@@ -176,6 +176,7 @@ SELECT addBMItemStatus(3,'For approval','This item was submitted by a player and
 SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market by a player and was refused by an admin.');
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
 SELECT addBMItemStatus(6,'Ready to publish','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
+SELECT addBMItemStatus(7,'Ready to retrieve','This status will tell the bmUpdater to get the item from the scoreboard database (bmItem.data).');
 
 /*
 SELECT addBMItem('Military base leak','admin',1,1,800,NULL,Null,'A leak was found regarding the military base. It looks like some way to discover new hosts', 'exploit!'::bytea);

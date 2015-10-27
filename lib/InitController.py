@@ -202,7 +202,9 @@ class InitController(UpdaterController.UpdaterController):
             #_displayInterval varchar(20),
             #_description bmItem.description%TYPE,
             #_importName bmItem.importName%TYPE
-            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,text)')
+            #_data bmItem.data%TYPE
+            #_updateCmd bmItem.updateCmd%TYPE
+            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,bytea,text)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
@@ -216,6 +218,7 @@ class InitController(UpdaterController.UpdaterController):
                     bmiDispInt = row[5]
                     bmiDesc = row[1]
                     bmiImportName = row[6]
+                    bmiData = None
                     bmiUpdateCmd = row[7]
 
                     bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
@@ -223,7 +226,7 @@ class InitController(UpdaterController.UpdaterController):
                     if bmiName != 'Name':
                         if os.path.isfile(bmiLocalPath):
                             # Import in database
-                            print('Importing item "%s"' % bmiName)
+                            #print('Importing item "%s"' % bmiName)
                             bmiId = addBMItem(self._sanitize(bmiName,'str'), \
                                                self._sanitize(bmiCat,'str'), \
                                                self._sanitize(bmiStatusCode,'int'), \
@@ -233,6 +236,7 @@ class InitController(UpdaterController.UpdaterController):
                                                self._sanitize(bmiDispInt,'str'), \
                                                self._sanitize(bmiDesc,'str'), \
                                                self._sanitize(bmiImportName,'str'), \
+                                               bmiData, \
                                                self._sanitize(bmiUpdateCmd,'str'))
 
                             # Get privateId from bmiId

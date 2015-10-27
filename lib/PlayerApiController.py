@@ -127,13 +127,15 @@ class PlayerApiController(WebController.WebController):
         return x.get_string()
 
     def getFormatBMItemListFromIp(self,top,playerIp):
-        title = ['id','Name','Category','Status','Rating','Owner','Cost','qty','bought?']
+        title = ['id','Name','Description','Category','Status','Rating','Owner','Cost','qty','bought?']
         score = self.getBMItemListFromIp(top,playerIp)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
+        x.align['description'] = 'l'
         x.align['Category'] = 'l'
         x.align['Status'] = 'l'
         x.align['Owner'] = 'l'
+        x.max_width = 40
         x.padding_width = 1
         for row in score:
             x.add_row(row)

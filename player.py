@@ -51,7 +51,7 @@ from lib import PlayerController
 # System imports
 import argparse
 import socket
-from xmlrpc.client import Fault
+from xmlrpc.client import Fault,ProtocolError
 import os.path
 
 # Get args
@@ -175,8 +175,10 @@ try:
                     data += byte
                     byte = f.read(1024)
             f.close()
-
-            rc = c.sellBMItem(name,amount,int(qty),desc,data)
+            
+            if qty != None:
+                qty = int(qty)
+            rc = c.sellBMItem(name,amount,qty,desc,data)
             print('Return Code: '+str(rc))
         elif args.info != '':
             id = args.info
@@ -249,8 +251,10 @@ try:
         parser.print_help()
 except socket.error as e:
     print('[-] %s' % e)
-except Fault as err:
-    print('[-] %s' % err.faultString)
+except Fault as e:
+    print('[-] %s' % e.faultString)
+except ProtocolError as e:
+    print('[-] %s %s' % (e.errcode,e.errmsg))
 else:
     if args.debug:
         print('[+] Job completed')

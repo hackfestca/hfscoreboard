@@ -57,10 +57,10 @@ GRANT EXECUTE ON FUNCTION scoreboard.getFlagList(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getEvents(timestamp,varchar,varchar,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.launderMoneyFromTeamId(integer,numeric) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamsSecrets(varchar,integer) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,text) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,bytea,text) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemInfo(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,integer,integer,text) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,boolean,integer,text) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
@@ -79,6 +79,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO
 
 -- Grants for bmUpdater
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemListUpdater(integer) TO hfbmupdater;
+GRANT EXECUTE ON FUNCTION scoreboard.getBMItemData(integer) TO hfbmupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.addEvent(text,varchar,varchar) TO hfbmupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.setBMItemStatus(integer,integer) TO hfbmupdater;
 

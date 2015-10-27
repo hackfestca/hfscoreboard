@@ -146,6 +146,7 @@ variables:
     QTY         int - (optional) Max number of time the item can get bought. Cannot be < 0. Default = 0 (no limit).
     DISP        interval - (optional) Display interval. Format: '2015-11-07 22:00'. Default = Null
 
+    APPROVE     bool - Approve or not an item. 1 = approved, 0 = denied.
     STATUS      int - Item status code. Use --list-status to see full list.
     RATING      int - Rating from 0 to 5, 0 being shit and 5 being awesome.
     COMMENTS    str - Put comments to describe what you think of this item.
@@ -160,7 +161,7 @@ examples:
 
     --review '1|1|5|Good item. Seem legit and functional'
     --review '2|1|1|This item looks like bullshit'
-    --review '3|5|0|You cannot hide flags in your items'
+    --review '3|0|0|You cannot hide flags in your items'
 
     --setStatus '3|1'   # Set item id 3 for sale
     --setStatus '3|5'   # Remove item id 3 from game
@@ -178,7 +179,7 @@ pbm_a.add_argument('--info', action='store', dest='info', default='', metavar='\
                    help='Show an item information.')
 pbm_a.add_argument('--get', action='store', dest='get', default='', metavar='\'ID\'', \
                    help='Download an item.')
-pbm_a.add_argument('--review', action='store', dest='review', default='', type=str, metavar='\'ID|STATUS|RATING|COMMENTS\'', \
+pbm_a.add_argument('--review', action='store', dest='review', default='', type=str, metavar='\'ID|APPROVE|RATING|COMMENTS\'', \
                    help='Review an item.')
 pbm_a.add_argument('--setStatus', action='store', dest='setStatus', default='', type=str, metavar='\'ID|STATUS\'', \
                    help='Change status of an item.')
@@ -470,13 +471,13 @@ try:
 
             print("[+] %s bytes were saved at %s" % (len(data),path))
         elif args.review != '':
-            id,status,rating,comments = args.review.split('|',3)
+            id,approve,rating,comments = args.review.split('|',3)
             assert id.isdigit(), "ID is not an integer : %r" % id
-            assert status.isdigit(), "STATUS is not an integer : %r" % status
+            assert approve.isdigit(), "APPROVE is not an integer : %r" % approve
             assert rating.isdigit(), "RATING is not an integer : %r" % rating
             assert type(comments) is str, "COMMENTS is not a string: %r" % comments
             print("[+] Reviewing black market item")
-            rc = c.reviewBMItem(int(id),int(status),int(rating),comments)
+            rc = c.reviewBMItem(int(id),bool(approve),int(rating),comments)
         elif args.setStatus != '':
             id,status = args.setStatus.split('|',1)
             assert id.isdigit(), "ID is not an integer : %r" % id

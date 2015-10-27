@@ -140,8 +140,8 @@ class AdminController(ClientController.ClientController):
     def getBMItemData(self,id):
         return self._exec('getBMItemData(integer)',id)
 
-    def reviewBMItem(self,id,status,rating,comments):
-        return self._exec('reviewBMItem(integer,integer,integer,text)',id,status,rating,comments)
+    def reviewBMItem(self,id,approve,rating,comments):
+        return self._exec('reviewBMItem(integer,boolean,integer,text)',id,approve,rating,comments)
 
     def getBMItemList(self,top):
         return self._exec('getBMItemList(integer)',top)
@@ -252,12 +252,14 @@ class AdminController(ClientController.ClientController):
         return x.get_string()
 
     def getFormatBMItemList(self,top):
-        title = ['id','name','category','status','rating','owner','cost','qty']
+        title = ['id','name','description','category','status','rating','owner','cost','qty']
         info = self.getBMItemList(top)
         x = PrettyTable(title)
         x.align['name'] = 'l'
+        x.align['description'] = 'l'
         x.align['category'] = 'l'
         x.align['status'] = 'l'
+        x.max_width = 40
         x.padding_width = 1
         for row in info:
             x.add_row(row)

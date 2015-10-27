@@ -1,5 +1,5 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-csa1,Hs17K6LakjDeTeLlwoQ5gVGP,100,0,scoreboard.hf,demat,Null,flr,Unique,Null,<h3>Call Home -</h3> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,This_is_an_automated_news$team,CALL HOME
+csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,1000,scoreboard.hf,demat,Null,flr,Standard,Null,<h3>Call Home -</h3> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,This_is_an_automated_news$team,CALL HOME
 csa2,0AB2C8DZzO7W0zo0WdRrS6mv,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
 network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
 
@@ -27,22 +27,22 @@ csa8,gDk99jmKRsRIRWlIDwKJY4NC,400,0,scoreboard.hf,demat,Null,flr,Unique,Null,"<h
 To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;",,
 csa9,3UvDr8lpgeEFpXxZZclTLfUX,400,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 4 -</h3> Look inside the Web application for valuable information.
 ",,
-teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,100,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
-teaser2,bq4TALp8TvAXuOPZ6FInZA==,100,100,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
-teaser3,Gratz!SeeYouInNovember,100,100,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
-instruction1,447addca18a1e9099e8dac715e1136b6,0,100,scoreboard.hf,thirdparty,12 hours,chaput,Standard,Null,Read the instruction ,,hidden flag in player instruction
-babyfoot1,77e7cddf7f28a57459778b9e5718c109,0,1000,scoreboard.hf,thirdparty,12 hours,patoff,Standard,Null,babyfoot01,,BabyFoot tournament of Security Compass(Pat)
+teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,5000,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
+teaser2,bq4TALp8TvAXuOPZ6FInZA==,0,5000,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
+teaser3,Gratz!SeeYouInNovember,0,5000,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
+instruction1,447addca18a1e9099e8dac715e1136b6,0,3000,scoreboard.hf,thirdparty,12 hours,chaput,Standard,Null,Read the instruction ,,hidden flag in player instruction
+babyfoot1,77e7cddf7f28a57459778b9e5718c109,100,1000,scoreboard.hf,thirdparty,12 hours,patoff,Standard,Null,babyfoot01,,BabyFoot tournament of Security Compass(Pat)
 hydrohf1,X8J5drognjMhjTzw4gAxZGIuSPBD1qke,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had access to the switch Hydro_HF_Core_01 and Hydro_HF_Core_02. There are probably communications between computer, try to discover how to shutdown the power. Come near the model.",,switch mac flood
 hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had acces to the switch Hydro_HF_Dam_01 and Hydro_HF_Dam_02, you have to find the host that listening. Come near the model.",,switch vlan uppping
 hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
 hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"
 Your goal is near, you have found the information about certain employees, you must now shutdown the Dam.",,Bypass 2FA - connect with winrm
-phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,100,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
 lotohf1,0dbcadc23ba311d1698382eba06dec1e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""lotohf.ctf.hf""> lotohf.ctf.hf</a> ",,
 lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to pivot in lan subnet. ,,
 lotohf3,6235401daa92365013116dac3eddc38e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try have a Domain User access,,
@@ -52,10 +52,10 @@ nssa1,d5b3a9bcaa0539509cf45cdca959ef4e,100,100,scoreboard.hf,nssa,Null,mdube,Sta
 nssa2,b1a6ceb4bc344c80fb697d559f320047,200,200,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
 nssa3,d06f1adb6acbc9b955f47c0398947a91,300,300,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
 nssa4,74290bbf62a177509f728a81f0c16cb4,400,400,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
-re1,whatever34345345345,200,100,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
-re2,dfif8f98utf8fj,200,200,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
-re3,whateverdin3n3njf,300,300,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
-re4,ff61acc62c312edd2211739f9927268c,400,400,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re1,whatever34345345345,200,1000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re2,dfif8f98utf8fj,200,2000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re3,whateverdin3n3njf,300,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
+re4,ff61acc62c312edd2211739f9927268c,400,4000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
 lock1,098bbc25fd30692492bd33986078e826,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock2,d21c4c7507d792b50e356ec348adaff0,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock3,whatever123egregergerg,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
@@ -71,7 +71,7 @@ pipe09,USERhashisflag,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pip
 pipe10,FLAGH1iq8NEN7n4OoWFLMzse,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe10,,
 pipe11,FLAGyhF0jjCjlz6zMVa5JzVg,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe11,,
 fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,gp,Standard,Null,FM01,,
-cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
+cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
 cash03,646bc3da08eeec46d8e592b1e3434be2,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
 cash04,ea847f9a7eeb7e45a9f6bdf7abf2f984,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
