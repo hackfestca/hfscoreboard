@@ -69,10 +69,10 @@ class BMUpdaterController(UpdaterController.UpdaterController):
         msg = 'The Black Market Item %s is waiting for a review'
         return self._exec('addEvent(text,varchar,varchar)',msg,'bm','warning')
 
-    def _updateFromList(self,bmis):
-        if len(list(bmis)) != 0:
+    def _updateFromList(self,bmItems):
+        if len(list(bmItems)) != 0:
 
-            for row in bmis:
+            for row in bmItems:
                 bmiId = row[0]
                 bmiName = row[1]
                 bmiCategory = row[2]
@@ -101,7 +101,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                         ret = self._localExec(bmiUpdCmd)
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmImportName,privateId)
+                        self._uploadBMItemOnScoreboard(bmiImportName,privateId)
                 # Send a reminder in the events
                 elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     self._addReviewReminder()
