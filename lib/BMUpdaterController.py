@@ -54,6 +54,12 @@ class BMUpdaterController(UpdaterController.UpdaterController):
         self._sPass = config.DB_FU_PASS
         self._sCrtFile = config.DB_FU_CRT_FILE
         self._sKeyFile = config.DB_FU_KEY_FILE
+
+        self._sSSHUser = config.SSH_BMU_USER
+        self._sSSHPubKey = config.SSH_BMU_PUB_KEY
+        self._sSSHPrivKey= config.SSH_BMU_PRIV_KEY
+        self._sSSHPrivKeyPwd = config.SSH_BMU_PRIV_PWD
+
         super().__init__()
 
     def _getBMItems(self,top=30):
