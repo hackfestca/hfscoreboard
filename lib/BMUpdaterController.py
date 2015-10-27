@@ -91,7 +91,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                     self._removeBMItemFromScoreboard(bmiPrivateId)
                 # Publish new items
                 elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
-                    self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+                    self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Item is for sale
                 elif bmiStatusCode == config.BMI_STATUS_FOR_SALE:
@@ -101,7 +101,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                         ret = self._localExec(bmiUpdCmd)
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+                        self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
                 # Send a reminder in the events
                 elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     self._addReviewReminder()
