@@ -77,8 +77,8 @@ DB_FU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
 
 DB_BMU_USER = 'flagupdater'
 DB_BMU_PASS = None
-DB_BMU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
-DB_BMU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
+DB_BMU_CRT_FILE = 'certs/hf.cli.db.flagupdater.crt'
+DB_BMU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
 
 SQL_DATA_FILE = 'sql/data.sql'
 SQL_FUNC_FILE = 'sql/functions.sql'
@@ -98,6 +98,13 @@ SSH_BMU_PRIV_PWD = ''
 BMI_HOSTS = ['scoreboard.hf']
 BMI_LOCAL_PATH = './blackmarket'
 BMI_REMOTE_PATH = '/var/www/htdocs/blackmarket'
+
+BMI_STATUS_FOR_SALE = 1
+BMI_STATUS_SOLD = 2
+BMI_STATUS_FOR_APPROVAL= 3
+BMI_STATUS_REFUSED = 4
+BMI_STATUS_REMOVED = 5
+BMI_STATUS_TO_PUBLISH = 6
 
 COMPETITION_MODE = True
 '''

@@ -3323,8 +3323,9 @@ CREATE OR REPLACE FUNCTION addBMItem(_name bmItem.name%TYPE,
                                     _qty bmItem.qty%TYPE,
                                     _displayInterval varchar(20),
                                     _description bmItem.description%TYPE,
-                                    _importName bmItem.importName%TYPE) 
-RETURNS bmItem.privateId%TYPE AS $$
+                                    _importName bmItem.importName%TYPE,
+                                    _updateCmd bmItem.updateCmd%TYPE) 
+RETURNS bmItem.id%TYPE AS $$
     DECLARE
         _bmItemId bmItem.id%TYPE;
         _catId bmItemCategory.id%TYPE;
@@ -3373,14 +3374,16 @@ RETURNS bmItem.privateId%TYPE AS $$
         _dlLink := format(DL_LINK,_privateId);
 
         -- Insert a new row
-        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,qty,displayInterval,description,privateId,importName,dlLink)
-                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,_qty,_display,_description,_privateId,_importName,_dlLink);
+        INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,
+                    qty,displayInterval,description,privateId,importName,dlLink,updateCmd)
+                VALUES(_name,_catId,_statusCode,_ownerWallet,_amount,
+                        _qty,_display,_description,_privateId,_importName,_dlLink,_updateCmd);
         _bmItemId := LASTVAL();
 
         -- Set initial status
         PERFORM setBMItemStatus(_bmItemId,_statusCode);
 
-        RETURN _privateId;
+        RETURN _bmItemId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -3799,6 +3802,7 @@ RETURNS TABLE (
                     LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
 /*
     Stored Proc: getBMItemListUpdater(_top)
 */
@@ -3812,7 +3816,7 @@ RETURNS TABLE (
                 owner wallet.name%TYPE,
                 qty bmItem.qty%TYPE,
                 privateId bmItem.privateId%TYPE,
-                dlLink bmItem.dlLink%TYPE
+                updateCmd bmItem.updateCmd%TYPE
               ) AS $$
 
     BEGIN
@@ -3824,7 +3828,7 @@ RETURNS TABLE (
                             w.name AS owner,
                             i.qty AS qty,
                             i.privateId as privateId,
-                            i.dlLink as dlLink
+                            i.updateCmd as updateCmd
                      FROM bmItem AS i
                      LEFT OUTER JOIN (
                         SELECT ic.id,ic.name
@@ -3840,6 +3844,23 @@ RETURNS TABLE (
                         ) AS w ON i.ownerWallet = w.id
                     ORDER BY i.id
                     LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getBMItemPrivateId(_bmItemId)
+*/
+CREATE OR REPLACE FUNCTION getBMItemPrivateId(_bmItemId bmItem.id%TYPE)
+RETURNS bmItem.privateId%TYPE AS $$
+    DECLARE
+        _privateId bmItem.privateId%TYPE;
+    BEGIN
+        SELECT privateId INTO _privateId FROM bmItem WHERE id = _bmItemId LIMIT 1;
+        if not FOUND then
+            raise exception 'Could not find the black market item id "%"',_bmItemId::text;
+        end if;
+
+        return _privateId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

@@ -40,6 +40,7 @@ import ClientController
 import socket
 import libssh2
 import os
+from subprocess import call
 
 class UpdaterController(ClientController.ClientController):
     """
@@ -52,6 +53,14 @@ class UpdaterController(ClientController.ClientController):
 
     def __init__(self):
         super().__init__()
+
+    def _localExec(self,cmd):
+        print(cmd)
+        print(cmd.split())
+        if cmd != '':
+            return call(cmd.split())
+        else:
+            return -1
 
     def _remoteExec(self,host,cmd):
         try:
@@ -127,4 +136,24 @@ class UpdaterController(ClientController.ClientController):
         exitStatus = channel.get_exit_status()
         channel.close()
 
+    def _uploadBMItemOnScoreboard(self,bmiImportName,privateId):
+        bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
+        # Send on web servers
+        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+        for host in config.BMI_HOSTS:
+            print('[+] Uploading %s on %s' % (privateId,host))
+            self._remotePut(host,bmiLocalPath,bmiRemotePath)
+
+    def _removeBMItemFromScoreboard(self,privateId):
+        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+        cmd = 'rm '+bmiRemotePath
+        for host in config.BMI_HOSTS:
+            self._remoteExec(host,cmd)
+            print('[+] Removing %s on %s' % (privateId,host))
+
+    def _updateBMItemStatus(self,bmItemId,statusCode):
+        return self._exec('setBMItemStatus(integer,integer)',bmItemId,statusCode)
+
+    def _getBMItemPrivateId(self,bmItemId):
+        return self._exec('getBMItemPrivateId(integer)',bmItemId)
 

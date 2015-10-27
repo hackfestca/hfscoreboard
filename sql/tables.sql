@@ -347,8 +347,9 @@ CREATE TABLE bmItem(
     description text,
     importName varchar(150) not null unique,
     privateId varchar(64) not null unique,  -- Should be secured
-    data bytea null,                    -- Should be secured. Should be empty.
+    data bytea null,                        -- Should be secured. Should be empty.
     dlLink text default null,               -- Should be secured
+    updateCmd text default null,
     ts timestamp not null default current_timestamp,
     constraint valid_bmItem_name check (name != ''),
     -- constraint valid_bmItem_data check (data != ''),

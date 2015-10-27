@@ -59,6 +59,7 @@ class InitController(UpdaterController.UpdaterController):
         self._sSSHPubKey = config.SSH_BMU_PUB_KEY
         self._sSSHPrivKey= config.SSH_BMU_PRIV_KEY
         self._sSSHPrivKeyPwd = config.SSH_BMU_PRIV_PWD
+
         super().__init__()
         
     def __del__(self):
@@ -201,19 +202,21 @@ class InitController(UpdaterController.UpdaterController):
             #_displayInterval varchar(20),
             #_description bmItem.description%TYPE,
             #_importName bmItem.importName%TYPE
-            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar)')
+            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,text)')
             with self._oDB.xact():
                 for row in reader:
                     #print('|'.join(row))
                     bmiName = row[0]
                     bmiCat = 'admin'
-                    bmiStatusCode = 1
+                    bmiStatusCode = config.BMI_STATUS_TO_PUBLISH
                     bmiOwnerWallet = 1
-                    bmiAmount = row[2]
-                    bmiQty = row[3]
-                    bmiDispInt = row[4]
+                    bmiAuthor = row[2]
+                    bmiAmount = row[3]
+                    bmiQty = row[4]
+                    bmiDispInt = row[5]
                     bmiDesc = row[1]
-                    bmiImportName = row[5]
+                    bmiImportName = row[6]
+                    bmiUpdateCmd = row[7]
 
                     bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
                     
@@ -221,7 +224,7 @@ class InitController(UpdaterController.UpdaterController):
                         if os.path.isfile(bmiLocalPath):
                             # Import in database
                             print('Importing item "%s"' % bmiName)
-                            privateId = addBMItem(self._sanitize(bmiName,'str'), \
+                            bmiId = addBMItem(self._sanitize(bmiName,'str'), \
                                                self._sanitize(bmiCat,'str'), \
                                                self._sanitize(bmiStatusCode,'int'), \
                                                self._sanitize(bmiOwnerWallet,'int'), \
@@ -229,14 +232,17 @@ class InitController(UpdaterController.UpdaterController):
                                                self._sanitize(bmiQty,'int'), \
                                                self._sanitize(bmiDispInt,'str'), \
                                                self._sanitize(bmiDesc,'str'), \
-                                               self._sanitize(bmiImportName,'str'))
+                                               self._sanitize(bmiImportName,'str'), \
+                                               self._sanitize(bmiUpdateCmd,'str'))
 
+                            # Get privateId from bmiId
+                            privateId = self._getBMItemPrivateId(int(bmiId))
 
                             # Send on web servers
-                            bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
-                            for host in config.BMI_HOSTS:
-                                print('Uploading %s on %s' % (privateId,host))
-                                self._remotePut(host,bmiLocalPath,bmiRemotePath)
+                            self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+
+                            # update status (From TO_PUBLISH to FOR_SALE)
+                            self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                         else:
                             print('File "%s" not found. Import of "%s" was canceled' % (bmiImportName,bmiName))
 

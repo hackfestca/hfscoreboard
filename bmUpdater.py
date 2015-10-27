@@ -67,9 +67,9 @@ actGrp.add_argument('--updateToPublish', '-u', action='store_true', dest='update
 actGrp.add_argument('--updateSold', '-s', action='store_true', dest='updateSold', default=False, \
               help='Update all items that have status "Sold" (Remove them from frontend)')
 actGrp.add_argument('--updateAll', '-a', action='store_true', dest='updateAll', default=False, \
-              help='Update all items (even already existing ones)'
+              help='Update all items (even already existing ones)')
 actGrp.add_argument('--deleteAll', '-d', action='store_true', dest='deleteAll', default=False, \
-              help='Delete all items (Dangerous! Will erase all files in black market folder)'
+              help='Delete all items (Dangerous! Will erase all files in black market folder)')
 actGrp.add_argument('--list', '-l',  action='store_true', dest='list', default=False,\
               help='List flags that will be processed')
 
