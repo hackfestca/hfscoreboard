@@ -131,7 +131,7 @@ class PlayerApiController(WebController.WebController):
         score = self.getBMItemListFromIp(top,playerIp)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
-        x.align['description'] = 'l'
+        x.align['Description'] = 'l'
         x.align['Category'] = 'l'
         x.align['Status'] = 'l'
         x.align['Owner'] = 'l'
