@@ -3816,6 +3816,7 @@ RETURNS TABLE (
                 owner wallet.name%TYPE,
                 qty bmItem.qty%TYPE,
                 privateId bmItem.privateId%TYPE,
+                importName bmItem.importName%TYPE,
                 updateCmd bmItem.updateCmd%TYPE
               ) AS $$
 
@@ -3828,6 +3829,7 @@ RETURNS TABLE (
                             w.name AS owner,
                             i.qty AS qty,
                             i.privateId as privateId,
+                            i.importName as importName,
                             i.updateCmd as updateCmd
                      FROM bmItem AS i
                      LEFT OUTER JOIN (

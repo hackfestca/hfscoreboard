@@ -65,49 +65,48 @@ class BMUpdaterController(UpdaterController.UpdaterController):
     def _getBMItemsDeleteAll(self):
         return [x[self.BMI_STATUS_COL_ID] == config.BMI_STATUS_REMOVED for x in self._getBMItems()]
 
-    def _addReviewReminder(self,bmItemId):
+    def _addReviewReminder(self,bmiId):
         msg = 'The Black Market Item %s is waiting for a review'
         return self._exec('addEvent(text,varchar,varchar)',msg,'bm','warning')
 
-    def _updateFromList(self,bmItems):
-        if len(list(bmItems)) != 0:
+    def _updateFromList(self,bmis):
+        if len(list(bmis)) != 0:
 
-            for row in bmItems:
-                bmItemId = row[0]
-                bmItemName = row[1]
-                bmItemCategory = row[2]
-                bmItemStatusCode = row[3]
-                bmItemStatusName = row[4]
-                bmItemOwner = row[5]
-                bmItemQty = row[6]
-                bmItemPrivateId = row[7]
-                bmItemUpdCmd = row[8]
+            for row in bmis:
+                bmiId = row[0]
+                bmiName = row[1]
+                bmiCategory = row[2]
+                bmiStatusCode = row[3]
+                bmiStatusName = row[4]
+                bmiOwner = row[5]
+                bmiQty = row[6]
+                bmiPrivateId = row[7]
+                bmiImportName = row[8]
+                bmiUpdCmd = row[9]
                 timestamp = str(time.strftime("%Y-%m-%d-%H%M"))
               
                 # Remove items
-                if bmItemStatusCode == config.BMI_STATUS_REMOVED or \
-                    bmItemStatusCode == config.BMI_STATUS_SOLD:
-                    self._removeBMItemFromScoreboard(bmItemPrivateId)
+                if bmiStatusCode == config.BMI_STATUS_REMOVED or \
+                    bmiStatusCode == config.BMI_STATUS_SOLD:
+                    self._removeBMItemFromScoreboard(bmiPrivateId)
                 # Publish new items
-                elif bmItemStatusCode == config.BMI_STATUS_TO_PUBLISH:
+                elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
                     self._uploadBMItemOnScoreboard(bmiImportName,privateId)
-                    self._updateBMItemStatus(bmItemId,config.BMI_STATUS_FOR_SALE)
+                    self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Item is for sale
-                elif bmItemStatusCode == config.BMI_STATUS_FOR_SALE:
-                    if bmItemUpdCmd != None and bmItemUpdCmd != '':
+                elif bmiStatusCode == config.BMI_STATUS_FOR_SALE:
+                    if bmiUpdCmd != None and bmiUpdCmd != '':
                         print('[+] Item can be updated. Updating.')
                         # Run the updateCmd
-                        ret = self._localExec(bmItemUpdCmd)
-                        print(ret)
-                        print(dir(ret))
+                        ret = self._localExec(bmiUpdCmd)
 
                         # Send on web servers
                         self._uploadBMItemOnScoreboard(bmImportName,privateId)
                 # Send a reminder in the events
-                elif bmItemStatusCode == config.BMI_STATUS_FOR_APPROVAL:
+                elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     self._addReviewReminder()
                 # Refused items
-                elif bmItemStatusCode == config.BMI_STATUS_REFUSED:
+                elif bmiStatusCode == config.BMI_STATUS_REFUSED:
                     pass
             return 0
         else:
@@ -115,7 +114,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
             return 1
 
     def getFormatBMItems(self):
-        title = ['ID','Name','Category','Status','Status Name','Owner','Qty','privateId','updateCmd']
+        title = ['ID','Name','Category','Status','Status Name','Owner','Qty','privateId','importName','updateCmd']
         info = self._getBMItems()
         x = PrettyTable(title)
         #x.align['Info'] = 'l'
