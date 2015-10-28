@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 DEFAULT_TOP_VALUE = 300
 
-PLAYER_API_LISTEN_ADDR = '127.0.0.1'
+PLAYER_API_LISTEN_ADDR = '0.0.0.0'
 PLAYER_API_LISTEN_PORT = 8000
 PLAYER_API_URI = 'https://scoreboard.hf'
 #PLAYER_API_URI = 'http://127.0.0.1:8000'
@@ -95,7 +95,7 @@ SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
 SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
 SSH_BMU_PRIV_PWD = ''
 
-BMI_HOSTS = ['scoreboard.hf']
+BMI_HOSTS = ['sb-web01.hf','sb-web02.hf']
 BMI_LOCAL_PATH = './blackmarket'
 BMI_REMOTE_PATH = '/var/www/htdocs/blackmarket'
 

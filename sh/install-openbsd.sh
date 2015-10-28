@@ -6,12 +6,19 @@ pkg_add postgresql-server
 pkg_add postgresql-contrib-9.3.2 # for pgcrypto
 mkdir -p /var/postgresql/data
 su - _postgresql
-postgres -D /var/postgresql/data
+initdb -D /var/postgresql/data
 /etc/rc.d/postgresql restart
 
 # Install pip 
-curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
-python3.3 get-pip.py
+#curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
+#python3.3 get-pip.py
+pkg_add py3-pip
+pip install --upgrade pip
+
+# Install supervisor
+pkg_add py-pip
+pip2.7 install --upgrade pip
+pkg_add supervisor
 
 # Install postgresql
 pip install py-postgresql
@@ -25,8 +32,9 @@ pip install ascii_graph
 # Install ssh4py (needed for flagUpdater.py only)
 git clone https://github.com/wallunit/ssh4py.git
 pkg_add libssh2-1.4.3
-cd /usr/local/include/python3.3m/
+cd /usr/local/include/python3.4m/
+ln -s ../libssh2.h libssh2.h 
 ln -s ../libssh2_sftp.h libssh2_sftp.h 
-ln -s ../libssh2_sftp.h libssh2_sftp.h 
-cd /root/ssh4py; python3.2 ./setup.py build; python3.2 ./setup.py install
+ln -s ../libssh2_publickey.h libssh2_publickey.h 
+cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
 
