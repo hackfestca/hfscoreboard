@@ -1,32 +1,28 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,1000,scoreboard.hf,demat,Null,flr,Standard,Null,<h3>Call Home -</h3> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,This_is_an_automated_news$team,CALL HOME
-csa2,0AB2C8DZzO7W0zo0WdRrS6mv,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
-network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
+csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,1000,scoreboard.hf,demat,Null,flr,Unique,Null,<h4>Call Home:</h4> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,An anonymous source says that Demat Corporation as poor security practices and standards.,CALL HOME
+csa2,RfyVOKvGbemApCaq6Mq1OBcg,0,1500,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Search for it</h4> Four parts of a flag have been hidden in the page context. Find each of them and the submit the flag : PART1PART2PART3PART4,Demat confidential documents have been leaked on the internet. The company have not yet confirmed the authenticity of those documents.,
+csa3,0AB2C8DZzO7W0zo0WdRrS6mv,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+<br/>
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""http://192.168.0.1/"", ""method"" : ""GET"", ""flag"" : ""0AB2C8DZzO7W0zo0WdRrS6mv""},"
+csa4,U2PHFyGFxWcV3vbRGnrv5B4H,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+<br/>
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""file://192.168.20.9/"", ""method"" : ""GET"", ""flag"" : ""U2PHFyGFxWcV3vbRGnrv5B4H""}"
+csa5,E9N2ocEZ21ZaCDfYWNu4EZGO,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+<br/>
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""https://192.168.53.53/"", ""method"" : ""GET"", ""flag"" : ""E9N2ocEZ21ZaCDfYWNu4EZGO""}"
+csa6,VvGZEg6GQmvYVx6yEWTW0Jvc,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+<br/>
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""ftp://192.168.53.194:1025/"", ""method"" : ""GET"", ""flag"" : ""VvGZEg6GQmvYVx6yEWTW0Jvc""}"
+csa7,KxSIVhHctS3MpuGdff5QNQcH,300,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Mini level up 1:</h4> For one of the identified service, a common Web application is running. Identified it!
+<br/>
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; with the URI parameter set to the URI describing the service and the  application. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;application_path&gt;","This morning, officials of Demat reported that they were victim of a data breach. They say that everything is now under control and that they have hired the best experts to investigate the breach.","{""url"":""https://192.168.53.53/phpMyAdmin"", ""method"" : ""GET"", ""flag"" : ""KxSIVhHctS3MpuGdff5QNQcH""}"
+csa8,Db9Xu4yGytwQUR3QKDgE3CFF,500,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Mini level up 2:</h4> An XSS vulnerability has been added to an existing feature of the Web application. Find it!
+<br/>
+The flag is somewhere in the source code of the vulnerable page.","After months of investigation, Demat and the FBI are about to drop hacking charges one or many individuals.",
+csa9,gDk99jmKRsRIRWlIDwKJY4NC,400,0,scoreboard.hf,demat,Null,flr,Unique,Null,"<h4>Mini level up 3:</h4> Try to log in the Web application with account often used to debug things.
 
-To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""http://192.168.0.1/"", ""method"" : ""GET"", ""flag"" : ""0AB2C8DZzO7W0zo0WdRrS6mv""},"
-csa3,U2PHFyGFxWcV3vbRGnrv5B4H,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
-network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
-
-To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""file://192.168.20.9/"", ""method"" : ""GET"", ""flag"" : ""U2PHFyGFxWcV3vbRGnrv5B4H""}"
-csa4,E9N2ocEZ21ZaCDfYWNu4EZGO,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
-network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
-
-To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""https://192.168.53.53/"", ""method"" : ""GET"", ""flag"" : ""E9N2ocEZ21ZaCDfYWNu4EZGO""}"
-csa5,VvGZEg6GQmvYVx6yEWTW0Jvc,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Scan the
-network -</h3> Look for reachable services.  Each identified service will give you points.<p/>
-
-To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""ftp://192.168.53.194:1025/"", ""method"" : ""GET"", ""flag"" : ""VvGZEg6GQmvYVx6yEWTW0Jvc""}"
-csa6,KxSIVhHctS3MpuGdff5QNQcH,300,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 1 -</h3> For one of the identified service, a common Web application is running. Identified it!<p/>
-
-To retrieve a flag associate with a service, call the ""getFlag"" with the URI parameter set to the URI describing the service and the application. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;application_path&gt;",,"{""url"":""https://192.168.53.53/phpMyAdmin"", ""method"" : ""GET"", ""flag"" : ""KxSIVhHctS3MpuGdff5QNQcH""}"
-csa7,Db9Xu4yGytwQUR3QKDgE3CFF,500,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 2 -</h3> A common vulnerability has been added to an existing feature of the Web application. Find it!
-
-The flag is somewhere in the source code of the vulnerable page.",,
-csa8,gDk99jmKRsRIRWlIDwKJY4NC,400,0,scoreboard.hf,demat,Null,flr,Unique,Null,"<h3>Mini level up 3 -</h3> Try to log in the Web application.<p/>
-
-To retrieve a flag associate with a service, call the ""getFlag"" function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;",,
-csa9,3UvDr8lpgeEFpXxZZclTLfUX,400,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h3>Mini level up 4 -</h3> Look inside the Web application for valuable information.
-",,
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;","Using basic social engineering techniques, hackers have been able to access Demat CSO emails. In one of them we could learn that the company is still under attack and that the initial breach have not been circumvent yet.",
+csa10,3UvDr8lpgeEFpXxZZclTLfUX,400,0,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Mini level up 4:</h4> Look inside the Web application for valuable information.,The Demat CEO have resign following the massive data breach the company has suffered recently.,
 teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,5000,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
 teaser2,bq4TALp8TvAXuOPZ6FInZA==,0,5000,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
 teaser3,Gratz!SeeYouInNovember,0,5000,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
@@ -43,15 +39,15 @@ phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,1000,scoreboard.hf,phenix,Null,hidd
 phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
 phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
 phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-lotohf1,0dbcadc23ba311d1698382eba06dec1e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""lotohf.ctf.hf""> lotohf.ctf.hf</a> ",,
-lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to pivot in lan subnet. ,,
-lotohf3,6235401daa92365013116dac3eddc38e,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try have a Domain User access,,
-lotohf4,c41da8273f46eab41694111de52b4a39,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get the ms-sql user account password ,,
-lotohf5,93181fa8565af6e79b6208778b90a3c7,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,,
-nssa1,d5b3a9bcaa0539509cf45cdca959ef4e,100,100,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
-nssa2,b1a6ceb4bc344c80fb697d559f320047,200,200,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
-nssa3,d06f1adb6acbc9b955f47c0398947a91,300,300,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
-nssa4,74290bbf62a177509f728a81f0c16cb4,400,400,scoreboard.hf,nssa,Null,mdube,Standard,Null,Hack the Model!,,
+lotohf1,0dbcadc23ba311d1698382eba06dec1e,200,20000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""lotohf.ctf.hf""> lotohf.ctf.hf</a> ",,
+lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Pivot in the Lan Subnet,,
+lotohf3,6235401daa92365013116dac3eddc38e,200,20000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try have a Domain User access,,
+lotohf4,c41da8273f46eab41694111de52b4a39,500,30000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get the ms-sql user account password ,,
+lotohf5,93181fa8565af6e79b6208778b90a3c7,300,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,,
+ssrc1,d5b3a9bcaa0539509cf45cdca959ef4e,100,100,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hack the Model!,,
+ssrc2,b1a6ceb4bc344c80fb697d559f320047,200,200,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hack the Model!,,
+ssrc3,d06f1adb6acbc9b955f47c0398947a91,300,300,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hack the Model!,,
+ssrc4,74290bbf62a177509f728a81f0c16cb4,400,400,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hack the Model!,,
 re1,whatever34345345345,200,1000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
 re2,dfif8f98utf8fj,200,2000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
 re3,whateverdin3n3njf,300,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,,,
@@ -59,17 +55,18 @@ re4,ff61acc62c312edd2211739f9927268c,400,4000,scoreboard.hf,elcaro,Null,_eko,Sta
 lock1,098bbc25fd30692492bd33986078e826,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock2,d21c4c7507d792b50e356ec348adaff0,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock3,whatever123egregergerg,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
-pipe01,FLAGoTd6mkNfT0qdQZH5xMZK,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe01,,
-pipe02,FLAGQ3RBc95fYPFXuFxPX2Qs,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe02,,
-pipe03,USERhashisflag1,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe03,,
-pipe04,FLAG0FJWTgLyLZCUvyHA11pk,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe04,,
-pipe05,USERhashisflag2,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe05,,
-pipe06,FLAGYSByxqVZ00KsKSljIEoH,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe06,,
-pipe07,USERhashisflag3,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe07,,
-pipe08,FLAGu6HYwtkpnReVfWeHrBse,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe08,,
-pipe09,USERhashisflag,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe09,,
-pipe10,FLAGH1iq8NEN7n4OoWFLMzse,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe10,,
-pipe11,FLAGyhF0jjCjlz6zMVa5JzVg,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,pipe11,,
+pipe01,FLAGoTd6mkNfT0qdQZH5xMZK,50,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Start your DC hunting journey with this pcap.<br/> Find data and pwn something !,,
+pipe02,FLAGQ3RBc95fYPFXuFxPX2Qs,100,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find interesting lame services to abuse in the pcap !,,
+pipe03,60B7DBBB8EDFD502EA2D98581F25D66D,100,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Hope you found juicy creds to use as entry point in this pcap !!! General rule applies here :),,
+pipe04,FLAG0FJWTgLyLZCUvyHA11pk,150,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server ... look for c:\flag.txt<br/>Server01.dev.pipeline.local (172.28.17.80),,
+pipe05,9B806FDD0F276750E0EB4C65E9C6612D,150,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server <br/>Dump users hash ... remember General rule !!!,,
+pipe06,FLAGyhF0jjCjlz6zMVa5JzVg,100,1000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Backup folder in C drive is always good start ! #1,,
+pipe07,4AA1B027934BD47A956AA8B636D9AA41,200,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Backup file always contains precious informations ! #2,,
+pipe08,FLAGYSByxqVZ00KsKSljIEoH,300,1000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Pwn DEV Domain DC ... look for c:\flag.txt <br/> I won't give you the Dev DC name nor is IP because if you are here,<br/> you should be able to find it yourself, recon is part of the challenge ;)",,
+pipe09,E4118FD4A90256685141D9DC268B4CDB,300,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn DEV Domain DC ... <br/>Dump users hash ... find someone special!!!,,
+pipe10,5CD5AC600D2904910C8A6EFA3520CD10,400,4000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Can you pwn forest root Domain DC<br/>Dump users hash ... find someone special, his hash should be PROFIT !!!<br/>dcalpha.pipeline.local (172.28.17.100) ... don't come to see me if you can't ping it from your computer.",,
+pipe11,FLAGu6HYwtkpnReVfWeHrBse,500,4000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Can you get c:\flag.txt from forest root Domain DC ?,,
+pipe12,FLAGH1iq8NEN7n4OoWFLMzse,200,1000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find the hidden domain .. look for c:\flag.txt,,
 fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,gp,Standard,Null,FM01,,
 cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,,
