@@ -118,7 +118,7 @@ class BaseHandler(tornado.web.RequestHandler):
         import traceback
 
         exc_type, exc_obj, exc_tb = kwargs["exc_info"]
-        msg = "{}".format(exc_obj.message)
+        msg = "{}".format(exc_obj.pgerror)
 
         # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
