@@ -84,17 +84,12 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             self._oC = PlayerApiController.PlayerApiController()
             self._oC.setDebug(self._bDebug)
         except psycopg2.Error as e:
-            print('[-] ('+str(e.code)+') '+e.message)
-            raise Fault(e.code, e.message) 
+            submit_message = 'Error while connecting the database'
+
+
+            print(e.pgerror)
+            raise Fault(1, submit_message) 
             exit(1)
-#except postgresql.exceptions.ClientCannotConnectError as e:
-#            print('[-] Insufficient privileges to connect to database')
-#            raise Fault(e.code, 'Insufficient privileges to connect to database') 
-#            exit(1);
-#        except postgresql.exceptions.InsecurityError as e:
-#            print('[-] Something insecure was detected. Please contact an admin')
-#            raise Fault(e.code, 'Something insecure was detected. Please contact an admin') 
-#            exit(1);
         except Exception as e:
             exit(1)
 
@@ -131,7 +126,10 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
                 else:
                     msg = e.pgerror
 
-            if msg == 'ERROR:  duplicate key value violates unique constraint "u_flag_constraint"':
+            if msg.startswith('ERROR:  Invalid flag'):
+                print('Invalid Flag.')
+                return 'Invalid Flag.'
+            elif msg == 'ERROR:  duplicate key value violates unique constraint "u_flag_constraint"':
                 print('Flag already submitted')
                 return 'Flag already submitted'
             elif msg.startswith('ERROR:  value too long for type character'):

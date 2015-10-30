@@ -39,8 +39,8 @@ DEFAULT_TOP_VALUE = 300
 
 PLAYER_API_LISTEN_ADDR = '0.0.0.0'
 PLAYER_API_LISTEN_PORT = 8000
-PLAYER_API_URI = 'https://scoreboard.hf'
-#PLAYER_API_URI = 'http://127.0.0.1:8000'
+#PLAYER_API_URI = 'https://scoreboard.hf'
+PLAYER_API_URI = 'http://127.0.0.1:8000'
 PLAYER_API_URI_OLD = 'http://scoreboard.hf'   # python < 3.4.0
 #PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
 PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
@@ -49,7 +49,7 @@ DB_HOST = 'db.hf'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
 DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
-DB_CONNECT_TIMEOUT = 2
+DB_CONNECT_TIMEOUT = 5
 
 DB_INIT_USER = 'owner'
 DB_INIT_PASS = None

@@ -126,7 +126,16 @@ class BaseHandler(tornado.web.RequestHandler):
         self.render("templates/error.html", error_msg=msg)
 
     def _connect(self):
-        self.client = WebController()
+        try:
+            self.client = WebController()
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            message = e.pgerror
+            self.renderCriticalFailure(error_msg=message)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('templates/error.html', error_msg="Error")
 
     def _getTeamInfo(self):
         try:
@@ -134,7 +143,19 @@ class BaseHandler(tornado.web.RequestHandler):
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
             self.team_score = team_info[6][1]
-        except:
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.team_name = "None"
+            self.team_ip = "None"
+            self.team_score = "None"
+            message = e.pgerror
+            super().render('templates/error.html', 
+                          error_msg=message,
+                          team_name=self.team_name,
+                          team_ip=self.team_ip,
+                          team_score=self.team_score)
+        except Exception as e: 
+            self.logger.error(e)
             self.team_name = "None"
             self.team_ip = "None"
             self.team_score = "None"
@@ -150,6 +171,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def on_finish(self):
         self._disconnect()
+
+    def renderCriticalFailure(self, **kwargs):
+        template_name = 'templates/error.html'
+        super().render(template_name,
+                       team_name='None',
+                       team_ip='None',
+                       team_score='None',
+                       **kwargs)
 
     def render(self, template_name, **kwargs):
         self._getTeamInfo()
@@ -213,9 +242,10 @@ class ScoreHandler(BaseHandler):
         try:
             score = self.client.getScore(top=200)
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -230,6 +260,7 @@ class ChallengesHandler(BaseHandler):
             categories = self.client.getCatProgressFromIp(self.remote_ip)
             challenges = self.client.getFlagProgressFromIp(self.remote_ip)
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except Exception as e:
@@ -250,9 +281,10 @@ class IndexHandler(BaseHandler):
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -271,14 +303,17 @@ class IndexHandler(BaseHandler):
                 flag,
                 self.remote_ip)
 
-        except psycopg2.Error:  # TODO: Replace with Unique error
-            submit_message = "Flag already submitted"
+        except psycopg2.Error as e:  # already submitted, invalid flag = insult
+            self.logger.error(e)
+            if e.pgerror.startswith('Invalid flag'):
+                rand = random.randint(0, len(self._insults)-1)
+                submit_message = e.pgerror + "!  " + self.getInsult(rand)
+            elif e.pgerror.startswith('ERROR:  duplicate key'):
+                submit_message = 'Flag already submitted'
+            else:
+                submit_message = 'Something wrong happened. Oups. :)'
             flag_is_valid = False
-        except psycopg2.Error as e:
-            rand = random.randint(0, len(self._insults)-1)
-            submit_message = e.pgerror + "!  " + self.getInsult(rand)
-            flag_is_valid = False
-        except:
+        except Exception as e:
             self.logger.error(e)
             self.set_status(500)
             self.render('templates/error.html', error_msg="Error")
@@ -290,7 +325,7 @@ class IndexHandler(BaseHandler):
         if match:
             submit_message = "Are you fucking kidding me ? " + \
               "\"Your flag without 'FLAG-'\""
-
+	
         score = self.client.getScore(top=15)
         self.render('templates/index.html',
                     table=score,
@@ -312,9 +347,10 @@ class DashboardHandler(BaseHandler):
                 jsArray2 += "\"" + i + "\\n\" + \n"
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -322,7 +358,6 @@ class DashboardHandler(BaseHandler):
             self.render('templates/dashboard.html',
                         sponsors=self.sponsors,
                         jsArray=jsArray)
-
 
 class BlackMarketItemHandler(BaseHandler):
 
@@ -335,9 +370,10 @@ class BlackMarketItemHandler(BaseHandler):
                                                          self.remote_ip
                                                          )
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -381,9 +417,10 @@ class IndexProjectorHandler(BaseHandler):
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
@@ -400,9 +437,10 @@ class DashboardProjectorHandler(BaseHandler):
         try:
             jsArray = self.client.getJsDataScoreProgress()
         except psycopg2.Error as e:
+            self.logger.error(e)
             message = e.pgerror
             self.render('templates/error.html', error_msg=message)
-        except:
+        except Exception as e:
             self.set_status(500)
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")

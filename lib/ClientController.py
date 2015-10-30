@@ -109,9 +109,10 @@ class ClientController():
                             sslcert = self._sCrtFile, \
                             sslkey = self._sKeyFile, \
                             sslrootcert = config.DB_SSL_ROOT_CA)
+        self._oDB.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+        self._oDB.autocommit = True
         self._oDBCursor = self._oDB.cursor()
         self._oDBCursor.execute("SET search_path = %s" % config.DB_SCHEMA)
-                            
 
 #    def __del__(self):
 #        if self._oDB:
@@ -122,8 +123,8 @@ class ClientController():
             self._benchmark(funcDef,args)
         else:
             self._oDBCursor.callproc(funcDef,args)
-        if funcDef in self._autoCommit:
-            self.commit()
+#if funcDef in self._autoCommit:
+#            self.commit()
         return self.fetchall()
 
     def exec(self, funcDef, *args):
