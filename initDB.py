@@ -50,8 +50,8 @@ import config
 from lib import InitController
 
 # System imports
-import postgresql.exceptions
 import argparse
+import psycopg2
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -88,17 +88,9 @@ if args.debug:
 try:
     c = InitController.InitController()
     c.setDebug(args.debug)
-except postgresql.exceptions.PLPGSQLRaiseError as e:
-    print('[-] ('+str(e.code)+') '+e.message)
+except psycopg2.Error as e:
+    print(e)
     exit(1)
-except postgresql.exceptions.ClientCannotConnectError as e:
-    print('[-] Insufficient privileges to connect to database')
-    print(e)
-    exit(1);
-except postgresql.exceptions.InsecurityError:
-    print('[-] Something insecure was detected. Please contact an admin')
-    print(e)
-    exit(1);
 except Exception as e:
     print(e)
     exit(1)
@@ -131,14 +123,12 @@ try:
         c.importAll()
     else:
         parser.print_help()
-except postgresql.exceptions.InsufficientPrivilegeError:
-    print('[-] Insufficient privileges')
-except IOError as e:
-    print('[-] '+str(e))
-except postgresql.message.Message as e:
-    print(e)
-except Exception as e:
-    print(e)
+except psycopg2.Warning as e:
+    print('[-] ' + str(e))
+except psycopg2.Error as e:
+    print('[-] ' + str(e))
+#except Exception as e:
+#    print(e)
 else:
     if args.debug:
         print('[+] Import successful')

@@ -63,7 +63,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
         super().__init__()
 
     def _getBMItems(self,top=30):
-        return list(self._exec('getBMItemListUpdater(integer)',top))
+        return list(self.exec('getBMItemListUpdater',top))
         
     def _getBMItemsFromStatus(self,statusCode):
         return [x for x in self._getBMItems() if x[self.BMI_STATUS_COL_ID] == statusCode]
@@ -73,10 +73,10 @@ class BMUpdaterController(UpdaterController.UpdaterController):
 
     def _addReviewReminder(self,bmiId):
         msg = 'The Black Market Item %s is waiting for a review' % bmiId
-        return self._exec('addEvent(text,varchar,varchar)',msg,'bm','warning')
+        return self.exec('addEvent',msg,'bm','warning')
 
     def _getBMItemData(self,bmiId):
-        return self._exec('getBMItemData(integer)',bmiId)
+        return self.exec('getBMItemData',bmiId)
     
     def _saveBMItemData(self,bmiId,fileName):
         data = self._getBMItemData(bmiId)

@@ -62,6 +62,11 @@ GRANT hfflagupdater to flagupdater;
 GRANT hfbmupdater to flagupdater;
 GRANT hfrpi to rpi;
 
+/*
+    Replication role
+*/
+--CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD 'ndkfvGPkMsKCDuWsBJWxbzGozoBCrQ2Q';
+
 -- Create yourself a role here. Replace admin by something else on both lines.
 CREATE ROLE admin LOGIN INHERIT PASSWORD 'zWMmhIpSQlcFlNOu8rfpr';
 GRANT hfadmins to admin;

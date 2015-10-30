@@ -66,7 +66,7 @@ SELECT addFlagCategory('lotohf', 'Loto Hackfest', 'LotoHF is the biggest gaming 
 SELECT addFlagCategory('phenix', 'Phenix', 'phenix. Use ./player.py secrets');
 SELECT addFlagCategory('pipeline', 'Pipeline', 'Pipeline Corp is full patched Windows environment. <br/>Full patched doesn''t mean not pwnable !!!!<br/> Start your DC hunting and gather as much credentials and flag as you can.<br/><br/>You will have great power so don''t mess with server configurations or we will ban your team. Hint - to be sure you won''t help other teams, create your own credentials if you need it.');
 SELECT addFlagCategory('elcaro', 'Elcaro', '');
-SELECT addFlagCategory('nssa', 'NSSA', 'New Super Security Agency. It looks like these guys infected implants in several systems. All challenges are on the model.');
+SELECT addFlagCategory('ssrc', 'SSRC', 'Super something. It looks like these guys infected implants in several systems. All challenges are on the model.');
 SELECT addFlagCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.');
 SELECT addFlagCategory('thirdparty', 'Third Party', 'LockPick, babyfoot, surprise ',True);
 

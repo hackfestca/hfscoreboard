@@ -21,7 +21,10 @@ pip2.7 install --upgrade pip
 pkg_add supervisor
 
 # Install postgresql
-pip install py-postgresql
+#pip install py-postgresql
+
+# Install psycopg2
+pkg_add py3-psycopg3
 
 # Install tornado (needed for scoreboard.py only)
 pip install tornado

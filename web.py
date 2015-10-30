@@ -57,7 +57,7 @@ import os
 import logging
 import re
 import random
-from postgresql.exceptions import *
+import psycopg2
 
 
 class Logger(logging.getLoggerClass()):
@@ -118,15 +118,7 @@ class BaseHandler(tornado.web.RequestHandler):
         import traceback
 
         exc_type, exc_obj, exc_tb = kwargs["exc_info"]
-
-        if issubclass(exc_type, ConnectionError):
-            msg = "{}".format(exc_obj.message)
-        elif isinstance(exc_type, PLPGSQLRaiseError):
-            msg = "{}".format(exc_obj.message)
-        elif isinstance(exc_type, InsufficientPrivilegeError):
-            msg = "{}".format(exc_obj.message)
-        else:
-            msg = "{}".format(exc_obj.message)
+        msg = "{}".format(exc_obj.pgerror)
 
         # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
@@ -220,8 +212,8 @@ class ScoreHandler(BaseHandler):
     def get(self):
         try:
             score = self.client.getScore(top=200)
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -237,8 +229,8 @@ class ChallengesHandler(BaseHandler):
         try:
             categories = self.client.getCatProgressFromIp(self.remote_ip)
             challenges = self.client.getFlagProgressFromIp(self.remote_ip)
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except Exception as e:
             self.set_status(500)
@@ -257,8 +249,8 @@ class IndexHandler(BaseHandler):
         try:
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -279,12 +271,12 @@ class IndexHandler(BaseHandler):
                 flag,
                 self.remote_ip)
 
-        except UniqueError:
+        except psycopg2.Error:  # TODO: Replace with Unique error
             submit_message = "Flag already submitted"
             flag_is_valid = False
-        except PLPGSQLRaiseError as e:
+        except psycopg2.Error as e:
             rand = random.randint(0, len(self._insults)-1)
-            submit_message = e.message + "!  " + self.getInsult(rand)
+            submit_message = e.pgerror + "!  " + self.getInsult(rand)
             flag_is_valid = False
         except:
             self.logger.error(e)
@@ -319,8 +311,8 @@ class DashboardHandler(BaseHandler):
             for i in jsArray.split("\r\n"):
                 jsArray2 += "\"" + i + "\\n\" + \n"
             jsArray = jsArray2[:-12]
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -342,8 +334,8 @@ class BlackMarketItemHandler(BaseHandler):
             bmItemData = self.client.getBMItemDataFromIp(privateId,
                                                          self.remote_ip
                                                          )
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -388,8 +380,8 @@ class IndexProjectorHandler(BaseHandler):
         try:
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -407,8 +399,8 @@ class DashboardProjectorHandler(BaseHandler):
     def get(self):
         try:
             jsArray = self.client.getJsDataScoreProgress()
-        except PLPGSQLRaiseError as e:
-            message = e.message
+        except psycopg2.Error as e:
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)

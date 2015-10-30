@@ -42,6 +42,7 @@ PLAYER_API_LISTEN_PORT = 8000
 PLAYER_API_URI = 'https://scoreboard.hf'
 #PLAYER_API_URI = 'http://127.0.0.1:8000'
 PLAYER_API_URI_OLD = 'http://scoreboard.hf'   # python < 3.4.0
+#PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
 PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
 
 DB_HOST = 'db.hf'
@@ -90,7 +91,7 @@ SSH_FU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
 SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2015'
 SSH_FU_PRIV_PWD = ''
 
-SSH_BMU_USER = 'scoreboard'
+SSH_BMU_USER = 'sb'
 SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
 SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
 SSH_BMU_PRIV_PWD = ''

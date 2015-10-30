@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import config
 from prettytable import PrettyTable 
-import postgresql
+import psycopg2
 import time
 
 class ClientController():
@@ -78,22 +78,40 @@ class ClientController():
     _oDB = None
     '''
     @ivar: Database connection object
-    @type: postgresql
+    @type: tbd
     '''
 
+    _oDBCursor = None
+
+    _autoCommit = ['submitFlagFromIp','addNews']
+
+#    def __init__(self):
+#        self._oDB = postgresql.open( \
+#                            user = self._sUser, \
+#                            password = self._sPass, \
+#                            host = config.DB_HOST, \
+#                            database = config.DB_NAME, \
+#                            connect_timeout = config.DB_CONNECT_TIMEOUT, \
+#                            sslmode = 'require',
+#                            sslcrtfile = self._sCrtFile, \
+#                            sslkeyfile = self._sKeyFile, \
+#                            sslrootcrtfile = config.DB_SSL_ROOT_CA)
+#        self._oDB.settings['search_path'] = config.DB_SCHEMA
+##        self._oDB.settings['client_min_messages'] = 'NOTICE'
     def __init__(self):
-        self._oDB = postgresql.open( \
+        self._oDB = psycopg2.connect(\
                             user = self._sUser, \
                             password = self._sPass, \
                             host = config.DB_HOST, \
                             database = config.DB_NAME, \
                             connect_timeout = config.DB_CONNECT_TIMEOUT, \
                             sslmode = 'require',
-                            sslcrtfile = self._sCrtFile, \
-                            sslkeyfile = self._sKeyFile, \
-                            sslrootcrtfile = config.DB_SSL_ROOT_CA)
-        self._oDB.settings['search_path'] = config.DB_SCHEMA
-#        self._oDB.settings['client_min_messages'] = 'NOTICE'
+                            sslcert = self._sCrtFile, \
+                            sslkey = self._sKeyFile, \
+                            sslrootcert = config.DB_SSL_ROOT_CA)
+        self._oDBCursor = self._oDB.cursor()
+        self._oDBCursor.execute("SET search_path = %s" % config.DB_SCHEMA)
+                            
 
 #    def __del__(self):
 #        if self._oDB:
@@ -101,18 +119,34 @@ class ClientController():
 
     def _exec(self, funcDef, *args):
         if self._bDebug:
-            return self._benchmark(self._oDB.proc(funcDef),*args)
+            self._benchmark(funcDef,args)
         else:
-            return self._oDB.proc(funcDef)(*args)
+            self._oDBCursor.callproc(funcDef,args)
+        if funcDef in self._autoCommit:
+            self.commit()
+        return self.fetchall()
 
-    def _benchmark(self,f, *args):
-        t1 = time.time()
-        if len(args) > 0:
-            ret = f(*args)
+    def exec(self, funcDef, *args):
+        return self._exec(funcDef,*args)
+
+    def fetchall(self):
+        ret = self._oDBCursor.fetchall()
+        if len(ret) == 1:
+            if type(ret[0]) == str and len(ret[0]) == 1:
+                return ret[0][0]
+            else:
+                return ret
         else:
-            ret = f()
+            return ret
+
+    def commit(self):
+        self._oDB.commit()
+
+    def _benchmark(self,f, args):
+        t1 = time.time()
+        ret = self._oDBCursor.callproc(f,args)
         t2 = time.time()
-        print('[+] Debug: '+f.name+'() was executed in ' \
+        print('[+] Debug: '+f+'() was executed in ' \
                   +str((t2-t1).__round__(4))+'ms')
         return ret
 
@@ -130,28 +164,30 @@ class ClientController():
         return ret
 
     def close(self):
+        self._oDBCursor.close()
         self._oDB.close()
 
     def setDebug(self,debug):
         self._bDebug = debug
         
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        return self._exec('getScore(integer,varchar,varchar)',top,ts,cat)
+#return self.exec('getScore',top,ts,cat)
+        return self._exec('getScore',top,ts,cat)
 
     def getBMItemCategoryList(self):
-        return self._exec('getBMItemCategoryList()')
+        return self.exec('getBMItemCategoryList')
     
     def getBMItemStatusList(self):
-        return self._exec('getBMItemStatusList()')
+        return self.exec('getBMItemStatusList')
 
     def getLotoHistory(self,top):
-        return self._exec('getLotoHistory(integer)',top)
+        return self.exec('getLotoHistory',top)
 
     def getLotoInfo(self):
-        return self._exec('getLotoInfo()')
+        return self.exec('getLotoInfo')
 
     def getNewsList(self):
-        return self._exec('getNewsList()')
+        return self.exec('getNewsList')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
         title = ['ID','TeamName','FlagPts','KFlagPts','Total','Cash'] 

@@ -151,8 +151,8 @@ class UpdaterController(ClientController.ClientController):
             print('[+] Removing %s on %s' % (privateId,host))
 
     def _updateBMItemStatus(self,bmItemId,statusCode):
-        return self._exec('setBMItemStatus(integer,integer)',bmItemId,statusCode)
+        return self.exec('setBMItemStatus',bmItemId,statusCode)
 
     def _getBMItemPrivateId(self,bmItemId):
-        return self._exec('getBMItemPrivateId(integer)',bmItemId)
+        return self.exec('getBMItemPrivateId',bmItemId)
 

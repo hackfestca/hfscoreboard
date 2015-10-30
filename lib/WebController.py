@@ -60,26 +60,26 @@ class WebController(ClientController.ClientController):
         self._benchmarkMany(callLimit,self._oDB.proc('getScoreProgress(integer)'),None)
 
     def submitFlagFromIp(self,flagValue,playerIp):
-        self._exec('logSubmit(varchar,varchar)',flagValue,playerIp)
-        return self._exec('submitFlagFromIp(varchar,varchar)',flagValue,playerIp)
+        self.exec('logSubmit',flagValue,playerIp)
+        return self.exec('submitFlagFromIp',flagValue,playerIp)
 
     def getBMItemDataFromIp(self,privateId,playerIp):
-        return self._exec('getBMItemDataFromIp(varchar,varchar)',privateId,playerIp)
+        return self.exec('getBMItemDataFromIp',privateId,playerIp)
 
     def getCatProgressFromIp(self,playerIp):
-        return self._exec('getCatProgressFromIp(varchar)',playerIp)
+        return self.exec('getCatProgressFromIp',playerIp)
 
     def getFlagProgressFromIp(self,playerIp):
-        return self._exec('getFlagProgressFromIp(varchar)',playerIp)
+        return self.exec('getFlagProgressFromIp',playerIp)
 
     def getScoreProgress(self):
-        return self._exec('getScoreProgress(integer)',None)
+        return self.exec('getScoreProgress',None)
 
     def getTeamInfoFromIp(self,playerIp):
-        return self._exec('getTeamInfoFromIp(varchar)',playerIp)
+        return self.exec('getTeamInfoFromIp',playerIp)
 
     def getTeamSecretsFromIp(self,playerIp):
-        return self._exec('getTeamSecretsFromIp(varchar)',playerIp)
+        return self.exec('getTeamSecretsFromIp',playerIp)
 
     def getJsDataScoreProgress(self):
         s = "[\n"

@@ -42,7 +42,6 @@ if sys.version_info < (3,2,0):
     exit(1);
 
 sys.path.insert(0, 'lib')
-del sys
 
 # Project imports
 import config
@@ -79,7 +78,11 @@ args = parser.parse_args()
 if args.start:
     rh = RPCController.RPCHandler
     rh.behindProxy = args.behindProxy
-    server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=rh,allow_none=True,logRequests=True,use_builtin_types=True)
+    if sys.version_info >= (3,4,0):
+        server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=rh,allow_none=True,logRequests=True,use_builtin_types=True)
+    else:
+        server = SimpleXMLRPCServer((config.PLAYER_API_LISTEN_ADDR,config.PLAYER_API_LISTEN_PORT),requestHandler=rh,allow_none=True,logRequests=True)
+
     print("RPC server started.")
     try:
         server.serve_forever()
