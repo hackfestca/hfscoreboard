@@ -77,110 +77,87 @@ class InitController(UpdaterController.UpdaterController):
                    
     def importTables(self):
         sql = ''.join(open(config.SQL_TABLE_FILE, 'r').readlines())
-        self._oDB.execute(sql)
+        self._oDBCursor.execute(sql)
+        self.commit()
 
     def importFunctions(self):
         sql = ''.join(open(config.SQL_FUNC_FILE, 'r').readlines())
-        self._oDB.execute(sql)
+        self._oDBCursor.execute(sql)
+        self.commit()
 
     def importData(self):
         sql = ''.join(open(config.SQL_DATA_FILE, 'r').readlines())
-        self._oDB.execute(sql)
+        self._oDBCursor.execute(sql)
+        self.commit()
 
     def importFlags(self):
         with open(self._flagsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            addFlag = self._oDB.proc('addFlag(varchar, \
-                                    varchar, \
-                                    integer, \
-                                    numeric, \
-                                    varchar, \
-                                    varchar, \
-                                    integer, \
-                                    varchar, \
-                                    varchar, \
-                                    varchar, \
-                                    varchar, \
-                                    text, \
-                                    text)')
-            addRandomFlag = self._oDB.proc('addRandomFlag(varchar, \
-                                    integer, \
-                                    numeric, \
-                                    varchar, \
-                                    varchar, \
-                                    integer, \
-                                    varchar, \
-                                    varchar, \
-                                    varchar, \
-                                    varchar, \
-                                    text, \
-                                    text)')
-            with self._oDB.xact():
-                for row in reader:
-                    #print('|'.join(row))
-                    fname = row[0]
-                    fvalue = row[1]
-                    fpts = row[2]
-                    fcash = row[3]
-                    fhost = row[4]
-                    fcat = row[5]
-                    fstatus = 1
-                    fdispint = row[6]
-                    fauthor = row[7]
-                    ftype = row[8]
-                    ftypeext = row[9]
-                    fdesc = row[10]
-                    fnews = row[11]
-                    
-                    if fname != 'Flag Name':
-                        if fvalue != '':
-                            addFlag(self._sanitize(fname,'str'), \
-                                    self._sanitize(fvalue,'str'), \
-                                    self._sanitize(fpts,'int'), \
-                                    self._sanitize(fcash,'float'), \
-                                    self._sanitize(fhost,'str'), \
-                                    self._sanitize(fcat,'str'), \
-                                    self._sanitize(fstatus,'int'), \
-                                    self._sanitize(fdispint,'str'), \
-                                    self._sanitize(fauthor,'str'), \
-                                    self._sanitize(ftype,'str'), \
-                                    self._sanitize(ftypeext,'str'), \
-                                    self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fnews,'str'))
-                        else:
-                            addRandomFlag(self._sanitize(fname,'str'), \
-                                    self._sanitize(fpts,'int'), \
-                                    self._sanitize(cash,'float'), \
-                                    self._sanitize(fhost,'str'), \
-                                    self._sanitize(fcat,'str'), \
-                                    self._sanitize(fstatus,'int'), \
-                                    self._sanitize(fdispint,'str'), \
-                                    self._sanitize(fauthor,'str'), \
-                                    self._sanitize(ftype,'str'), \
-                                    self._sanitize(ftypeext,'str'), \
-                                    self._sanitize(fdesc,'str'), \
-                                    self._sanitize(fnews,'str'))
+
+            for row in reader:
+                #print('|'.join(row))
+                fname = row[0]
+                fvalue = row[1]
+                fpts = row[2]
+                fcash = row[3]
+                fhost = row[4]
+                fcat = row[5]
+                fstatus = 1
+                fdispint = row[6]
+                fauthor = row[7]
+                ftype = row[8]
+                ftypeext = row[9]
+                fdesc = row[10]
+                fnews = row[11]
+                
+                if fname != 'Flag Name':
+                    if fvalue != '':
+                        self.exec('addFlag',self._sanitize(fname,'str'), \
+                                self._sanitize(fvalue,'str'), \
+                                self._sanitize(fpts,'int'), \
+                                self._sanitize(fcash,'float'), \
+                                self._sanitize(fhost,'str'), \
+                                self._sanitize(fcat,'str'), \
+                                self._sanitize(fstatus,'int'), \
+                                self._sanitize(fdispint,'str'), \
+                                self._sanitize(fauthor,'str'), \
+                                self._sanitize(ftype,'str'), \
+                                self._sanitize(ftypeext,'str'), \
+                                self._sanitize(fdesc,'str'), \
+                                self._sanitize(fnews,'str'))
+                    else:
+                        self.exec('addRandomFlag',[self._sanitize(fname,'str'), \
+                                self._sanitize(fpts,'int'), \
+                                self._sanitize(cash,'float'), \
+                                self._sanitize(fhost,'str'), \
+                                self._sanitize(fcat,'str'), \
+                                self._sanitize(fstatus,'int'), \
+                                self._sanitize(fdispint,'str'), \
+                                self._sanitize(fauthor,'str'), \
+                                self._sanitize(ftype,'str'), \
+                                self._sanitize(ftypeext,'str'), \
+                                self._sanitize(fdesc,'str'), \
+                                self._sanitize(fnews,'str')])
+        self.commit()
 
     def importTeams(self):
         SETTINGS_COLS_START = 2
         with open(self._teamsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
-            addTeam = self._oDB.proc('addTeam(varchar,varchar)')
-            addTeamSecrets = self._oDB.proc('addTeamSecrets(integer,varchar,varchar)')
-            with self._oDB.xact():
-                for row in reader:
-                    #print('|'.join(row))
-                    tname = row[0]
-                    tnet = row[1]
-                    
-                    if tname != 'Team Name':
-                        teamId = addTeam(self._sanitize(tname,'str'), \
-                                         self._sanitize(tnet,'str'))
-                        for i in range(SETTINGS_COLS_START,len(headers)):
-                            addTeamSecrets(teamId,\
-                                           self._sanitize(headers[i],'str'),\
-                                           self._sanitize(row[i],'str'))
+            for row in reader:
+                #print('|'.join(row))
+                tname = row[0]
+                tnet = row[1]
+                
+                if tname != 'Team Name':
+                    teamId = self.exec('addTeam',self._sanitize(tname,'str'), \
+                                     self._sanitize(tnet,'str'))[0]
+                    for i in range(SETTINGS_COLS_START,len(headers)):
+                        self.exec('addTeamSecrets', teamId,\
+                                       self._sanitize(headers[i],'str'),\
+                                       self._sanitize(row[i],'str'))
+        self.commit()
 
     def importBlackMarketItems(self):
         with open(self._bmiFile) as csvfile:
@@ -203,55 +180,55 @@ class InitController(UpdaterController.UpdaterController):
             #_importName bmItem.importName%TYPE
             #_data bmItem.data%TYPE
             #_updateCmd bmItem.updateCmd%TYPE
-            addBMItem = self._oDB.proc('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,varchar,bytea,text)')
-            with self._oDB.xact():
-                for row in reader:
-                    #print('|'.join(row))
-                    bmiName = row[0]
-                    bmiCat = 'admin'
-                    bmiStatusCode = config.BMI_STATUS_TO_PUBLISH
-                    bmiOwnerWallet = 1
-                    bmiAuthor = row[2]
-                    bmiAmount = row[3]
-                    bmiQty = row[4]
-                    bmiDispInt = row[5]
-                    bmiDesc = row[1]
-                    bmiImportName = row[6]
-                    bmiData = None
-                    bmiUpdateCmd = row[7]
+            for row in reader:
+                #print('|'.join(row))
+                bmiName = row[0]
+                bmiCat = 'admin'
+                bmiStatusCode = config.BMI_STATUS_TO_PUBLISH
+                bmiOwnerWallet = 1
+                bmiAuthor = row[2]
+                bmiAmount = row[3]
+                bmiQty = row[4]
+                bmiDispInt = row[5]
+                bmiDesc = row[1]
+                bmiImportName = row[6]
+                bmiData = None
+                bmiUpdateCmd = row[7]
 
-                    bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
-                    
-                    if bmiName != 'Name':
-                        if os.path.isfile(bmiLocalPath):
-                            # Import in database
-                            #print('Importing item "%s"' % bmiName)
-                            bmiId = addBMItem(self._sanitize(bmiName,'str'), \
-                                               self._sanitize(bmiCat,'str'), \
-                                               self._sanitize(bmiStatusCode,'int'), \
-                                               self._sanitize(bmiOwnerWallet,'int'), \
-                                               self._sanitize(bmiAmount,'float'), \
-                                               self._sanitize(bmiQty,'int'), \
-                                               self._sanitize(bmiDispInt,'str'), \
-                                               self._sanitize(bmiDesc,'str'), \
-                                               self._sanitize(bmiImportName,'str'), \
-                                               bmiData, \
-                                               self._sanitize(bmiUpdateCmd,'str'))
+                bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
+                
+                if bmiName != 'Name':
+                    if os.path.isfile(bmiLocalPath):
+                        # Import in database
+                        #print('Importing item "%s"' % bmiName)
+                        bmiId = self.exec('addBMItem', self._sanitize(bmiName,'str'), \
+                                           self._sanitize(bmiCat,'str'), \
+                                           self._sanitize(bmiStatusCode,'int'), \
+                                           self._sanitize(bmiOwnerWallet,'int'), \
+                                           self._sanitize(bmiAmount,'float'), \
+                                           self._sanitize(bmiQty,'int'), \
+                                           self._sanitize(bmiDispInt,'str'), \
+                                           self._sanitize(bmiDesc,'str'), \
+                                           self._sanitize(bmiImportName,'str'), \
+                                           bmiData, \
+                                           self._sanitize(bmiUpdateCmd,'str'))[0][0]
 
-                            # Get privateId from bmiId
-                            privateId = self._getBMItemPrivateId(int(bmiId))
+                        # Get privateId from bmiId
+                        privateId = self._getBMItemPrivateId(int(bmiId))[0][0]
 
-                            # Send on web servers
-                            self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+                        # Send on web servers
+                        self._uploadBMItemOnScoreboard(bmiImportName,privateId)
 
-                            # update status (From TO_PUBLISH to FOR_SALE)
-                            self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
-                        else:
-                            print('File "%s" not found. Import of "%s" was canceled' % (bmiImportName,bmiName))
+                        # update status (From TO_PUBLISH to FOR_SALE)
+                        self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
+                    else:
+                        print('File "%s" not found. Import of "%s" was canceled' % (bmiImportName,bmiName))
+        self.commit()
 
     def importSecurity(self):
         sql = ''.join(open(config.SQL_SEC_FILE, 'r').readlines())
-        self._oDB.execute(sql)
+        self._oDBCursor.execute(sql)
+        self.commit()
 
     def importAll(self):
         self.importTables()

@@ -213,7 +213,7 @@ class ScoreHandler(BaseHandler):
         try:
             score = self.client.getScore(top=200)
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -230,7 +230,7 @@ class ChallengesHandler(BaseHandler):
             categories = self.client.getCatProgressFromIp(self.remote_ip)
             challenges = self.client.getFlagProgressFromIp(self.remote_ip)
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except Exception as e:
             self.set_status(500)
@@ -250,7 +250,7 @@ class IndexHandler(BaseHandler):
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -276,7 +276,7 @@ class IndexHandler(BaseHandler):
             flag_is_valid = False
         except psycopg2.Error as e:
             rand = random.randint(0, len(self._insults)-1)
-            submit_message = e.message + "!  " + self.getInsult(rand)
+            submit_message = e.pgerror + "!  " + self.getInsult(rand)
             flag_is_valid = False
         except:
             self.logger.error(e)
@@ -312,7 +312,7 @@ class DashboardHandler(BaseHandler):
                 jsArray2 += "\"" + i + "\\n\" + \n"
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -335,7 +335,7 @@ class BlackMarketItemHandler(BaseHandler):
                                                          self.remote_ip
                                                          )
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -381,7 +381,7 @@ class IndexProjectorHandler(BaseHandler):
             score = self.client.getScore(top=15)
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
@@ -400,7 +400,7 @@ class DashboardProjectorHandler(BaseHandler):
         try:
             jsArray = self.client.getJsDataScoreProgress()
         except psycopg2.Error as e:
-            message = e.message
+            message = e.pgerror
             self.render('templates/error.html', error_msg=message)
         except:
             self.set_status(500)
