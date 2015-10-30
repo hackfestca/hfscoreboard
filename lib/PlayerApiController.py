@@ -52,28 +52,28 @@ class PlayerApiController(WebController.WebController):
         super().__init__()
 
     def buyBMItemFromIp(self,bmItemId,playerIp):
-        return self._exec('buyBMItemFromIp(integer,varchar)',bmItemId,playerIp)
+        return self.exec('buyBMItemFromIp',bmItemId,playerIp)
     
     def sellBMItemFromIp(self,name,amount,qty,desc,data,playerIp):
-        return self._exec('sellBMItemFromIp(varchar,numeric,integer,text,bytea,varchar)',name,amount,qty,desc,data,playerIp)
+        return self.exec('sellBMItemFromIp',name,amount,qty,desc,data,playerIp)
 
     def getBMItemInfoFromIp(self,id,playerIp):
-        return self._exec('getBMItemInfoFromIp(integer,varchar)',id,playerIp)
+        return self.exec('getBMItemInfoFromIp',id,playerIp)
 
     def getBMItemDataFromIp(self,id,playerIp):
-        return self._exec('getBMItemDataFromIp(integer,varchar)',id,playerIp)
+        return self.exec('getBMItemDataFromIp',id,playerIp)
 
     def getBMItemListFromIp(self,top,playerIp):
-        return self._exec('getBMItemListFromIp(integer,varchar)',top,playerIp)
+        return self.exec('getBMItemListFromIp',top,playerIp)
     
     def buyLotoFromIp(self,amount,playerIp):
-        return self._exec('buyLotoFromIp(numeric,varchar)',amount,playerIp)
+        return self.exec('buyLotoFromIp',amount,playerIp)
 
     def getTeamSecretsFromIp(self,playerIp):
-        return self._exec('getTeamSecretsFromIp(varchar)',playerIp)
+        return self.exec('getTeamSecretsFromIp',playerIp)
 
     def getEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
-        return self._exec('getEventsFromIp(timestamp,varchar,varchar,varchar,integer,varchar)',lastUpdate,facility,severity,grep,top,playerIp)
+        return self.exec('getEventsFromIp',lastUpdate,facility,severity,grep,top,playerIp)
     
     def getFormatCatProgressFromIp(self,playerIp):
         keepCols = [2,3,4,5]

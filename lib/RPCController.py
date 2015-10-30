@@ -37,10 +37,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import config
 import inspect
-import postgresql.exceptions
+import psycopg2
 from xmlrpc.server import SimpleXMLRPCRequestHandler,Fault
 from lib import PlayerApiController
-
 import re
 
 def expose(*args, **kwargs):
@@ -84,18 +83,18 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         try:
             self._oC = PlayerApiController.PlayerApiController()
             self._oC.setDebug(self._bDebug)
-        except postgresql.exceptions.PLPGSQLRaiseError as e:
+        except psycopg2.Error as e:
             print('[-] ('+str(e.code)+') '+e.message)
             raise Fault(e.code, e.message) 
             exit(1)
-        except postgresql.exceptions.ClientCannotConnectError as e:
-            print('[-] Insufficient privileges to connect to database')
-            raise Fault(e.code, 'Insufficient privileges to connect to database') 
-            exit(1);
-        except postgresql.exceptions.InsecurityError as e:
-            print('[-] Something insecure was detected. Please contact an admin')
-            raise Fault(e.code, 'Something insecure was detected. Please contact an admin') 
-            exit(1);
+#except postgresql.exceptions.ClientCannotConnectError as e:
+#            print('[-] Insufficient privileges to connect to database')
+#            raise Fault(e.code, 'Insufficient privileges to connect to database') 
+#            exit(1);
+#        except postgresql.exceptions.InsecurityError as e:
+#            print('[-] Something insecure was detected. Please contact an admin')
+#            raise Fault(e.code, 'Something insecure was detected. Please contact an admin') 
+#            exit(1);
         except Exception as e:
             exit(1)
 
@@ -109,23 +108,38 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             ret = getattr(self._oC,func)(*args)
             self._dbClose()
             return ret
-        except postgresql.exceptions.PLPGSQLRaiseError as e:
-            print('[-] ('+str(e.code)+') '+e.message)
-            raise Fault(e.code, e.message) 
-        except postgresql.exceptions.InsufficientPrivilegeError as e:
-            print('[-] Insufficient privileges')
-            raise Fault(e.code, 'Insufficient privileges') 
-        except postgresql.exceptions.UniqueError as e:
-            print('[-] Flag already submitted')
-            raise Fault(e.code, 'Flag already submitted') 
-        except postgresql.exceptions.StringRightTruncationError as e:
-            print('[-] Input is too big ('+e.message+')')
-            raise Fault(e.code, 'Input is too big') 
-        except postgresql.exceptions.UndefinedFunctionError as e:
-            print('[-] The specified function does not exist. Please contact an admin')
-            raise Fault(e.code, 'The specified function does not exist. Please contact an admin') 
-        except postgresql.message.Message as e:
-            print(e)
+#        except postgresql.exceptions.PLPGSQLRaiseError as e:
+#            print('[-] ('+str(e.code)+') '+e.message)
+#            raise Fault(e.code, e.message) 
+#        except postgresql.exceptions.InsufficientPrivilegeError as e:
+#            print('[-] Insufficient privileges')
+#            raise Fault(e.code, 'Insufficient privileges') 
+#        except postgresql.exceptions.UniqueError as e:
+#            print('[-] Flag already submitted')
+#            raise Fault(e.code, 'Flag already submitted') 
+#        except postgresql.exceptions.StringRightTruncationError as e:
+#            print('[-] Input is too big ('+e.message+')')
+#            raise Fault(e.code, 'Input is too big') 
+#        except postgresql.exceptions.UndefinedFunctionError as e:
+#            print('[-] The specified function does not exist. Please contact an admin')
+#            raise Fault(e.code, 'The specified function does not exist. Please contact an admin') 
+        except psycopg2.Error as e:
+            if e.pgerror != '':
+                a = e.pgerror.split('\n')
+                if len(a) >= 2:
+                    msg = a[0]
+                else:
+                    msg = e.pgerror
+
+            if msg == 'ERROR:  duplicate key value violates unique constraint "u_flag_constraint"':
+                print('Flag already submitted')
+                return 'Flag already submitted'
+            elif msg.startswith('ERROR:  value too long for type character'):
+                print(e.pgerror)
+                return 'Input is too big'
+            else:
+                print(e.pgerror)
+                return 'An error occured. Please contact an administrator'
 
     def _getProxiedClientIp(self):
         h = dict(re.findall(r"(?P<name>.*?): (?P<value>.*?)\n", str(self.headers)))

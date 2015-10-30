@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import config
-import postgresql
+import psycopg2
 import ClientController
 import itertools
 
@@ -58,7 +58,7 @@ class SecTestController(ClientController.ClientController):
         super().__init__()
         try:
             self.initConfig()
-        except postgresql.exceptions.UndefinedFunctionError:
+        except psycopg2.Error as e:
             print('[-] There is a function missing')
             exit(0)
 
@@ -100,9 +100,9 @@ class SecTestController(ClientController.ClientController):
                     ret = f(*a)
                 else:
                     ret = f()
-            except postgresql.exceptions.InsufficientPrivilegeError:
-                print(f.name+'(): Player does not have access: ERROR')
-            except postgresql.exceptions.PLPGSQLRaiseError as e:
+#except postgresql.exceptions.InsufficientPrivilegeError:
+#                print(f.name+'(): Player does not have access: ERROR')
+            except psycopg2.Error as e:
                 #print('[-] ('+str(e.code)+') '+e.message)
                 print(f.name+'(): Player have access: OK')
             else:

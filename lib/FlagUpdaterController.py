@@ -68,16 +68,16 @@ class FlagUpdaterController(UpdaterController.UpdaterController):
         return cmd.replace('$FLAG', 'KOTH-'+flag)
     
     def _getAllKingFlags(self):
-        return list(self._exec('getAllKingFlags()'))
+        return list(self.exec('getAllKingFlags'))
 
     def _getKingFlagsFromHost(self,host):
-        return list(self._exec('getKingFlagsFromHost(varchar)',host)
+        return list(self.exec('getKingFlagsFromHost',host)
 
     def _getKingFlagFromName(self,name):
-        return list(self._exec('getKingFlagsFromName(varchar)',name)
+        return list(self.exec('getKingFlagsFromName',name)
 
     def _addRandomKingFlagFromId(self,flagId):
-        return self._exec('addRandomKingFlagFromId(integer,integer)',flagId,self.KING_FLAG_VALUE)
+        return self.exec('addRandomKingFlagFromId',flagId,self.KING_FLAG_VALUE)
     
     def _updateFromList(self,flags):
         if len(list(flags)) != 0:

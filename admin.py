@@ -49,7 +49,7 @@ from lib import AdminController
 from lib import SecTestController
 
 # System imports
-import postgresql.exceptions
+import psycopg2
 import argparse
 import os.path
 
@@ -314,17 +314,11 @@ if args.action == 'security':
 try:
     c = AdminController.AdminController()
     c.setDebug(args.debug)
-except postgresql.exceptions.PLPGSQLRaiseError as e:
-    print('[-] ('+str(e.code)+') '+e.message)
+except psycopg2.Warning as e:
+    print('[-] ' + str(e))
+except psycopg2.Error as e:
+    print('[-] ' + str(e))
     exit(1)
-except postgresql.exceptions.ClientCannotConnectError as e:
-    print('[-] Insufficient privileges to connect to database')
-    print(e)
-    exit(1);
-except postgresql.exceptions.InsecurityError:
-    print('[-] Something insecure was detected. Please contact an admin')
-    print(e)
-    exit(1);
 except Exception as e:
     print(e)
     exit(1)
@@ -587,31 +581,18 @@ except ValueError:
     print('[-] Invalid input. Please RTFM')
 except AssertionError as e:
     print('[-] Assertion error: %s' % e.args)
-except postgresql.exceptions.PLPGSQLRaiseError as e:
-    print('[-] ('+str(e.code)+') '+e.message)
-except postgresql.exceptions.InsufficientPrivilegeError:
-    print('[-] Insufficient privileges')
-except postgresql.exceptions.UniqueError as e:
-    print('[-] Unique constraint violation ('+e.message+')')
-except postgresql.exceptions.CheckError as e:
-    print('[-] Check constraint violation ('+e.message+')')
-except postgresql.exceptions.TextRepresentationError as e:
-    print('[-] '+e.message)
-except postgresql.exceptions.UndefinedFunctionError:
-    print('[-] The specified function does not exist. Please contact an admin')
-except postgresql.exceptions.DateTimeFormatError:
-    print('[-] Date&Time format error')
-except postgresql.exceptions.ClientCannotConnectError:
-    print('[-] Could not connect to server')
-except postgresql.message.Message as e:
-    print(e)
-except Exception as e:
-    print(e)
+except psycopg2.Warning as e:
+    print('[-] ' + str(e))
+except psycopg2.Error as e:
+    print('[-] ' + str(e))
+#except Exception as e:
+#    print(e)
 else:
-    if rc == 0:
-        print('[+] Job completed')
-    else:
-        print('An error occured. Return Code: '+str(rc))
+    if args.debug:
+        if rc == 0:
+            print('[+] Job completed')
+        else:
+            print('An error occured. Return Code: '+str(rc))
 
 c.close()
 

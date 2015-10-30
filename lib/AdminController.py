@@ -91,96 +91,96 @@ class AdminController(ClientController.ClientController):
             t.join()
 
     def addTeam(self,name,net):
-        return self._exec('addTeam(varchar,varchar)',name,net)
+        return self._exec('addTeam',name,net)
 
     def modTeam(self,id,name,net):
-        return self._exec('modTeam(integer,varchar,varchar)',id,name,net)
+        return self._exec('modTeam',id,name,net)
 
     def getTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
-        return self._exec('listTeams(varchar,integer)',grep,top)
+        return self._exec('listTeams',grep,top)
 
     def rewardTeam(self,id,name,pts):
-        return self._exec('rewardTeam(integer,varchar,integer)',id,name,pts)
+        return self._exec('rewardTeam',id,name,pts)
 
     def launderMoney(self,id,cash):
-        return self._exec('launderMoneyFromTeamid(integer,numeric)',id,cash)
+        return self.exec('launderMoneyFromTeamid',id,cash)
 
     def getTeamsVariables(self,grep,top=config.DEFAULT_TOP_VALUE):
-        return self._exec('getTeamsVariables(varchar,integer)',grep,top)
+        return self.exec('getTeamsVariables',grep,top)
 
     def addNews(self,desc,ts):
-        return self._exec('addNews(varchar,varchar)',desc,ts)
+        return self.exec('addNews',desc,ts)
 
     def modNews(self,id,desc,ts):
-        return self._exec('modNews(integer,varchar,varchar)',id,desc,ts)
+        return self.exec('modNews',id,desc,ts)
 
     def checkFlag(self,flagValue):
-        return self._exec('checkFlag(varchar)',flagValue)
+        return self.exec('checkFlag',flagValue)
 
     def getFlagList(self,top=config.DEFAULT_TOP_VALUE):
-        return self._exec('getFlagList(integer)',top)
+        return self.exec('getFlagList',top)
 
     def getFlagsSubmitCount(self,nameFilter):
-        return self._exec('getFlagsSubmitCount(varchar)',nameFilter)
+        return self.exec('getFlagsSubmitCount',nameFilter)
 
     def addBMItem(self,name,amount,qty,disp,desc,data):
         category = 'admin'
         status = 1
         wallet = 1
-        return self._exec('addBMItem(varchar,varchar,integer,integer,numeric,integer,varchar,text,bytea)',\
+        return self.exec('addBMItem',\
                           name,category,status,wallet,amount,qty,disp,desc,data)
 
     def modBMItem(self,id,name,amount,qty,disp,desc):
-        return self._exec('modBMItem(integer,varchar,numeric,integer,varchar,text)',\
+        return self.exec('modBMItem',\
                           id,name,amount,qty,disp,desc)
 
     def getBMItemInfo(self,id):
-        return self._exec('getBMItemInfo(integer)',id)
+        return self.exec('getBMItemInfo',id)
 
     def getBMItemData(self,id):
-        return self._exec('getBMItemData(integer)',id)
+        return self.exec('getBMItemData',id)
 
     def reviewBMItem(self,id,approve,rating,comments):
-        return self._exec('reviewBMItem(integer,boolean,integer,text)',id,approve,rating,comments)
+        return self.exec('reviewBMItem',id,approve,rating,comments)
 
     def getBMItemList(self,top):
-        return self._exec('getBMItemList(integer)',top)
+        return self.exec('getBMItemList',top)
 
     def setBMItemStatus(self,id,status):
-        return self._exec('setBMItemStatus(integer,integer)',id,status)
+        return self.exec('setBMItemStatus',id,status)
 
     def getTransactionHistory(self,top):
-        return self._exec('getTransactionHistory(integer)',top)
+        return self.exec('getTransactionHistory',top)
 
     def startGame(self):
-        return self._exec('startGame()')
+        return self.exec('startGame')
 
     def setSetting(self,attr,value,type):
-        return self._exec('setSetting(text,text,varchar)',attr,value,type)
+        return self.exec('setSetting',attr,value,type)
 
     def getSettings(self):
-        return self._exec('getSettings()')
+        return self.exec('getSettings')
 
     def getGameStats(self):
-        return self._exec('getGameStats()')
+        return self.exec('getGameStats')
 
     def getTeamProgress(self,teamId):
-        return self._exec('getTeamProgress(integer)',teamId)
+        return self.exec('getTeamProgress',teamId)
 
     def getFlagProgress(self,flagName):
-        return self._exec('getFlagProgress(varchar)',flagName)
+        return self.exec('getFlagProgress',flagName)
 
     def getFlagTypeList(self):
-        return self._exec('getFlagTypeList()')
+        return self.exec('getFlagTypeList')
 
     def getScoreProgress(self):
-        return self._exec('getScoreProgress(integer)',None)
+        return self.exec('getScoreProgress',None)
 
     def getSubmitHistory(self,top=config.DEFAULT_TOP_VALUE,type=None):
-        return self._exec('getSubmitHistory(integer,integer)',top,type)
+        return self.exec('getSubmitHistory',top,type)
 
     def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=config.DEFAULT_TOP_VALUE):
-        return self._exec('getEvents(timestamp,varchar,varchar,varchar,integer)',\
+        return self.exec('getEvents',\
                             lastUpdate,facility,severity,grep,top)
 
     def getFormatTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):

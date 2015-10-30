@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import config
 import UpdaterController
-import postgresql
 import csv
 import os
 
