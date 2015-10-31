@@ -76,16 +76,19 @@ class InitController(UpdaterController.UpdaterController):
         return options[t](data)
                    
     def importTables(self):
+        print('Importing DB structure')
         sql = ''.join(open(config.SQL_TABLE_FILE, 'r').readlines())
         self._oDBCursor.execute(sql)
         self.commit()
 
     def importFunctions(self):
+        print('Importing DB functions')
         sql = ''.join(open(config.SQL_FUNC_FILE, 'r').readlines())
         self._oDBCursor.execute(sql)
         self.commit()
 
     def importData(self):
+        print('Importing DB data')
         sql = ''.join(open(config.SQL_DATA_FILE, 'r').readlines())
         self._oDBCursor.execute(sql)
         self.commit()
@@ -95,7 +98,7 @@ class InitController(UpdaterController.UpdaterController):
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
             for row in reader:
-                #print('|'.join(row))
+                print('Flag: %s' % '|'.join(row))
                 fname = row[0]
                 fvalue = row[1]
                 fpts = row[2]
@@ -146,13 +149,13 @@ class InitController(UpdaterController.UpdaterController):
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
             for row in reader:
-                #print('|'.join(row))
+                print('Team: %s' % '|'.join(row))
                 tname = row[0]
                 tnet = row[1]
                 
                 if tname != 'Team Name':
                     teamId = self.exec('addTeam',self._sanitize(tname,'str'), \
-                                     self._sanitize(tnet,'str'))[0]
+                                     self._sanitize(tnet,'str'))
                     for i in range(SETTINGS_COLS_START,len(headers)):
                         self.exec('addTeamSecrets', teamId,\
                                        self._sanitize(headers[i],'str'),\
@@ -170,18 +173,8 @@ class InitController(UpdaterController.UpdaterController):
                 print('Deleting black market items on %s' % host)
                 self._remoteExec(host,cmd)
 
-            #_category bmItemCategory.name%TYPE,
-            #_statusCode bmItemStatus.code%TYPE,
-            #_ownerWallet bmItem.ownerWallet%TYPE,
-            #_amount bmItem.amount%TYPE,
-            #_qty bmItem.qty%TYPE,
-            #_displayInterval varchar(20),
-            #_description bmItem.description%TYPE,
-            #_importName bmItem.importName%TYPE
-            #_data bmItem.data%TYPE
-            #_updateCmd bmItem.updateCmd%TYPE
             for row in reader:
-                #print('|'.join(row))
+                print('BM Item: %s' % '|'.join(row))
                 bmiName = row[0]
                 bmiCat = 'admin'
                 bmiStatusCode = config.BMI_STATUS_TO_PUBLISH
@@ -211,10 +204,10 @@ class InitController(UpdaterController.UpdaterController):
                                            self._sanitize(bmiDesc,'str'), \
                                            self._sanitize(bmiImportName,'str'), \
                                            bmiData, \
-                                           self._sanitize(bmiUpdateCmd,'str'))[0][0]
+                                           self._sanitize(bmiUpdateCmd,'str'))
 
                         # Get privateId from bmiId
-                        privateId = self._getBMItemPrivateId(int(bmiId))[0][0]
+                        privateId = self._getBMItemPrivateId(int(bmiId))
 
                         # Send on web servers
                         self._uploadBMItemOnScoreboard(bmiImportName,privateId)

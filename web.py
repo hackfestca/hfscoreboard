@@ -90,7 +90,8 @@ class Logger(logging.getLoggerClass()):
 
 class BaseHandler(tornado.web.RequestHandler):
 
-    def initialize(self, sponsors_imgs, logger):
+    def initialize(self, sponsors_imgs, logger, debug=False):
+        self._debug = debug
         self._client = None
         self._logger = logger
         self._team_name = None
@@ -118,8 +119,11 @@ class BaseHandler(tornado.web.RequestHandler):
         # Handle every exception thrown by any BaseHadler
         import traceback
 
-        exc_type, exc_obj, exc_tb = kwargs["exc_info"]
-        msg = "{}".format(exc_obj.pgerror)
+        if self._debug:
+            exc_type, exc_obj, exc_tb = kwargs["exc_info"]
+            msg = "{}".format(exc_obj)
+        else:
+            msg = WEB_ERROR_MESSAGE
 
         # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
@@ -142,7 +146,7 @@ class BaseHandler(tornado.web.RequestHandler):
         try:
             team_info = list(self.client.getTeamInfoFromIp(self.remote_ip))
             self.team_name = team_info[1][1]
-            self.team_ip = team_info[2][1]
+            self.team_ip = team_info[3][1]
             self.team_score = team_info[7][1]
         except psycopg2.Error as e:
             self.logger.error(e)
@@ -309,7 +313,7 @@ class IndexHandler(BaseHandler):
             elif e.pgerror.startswith('ERROR:  duplicate key'):
                 submit_message = 'Flag already submitted'
             else:
-                submit_message = e.pgerror
+                submit_message = WEB_ERROR_MESSAGE
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
@@ -346,8 +350,7 @@ class DashboardHandler(BaseHandler):
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -356,6 +359,7 @@ class DashboardHandler(BaseHandler):
             self.render('templates/dashboard.html',
                         sponsors=self.sponsors,
                         jsArray=jsArray)
+
 
 class BlackMarketItemHandler(BaseHandler):
 
@@ -369,8 +373,7 @@ class BlackMarketItemHandler(BaseHandler):
                                                          )
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -432,7 +435,12 @@ class DashboardProjectorHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            jsArray = self.client.getJsDataScoreProgress()
+            jsArray2 = ""
+            jsArray = self.client.getCsvScoreProgress()
+            # Formatting into javascript string.
+            for i in jsArray.split("\r\n"):
+                jsArray2 += "\"" + i + "\\n\" + \n"
+            jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
             self.logger.error(e)
             self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
@@ -441,7 +449,8 @@ class DashboardProjectorHandler(BaseHandler):
             self.logger.error(e)
             self.render('templates/error.html', error_msg="Error")
         else:
-            self.render('templates/projector_js.html', jsArray=jsArray)
+            self.render('templates/projector_js.html',
+                        jsArray=jsArray)
 
 
 class SponsorsProjectorHandler(BaseHandler):
@@ -466,7 +475,7 @@ if __name__ == '__main__':
 
     logger = Logger("HF2k15_Logger")
 
-    args = dict(logger=logger, sponsors_imgs=sponsors_imgs)
+    args = dict(logger=logger, sponsors_imgs=sponsors_imgs, debug=False)
 
     app = tornado.web.Application([
             (r"/", IndexHandler, args),

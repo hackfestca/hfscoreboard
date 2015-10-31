@@ -1970,19 +1970,20 @@ RETURNS text AS $$
                 -- If flag is standard or king, process now. Otherwise, manage in processNonStandardFlag() function.
                 if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
                     _pts := _flagRec.pts;
-                    _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
-                    _retEvent = _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
+                    _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+                    _retEvent := _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
 
                     -- Give cash if flag contains cash
                     if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
                         PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
-                        _ret = _ret || 'You also received ' || _flagRec.cash::text || '$.';
-                        _retEvent = _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
+                        _ret := _ret || 'You also received ' || _flagRec.cash::text || '$.';
+                        _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
                     end if;
                 else
                     SELECT *
                     FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)
                     INTO _pts,_ret;
+                    _retEvent := _ret;
                 end if;
 
                 -- Get number of time it was submitted
@@ -2001,8 +2002,8 @@ RETURNS text AS $$
                 INSERT INTO team_kingFlag(teamId,kingFlagId,playerIp)
                         VALUES(_teamRec.id,_flagRec.id,_playerIp);
                 
-                _ret = _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
-                _retEvent = _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
+                _ret := _ret || 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+                _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
             end if;
         else
             raise exception 'Invalid flag';
@@ -2023,9 +2024,8 @@ CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
-                flagPts flag.pts%TYPE,
-                flagTotal flag.pts%TYPE,
-                cash text
+                cash text,
+                flagTotal flag.pts%TYPE
               ) AS $$
     DECLARE
         _settings settings%ROWTYPE;
@@ -2071,9 +2071,8 @@ RETURNS TABLE (
 
         return QUERY SELECT t.id AS id,
                             t.name AS team,
-                            coalesce(tf3.sum::integer,0) AS flagPts,
-                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
-                            w.amount::text || ' $' AS cash
+                            w.amount::text || ' $' AS cash,
+                            coalesce(tf3.sum::integer,0) AS flagPts
                          FROM team AS t
                          LEFT OUTER JOIN (
                             SELECT w.id,
@@ -2099,14 +2098,15 @@ RETURNS TABLE (
                                 WHERE tf2.ts <= _ts
                             GROUP BY tf2.teamId
                             ) AS tf3 ON t.id = tf3.teamId
-                         ORDER BY flagTotal,cash DESC
+                         ORDER BY flagPts DESC,w.amount DESC NULLS LAST
                          LIMIT _top;
 
 --
 -- King flags were removed for Hackfest 2015. To add king flags in getScore(), 
--- simply add this line in the return table
+-- simply add these lines in the return table
 --
 --                            coalesce(tfi3.sum::integer,0) AS kingFlagPts,
+--                            (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
 --
 -- Then add this to the query
 --
@@ -4381,6 +4381,10 @@ RETURNS integer AS $$
     BEGIN
         -- Logging
         raise notice 'addEvent(%,%,%)',$1,$2,$3;
+
+        if _title is NULL or _title = '' then
+            raise exception 'Invalid event';
+        end if;
 
         -- Get facilityCode if name is specified
         if _facility is not NULL then

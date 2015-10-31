@@ -115,11 +115,12 @@ class ClientController():
 
     def fetchall(self):
         ret = self._oDBCursor.fetchall()
-        if len(ret) == 1:
-            if type(ret[0]) == str and len(ret[0]) == 1:
-                return ret[0][0]
-            else:
-                return ret
+       
+        # If the return set has a single value, return this value 
+        if type(ret) in [list,tuple] \
+            and type(ret[0]) in [list,tuple] \
+            and len(ret[0]) == 1:
+            return ret[0][0]
         else:
             return ret
 
@@ -173,7 +174,7 @@ class ClientController():
         return self.exec('getNewsList')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        title = ['ID','TeamName','FlagPts','KFlagPts','Total','Cash'] 
+        title = ['ID','TeamName','Cash','Notoriety'] 
         score = self.getScore(top,ts,cat)
         x = PrettyTable(title)
         x.align['TeamName'] = 'l'

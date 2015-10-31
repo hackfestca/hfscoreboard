@@ -429,7 +429,7 @@ CREATE TABLE event(
 */
 CREATE TABLE news(
     id serial primary key,
-    title varchar(150) not null unique,
+    title text not null unique,
     displayTs timestamp not null default current_timestamp,
     ts timestamp not null default current_timestamp,
     constraint valid_title_name check (title != '')

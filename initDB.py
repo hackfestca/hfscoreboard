@@ -98,28 +98,28 @@ except Exception as e:
 # Step 2: Process user request
 try:
     if args.tables:
-        print('Importing table structure')
+        print('[+] Importing table structure')
         c.importTables()
     elif args.functions:
-        print('Importing functions / stored procedure')
+        print('[+] Importing functions / stored procedure')
         c.importFunctions()
     elif args.data:
-        print('Importing data')
+        print('[+] Importing data')
         c.importData()
     elif args.flags:
-        print('Importing flags')
+        print('[+] Importing flags')
         c.importFlags()
     elif args.teams:
-        print('Importing teams')
+        print('[+] Importing teams')
         c.importTeams()
     elif args.blackmarket:
-        print('Importing black market items')
+        print('[+] Importing black market items')
         c.importBlackMarketItems()
     elif args.security:
-        print('Importing database security')
+        print('[+] Importing database security')
         c.importSecurity()
     elif args.all:
-        print('Importing all (struct + data + security)')
+        print('[+] Importing all (struct + data + security)')
         c.importAll()
     else:
         parser.print_help()
