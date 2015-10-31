@@ -83,21 +83,6 @@ class ClientController():
 
     _oDBCursor = None
 
-    _autoCommit = ['submitFlagFromIp','addNews']
-
-#    def __init__(self):
-#        self._oDB = postgresql.open( \
-#                            user = self._sUser, \
-#                            password = self._sPass, \
-#                            host = config.DB_HOST, \
-#                            database = config.DB_NAME, \
-#                            connect_timeout = config.DB_CONNECT_TIMEOUT, \
-#                            sslmode = 'require',
-#                            sslcrtfile = self._sCrtFile, \
-#                            sslkeyfile = self._sKeyFile, \
-#                            sslrootcrtfile = config.DB_SSL_ROOT_CA)
-#        self._oDB.settings['search_path'] = config.DB_SCHEMA
-##        self._oDB.settings['client_min_messages'] = 'NOTICE'
     def __init__(self):
         self._oDB = psycopg2.connect(\
                             user = self._sUser, \
@@ -110,7 +95,7 @@ class ClientController():
                             sslkey = self._sKeyFile, \
                             sslrootcert = config.DB_SSL_ROOT_CA)
         self._oDB.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-        self._oDB.autocommit = True
+        self._oDB.autocommit = True     # Important for when submitFlag return an error (such as: invalid flag, already submit, etc.)
         self._oDBCursor = self._oDB.cursor()
         self._oDBCursor.execute("SET search_path = %s" % config.DB_SCHEMA)
 
@@ -123,8 +108,6 @@ class ClientController():
             self._benchmark(funcDef,args)
         else:
             self._oDBCursor.callproc(funcDef,args)
-#if funcDef in self._autoCommit:
-#            self.commit()
         return self.fetchall()
 
     def exec(self, funcDef, *args):
@@ -172,7 +155,6 @@ class ClientController():
         self._bDebug = debug
         
     def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-#return self.exec('getScore',top,ts,cat)
         return self._exec('getScore',top,ts,cat)
 
     def getBMItemCategoryList(self):

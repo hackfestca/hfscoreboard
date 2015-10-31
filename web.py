@@ -59,6 +59,7 @@ import re
 import random
 import psycopg2
 
+WEB_ERROR_MESSAGE = 'Oops. Something wrong happened. :)'
 
 class Logger(logging.getLoggerClass()):
 
@@ -142,13 +143,13 @@ class BaseHandler(tornado.web.RequestHandler):
             team_info = list(self.client.getTeamInfoFromIp(self.remote_ip))
             self.team_name = team_info[1][1]
             self.team_ip = team_info[2][1]
-            self.team_score = team_info[6][1]
+            self.team_score = team_info[7][1]
         except psycopg2.Error as e:
             self.logger.error(e)
             self.team_name = "None"
             self.team_ip = "None"
             self.team_score = "None"
-            message = e.pgerror
+            message = WEB_ERROR_MESSAGE
             super().render('templates/error.html', 
                           error_msg=message,
                           team_name=self.team_name,
@@ -243,8 +244,7 @@ class ScoreHandler(BaseHandler):
             score = self.client.getScore(top=200)
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -261,8 +261,7 @@ class ChallengesHandler(BaseHandler):
             challenges = self.client.getFlagProgressFromIp(self.remote_ip)
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -282,8 +281,7 @@ class IndexHandler(BaseHandler):
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -311,7 +309,7 @@ class IndexHandler(BaseHandler):
             elif e.pgerror.startswith('ERROR:  duplicate key'):
                 submit_message = 'Flag already submitted'
             else:
-                submit_message = 'Something wrong happened. Oups. :)'
+                submit_message = e.pgerror
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
@@ -418,8 +416,7 @@ class IndexProjectorHandler(BaseHandler):
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -438,8 +435,7 @@ class DashboardProjectorHandler(BaseHandler):
             jsArray = self.client.getJsDataScoreProgress()
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
-            self.render('templates/error.html', error_msg=message)
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)

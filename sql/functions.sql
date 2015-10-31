@@ -2024,7 +2024,6 @@ RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
                 flagPts flag.pts%TYPE,
-                kingFlagPts kingFlag.pts%TYPE,
                 flagTotal flag.pts%TYPE,
                 cash text
               ) AS $$
@@ -2073,7 +2072,6 @@ RETURNS TABLE (
         return QUERY SELECT t.id AS id,
                             t.name AS team,
                             coalesce(tf3.sum::integer,0) AS flagPts,
-                            coalesce(tfi3.sum::integer,0) AS kingFlagPts,
                             (coalesce(tf3.sum::integer,0) + coalesce(tfi3.sum::integer,0)) AS flagTotal,
                             w.amount::text || ' $' AS cash
                          FROM team AS t
@@ -2101,33 +2099,43 @@ RETURNS TABLE (
                                 WHERE tf2.ts <= _ts
                             GROUP BY tf2.teamId
                             ) AS tf3 ON t.id = tf3.teamId
-                         LEFT OUTER JOIN (
-                            SELECT tfi2.teamId,
-                                   sum(tfi2.pts) AS sum
-                            FROM (
-                                SELECT tfi.kingFlagId,
-                                       tfi.teamId,
-                                       tfi.ts,
-                                       fi.pts
-                                FROM team_kingFlag as tfi
-                                LEFT OUTER JOIN (
-                                    SELECT kf.id,
-                                           kf.flagId,
-                                           kf.pts
-                                    FROM kingFlag as kf
-                                    LEFT OUTER JOIN (
-                                        SELECT flag.id,
-                                               flag.category
-                                        FROM flag 
-                                        ) as ff ON kf.flagId = ff.id
-                                        WHERE ff.category = ANY (_aCat)
-                                    ) as fi ON tfi.kingFlagId = fi.id
-                                ) AS tfi2
-                                WHERE tfi2.ts <= _ts
-                            GROUP BY tfi2.teamId
-                            ) AS tfi3 ON t.id = tfi3.teamId
-                         ORDER BY flagTotal DESC
+                         ORDER BY flagTotal,cash DESC
                          LIMIT _top;
+
+--
+-- King flags were removed for Hackfest 2015. To add king flags in getScore(), 
+-- simply add this line in the return table
+--
+--                            coalesce(tfi3.sum::integer,0) AS kingFlagPts,
+--
+-- Then add this to the query
+--
+--                         LEFT OUTER JOIN (
+--                            SELECT tfi2.teamId,
+--                                   sum(tfi2.pts) AS sum
+--                            FROM (
+--                                SELECT tfi.kingFlagId,
+--                                       tfi.teamId,
+--                                       tfi.ts,
+--                                       fi.pts
+--                                FROM team_kingFlag as tfi
+--                                LEFT OUTER JOIN (
+--                                    SELECT kf.id,
+--                                           kf.flagId,
+--                                           kf.pts
+--                                    FROM kingFlag as kf
+--                                    LEFT OUTER JOIN (
+--                                        SELECT flag.id,
+--                                               flag.category
+--                                        FROM flag 
+--                                        ) as ff ON kf.flagId = ff.id
+--                                        WHERE ff.category = ANY (_aCat)
+--                                    ) as fi ON tfi.kingFlagId = fi.id
+--                                ) AS tfi2
+--                                WHERE tfi2.ts <= _ts
+--                            GROUP BY tfi2.teamId
+--                            ) AS tfi3 ON t.id = tfi3.teamId
+
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
