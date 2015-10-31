@@ -20,10 +20,16 @@ git archive --format=tar origin/master | gzip -9c | ssh sb@$scoreboard2 "tar -C 
 
 # web
 echo Uploading on $scoreboard3
-ssh sb@$scoreboard3 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
-scp -rq static/* sb@$scoreboard3:/var/www/htdocs/static/
-scp -rq public/* sb@$scoreboard3:/var/www/htdocs/public/
+ssh root@$scoreboard3 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
+scp -rq static/* root@$scoreboard3:/var/www/htdocs/static/
+scp -rq public/* root@$scoreboard3:/var/www/htdocs/public/
+ssh root@$scoreboard3 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
+ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 755 {} \;"
+ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 644 {} \;"
 echo Uploading on $scoreboard4
-ssh sb@$scoreboard4 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
-scp -rq static/* sb@$scoreboard4:/var/www/htdocs/static/
-scp -rq public/* sb@$scoreboard4:/var/www/htdocs/public/
+ssh root@$scoreboard4 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
+scp -rq static/* root@$scoreboard4:/var/www/htdocs/static/
+scp -rq public/* root@$scoreboard4:/var/www/htdocs/public/
+ssh root@$scoreboard4 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
+ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 755 {} \;"
+ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 644 {} \;"

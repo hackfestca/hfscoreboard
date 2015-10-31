@@ -168,7 +168,8 @@ class BaseHandler(tornado.web.RequestHandler):
     def _disconnect(self):
         try:
             self.client.close()
-        except AttributeError:
+        except Exception as e:
+            self.logger.error('Could not close DB connection.')
             pass  # The connection was never established
 
     def prepare(self):

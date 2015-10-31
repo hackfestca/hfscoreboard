@@ -85,12 +85,11 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             self._oC.setDebug(self._bDebug)
         except psycopg2.Error as e:
             submit_message = 'Error while connecting the database'
-
-
             print(e.pgerror)
             raise Fault(1, submit_message) 
             exit(1)
         except Exception as e:
+            print(e)
             exit(1)
 
     def _dbClose(self):
@@ -103,21 +102,6 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             ret = getattr(self._oC,func)(*args)
             self._dbClose()
             return ret
-#        except postgresql.exceptions.PLPGSQLRaiseError as e:
-#            print('[-] ('+str(e.code)+') '+e.message)
-#            raise Fault(e.code, e.message) 
-#        except postgresql.exceptions.InsufficientPrivilegeError as e:
-#            print('[-] Insufficient privileges')
-#            raise Fault(e.code, 'Insufficient privileges') 
-#        except postgresql.exceptions.UniqueError as e:
-#            print('[-] Flag already submitted')
-#            raise Fault(e.code, 'Flag already submitted') 
-#        except postgresql.exceptions.StringRightTruncationError as e:
-#            print('[-] Input is too big ('+e.message+')')
-#            raise Fault(e.code, 'Input is too big') 
-#        except postgresql.exceptions.UndefinedFunctionError as e:
-#            print('[-] The specified function does not exist. Please contact an admin')
-#            raise Fault(e.code, 'The specified function does not exist. Please contact an admin') 
         except psycopg2.Error as e:
             if e.pgerror != '':
                 a = e.pgerror.split('\n')
