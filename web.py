@@ -307,7 +307,7 @@ class IndexHandler(BaseHandler):
 
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
-            if e.pgerror.startswith('Invalid flag'):
+            if e.pgerror.startswith('ERROR:  Invalid flag'):
                 rand = random.randint(0, len(self._insults)-1)
                 submit_message = e.pgerror + "!  " + self.getInsult(rand)
             elif e.pgerror.startswith('ERROR:  duplicate key'):

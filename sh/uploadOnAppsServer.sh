@@ -8,7 +8,9 @@ scoreboard4='sb-web02.hf'
 # dev
 echo Uploading on $scoreboardDev
 git archive --format=tar origin/master | gzip -9c | ssh root@$scoreboardDev "tar -C /var/www/scoreboard -xzvf -" > /dev/null
-scp -r static sb@$scoreboardDev:/var/www/htdocs/
+ssh root@$scoreboardDev "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
+scp -rq static/* root@$scoreboardDev:/var/www/htdocs/static/
+scp -rq public/* root@$scoreboardDev:/var/www/htdocs/public/
 
 # apps
 echo Uploading on $scoreboard1
@@ -18,6 +20,10 @@ git archive --format=tar origin/master | gzip -9c | ssh sb@$scoreboard2 "tar -C 
 
 # web
 echo Uploading on $scoreboard3
-scp -r static sb@$scoreboard3:/var/www/htdocs/
+ssh sb@$scoreboard3 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
+scp -rq static/* sb@$scoreboard3:/var/www/htdocs/static/
+scp -rq public/* sb@$scoreboard3:/var/www/htdocs/public/
 echo Uploading on $scoreboard4
-scp -r static sb@$scoreboard4:/var/www/htdocs/
+ssh sb@$scoreboard4 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
+scp -rq static/* sb@$scoreboard4:/var/www/htdocs/static/
+scp -rq public/* sb@$scoreboard4:/var/www/htdocs/public/
