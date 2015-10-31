@@ -619,6 +619,31 @@ Flags & Teams management
 
 The `initDB.py` script let database owner import flags and teams from CSV files. Use google spreadsheet to write flags at a central location so multiple admins can prepare their flags before the CTF. On a regular basis, export the spreadsheet in CSV format, move it to `import/flags.csv` and import flags by running `python3.3 ./initDB --flags`. The same procedure apply for teams.
 
+Database
+--------
+
+Under load, you might have this error:
+
+    FATAL:  remaining connection slots are reserved for non-replication superuser connections
+
+According to: http://www.postgresql.org/docs/9.0/static/kernel-resources.html, several fields must be updated.
+
+To update sysctl configs, you can start by appending the relevant fields to the /etc/sysctl.conf file as follow:
+
+    sysctl | egrep -e 'shminfo|seminfo' >> /etc/sysctl.conf
+
+In my case, I changed:
+
+    kern.seminfo.semmni=10
+    kern.seminfo.semmns=60
+    kern.seminfo.semmnu=30
+
+to
+
+    kern.seminfo.semmni=64
+    kern.seminfo.semmns=512
+    kern.seminfo.semmnu=256
+
 
 Docs
 ====

@@ -68,9 +68,9 @@ class AdminController(ClientController.ClientController):
     
     def benchmarkDB(self,reqNum=config.BENCH_DEFAULT_REQ_NUM):
         print('Testing getScore()')
-        self._benchmarkMany(reqNum,self._oDB.proc('getScore(integer,varchar,varchar)'),config.DEFAULT_TOP_VALUE,None,None)
-        print('Testing getNews()')
-        self._benchmarkMany(reqNum,self._oDB.proc('getNewsList()'))
+        self._benchmarkMany(reqNum,'getScore',[config.DEFAULT_TOP_VALUE,None,None])
+        print('Testing getNewsList()')
+        self._benchmarkMany(reqNum,'getNewsList',[])
 
     def benchmarkDBCon(self,reqNum=config.BENCH_DEFAULT_REQ_NUM,reqCon=config.BENCH_DEFAULT_CON_NUM):
         aThreads = []

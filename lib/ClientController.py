@@ -135,16 +135,12 @@ class ClientController():
                   +str((t2-t1).__round__(4))+'ms')
         return ret
 
-    def _benchmarkMany(self,nb,f,*args):
+    def _benchmarkMany(self,nb,f,args):
         t1 = time.time()
-        if len(args) > 0:
-            for i in range(0,nb):
-                ret = f(*args)
-        else:
-            for i in range(0,nb):
-                ret = f()
+        for i in range(0,nb):
+            ret = self._oDBCursor.callproc(f,args)
         t2 = time.time()
-        print('[+] Debug: '+f.name+'() was executed '+str(nb)+' times in ' \
+        print('[+] Debug: '+f+'() was executed '+str(nb)+' times in ' \
                   +str((t2-t1).__round__(4))+'ms')
         return ret
 

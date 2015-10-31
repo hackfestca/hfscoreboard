@@ -54,10 +54,10 @@ class WebController(ClientController.ClientController):
         super().__init__()
 
     def benchScore(self,callLimit=config.BENCH_DEFAULT_REQ_NUM):
-        self._benchmarkMany(callLimit,self._oDB.proc('getScore(integer,varchar,varchar)'),config.DEFAULT_TOP_VALUE,None,None)
+        self._benchmarkMany(callLimit,'getScore',[config.DEFAULT_TOP_VALUE,None,None])
 
     def benchScoreProgress(self,callLimit=config.BENCH_DEFAULT_REQ_NUM):
-        self._benchmarkMany(callLimit,self._oDB.proc('getScoreProgress(integer)'),None)
+        self._benchmarkMany(callLimit,'getScoreProgress',[None])
 
     def submitFlagFromIp(self,flagValue,playerIp):
         self.exec('logSubmit',flagValue,playerIp)
