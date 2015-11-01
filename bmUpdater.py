@@ -50,8 +50,8 @@ import config
 from lib import BMUpdaterController
 
 # System imports
-import postgresql.exceptions
 import argparse
+import psycopg2
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -82,17 +82,11 @@ args = parser.parse_args()
 # Step 1: Connect to database
 try:
     c = BMUpdaterController.BMUpdaterController()
-except postgresql.exceptions.PLPGSQLRaiseError as e:
-    print('[-] ('+str(e.code)+') '+e.message)
+except psycopg2.Warning as e:
+    print('[-] ' + str(e))
+except psycopg2.Error as e:
+    print('[-] ' + str(e))
     exit(1)
-except postgresql.exceptions.ClientCannotConnectError as e:
-    print('[-] Insufficient privileges to connect to database')
-    print(e)
-    exit(1);
-except postgresql.exceptions.InsecurityError:
-    print('[-] Something insecure was detected. Please contact an admin')
-    print(e)
-    exit(1);
 except Exception as e:
     print(e)
     exit(1)
@@ -124,24 +118,19 @@ try:
         print(c.getFormatBMItems())
     else:
         parser.print_help()
-except postgresql.exceptions.InsufficientPrivilegeError:
-    print('[-] Insufficient privileges')
-except postgresql.exceptions.UniqueError as e:
-    print('[-] Unique constraint violation ('+e.message+')')
-except postgresql.exceptions.CheckError as e:
-    print('[-] Check constraint violation ('+e.message+')')
-except postgresql.exceptions.TextRepresentationError as e:
-    print('[-] '+e.message)
-except postgresql.exceptions.UndefinedFunctionError:
-    print('[-] The specified function does not exist. Please contact an admin')
-except postgresql.exceptions.DateTimeFormatError:
-    print('[-] Date&Time format error')
-except postgresql.exceptions.ClientCannotConnectError:
-    print('[-] Could not connect to server')
-except postgresql.message.Message as e:
-    print(e)
-except Exception as e:
-    print(e)
+except KeyboardInterrupt:
+    print("Bye")
+    sys.exit()
+except ValueError:
+    print('[-] Invalid input. Please RTFM')
+except AssertionError as e:
+    print('[-] Assertion error: %s' % e.args)
+except psycopg2.Warning as e:
+    print('[-] ' + str(e))
+except psycopg2.Error as e:
+    print('[-] ' + str(e))
+#except Exception as e:
+#    print(e)
 else:
     if args.debug:
         print('[+] End of update')

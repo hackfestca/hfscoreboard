@@ -3644,7 +3644,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: getBMItemData(privateId,playerIp)
 */
 CREATE OR REPLACE FUNCTION getBMItemData(_id bmItem.id%TYPE)
-RETURNS bytea AS $$
+RETURNS bmItem.data%TYPE AS $$
     DECLARE
         _data bmItem.data%TYPE;
     BEGIN
@@ -4097,6 +4097,7 @@ RETURNS integer AS $$
         BMI_APPROVAL_STATUS bmItemStatus.code%TYPE := 3;
     BEGIN
         -- Logging
+        --raise notice 'sellBMItemFromIp(%,%,%,%,%,%)',$1,$2,$3,$4,'data',$6;
         raise notice 'sellBMItemFromIp(%,%,%,%,%,%)',$1,$2,$3,$4,'data',$6;
 
         -- Get team from userIp 

@@ -159,9 +159,9 @@ examples:
 
     --mod 'Track 2 leak|Buying this item is like buying a glass of scotch, you will simply enjoy.|/home/martin/track1.zip|5000|2|5 hours'
 
-    --review '1|1|5|Good item. Seem legit and functional'
-    --review '2|1|1|This item looks like bullshit'
-    --review '3|0|0|You cannot hide flags in your items'
+    --allow '1|5|Good item. Seem legit and functional'
+    --deny '2|1|This item looks like bullshit'
+    --deny '3|0|You cannot hide flags in your items'
 
     --setStatus '3|1'   # Set item id 3 for sale
     --setStatus '3|5'   # Remove item id 3 from game
@@ -179,8 +179,10 @@ pbm_a.add_argument('--info', action='store', dest='info', default='', metavar='\
                    help='Show an item information.')
 pbm_a.add_argument('--get', action='store', dest='get', default='', metavar='\'ID\'', \
                    help='Download an item.')
-pbm_a.add_argument('--review', action='store', dest='review', default='', type=str, metavar='\'ID|APPROVE|RATING|COMMENTS\'', \
-                   help='Review an item.')
+pbm_a.add_argument('--allow', action='store', dest='allow', default='', type=str, metavar='\'ID|RATING|COMMENTS\'', \
+                   help='Review an item (accept it to go on the black market).')
+pbm_a.add_argument('--deny', action='store', dest='deny', default='', type=str, metavar='\'ID|RATING|COMMENTS\'', \
+                   help='Review an item (deny it from going on the black market).')
 pbm_a.add_argument('--setStatus', action='store', dest='setStatus', default='', type=str, metavar='\'ID|STATUS\'', \
                    help='Change status of an item.')
 pbm_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List black market items.')
@@ -464,14 +466,20 @@ try:
             f.close()
 
             print("[+] %s bytes were saved at %s" % (len(data),path))
-        elif args.review != '':
-            id,approve,rating,comments = args.review.split('|',3)
+        elif args.allow != '':
+            id,rating,comments = args.allow.split('|',3)
             assert id.isdigit(), "ID is not an integer : %r" % id
-            assert approve.isdigit(), "APPROVE is not an integer : %r" % approve
             assert rating.isdigit(), "RATING is not an integer : %r" % rating
             assert type(comments) is str, "COMMENTS is not a string: %r" % comments
             print("[+] Reviewing black market item")
-            rc = c.reviewBMItem(int(id),bool(approve),int(rating),comments)
+            rc = c.reviewBMItem(int(id),True,int(rating),comments)
+        elif args.deny != '':
+            id,rating,comments = args.deny.split('|',3)
+            assert id.isdigit(), "ID is not an integer : %r" % id
+            assert rating.isdigit(), "RATING is not an integer : %r" % rating
+            assert type(comments) is str, "COMMENTS is not a string: %r" % comments
+            print("[+] Reviewing black market item")
+            rc = c.reviewBMItem(int(id),False,int(rating),comments)
         elif args.setStatus != '':
             id,status = args.setStatus.split('|',1)
             assert id.isdigit(), "ID is not an integer : %r" % id

@@ -98,6 +98,7 @@ class ClientController():
         self._oDB.autocommit = True     # Important for when submitFlag return an error (such as: invalid flag, already submit, etc.)
         self._oDBCursor = self._oDB.cursor()
         self._oDBCursor.execute("SET search_path = %s" % config.DB_SCHEMA)
+        self._oDBCursor.execute("SET bytea_output TO escape;")
 
 #    def __del__(self):
 #        if self._oDB:

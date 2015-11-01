@@ -55,6 +55,7 @@ class PlayerApiController(WebController.WebController):
         return self.exec('buyBMItemFromIp',bmItemId,playerIp)
     
     def sellBMItemFromIp(self,name,amount,qty,desc,data,playerIp):
+        print(type(data))
         return self.exec('sellBMItemFromIp',name,amount,qty,desc,data,playerIp)
 
     def getBMItemInfoFromIp(self,id,playerIp):

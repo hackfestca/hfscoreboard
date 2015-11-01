@@ -82,7 +82,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
         data = self._getBMItemData(bmiId)
 
         with open(config.BMI_LOCAL_PATH + '/' + fileName, 'wb') as f:
-            f.write(bytes(x for x in data))
+            f.write(bytes(x for x in data.tobytes()))
         f.close()
         
     def _updateFromList(self,bmItems):

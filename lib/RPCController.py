@@ -105,9 +105,19 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         except psycopg2.InternalError as e: # All "raise" trigger this type of exception.
             print(e.diag.message_primary)   # Hopefully, it will not leak too much :/
             return e.diag.message_primary
+        except psycopg2.IntegrityError as e:
+            if e.diag.message_primary.startswith('duplicate key value violates unique constraint "u_flag_constraint"'):
+                print('Flag already submitted.')
+                return 'Flag already submitted.'
+            elif e.diag.message_primary.startswith('duplicate key value violates unique constraint "bmitem_name_key"'):
+                print('Item already submitted.')
+                return 'Item already submitted.'
+            else:
+                return 'An error occured. Please contact an administrator.'
         except psycopg2.Error as e:
+            print(type(e))
             print(e.pgerror)
-            return 'An error occured. Please contact an administrator'
+            return 'An error occured. Please contact an administrator.'
 
     def _getProxiedClientIp(self):
         h = dict(re.findall(r"(?P<name>.*?): (?P<value>.*?)\n", str(self.headers)))

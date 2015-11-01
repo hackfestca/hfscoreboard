@@ -168,6 +168,7 @@ try:
             assert type(name) is str, "NAME is not a string: %r" % name
             assert type(desc) is str, "DESC is not a string: %r" % desc
             assert os.path.exists(path), "PATH is not a valid path: %r" % path
+            assert os.path.getsize(path) < 1024*1024, "PATH is too big. File size must be smaller than 1mb."
             assert float(amount), "AMOUNT is not a float: %r" % amount
             assert qty == None or qty.isdigit()  , "QTY is not an integer: %r" % qty
 
@@ -183,7 +184,10 @@ try:
             if qty != None:
                 qty = int(qty)
             rc = c.sellBMItem(name,amount,qty,desc,data)
-            print('Return Code: '+str(rc))
+            if rc == 0:
+                print('The item was send successfully. An admin will review it shortly.')
+            else:
+                print('An error occured while sending the file: %s' % rc)
         elif args.info != '':
             id = args.info
             assert id.isdigit(), "ID is not an integer : %r" % id
@@ -214,7 +218,7 @@ try:
                     f.close()
                     print("[+] %s bytes were saved at %s" % (len(data),path))
             else:
-                print('Black market item download canceled.')
+                print('Black market item download canceled: %s' % link)
 
         elif args.list:
             print("[+] Displaying black market items")
