@@ -3602,6 +3602,45 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: getBMItemLinkFromIp(id)
+*/
+CREATE OR REPLACE FUNCTION getBMItemLinkFromIp(_bmItemId bmItem.id%TYPE,
+                                               _playerIpStr varchar(20))
+RETURNS text AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+        _playerIp inet;
+        _dllink bmItem.dlLink%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemLinkFromIp(%,%)',$1,$2;
+
+        _playerIp := _playerIpStr::inet;
+
+        -- Get teamId FROM playerIp
+        SELECT id INTO _teamId FROM team WHERE _playerIp << net;
+        if NOT FOUND then
+            raise exception 'You do not have permission to download this item';
+        end if;
+
+        -- Verify that the team have successfuly bought the item
+        PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
+        if NOT FOUND then
+            raise exception 'You have not bought the item yet.';
+
+            -- Reset the item's private ID is an authorized access was performed
+            UPDATE bmItem
+            SET privateId = random(64)
+            WHERE id = _bmItemId;
+        end if;
+
+        -- Return data
+        SELECT dllink INTO _dllink FROM bmItem WHERE id = _bmItemId;
+        return _dllink;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: getBMItemData(privateId,playerIp)
 */
 CREATE OR REPLACE FUNCTION getBMItemData(_id bmItem.id%TYPE)
@@ -4372,8 +4411,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: addEvent(title,facility,severity)
 */
 CREATE OR REPLACE FUNCTION addEvent(_title event.title%TYPE,
-                                            _facility eventFacility.name%TYPE DEFAULT NULL,
-                                            _severity eventSeverity.name%TYPE DEFAULT NULL)
+                                            _facility eventFacility.name%TYPE DEFAULT 'global',
+                                            _severity eventSeverity.name%TYPE DEFAULT 'notice')
 RETURNS integer AS $$
     DECLARE
         _facilityCode eventFacility.code%TYPE := NULL;

@@ -102,26 +102,12 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             ret = getattr(self._oC,func)(*args)
             self._dbClose()
             return ret
+        except psycopg2.InternalError as e: # All "raise" trigger this type of exception.
+            print(e.diag.message_primary)   # Hopefully, it will not leak too much :/
+            return e.diag.message_primary
         except psycopg2.Error as e:
-            if e.pgerror != '':
-                a = e.pgerror.split('\n')
-                if len(a) >= 2:
-                    msg = a[0]
-                else:
-                    msg = e.pgerror
-
-            if msg.startswith('ERROR:  Invalid flag'):
-                print('Invalid Flag.')
-                return 'Invalid Flag.'
-            elif msg == 'ERROR:  duplicate key value violates unique constraint "u_flag_constraint"':
-                print('Flag already submitted')
-                return 'Flag already submitted'
-            elif msg.startswith('ERROR:  value too long for type character'):
-                print(e.pgerror)
-                return 'Input is too big'
-            else:
-                print(e.pgerror)
-                return 'An error occured. Please contact an administrator'
+            print(e.pgerror)
+            return 'An error occured. Please contact an administrator'
 
     def _getProxiedClientIp(self):
         h = dict(re.findall(r"(?P<name>.*?): (?P<value>.*?)\n", str(self.headers)))
@@ -152,6 +138,10 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
     @expose()
     def getBMItemInfo(self,clientIP,bmItemId):
         return self._dbExec('getFormatBMItemInfoFromIp',bmItemId,clientIP)
+
+    @expose()
+    def getBMItemLink(self,clientIP,bmItemId):
+        return self._dbExec('getBMItemLinkFromIp',bmItemId,clientIP)
 
     @expose()
     def getBMItemData(self,clientIP,bmItemId):

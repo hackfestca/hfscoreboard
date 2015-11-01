@@ -97,6 +97,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.sellBMItemFromIp(varchar,numeric,integer,te
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemInfoFromIp(integer,varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemDataFromIp(integer,varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemListFromIp(integer,varchar) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getBMItemLinkFromIp(integer,varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;

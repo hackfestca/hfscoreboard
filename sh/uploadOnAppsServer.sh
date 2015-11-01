@@ -24,12 +24,12 @@ ssh root@$scoreboard3 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
 scp -rq static/* root@$scoreboard3:/var/www/htdocs/static/
 scp -rq public/* root@$scoreboard3:/var/www/htdocs/public/
 ssh root@$scoreboard3 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
-ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 755 {} \;"
-ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 644 {} \;"
+ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 775 {} \;"
+ssh root@$scoreboard3 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 664 {} \;"
 echo Uploading on $scoreboard4
 ssh root@$scoreboard4 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
 scp -rq static/* root@$scoreboard4:/var/www/htdocs/static/
 scp -rq public/* root@$scoreboard4:/var/www/htdocs/public/
 ssh root@$scoreboard4 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
-ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 755 {} \;"
-ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 644 {} \;"
+ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 775 {} \;"
+ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 664 {} \;"

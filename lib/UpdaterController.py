@@ -139,9 +139,11 @@ class UpdaterController(ClientController.ClientController):
         bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
         # Send on web servers
         bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+        updateSecurityCmd = 'chmod 644 %s' % bmiRemotePath
         for host in config.BMI_HOSTS:
             print('[+] Uploading %s on %s' % (privateId,host))
             self._remotePut(host,bmiLocalPath,bmiRemotePath)
+            self._remoteExec(host,updateSecurityCmd)
 
     def _removeBMItemFromScoreboard(self,privateId):
         bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId

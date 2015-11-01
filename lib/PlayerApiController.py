@@ -60,6 +60,9 @@ class PlayerApiController(WebController.WebController):
     def getBMItemInfoFromIp(self,id,playerIp):
         return self.exec('getBMItemInfoFromIp',id,playerIp)
 
+    def getBMItemLinkFromIp(self,id,playerIp):
+        return self.exec('getBMItemLinkFromIp',id,playerIp)
+
     def getBMItemDataFromIp(self,id,playerIp):
         return self.exec('getBMItemDataFromIp',id,playerIp)
 

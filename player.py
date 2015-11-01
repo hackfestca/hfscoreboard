@@ -53,6 +53,8 @@ import argparse
 import socket
 from xmlrpc.client import Fault,ProtocolError
 import os.path
+from urllib.request import Request, urlopen, HTTPSHandler, build_opener
+from urllib.error import URLError, HTTPError
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -154,7 +156,9 @@ try:
             id = args.buy
             assert id.isdigit(), "ID is not an integer : %r" % id
             print("[+] Buying black market item")
-            print(c.buyBMItem(int(id)))
+            ret = c.buyBMItem(int(id))
+            if ret != 0:
+                print(ret)
         elif args.sell != '':
             try:
                 name,desc,path,amount,qty = args.sell.split('|',4)
@@ -189,15 +193,29 @@ try:
             id = args.get
             assert id.isdigit(), "ID is not an integer : %r" % id
             print("[+] Downloading black market item")
-            data = c.getBMItemData(int(id))
+            link = c.getBMItemLink(int(id))
 
             # Parse byte array and write file
-            path = 'BlackMarketItem_%s' % id
-            with open(path, 'wb') as f:
-                f.write(bytes(x for x in data))
-            f.close()
+            if link.startswith('http'):
+                # Download item
+                try:
+                    f = urlopen(link,cafile=config.PLAYER_API_SSL_ROOT_CA)
+                    data = f.read()
+                except URLError as e:
+                    print('Black market item download failed. %s' % e.reason)
+                except Exception as e:
+                    print(e)
 
-            print("[+] %s bytes were saved at %s" % (len(data),path))
+                # Save item
+                if data:
+                    path = 'BlackMarketItem_%s' % id
+                    with open(path, 'wb') as f:
+                        f.write(bytes(x for x in data))
+                    f.close()
+                    print("[+] %s bytes were saved at %s" % (len(data),path))
+            else:
+                print('Black market item download canceled.')
+
         elif args.list:
             print("[+] Displaying black market items")
             print(c.getBMItemList(config.DEFAULT_TOP_VALUE))
@@ -255,6 +273,8 @@ except Fault as e:
     print('[-] %s' % e.faultString)
 except ProtocolError as e:
     print('[-] %s %s' % (e.errcode,e.errmsg))
+except Exception as e:
+    print(e)
 else:
     if args.debug:
         print('[+] Job completed')

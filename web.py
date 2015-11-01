@@ -135,7 +135,7 @@ class BaseHandler(tornado.web.RequestHandler):
             self.client = WebController()
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.pgerror
+            message = e.diag.message_primary
             self.renderCriticalFailure(error_msg=message)
         except Exception as e:
             self.set_status(500)
@@ -308,10 +308,10 @@ class IndexHandler(BaseHandler):
 
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
-            if e.pgerror.startswith('ERROR:  Invalid flag'):
+            if e.diag.message_primary.startswith('Invalid flag'):
                 rand = random.randint(0, len(self._insults)-1)
-                submit_message = e.pgerror + "!  " + self.getInsult(rand)
-            elif e.pgerror.startswith('ERROR:  duplicate key'):
+                submit_message = e.diag.message_primary+ "!  " + self.getInsult(rand)
+            elif e.diag.message_primary.startswith('duplicate key'):
                 submit_message = 'Flag already submitted'
             else:
                 submit_message = WEB_ERROR_MESSAGE

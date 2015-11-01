@@ -117,7 +117,7 @@ class ClientController():
         ret = self._oDBCursor.fetchall()
        
         # If the return set has a single value, return this value 
-        if type(ret) in [list,tuple] \
+        if type(ret) in [list,tuple] and len(ret) > 0 \
             and type(ret[0]) in [list,tuple] \
             and len(ret[0]) == 1:
             return ret[0][0]

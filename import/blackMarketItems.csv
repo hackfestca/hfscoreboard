@@ -8,7 +8,7 @@ csa1,Code for creating a client side attack track in a CTF event using phantomJS
 csa2,A command and control client for performing client side attacks,flr,10000,Null,Null,CCclient.html,
 csa3,A command and control server for performing client side attacks,flr,50000,Null,Null,CCserver.js,
 csa4,Demat network diagram,flr,10000,Null,Null,demat_network_diagram.png,
-csa5,We've hack demat !!! Get the latest requests for being a qualified customer.,flr,15000,Null,Null,demat.tar,ssh -p 2200 172.28.19.30 /home/scoreboard/getFiles && scp -P 2200 172.28.19.30:/home/scoreboard/file.tar ./blackmarket/demat.tar
+csa5,We've hack demat !!! Get the latest requests for being a qualified customer.,flr,15000,Null,Null,demat.tar,ssh -p 2200 scoreboard@172.28.19.30 /home/scoreboard/getFiles && scp -P 2200 scoreboard@172.28.19.30:/home/scoreboard/file.tar ./blackmarket/demat.tar
 Phenix,A windows old trick.,hiddenman,25000,Null,Null,phenix1.txt,
 hydro_sw1,The switch configuration for HydroDam switch core 01,js,25000,Null,Null,i,
 hydro_sw2,The switch configuration for HydroDam switch core 02,js,25000,Null,Null,j,

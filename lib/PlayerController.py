@@ -79,6 +79,9 @@ class PlayerController():
     def getBMItemInfo(self,bmItemId):
         return self._oRPC.getBMItemInfo(bmItemId)
 
+    def getBMItemLink(self,bmItemId):
+        return self._oRPC.getBMItemLink(bmItemId)
+
     def getBMItemData(self,bmItemId):
         return self._oRPC.getBMItemData(bmItemId)
 
