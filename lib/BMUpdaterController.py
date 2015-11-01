@@ -111,6 +111,9 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                     print('[+] %s Item "%s" must be retrieved. Downloading from DB.' % (timestamp,bmiName))
                     self._saveBMItemData(bmiId,bmiImportName)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_TO_PUBLISH)
+                    print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))
+                    self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
+                    self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Publish new items
                 elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
                     print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))

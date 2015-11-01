@@ -122,13 +122,6 @@ psecrets = subparsers.add_parser('secrets', help='Display team secrets')
 psecrets_a = psecrets.add_argument_group("action")
 psecrets_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List settings.')
 
-pevents = subparsers.add_parser('events', help='Display game events.')
-pevents_a = pevents.add_argument_group("action")
-pevents_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, \
-                       help='List events')
-pevents_a.add_argument('--live', action='store_true', dest='live', default=False, \
-                       help='List events as they appear in the database.')
-
 args = parser.parse_args()
 
 if args.debug:
@@ -259,16 +252,6 @@ try:
     elif args.action == 'secrets':
         print('[-] Displaying team\'s secrets')
         print(c.getTeamSecrets())
-    elif args.action == 'events':
-        if args.list:
-            print("[+] Displaying events")
-            print(c.getEvents())
-        elif args.live:
-            print("[+] Displaying events IRL")
-            c.printLiveEvents()
-        else:
-            print("[+] Displaying events")
-            print(c.getEvents())
     else:
         parser.print_help()
 except socket.error as e:

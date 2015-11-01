@@ -44,6 +44,7 @@ from io import StringIO
 import csv
 from time import sleep
 from datetime import datetime
+#from termcolor import colored
 
 # Used for benchmark test only
 class MyThread(threading.Thread):
@@ -53,6 +54,49 @@ class MyThread(threading.Thread):
         self.reqNum = reqNum
     def run(self):
         self.con.benchScoreProgress(self.reqNum)
+
+class colors:
+    '''Colors class:
+        reset all colors with colors.reset
+        two subclasses fg for foreground and bg for background.
+        use as colors.subclass.colorname.
+        i.e. colors.fg.red or colors.bg.green
+        also, the generic bold, disable, underline, reverse, strikethrough,
+        and invisible work with the main class
+        i.e. colors.bold
+    '''
+    reset='\033[0m'
+    bold='\033[01m'
+    disable='\033[02m'
+    underline='\033[04m'
+    reverse='\033[07m'
+    strikethrough='\033[09m'
+    invisible='\033[08m'
+    class fg:
+        black='\033[30m'
+        red='\033[31m'
+        green='\033[32m'
+        orange='\033[33m'
+        blue='\033[34m'
+        purple='\033[35m'
+        cyan='\033[36m'
+        lightgrey='\033[37m'
+        darkgrey='\033[90m'
+        lightred='\033[91m'
+        lightgreen='\033[92m'
+        yellow='\033[93m'
+        lightblue='\033[94m'
+        pink='\033[95m'
+        lightcyan='\033[96m'
+    class bg:
+        black='\033[40m'
+        red='\033[41m'
+        green='\033[42m'
+        orange='\033[43m'
+        blue='\033[44m'
+        purple='\033[45m'
+        cyan='\033[46m'
+        lightgrey='\033[47m'
 
 class AdminController(ClientController.ClientController):
     ''' 
@@ -364,10 +408,13 @@ class AdminController(ClientController.ClientController):
         return x.get_string()
 
     def printLiveFormatEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
-        formatStr = "%s %s %s %s"
+        formatStr = "%s%s %s%s %s%s %s%s"
         events = self.getEvents(lastUpdate,facility,severity,grep,top)
         for row in events:
-            print(formatStr % (row[3],row[1],row[2],row[0]))
+            print(formatStr % (colors.fg.green,row[3],
+                               colors.fg.yellow,row[1],
+                               colors.fg.orange,row[2],
+                               colors.reset,row[0]))
         lastUpdate = datetime.now()
         sleep(refresh)
 
@@ -375,6 +422,9 @@ class AdminController(ClientController.ClientController):
             events = list(self.getEvents(lastUpdate,facility,severity,grep,top))
             if len(events) > 0:
                 for row in events:
-                    print(formatStr % (row[3],row[1],row[2],row[0]))
+                    print(formatStr % (colors.fg.green,row[3],
+                                       colors.fg.yellow,row[1],
+                                       colors.fg.orange,row[2],
+                                       colors.reset,row[0]))
                     lastUpdate = datetime.now()
             sleep(refresh)

@@ -201,11 +201,11 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
     def getTeamSecrets(self,clientIP):
         return self._dbExec('getFormatTeamSecretsFromIp',clientIP)
 
-    @expose()
-    def getEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
-        return self._dbExec('getFormatEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
+#    @expose()
+#    def getEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
+#        return self._dbExec('getFormatEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
 
-    @expose()
-    def getLogEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
-        return self._dbExec('getLogEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
+#    @expose()
+#    def getLogEvents(self,clientIP,lastUpdate,facility,severity,grep,top):
+#        return self._dbExec('getLogEventsFromIp',lastUpdate,facility,severity,grep,top,clientIP)
 

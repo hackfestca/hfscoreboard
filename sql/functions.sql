@@ -452,6 +452,7 @@ RETURNS TABLE (
         -- Get flag attributes
         SELECT  f.id,
                 f.pts,
+                f.cash,
                 f.type,
                 f.typeExt,
                 ft.code,
@@ -485,7 +486,7 @@ RETURNS TABLE (
             if FOUND then
                 raise exception 'Unique flag already submitted by a team. Too late. :)';
             end if;
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
             --PERFORM addEvent(_ret,'flag');
             RETURN QUERY SELECT _flagRec.pts,_ret;
         elsif _flagRec.type = 12 then
@@ -574,9 +575,6 @@ RETURNS TABLE (
             _pts := _flagRec.ptsLimit;
         end if;
 
-        PERFORM addEvent(format('Team "%s" is the %sth team to submit flag "%s", for %s/%spts',
-                        _teamId,(_ct+1),_flagRec.name,_pts,_flagRec.pts),'flag');
-
         _ret := format('You are the %sth team to submit flag "%s", for %s/%spts',
                  (_ct+1),_flagRec.name,_pts,_flagRec.pts);
 
@@ -608,6 +606,7 @@ RETURNS TABLE (
         SELECT  f.id,
                 f.name,
                 f.pts,
+                f.cash,
                 f.type,
                 f.typeExt,
                 ft.code,
@@ -657,7 +656,7 @@ RETURNS TABLE (
             _ret := format('You have received a bonus of %spts for being the %sth team to submit flag "%s" with value %spts',
                      _bonusPts,(_ct+1),_flagRec.name,_flagRec.pts);
         else
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
@@ -786,6 +785,7 @@ RETURNS TABLE (
         SELECT  f.id,
                 f.name,
                 f.pts,
+                f.cash,
                 f.type,
                 f.typeExt,
                 ft.code,
@@ -854,7 +854,7 @@ RETURNS TABLE (
             _ret := format('You have received a bonus of %spts for being the %sth team to complete track "%s" and submitting flag "%s" for %spts',
                             _bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts);
         else
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
+            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
@@ -1207,6 +1207,8 @@ RETURNS integer AS $$
             RETURN 1;
         END IF;
 
+        PERFORM addEvent(format('Team "%s" was updated. name="%s",net="%s".',_id,_name,_inet),'team');
+
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1316,7 +1318,7 @@ RETURNS integer AS $$
                VALUES(_teamId, _flagId,_pts,_teamNet+1);
 
         -- Create news
-        _newsMsg := 'Thanks to '||_teamName||' for raising an issue to admins ('||_pts||' pts)';
+        _newsMsg := 'Thanks to '||_teamName||' for raising an issue to admins. That was worth '||_pts||' pts.';
         PERFORM addNews(_newsMsg,current_timestamp::timestamp);
 
         RETURN 0;
@@ -1440,6 +1442,8 @@ RETURNS integer AS $$
             raise exception 'Could not find news with id %i', _id;
             RETURN 1;
         END IF;
+
+        PERFORM addEvent(format('News "%s" was updated. title="%s",displayTs="%s".',_id,_title,_displayTs),'global');
 
         RETURN 0;
     END;
@@ -1955,7 +1959,7 @@ RETURNS text AS $$
             FROM flag 
             WHERE statusCode = STATUS_CODE_OK and value = _flagValue and type <> 11
               UNION ALL
-            SELECT id,value,pts,NULL,NULL,NULL,NULL,2 AS tableId
+            SELECT id,value,pts,0,NULL,NULL,NULL,2 AS tableId
             FROM kingFlag 
             WHERE value = _flagValue
         ) AS x INTO _flagRec;
@@ -1970,15 +1974,15 @@ RETURNS text AS $$
                 -- If flag is standard or king, process now. Otherwise, manage in processNonStandardFlag() function.
                 if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
                     _pts := _flagRec.pts;
-                    _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag. ';
-                    _retEvent := _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
+                    _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+                    _retEvent := _teamRec.name || ' received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
 
                     -- Give cash if flag contains cash
-                    if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
-                        PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
-                        _ret := _ret || 'You also received ' || _flagRec.cash::text || '$.';
-                        _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
-                    end if;
+                    --if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
+                    --    PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
+                    --    _ret := _ret || 'You also received ' || _flagRec.cash::text || '$.';
+                    --    _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
+                    --end if;
                 else
                     SELECT *
                     FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)
@@ -2176,6 +2180,8 @@ RETURNS TABLE (
         _teamId team.id%TYPE;
         _iPlayerIp inet;
         _settings settings%ROWTYPE;
+
+        KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
         raise notice 'getCatProgressFromIp(%)',$1;
@@ -2216,7 +2222,7 @@ RETURNS TABLE (
                                 SELECT f.id,
                                        f.category
                                 FROM flag AS f
-                                WHERE f.type <> 2
+                                WHERE f.type <> KING_FLAG_TYPE 
                                 ) as f ON tf.flagId = f.id
                             WHERE tf.teamId = _teamId
                             ) AS tf2
@@ -2226,7 +2232,7 @@ RETURNS TABLE (
                          SELECT f2.category,
                                 sum(f2.pts) AS sum
                          FROM flag AS f2
-                         WHERE f2.type <> 2
+                         WHERE f2.type <> KING_FLAG_TYPE
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
                      WHERE c.hidden = False
@@ -2307,7 +2313,7 @@ RETURNS TABLE (
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
                           and f.type <> KING_FLAG_TYPE
                           and c.hidden = False
-                    ORDER BY f.name;
+                    ORDER BY f.id;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -2903,7 +2909,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getScoreProgress()
-    Note: Max number of interval on scoreboard seems to be 21 so default here is 21.
+    Note: Max number of interval on scoreboard seems to be 15 so default here is 15.
 */
 CREATE OR REPLACE FUNCTION getScoreProgress(_intLimit integer default 21)
 RETURNS TABLE (
@@ -3048,6 +3054,8 @@ RETURNS integer AS $$
         raise notice 'startGame()';
 
         UPDATE settings SET gameStartTs = current_timestamp;
+
+        PERFORM addEvent('Starting the game!','global');
         RETURN 0;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -3064,6 +3072,8 @@ RETURNS integer AS $$
         -- Safe update using format()
         -- TODO: See if %s is vulnerable to sqli
         EXECUTE format('UPDATE settings SET %I = %L::%s;',lower(_attr),_value,_type);
+
+        PERFORM addEvent('Changing a setting.','global');
 
         RETURN 0;
     END;
@@ -3437,6 +3447,9 @@ RETURNS integer AS $$
             displayInterval = _display,
             description = _description
         WHERE id = _id;
+
+        PERFORM addEvent(format('The item "%s" was updated by an admin with name="%s",amount="%s"',
+                        _id,_name,_amount),'bm');
 
         RETURN 0;
     END;
@@ -4206,6 +4219,8 @@ RETURNS integer AS $$
 
         -- Update status
         PERFORM setBMItemStatus(_bmItemId,BMI_FORSALE_STATUS);
+
+        PERFORM addEvent(format('Item "%s" was published by the scoreboard.',_bmItemId),'bm');
 
         RETURN 0;
     END;
