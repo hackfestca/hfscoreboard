@@ -12,7 +12,7 @@ SELECT emptyTables();
     Set game start timestamp and other variables
 */
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2015-05-30 18:30'::timestamp,'2015-05-31 02:00'::timestamp,1000);
+       VALUES('2015-11-01 16:00'::timestamp,'2015-11-07 02:00'::timestamp,1000);
 
 -- Add EventFacility
 SELECT addEventFacility(0,'global','Global','');
