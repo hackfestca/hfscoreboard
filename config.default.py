@@ -98,6 +98,7 @@ Not implemented yet. Enable to ensure nobody can accidentally delete data with i
 BENCH_DEFAULT_REQ_NUM = 50
 BENCH_DEFAULT_CON_NUM = 30
 
+CATEGORIES_FILE = 'import/categories.csv'
 FLAGS_FILE = 'import/flags.csv'
 TEAMS_FILE = 'import/teams.csv'
 BMI_FILE = 'import/blackMarketItems.csv'

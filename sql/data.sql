@@ -47,41 +47,6 @@ SELECT addFlagStatus(3,'Disabled','The flag is removed by admins');
 */
 SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
 
-/*
-    Add categories
-*/
-SELECT addFlagCategory('demat', 'Dematerialized', '<a href="http://demat.ctf.hf">http://demat.ctf.hf</a>
-
-<h3>Instructions:</h3>
-
-Build weapons of mass destructions (WMD) and then try to use them from the inside against the enemy. Attackers can build as many WMD as they want. WMD will be dropped one at the time in the order they are produced. WMD are dropped at a rate of 1 per 30 seconds. EACH AND EVERY WMD WILL BE EFFECTIVE FOR AT LEAST 30 SECONDS i.e.: If your team drop 100 ineffective WMD before an effective one, you will have to wait for 50 minutes before your effective WMD get dropped.
-<h4>How to see the result of your WMD:</h4>
-
-For some of the flag listed below, you will need to make a call to the &quot;getFlag&quot; JavaScript function take will be loaded automatically in your page context. A call to this function will succeed if you were able to achieve what it is listed in the flag description. Upon success a 
-cookie named flag will be defined in the page context containing the flag value.
-<br/>
-
-<em><h4>***Warning***:</h4></em><ul>
-<li>WMD length is limited to 4000 characters. Over 4000 characters, WMD will be truncated.</li> 
-<li>To prevent brute force, if a call to &quot;getFlag&quot; fails, the current WMD will be countered. The next submitted WMD will be dropped within the next 30 seconds.</li>
-<li>From the inside you will only be able to reach your team subnet (172.28.1XX.0/24), the tracks subnet and the 192.168.0.0/16 subnet.</li>
-<li>For performance considerations, dynamic creation of DOM elements have been disabled</li>
-<li>For performance considerations, simultaneous ressources requests have been limited to 500. Over 500, requests will be dropped.</li>
-</ul>');
-SELECT addFlagCategory('misc', 'Misc', 'Miscelaneous (Teaser on hackfest website)
-<h4>Trivia</h4>
-Join irc.smashthestack.org #hackfest-trivia around 20:00PM to play the annual Hackfest Trivia.');
-SELECT addFlagCategory('hydrohf', 'hydroHF', 'Hydro HF provide electricity for mini Hackfest city.  As Hacker, you have just learned that Hydro HF Datacenter provides power to the SSRC. Shutdown the power at HydroHF you will be able to stop the power of the SSRC DataCenter and and be able to stop global surveillance. Are you ready for this contract ?You have managed to gain access to the room of the switch, and you have to find communication and look what inside network. You got information that allow you to unlock the door to the server room. This is mostly a physical and network track. Come near the model.');
-SELECT addFlagCategory('lotohf', 'Loto Hackfest', 'LotoHF is the biggest gaming platforme ! You need to hack as far as you can. Only the web page is visible. Will you reach the DC ?  You''ll have to do the flag in order');
-SELECT addFlagCategory('phenix', 'Phenix', 'phenix. Use ./player.py secrets');
-SELECT addFlagCategory('pipeline', 'Pipeline', 'Pipeline Corp is full patched Windows environment. <br/>Full patched doesn''t mean not pwnable !!!!<br/> Start your DC hunting and gather as much credentials and flag as you can.<br/><br/>You will have great power so don''t mess with server configurations or we will ban your team. Hint - to be sure you won''t help other teams, create your own credentials if you need it.');
-SELECT addFlagCategory('elcaro', 'Elcaro', '');
-SELECT addFlagCategory('ssrc', 'SSRC', 'Super something. It looks like these guys infected implants in several systems. All challenges are on the model.');
-SELECT addFlagCategory('bug', 'Bug Bounty', 'Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.');
-SELECT addFlagCategory('thirdparty', 'Third Party', 'LockPick, babyfoot, surprise ',True);
-
--- Special category
-SELECT addFlagCategory('bonus', 'Bonus', 'Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team',True);
 
 /*
     Add authors
@@ -185,7 +150,7 @@ SELECT addBMItemStatus(2,'Sold','This item is sold and is not available anymore 
 SELECT addBMItemStatus(3,'For approval','This item was submitted by a player and needs approval.');
 SELECT addBMItemStatus(4,'Refused by admin','This item was put on black market by a player and was refused by an admin.');
 SELECT addBMItemStatus(5,'Removed from game','This item was removed during the CTF.');
-SELECT addBMItemStatus(6,'Ready to be published','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
+SELECT addBMItemStatus(6,'To be published','This status will tell the bmUpdater to publish the item on the scoreboard front-end.');
 SELECT addBMItemStatus(7,'Approved.','This status will tell the bmUpdater to get the item from the scoreboard database (bmItem.data).');
 
 /*

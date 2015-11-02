@@ -50,6 +50,7 @@ class InitController(UpdaterController.UpdaterController):
         self._sPass = config.DB_INIT_PASS
         self._sCrtFile = config.DB_INIT_CRT_FILE
         self._sKeyFile = config.DB_INIT_KEY_FILE
+        self._categoriesFile = config.CATEGORIES_FILE
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
         self._bmiFile = config.BMI_FILE
@@ -91,6 +92,25 @@ class InitController(UpdaterController.UpdaterController):
         print('Importing DB data')
         sql = ''.join(open(config.SQL_DATA_FILE, 'r').readlines())
         self._oDBCursor.execute(sql)
+        self.commit()
+
+    def importCategories(self):
+        with open(self._categoriesFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            headers = reader.__next__()
+            for row in reader:
+                cname = row[0]
+                ctitle = row[1]
+                cdesc = row[2]
+                chidden = row[3]
+                print('Category: %s' % cname)
+                
+                if cname != 'Name':
+                    teamId = self.exec('addFlagCategory',
+                                     self._sanitize(cname,'str'), \
+                                     self._sanitize(ctitle,'str'), \
+                                     self._sanitize(cdesc,'str'), \
+                                     self._sanitize(chidden,'bool'))
         self.commit()
 
     def importFlags(self):
@@ -227,6 +247,7 @@ class InitController(UpdaterController.UpdaterController):
         self.importTables()
         self.importFunctions()
         self.importData()
+        self.importCategories()
         self.importFlags()
         self.importTeams()
         self.importBlackMarketItems()

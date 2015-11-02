@@ -1,0 +1,42 @@
+Name,Title,Description,Hidden,Authors
+demat,Dematerialized,"<a href=""http://demat.ctf.hf"">http://demat.ctf.hf</a>
+
+<h3>Instructions:</h3>
+
+Build weapons of mass destructions (WMD) and then try to use them from the inside against the enemy. Attackers can build as many WMD as they want. WMD will be dropped one at the time in the order they are produced. WMD are dropped at a rate of 1 per 30 seconds. EACH AND EVERY WMD WILL BE EFFECTIVE FOR AT LEAST 30 SECONDS i.e.: If your team drop 100 ineffective WMD before an effective one, you will have to wait for 50 minutes before your effective WMD get dropped.
+
+<h4>How to see the result of your WMD:</h4>
+
+For some of the flag listed below, you will need to make a call to the &quot;getFlag&quot; JavaScript function take will be loaded automatically in your page context. A call to this function will succeed if you were able to achieve what it is listed in the flag description. Upon success a 
+cookie named flag will be defined in the page context containing the flag value.
+<br/>
+
+<em><h4>***Warning***:</h4></em><ul>
+<li>WMD length is limited to 4000 characters. Over 4000 characters, WMD will be truncated.</li> 
+<li>To prevent brute force, if a call to &quot;getFlag&quot; fails, the current WMD will be countered. The next submitted WMD will be dropped within the next 30 seconds.</li>
+<li>From the inside you will only be able to reach your team subnet (172.28.1XX.0/24), the tracks subnet and the 192.168.0.0/16 subnet.</li>
+<li>For performance considerations, dynamic creation of DOM elements have been disabled</li>
+<li>For performance considerations, simultaneous ressources requests have been limited to 500. Over 500, requests will be dropped.</li>
+</ul>",FALSE,FLR
+hydrohf,hydroHF,"Hydro HF provide electricity for mini Hackfest city.  As Hacker, you have just learned that Hydro HF Datacenter provides power to the SSRC. Shutdown the power at HydroHF you will be able to stop the power of the SSRC DataCenter and and be able to stop global surveillance. Are you ready for this contract ?You have managed to gain access to the room of the switch, and you have to find communication and look what inside network. You got information that allow you to unlock the door to the server room. This is mostly a physical and network track. Come near the model.",FALSE,
+lotohf,Loto Hackfest,LotoHF is the biggest gaming platform! They are the main source of money of SSRC too ! You need to hack as far as you can to make them lose all they money. Only the web page is visible. Will you reach the DC ? (You'll have to do the flag in order),FALSE,
+phenix,Phenix,"<ul>
+<li>An infected VM is waiting for you to connect on it on the cloud. Use the <a href=""/public/player.tar.gz"">player.py</a> script to retrieve credentials (./player.py secrets)</li>
+<li>Your mission: <b>disable</b> the spreaded virus from running.</li>
+<li>This time, you are not admin. Find your way in to escalate privileges.</li>
+<li>Use the WPhenixChecker.exe on desktop to verify your cleanup. This binary will pop you up to 5 flags for successful permanent cleanup. </li>
+<li>Trying to reverse WPhenixChecker.exe might give you headache. The challenge should be done without reversing this binary.</li>
+<li>This challenge is experimental. Your friendly comments are welcome. </li>
+</ul>",FALSE,
+pipeline,Pipeline,"Welcome to Active Directory DC hunting Track<br/><br/>Pipeline Corp is a fully patched Windows environment but fully patched doesn't mean not pwnable !!!!<br/> Start your DC hunting and gather as much credentials and flag.txt as you can. You must respect track order to succeed!<br/><br/>General rule : Find special users ... <b>UPPERCASE NTLM part only</b> of the password hash should be a great prize !!!<br/>:00000000000000_LM_0000000000000:<b>9B806FDD0F2_NTLM_0EB4C65E9C6612D</b>:::<br/><br/>You will have great power so don't mess with server configurations, flags and other players or we will ban your team.",FALSE,
+elcaro,Elcaro,"When we are not suing you and our competitors, we are also making softwares.",FALSE,
+ssrc,SSRC,"The Super Surveillance Research Center (SSRC) has put implants on several systems of the Hackfest city. Find them and exploiti them. All challenges are on the model. <br />
+
+<h4>Gameplay</h4>
+As you are 220 people to compete, and there is a single model, patience and respect is critical to avoid chaos. <br />
+The model should support up to three(3) players at a time. Please take time to analyze the challenge before. <br />
+No more than 5 volts must be used on any pins. <br />",FALSE,
+misc,Misc,"Miscelaneous (Teaser on hackfest website, Chuck Trivia, etc.)",FALSE,
+bug,Bug Bounty,Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.,FALSE,
+thirdparty,Third Party,"LockPick, babyfoot, surprise ",TRUE,
+bonus,Bonus,"Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team",TRUE,
