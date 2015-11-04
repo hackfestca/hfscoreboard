@@ -69,8 +69,8 @@ class PlayerApiController(WebController.WebController):
     def getBMItemListFromIp(self,top,playerIp):
         return self.exec('getBMItemListFromIp',top,playerIp)
     
-    def buyLotoFromIp(self,amount,playerIp):
-        return self.exec('buyLotoFromIp',amount,playerIp)
+    def buyLotoFromIp(self,playerIp):
+        return self.exec('buyLotoFromIp',playerIp)
 
     def getTeamSecretsFromIp(self,playerIp):
         return self.exec('getTeamSecretsFromIp',playerIp)

@@ -212,8 +212,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: buyLotoFromIp(amount,playerIp)
 */
-CREATE OR REPLACE FUNCTION buyLotoFromIp(_amount wallet.amount%TYPE, 
-                                                _playerIpStr varchar(20))
+CREATE OR REPLACE FUNCTION buyLotoFromIp(_playerIpStr varchar(20))
 RETURNS integer AS $$
     DECLARE
         TR_LOTO_CODE transactionType.code%TYPE := 5;
@@ -221,6 +220,7 @@ RETURNS integer AS $$
         _playerIp inet;
         _teamName team.name%TYPE;
         _srcWalletId team.id%TYPE;
+        _amount wallet.amount%TYPE := 1000;
     BEGIN
         -- Logging
         raise notice 'buyLotoFromIp(%,%)',$1,$2;
@@ -1978,11 +1978,9 @@ RETURNS text AS $$
                     _retEvent := _teamRec.name || ' received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
 
                     -- Give cash if flag contains cash
-                    --if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
-                    --    PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
-                    --    _ret := _ret || 'You also received ' || _flagRec.cash::text || '$.';
-                    --    _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || '$.';
-                    --end if;
+                    if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
+                        PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
+                    end if;
                 else
                     SELECT *
                     FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)

@@ -94,8 +94,8 @@ class PlayerController():
     def getBMItemStatusList(self):
         return self._oRPC.getBMItemStatusList()
 
-    def buyLoto(self,amount):
-        return self._oRPC.buyLoto(amount)
+    def buyLoto(self):
+        return self._oRPC.buyLoto()
 
     def getLotoHistory(self,top):
         return self._oRPC.getLotoHistory(top)

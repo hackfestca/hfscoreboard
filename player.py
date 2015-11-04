@@ -107,7 +107,7 @@ pbm_a.add_argument('--list-status', action='store_true', dest='listStatus', defa
 
 ploto = subparsers.add_parser('loto', help='Buy loto tickets. See information on drawing')
 ploto_a = ploto.add_argument_group("action")
-ploto_a.add_argument('--buy', action='store', dest='buy', default='', help='Buy a loto ticket.')
+ploto_a.add_argument('--buy', action='store_true', dest='buy', default=False, help='Buy a loto ticket. (Will cost 1000$)')
 ploto_a.add_argument('--list', '-l', action='store_true', dest='list', default=False, help='List lottery history.')
 ploto_a.add_argument('--info', '-i', action='store_true', dest='info', default=False, help='Display information on current drawing.')
 
@@ -233,11 +233,9 @@ try:
             parser.print_help()
             print('No subaction choosen')
     elif args.action == 'loto':
-        if args.buy != '':
-            id = args.buy
-            assert id.isdigit(), "ID is not an integer : %r" % id
+        if args.buy:
             print("[+] Buying tickets")
-            print(c.buyLoto(int(id)))
+            print(c.buyLoto())
         elif args.list:
             print("[+] Displaying lottery history")
             print(c.getLotoHistory(config.DEFAULT_TOP_VALUE))

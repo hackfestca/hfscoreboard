@@ -170,8 +170,8 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         return self._dbExec('getFormatBMItemStatusList')
 
     @expose()
-    def buyLoto(self,clientIP,amount):
-        return self._dbExec('buyLotoFromIp',amount,clientIP)
+    def buyLoto(self,clientIP):
+        return self._dbExec('buyLotoFromIp',clientIP)
 
     @expose()
     def getLotoHistory(self,clientIP,top):
