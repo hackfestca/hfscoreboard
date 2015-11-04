@@ -34,7 +34,7 @@ ssrc,SSRC,"The Super Surveillance Research Center (SSRC) has put implants on sev
 
 <h4>Gameplay</h4>
 As you are 220 people to compete, and there is a single model, patience and respect is critical to avoid chaos. <br />
-The model should support up to three(3) players at a time. Please take time to analyze the challenge before. <br />
+The model should support up to three(3) players at a time. Please take time to analyze the challenge before attending it on the model. <br />
 No more than 5 volts must be used on any pins. <br />",FALSE,
 misc,Misc,"Miscelaneous (Teaser on hackfest website, Chuck Trivia, etc.)",FALSE,
 bug,Bug Bounty,Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.,FALSE,

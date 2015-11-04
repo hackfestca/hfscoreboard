@@ -1,74 +1,73 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,1000,scoreboard.hf,demat,Null,flr,Unique,Null,<h4>Call Home:</h4> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,An anonymous source says that Demat Corporation as poor security practices and standards.,CALL HOME
-csa2,RfyVOKvGbemApCaq6Mq1OBcg,0,1500,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Search for it</h4> Four parts of a flag have been hidden in the page context. Find each of them and the submit the flag : PART1PART2PART3PART4,Demat confidential documents have been leaked on the internet. The company have not yet confirmed the authenticity of those documents.,
-csa3,0AB2C8DZzO7W0zo0WdRrS6mv,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,10000,scoreboard.hf,demat,Null,flr,Unique,Null,<h4>Call Home:</h4> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,An anonymous source says that Demat Corporation as poor security practices and standards.,CALL HOME
+csa2,RfyVOKvGbemApCaq6Mq1OBcg,0,15000,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Search for it</h4> Four parts of a flag have been hidden in the page context. Find each of them and the submit the flag : PART1PART2PART3PART4,"This morning, officials of Demat reported that they were victim of a data breach.",
+csa3,0AB2C8DZzO7W0zo0WdRrS6mv,150,5000,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
 <br/>
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""http://192.168.0.1/"", ""method"" : ""GET"", ""flag"" : ""0AB2C8DZzO7W0zo0WdRrS6mv""},"
-csa4,U2PHFyGFxWcV3vbRGnrv5B4H,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",Demat documents have been leaked on the internet. The authenticity of those have not yet been confirmed by the company.,"{""url"":""http://192.168.0.1/"", ""method"" : ""GET"", ""flag"" : ""0AB2C8DZzO7W0zo0WdRrS6mv""},"
+csa4,U2PHFyGFxWcV3vbRGnrv5B4H,200,2000,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
 <br/>
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""file://192.168.20.9/"", ""method"" : ""GET"", ""flag"" : ""U2PHFyGFxWcV3vbRGnrv5B4H""}"
-csa5,E9N2ocEZ21ZaCDfYWNu4EZGO,150,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",Sources says that parts of Demat documents came from an misconfigured file share.,"{""url"":""file://192.168.20.9/"", ""method"" : ""GET"", ""flag"" : ""U2PHFyGFxWcV3vbRGnrv5B4H""}"
+csa5,E9N2ocEZ21ZaCDfYWNu4EZGO,150,2000,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
 <br/>
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""https://192.168.53.53/"", ""method"" : ""GET"", ""flag"" : ""E9N2ocEZ21ZaCDfYWNu4EZGO""}"
-csa6,VvGZEg6GQmvYVx6yEWTW0Jvc,200,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",Demat have hired the best forensic experts and is in contact with the FBI regarding their data breach.,"{""url"":""https://192.168.53.53/"", ""method"" : ""GET"", ""flag"" : ""E9N2ocEZ21ZaCDfYWNu4EZGO""}"
+csa6,VvGZEg6GQmvYVx6yEWTW0Jvc,200,1000,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
 <br/>
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",,"{""url"":""ftp://192.168.53.194:1025/"", ""method"" : ""GET"", ""flag"" : ""VvGZEg6GQmvYVx6yEWTW0Jvc""}"
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI describing the service. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;",Sources says that parts of Demat documents were available to anyone inside the company from a ftp server.,"{""url"":""ftp://192.168.53.194:1025/"", ""method"" : ""GET"", ""flag"" : ""VvGZEg6GQmvYVx6yEWTW0Jvc""}"
 csa7,KxSIVhHctS3MpuGdff5QNQcH,300,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Mini level up 1:</h4> For one of the identified service, a common Web application is running. Identified it!
 <br/>
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; with the URI parameter set to the URI describing the service and the  application. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;application_path&gt;","This morning, officials of Demat reported that they were victim of a data breach. They say that everything is now under control and that they have hired the best experts to investigate the breach.","{""url"":""https://192.168.53.53/phpMyAdmin"", ""method"" : ""GET"", ""flag"" : ""KxSIVhHctS3MpuGdff5QNQcH""}"
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; with the URI parameter set to the URI describing the service and the  application. i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;application_path&gt;","Using basic social engineering techniques, hackers have been able to access Demat CSO emails. ","{""url"":""https://192.168.53.53/phpMyAdmin"", ""method"" : ""GET"", ""flag"" : ""KxSIVhHctS3MpuGdff5QNQcH""}"
 csa8,Db9Xu4yGytwQUR3QKDgE3CFF,500,0,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Mini level up 2:</h4> An XSS vulnerability has been added to an existing feature of the Web application. Find it!
 <br/>
-The flag is somewhere in the source code of the vulnerable page.","After months of investigation, Demat and the FBI are about to drop hacking charges one or many individuals.",
+The flag is somewhere in the source code of the vulnerable page.",In one of the CSO emails we could learn that DEMAT that the initial breach have not been circumvent yet.,
 csa9,gDk99jmKRsRIRWlIDwKJY4NC,400,0,scoreboard.hf,demat,Null,flr,Unique,Null,"<h4>Mini level up 3:</h4> Try to log in the Web application with account often used to debug things.
 
-To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;","Using basic social engineering techniques, hackers have been able to access Demat CSO emails. In one of them we could learn that the company is still under attack and that the initial breach have not been circumvent yet.",
+To retrieve a flag associate with a service, call the &quot;getFlag&quot; function with the URI parameter set to the URI used to log into the application i.e.: &lt;scheme&gt;://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;","After months of investigation, Demat and the FBI are about to drop hacking charges one or many individuals.",
 csa10,3UvDr8lpgeEFpXxZZclTLfUX,400,0,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Mini level up 4:</h4> Look inside the Web application for valuable information.,The Demat CEO have resign following the massive data breach the company has suffered recently.,
-teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,5000,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
-teaser2,bq4TALp8TvAXuOPZ6FInZA==,0,5000,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
-teaser3,Gratz!SeeYouInNovember,0,5000,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
-instruction1,447addca18a1e9099e8dac715e1136b6,0,3000,scoreboard.hf,thirdparty,12 hours,chaput,Standard,Null,Read the instruction ,,hidden flag in player instruction
+teaser1,4cabe23a7711f52c09bbbe28800a2d6a,0,1000,scoreboard.hf,misc,12 hours,chaput,Standard,Null,Teaser01,,Data in ping
+teaser2,bq4TALp8TvAXuOPZ6FInZA==,0,1000,scoreboard.hf,misc,12 hours,hiddenman,Standard,Null,Teaser02,,Image -> Rar -> Sqlite -> Base64 -> Binary -> Found Text -> Run and Flag !
+teaser3,Gratz!SeeYouInNovember,0,1000,scoreboard.hf,misc,12 hours,_eko,Standard,Null,Teaser03,,crack dll
+instruction1,447addca18a1e9099e8dac715e1136b6,0,1000,scoreboard.hf,thirdparty,12 hours,chaput,Standard,Null,Read the instruction ,,hidden flag in player instruction
 babyfoot1,77e7cddf7f28a57459778b9e5718c109,100,1000,scoreboard.hf,thirdparty,12 hours,patoff,Standard,Null,babyfoot01,,BabyFoot tournament of Security Compass(Pat)
-hydrohf1,X8J5drognjMhjTzw4gAxZGIuSPBD1qke,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had access to the switch Hydro_HF_Core_01 and Hydro_HF_Core_02. There are probably communications between computer, try to discover how to shutdown the power. Come near the model.",,switch mac flood
-hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had acces to the switch Hydro_HF_Dam_01 and Hydro_HF_Dam_02, you have to find the host that listening. Come near the model.",,switch vlan uppping
-hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
-hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,1000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"
-Your goal is near, you have found the information about certain employees, you must now shutdown the Dam.",,Bypass 2FA - connect with winrm
-hydrohf5,4731bc7fb04a10fb387c79a82412c70e_1,0,10000,scoreboard.hf,hydrohf,Null,js,Standard,Null,Enter the password for the Dam. (There is a serial port near the model. you must finish hydrohf4 before),,
-phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,1000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-lotohf1,0dbcadc23ba311d1698382eba06dec1e,200,20000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""lotohf.ctf.hf""> lotohf.ctf.hf</a> ",LotoHF got hack by a group of hacker named  $name. They stoled 10 000 credits card number of online player,
-lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From the web server pivot in the lan subnet,,
-lotohf3,6235401daa92365013116dac3eddc38e,200,20000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From LAN try to have a domain user access,Internal document of LotoHF have been leak on the internet. LotoHf CSO said the breach has been fix. Our source say it's the group of hacker $name that leak the information,
-lotohf4,c41da8273f46eab41694111de52b4a39,500,30000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get the ms-sql service account password to log on the network share on de DC,LotoHF CEO has not more money !! A group of hacker named $name stole all his money. ,
-lotohf5,93181fa8565af6e79b6208778b90a3c7,300,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,LotoHF  is out of money. The hacker group $name stole all they money !,
-electro1,Vk9xRcdsYSovkfNtiOQ6UwJoMBmhHneU,100,100,scoreboard.hf,ssrc,Null,mdube,Standard,Null,The SSRC use these two pins named TX and RX to interact with an emergency section of the Hydro-Electric Dam. Find your way in!,,
-electro2,tU6yTmaXaSyIOSUC0PcUWkJgAnNIxGE2,200,200,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins interface let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",,
-electro3,oKoupgMXvvILwFSwg0cULgkGWPKzA6YR,300,300,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins interface let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",$name completely own the Hackfest city pipeline. ,last minute flag with flow meter
-electro4,yADvkHWQBzO1QLvEb1g5HYeadTZm13FK,400,400,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",,
-electro5,E3Lrpcd35X8nUxTxjyBGVBgFJ2Id8xmp,400,400,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",$name completely own the army robotic arm.,
-electro6,19cJgF9J9FXErTLjV0rw8L1T2DH7Sx3t,300,0,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"Bonus: ""Flash tes lumières"". Make the leds bounce as the beat of the music",,
-re1,ModifiedBase64IsStillBase64!!,200,1000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the first password,,
-re2,NoNeedToReverseWhenYouHaveTheKey,200,2000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the second password,,
-re3,whateverdin3n3njf,300,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the third password,,
-re4,GoodJobBreakingThisNanomitesProtection!,400,4000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the last password,,
+hydrohf1,X8J5drognjMhjTzw4gAxZGIuSPBD1qke,100,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had access to the switch Hydro_HF_Core_01 and Hydro_HF_Core_02. There are probably communications between computer, try to discover how to shutdown the power. Come near the model.",,switch mac flood
+hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You had acces to the switch Hydro_HF_Dam_01 and Hydro_HF_Dam_02, you have to find the host that listening. Come near the model.",,switch vlan uppping
+hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
+hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,10000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You need to log on the TerminalServer. (You need to have 2 of 3 flag from hydrohf1,hydrohf2,hydrohf3)",,Bypass 2FA - connect with winrm
+hydrohf5,922ec9531b1f94add983a8ce2ebdc97b,200,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,Enter the password to shutdown the Dam. (There is a serial port near the model. you must finish hydrohf4 before),,
+phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,8000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,10000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+lotohf1,0dbcadc23ba311d1698382eba06dec1e,200,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""http://lotohf.ctf.hf""> lotohf.ctf.hf</a> ",LotoHF got hack by a group of hacker named  $team. They stoled 10 000 credits card number of online player,
+lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From the web server pivot in the lan subnet,,
+lotohf3,6235401daa92365013116dac3eddc38e,200,15000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From LAN try to have a domain user access,Internal document of LotoHF have been leak on the internet. LotoHf CSO said the breach has been fix. Our source say it's the group of hacker $team that leak the information,
+lotohf4,c41da8273f46eab41694111de52b4a39,500,20000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get the ms-sql service account password to log on the network share on de DC,LotoHF CEO has not more money !! A group of hacker named $team stole all his money. ,
+lotohf5,93181fa8565af6e79b6208778b90a3c7,0,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,LotoHF is out of money. The hacker group $team stole all they money !,
+electro1,Vk9xRcdsYSovkfNtiOQ6UwJoMBmhHneU,100,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,The SSRC use these two pins named TX and RX to interact with an emergency section of the Hydro-Electric Dam. Find your way in!,,
+electro2,tU6yTmaXaSyIOSUC0PcUWkJgAnNIxGE2,200,5000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",,
+electro3,oKoupgMXvvILwFSwg0cULgkGWPKzA6YR,300,7000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",$team completely owned the Hackfest city pipeline. ,last minute flag with flow meter
+electro4,1bw1GLlNrqQrzBTxnGMWrpIBGJDa0m6v,200,0,scoreboard.hf,ssrc,Null,mdube,Standard,Null,This 2 pins communication protocol also let you interact with the Casino. Find your way in.,,
+electro5,yADvkHWQBzO1QLvEb1g5HYeadTZm13FK,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",,
+electro6,E3Lrpcd35X8nUxTxjyBGVBgFJ2Id8xmp,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",$team completely owned the army robotic arm.,
+re1,ModifiedBase64IsStillBase64!!,200,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the first password,,
+re2,NoNeedToReverseWhenYouHaveTheKey,200,4000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the second password,,
+re3,whateverdin3n3njf,300,7000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the third password,,
+re4,GoodJobBreakingThisNanomitesProtection!,400,8000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the last password,,
 lock1,098bbc25fd30692492bd33986078e826,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock2,d21c4c7507d792b50e356ec348adaff0,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock3,whatever123egregergerg,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 pipe01,FLAGoTd6mkNfT0qdQZH5xMZK,50,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Start your DC hunting journey with this pcap.<br/> Find data and pwn something ! <br/> https://scoreboard.hf/public/pipeline_corp.pcap,,
-pipe02,FLAGQ3RBc95fYPFXuFxPX2Qs,100,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find interesting lame services to abuse in the pcap !,,
+pipe02,FLAGQ3RBc95fYPFXuFxPX2Qs,100,3000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find interesting lame services to abuse in the pcap !,,
 pipe03,60B7DBBB8EDFD502EA2D98581F25D66D,100,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Hope you found juicy creds to use as entry point in this pcap !!! General rule applies here :),,
-pipe04,FLAG0FJWTgLyLZCUvyHA11pk,150,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server ... look for c:\flag.txt<br/>Server01.dev.pipeline.local (172.28.17.80),,
-pipe05,9B806FDD0F276750E0EB4C65E9C6612D,150,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server <br/>Dump users hash ... remember General rule !!!,,
-pipe06,4AA1B027934BD47A956AA8B636D9AA41,200,0,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Backup file always contains precious informations !,,
-pipe07,FLAGYSByxqVZ00KsKSljIEoH,300,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Pwn DEV Domain DC ... look for c:\flag.txt <br/> I won't give you the Dev DC name nor is IP because if you are here,<br/> you should be able to find it yourself, recon is part of the challenge ;)",,
-pipe08,E4118FD4A90256685141D9DC268B4CDB,300,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn DEV Domain DC ... <br/>Dump users hash ... find someone special!!!,,
-pipe09,5CD5AC600D2904910C8A6EFA3520CD10,400,2000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Can you pwn forest root Domain DC<br/>Dump users hash ... find someone special, his hash should be PROFIT !!!<br/>dcalpha.pipeline.local (172.28.17.100) ... don't come to see me if you can't ping it from your computer.",,
-pipe10,FLAGu6HYwtkpnReVfWeHrBse,500,3000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Can you get c:\flag.txt from forest root Domain DC ?,,
-pipe11,FLAGH1iq8NEN7n4OoWFLMzse,200,500,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find the hidden domain .. look for c:\flag.txt,,
+pipe04,FLAG0FJWTgLyLZCUvyHA11pk,150,3000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server ... look for c:\flag.txt<br/>Server01.dev.pipeline.local (172.28.17.80),,
+pipe05,9B806FDD0F276750E0EB4C65E9C6612D,150,2000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn a normal domain server <br/>Dump users hash ... remember General rule !!!,,
+pipe06,4AA1B027934BD47A956AA8B636D9AA41,200,2000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Backup file always contains precious informations !,,
+pipe07,FLAGYSByxqVZ00KsKSljIEoH,300,3000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Pwn DEV Domain DC ... look for c:\flag.txt <br/> I won't give you the Dev DC name nor is IP because if you are here,<br/> you should be able to find it yourself, recon is part of the challenge ;)",,
+pipe08,E4118FD4A90256685141D9DC268B4CDB,300,3000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Pwn DEV Domain DC ... <br/>Dump users hash ... find someone special!!!,,
+pipe09,5CD5AC600D2904910C8A6EFA3520CD10,400,4000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Can you pwn forest root Domain DC<br/>Dump users hash ... find someone special, his hash should be PROFIT !!!<br/>dcalpha.pipeline.local (172.28.17.100) ... don't come to see me if you can't ping it from your computer.",,
+pipe10,FLAGu6HYwtkpnReVfWeHrBse,500,6000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Can you get c:\flag.txt from forest root Domain DC ?,,
+pipe11,FLAGH1iq8NEN7n4OoWFLMzse,200,2000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find the hidden domain .. look for c:\flag.txt,,
 fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,gp,Standard,Null,FM01,,
 cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
@@ -90,3 +89,46 @@ cash17,2dfd1302355efc9c40796cb971f69860,0,5000,scoreboard.hf,thirdparty,24 hours
 cash18,4a7e7d10c8865a94702704ac426950bd,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash19,bd7fc09a3a52a43fb69c7086a87484b5,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash20,a96ac74db2326634f36c4704d3b614de,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
+trivia01,e1f24707a4a6d2d9c38d88e2f6d8154e,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 1,,
+trivia02,b61705f85f6a5787b3797b783d692360,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 2,,
+trivia03,7f8998c17fc083955aeedf49ae877991,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 3,,
+trivia04,e4547749a2ea06b0591d4de3c9ec126e,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 4,,
+trivia05,5532e22a2900241d5a734f38016a7119,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 5,,
+trivia06,6d1d67f0d4fa410a4a48fcc50900acc4,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 6,,
+trivia07,c4ca4238a0b923820dcc509a6f75849b,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 7,,
+trivia08,d26ba280c5184c44949d135f5a06d81d,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 8,,
+trivia09,69204ee693d1bc3911c29f6e68e14583,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 9,,
+trivia10,c31e41940cd12cf9b24b0e528ab955bc,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 10,,
+trivia11,4f7e6b0e0219f744cd5e8e00968c8864,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 11,,
+trivia12,6d342311e7715717aba507645ae5a7f6,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 12,,
+trivia13,011ecaa539eca696bb11dec356e27a78,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 13,,
+trivia14,41f22b17ba682e3344536d1361660707,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 14,,
+trivia15,4036241573c487ef3b63e5b90d3356fd,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 15,,
+trivia16,06fbe55f212d6bdfc3d3aa03f40a86f4,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 16,,
+trivia17,34920203ab4f462694b95bc5879f8e77,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 17,,
+trivia18,6832849f72bdeafb2bac03033b696b18,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 18,,
+trivia19,545ef28ba66218fdb3ca1ec4d242f4d2,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 19,,
+trivia20,59929ca6d753a9e7dad371b8f09ec3b0,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 20,,
+trivia21,be789b6d4a64708a46eb7f40ad380306,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 21,,
+trivia22,51f81d0c4b9d1e71fe831e47cd2bc5df,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 22,,
+trivia23,1d7cdd38e773d258f05abacd4ca02e5c,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 23,,
+trivia24,7c62df6b546b08774b484eee8b5bfa56,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 24,,
+trivia25,cce9519cc9a7b2c94ffbf1436a631de0,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 25,,
+trivia26,0a2bee26b8663d32bde40945e8eb804e,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 26,,
+trivia27,23f36aa8c7607a9b68ac3575edf1c16c,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 27,,
+trivia28,edf61b0fbf876c89a00634c826e90a59,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 28,,
+trivia29,d26ad09288ffc6c24f0d9d7e1f381b10,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 29,,
+trivia30,f59a1c502fc1c9d0e2480b61591f2de4,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 30,,
+trivia31,92c79087297211c73651fdc4a0eb0a56,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 31,,
+trivia32,0b8eb2c676a986f3e81887c16f3559a5,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 32,,
+trivia33,2ee955af6afa4810008f22380a0fccaf,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 33,,
+trivia34,c6d5e9742f60f662c32d2bb2c0d1ec42,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 34,,
+trivia35,3be404b4769c62cc2d8ded93a63e1b64,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 35,,
+trivia36,9f539be722c3be005a6eaa159489a461,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 36,,
+trivia37,4afcb79bd14f4e797b1cd2b4ba437033,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 37,,
+trivia38,4895d9dbd750d0b2e65fff524f4551ec,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 38,,
+trivia39,606b103eeee3c2ee66ea74c9baa89370,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 39,,
+trivia40,c5442ee888f5e487228c6ce8a1bd69fb,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 40,,
+trivia41,63c6c5253aba14e5add44db3148b0297,10,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 41,,
+trivia42,91fbbd0a5ab6b1fe11c9500d4457eb85,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 42,,
+trivia43,5e9f92a01c986bafcabbafd145520b13,20,0,scoreboard.hf,thirdparty,24 hours,HFCrew,Standard,Null,Chuck Norris Trivia question 43,,
