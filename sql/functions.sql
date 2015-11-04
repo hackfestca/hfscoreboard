@@ -213,7 +213,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: buyLotoFromIp(amount,playerIp)
 */
 CREATE OR REPLACE FUNCTION buyLotoFromIp(_playerIpStr varchar(20))
-RETURNS integer AS $$
+RETURNS text AS $$
     DECLARE
         TR_LOTO_CODE transactionType.code%TYPE := 5;
         LOTO_ID wallet.id%TYPE := 2;
@@ -223,7 +223,7 @@ RETURNS integer AS $$
         _amount wallet.amount%TYPE := 1000;
     BEGIN
         -- Logging
-        raise notice 'buyLotoFromIp(%,%)',$1,$2;
+        raise notice 'buyLotoFromIp(%)',$1;
     
         _playerIp := _playerIpStr::inet;
 
@@ -238,7 +238,7 @@ RETURNS integer AS $$
         -- DB Logging
         PERFORM addEvent(format('Team %s have bought a loto ticket for %s$.',_teamName,_amount),'loto');
 
-        RETURN 0;
+        RETURN format('You successfully bought a ticket for %s$',_amount::text);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -299,6 +299,71 @@ RETURNS text AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: getLotoCurrentList(_top)
+*/
+CREATE OR REPLACE FUNCTION getLotoCurrentList(_top integer DEFAULT 30)  
+RETURNS TABLE (
+                srcId wallet.id%TYPE,
+                srcName wallet.name%TYPE,
+                dstId wallet.id%TYPE,
+                dstName wallet.name%TYPE,
+                amount transaction.amount%TYPE,
+                transactionType transactionType.name%TYPE,
+                ts timestamp
+              ) AS $$
+    DECLARE
+        TR_LOTO_CODE transactionType.code%TYPE := 5;
+        LOTO_ID wallet.id%TYPE := 2;
+        _lastWinTs transaction.ts%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getLotoCurrentList(%)',$1;
+
+        -- Some check 
+        if _top <= 0 then
+            raise exception '_top argument cannot be a negative value. _top=%',_top;
+        end if;
+
+        -- Get last win timestamp
+        SELECT t.ts
+        INTO _lastWinTs
+        FROM transaction AS t
+        WHERE type = TR_LOTO_CODE
+            and srcWalletId = LOTO_ID
+        ORDER BY ts DESC LIMIT 1;
+
+
+        RETURN QUERY SELECT t.srcWalletId,
+                            w1.name as srcWallet,
+                            t.dstWalletId,
+                            w2.name as dstWallet,
+                            t.amount,
+                            tt.name as transactionType,
+                            t.ts
+                     FROM transaction as t
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w1 ON t.srcWalletId= w1.id
+                     LEFT OUTER JOIN (
+                         SELECT id,
+                                name
+                         FROM wallet
+                     ) AS w2 ON t.dstWalletId= w2.id
+                     LEFT OUTER JOIN (
+                         SELECT code,
+                                name
+                         FROM transactionType
+                     ) AS tt ON t.type= tt.code
+                    WHERE t.type = TR_LOTO_CODE
+                        and t.dstWalletId = LOTO_ID
+                        and t.ts > _lastWinTs
+                    ORDER BY t.ts
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: getLotoHistory(_top)
 */

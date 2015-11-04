@@ -161,8 +161,8 @@ class ClientController():
     def getBMItemStatusList(self):
         return self.exec('getBMItemStatusList')
 
-    def getLotoHistory(self,top):
-        return self.exec('getLotoHistory',top)
+    def getLotoCurrentList(self,top):
+        return self.exec('getLotoCurrentList',top)
 
     def getLotoInfo(self):
         return self.exec('getLotoInfo')
@@ -213,9 +213,9 @@ class ClientController():
             x.add_row(row)
         return x.get_string()
 
-    def getFormatLotoHistory(self,top):
+    def getFormatLotoCurrentList(self,top):
         title = ['Src id','Src Wallet','Dst ID','Dst Wallet','Amount','Type','TS']
-        info = self.getLotoHistory(top)
+        info = self.getLotoCurrentList(top)
         x = PrettyTable(title)
         x.align['Src Wallet'] = 'l'
         x.align['Dst Wallet'] = 'l'

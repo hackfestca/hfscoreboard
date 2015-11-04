@@ -219,7 +219,6 @@ try:
                     print("[+] %s bytes were saved at %s" % (len(data),filename))
             else:
                 print('Black market item download canceled: %s' % link)
-
         elif args.list:
             print("[+] Displaying black market items")
             print(c.getBMItemList(config.DEFAULT_TOP_VALUE))
@@ -237,11 +236,14 @@ try:
             print("[+] Buying tickets")
             print(c.buyLoto())
         elif args.list:
-            print("[+] Displaying lottery history")
-            print(c.getLotoHistory(config.DEFAULT_TOP_VALUE))
+            print("[+] Displaying lottery current pool")
+            print(c.getLotoCurrentList(config.DEFAULT_TOP_VALUE))
         elif args.info:
             print("[+] Displaying information on the current drawing")
             print(c.getLotoInfo())
+        else: 
+            parser.print_help()
+            print('No subaction choosen')
     elif args.action == 'catProg':
         print('[-] Displaying category progression')
         print(c.getCatProgress())

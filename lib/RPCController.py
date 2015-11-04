@@ -174,8 +174,8 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
         return self._dbExec('buyLotoFromIp',clientIP)
 
     @expose()
-    def getLotoHistory(self,clientIP,top):
-        return self._dbExec('getFormatLotoHistory',top)
+    def getLotoCurrentList(self,clientIP,top):
+        return self._dbExec('getFormatLotoCurrentList',top)
 
     @expose()
     def getLotoInfo(self,clientIP):

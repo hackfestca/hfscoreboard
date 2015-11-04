@@ -12,6 +12,7 @@ DROP ROLE IF EXISTS hfplayers;
 DROP ROLE IF EXISTS hfscore;
 DROP ROLE IF EXISTS hfflagupdater;
 DROP ROLE IF EXISTS hfbmupdater;
+DROP ROLE IF EXISTS hflotoupdater;
 DROP ROLE IF EXISTS hfrpi;
 DROP ROLE IF EXISTS admin;
 DROP ROLE IF EXISTS player;
@@ -48,6 +49,7 @@ CREATE ROLE hfplayers NOINHERIT;    -- Players of the KotH
 CREATE ROLE hfscore NOINHERIT;      -- Scoreboard access
 CREATE ROLE hfflagupdater NOINHERIT;-- FlagUpdater access
 CREATE ROLE hfbmupdater NOINHERIT;  -- Black market access
+CREATE ROLE hflotoupdater NOINHERIT;-- Loto access
 CREATE ROLE hfrpi NOINHERIT;        -- Rpi access (Model)
 
 CREATE ROLE player LOGIN INHERIT PASSWORD 'player';
@@ -60,6 +62,7 @@ GRANT hfplayers to player;
 GRANT hfscore to web;
 GRANT hfflagupdater to flagupdater;
 GRANT hfbmupdater to flagupdater;
+GRANT hflotoupdater to flagupdater;
 GRANT hfrpi to rpi;
 
 /*

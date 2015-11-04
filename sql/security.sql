@@ -62,6 +62,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getBMItemInfo(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,boolean,integer,text) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemLink(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
@@ -84,11 +85,14 @@ GRANT EXECUTE ON FUNCTION scoreboard.getBMItemData(integer) TO hfbmupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.addEvent(text,varchar,varchar) TO hfbmupdater;
 GRANT EXECUTE ON FUNCTION scoreboard.setBMItemStatus(integer,integer) TO hfbmupdater;
 
+-- Grants for lotoUpdater
+GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hflotoupdater;
+GRANT EXECUTE ON FUNCTION scoreboard.processLotoWinner(integer) TO hflotoupdater;
 
 -- Grants for rpi
 GRANT EXECUTE ON FUNCTION scoreboard.getModelCountDown() TO hfrpi;
---GRANT EXECUTE ON FUNCTION scoreboard.getModelNews() TO hfrpi;
---GRANT EXECUTE ON FUNCTION scoreboard.getModelTopTeams() TO hfrpi;
+GRANT EXECUTE ON FUNCTION scoreboard.getModelNews() TO hfrpi;
+GRANT EXECUTE ON FUNCTION scoreboard.getModelTopTeams() TO hfrpi;
 
 -- Grants for players only
 GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfplayers;
@@ -105,7 +109,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamSecretsFromIp(varchar) TO hfplayers;
 --GRANT EXECUTE ON FUNCTION scoreboard.getEventsFromIp(timestamp,varchar,varchar,varchar,integer,varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.buyLotoFromIp(varchar) TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfplayers;
+GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getLotoInfo() TO hfplayers;
 
 -- Grants for multiple groups

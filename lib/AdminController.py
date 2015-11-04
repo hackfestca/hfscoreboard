@@ -193,6 +193,9 @@ class AdminController(ClientController.ClientController):
     def setBMItemStatus(self,id,status):
         return self.exec('setBMItemStatus',id,status)
 
+    def getLotoHistory(self,top):
+        return self.exec('getLotoHistory',top)
+
     def getTransactionHistory(self,top):
         return self.exec('getTransactionHistory',top)
 
@@ -304,6 +307,18 @@ class AdminController(ClientController.ClientController):
         x.align['category'] = 'l'
         x.align['status'] = 'l'
         x.max_width = 40
+        x.padding_width = 1
+        for row in info:
+            x.add_row(row)
+        return x.get_string()
+
+    def getFormatLotoHistory(self,top):
+        title = ['Src id','Src Wallet','Dst ID','Dst Wallet','Amount','Type','TS']
+        info = self.getLotoHistory(top)
+        x = PrettyTable(title)
+        x.align['Src Wallet'] = 'l'
+        x.align['Dst Wallet'] = 'l'
+        x.align['Type'] = 'l'
         x.padding_width = 1
         for row in info:
             x.add_row(row)

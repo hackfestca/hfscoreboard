@@ -154,20 +154,3 @@ class PlayerApiController(WebController.WebController):
         for row in score:
             x.add_row(row)
         return x.get_string()
-
-    def getFormatEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
-        title = ['Title', 'Facility', 'Severity', 'Ts']
-        events = self.getEventsFromIp(lastUpdate,facility,severity,grep,top,playerIp)
-        x = PrettyTable(title)
-        x.align['Title'] = 'l'
-        x.padding_width = 1
-        for row in events:
-            x.add_row(row)
-        return x.get_string()
-
-    def getLogEventsFromIp(self,lastUpdate,facility,severity,grep,top,playerIp):
-        events = self.getEventsFromIp(lastUpdate,facility,severity,grep,top,playerIp)
-        ret = ''
-        for row in events:
-            ret += "%s %s %s %s\n" % (row[3],row[1],row[2],row[0])
-        return str(ret)

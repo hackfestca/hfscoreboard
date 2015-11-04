@@ -97,8 +97,8 @@ class PlayerController():
     def buyLoto(self):
         return self._oRPC.buyLoto()
 
-    def getLotoHistory(self,top):
-        return self._oRPC.getLotoHistory(top)
+    def getLotoCurrentList(self,top):
+        return self._oRPC.getLotoCurrentList(top)
 
     def getLotoInfo(self):
         return self._oRPC.getLotoInfo()
@@ -117,24 +117,4 @@ class PlayerController():
 
     def getTeamSecrets(self):
         return self._oRPC.getTeamSecrets()
-
-    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
-        return self._oRPC.getEvents(lastUpdate,facility,severity,grep,top)
-
-    def getLogEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
-        return self._oRPC.getLogEvents(lastUpdate,facility,severity,grep,top)
-
-    def printLiveEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
-        events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
-        print(events)
-        lastUpdate = datetime.now()
-        sleep(refresh)
-
-        while True:
-            events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
-            if len(events) > 0:
-                print(events)
-                lastUpdate = datetime.now()
-            sleep(refresh)
-
 

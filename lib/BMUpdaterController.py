@@ -38,8 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import config
 import UpdaterController
 import time
-import socket
-import libssh2
 from prettytable import PrettyTable 
 
 class BMUpdaterController(UpdaterController.UpdaterController):
