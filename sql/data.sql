@@ -108,7 +108,7 @@ SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 /*
     Create some "NPC" wallets
 */
-SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',30000000, true);
+SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',20000000, true);
 SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
 
 /*
