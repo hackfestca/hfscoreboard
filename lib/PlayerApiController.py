@@ -48,7 +48,7 @@ class PlayerApiController(WebController.WebController):
         self._sUser = config.DB_PLAYER_USER
         self._sPass = config.DB_PLAYER_PASS
         self._sCrtFile = config.DB_PLAYER_CRT_FILE
-        elf._sKeyFile = config.DB_PLAYER_KEY_FILE
+        self._sKeyFile = config.DB_PLAYER_KEY_FILE
         super().__init__()
 
     def buyBMItemFromIp(self,bmItemId,playerIp):
