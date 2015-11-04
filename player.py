@@ -55,6 +55,7 @@ from xmlrpc.client import Fault,ProtocolError
 import os.path
 from urllib.request import Request, urlopen, HTTPSHandler, build_opener
 from urllib.error import URLError, HTTPError
+from urllib.parse import urlparse
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -205,11 +206,12 @@ try:
 
                 # Save item
                 if data:
-                    path = 'BlackMarketItem_%s' % id
-                    with open(path, 'wb') as f:
+                    path = urlparse(link).path
+                    filename = os.path.basename(path)
+                    with open(filename, 'wb') as f:
                         f.write(bytes(x for x in data))
                     f.close()
-                    print("[+] %s bytes were saved at %s" % (len(data),path))
+                    print("[+] %s bytes were saved at %s" % (len(data),filename))
             else:
                 print('Black market item download canceled: %s' % link)
 

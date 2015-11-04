@@ -3617,6 +3617,24 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
+    Stored Proc: getBMItemLink(id)
+*/
+CREATE OR REPLACE FUNCTION getBMItemLink(_bmItemId bmItem.id%TYPE)
+RETURNS text AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+        _dllink bmItem.dlLink%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getBMItemLink(%)',$1;
+
+        -- Return data
+        SELECT dllink INTO _dllink FROM bmItem WHERE id = _bmItemId;
+        return _dllink;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
     Stored Proc: getBMItemLinkFromIp(id)
 */
 CREATE OR REPLACE FUNCTION getBMItemLinkFromIp(_bmItemId bmItem.id%TYPE,

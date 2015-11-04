@@ -52,6 +52,9 @@ from lib import SecTestController
 import psycopg2
 import argparse
 import os.path
+from urllib.request import Request, urlopen, HTTPSHandler, build_opener
+from urllib.error import URLError, HTTPError
+from urllib.parse import urlparse
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -454,18 +457,34 @@ try:
             print("[+] Displaying black market item information")
             print(c.getFormatBMItemInfo(int(id)))
         elif args.get != '':
+
+
             id = args.get
             assert id.isdigit(), "ID is not an integer : %r" % id
             print("[+] Downloading black market item")
-            data = c.getBMItemData(int(id))
+            link = c.getBMItemLink(int(id))
 
             # Parse byte array and write file
-            path = 'BlackMarketItem_%s' % id
-            with open(path, 'wb') as f:
-                f.write(bytes(x for x in data))
-            f.close()
+            if link.startswith('http'):
+                # Download item
+                try:
+                    f = urlopen(link,cafile=config.PLAYER_API_SSL_ROOT_CA)
+                    data = f.read()
+                except URLError as e:
+                    print('Black market item download failed. %s' % e.reason)
+                except Exception as e:
+                    print(e)
 
-            print("[+] %s bytes were saved at %s" % (len(data),path))
+                # Save item
+                if data:
+                    path = urlparse(link).path
+                    filename = os.path.basename(path)
+                    with open(filename, 'wb') as f:
+                        f.write(bytes(x for x in data))
+                    f.close()
+                    print("[+] %s bytes were saved at %s" % (len(data),filename))
+            else:
+                print('Black market item download canceled: %s' % link)
         elif args.allow != '':
             id,rating,comments = args.allow.split('|',3)
             assert id.isdigit(), "ID is not an integer : %r" % id

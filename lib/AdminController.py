@@ -181,8 +181,8 @@ class AdminController(ClientController.ClientController):
     def getBMItemInfo(self,id):
         return self.exec('getBMItemInfo',id)
 
-    def getBMItemData(self,id):
-        return self.exec('getBMItemData',id)
+    def getBMItemLink(self,id):
+        return self.exec('getBMItemLink',id)
 
     def reviewBMItem(self,id,approve,rating,comments):
         return self.exec('reviewBMItem',id,approve,rating,comments)
