@@ -87,7 +87,7 @@ class PlayerApiController(WebController.WebController):
         x.align['Category'] = 'l'
         x.align['Description'] = 'l'
         x.padding_width = 1
-        x.max_width = 40
+        x.max_width = 80
         for row in newScore:
             x.add_row(row)
         return x.get_string()
@@ -104,7 +104,7 @@ class PlayerApiController(WebController.WebController):
         x.align['isDone'] = 'l'
         x.align['Author'] = 'l'
         x.padding_width = 1
-        x.max_width = 40
+        x.max_width = 80
         for row in newScore:
             x.add_row(row)
         return x.get_string()
