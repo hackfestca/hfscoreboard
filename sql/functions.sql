@@ -4599,12 +4599,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION getModelNews(_pos integer DEFAULT 0)
 RETURNS varchar(500) AS $$
     DECLARE
+        _maxLineLen integer := 20;
         _ret varchar(500);
     BEGIN
         -- Logging
         raise notice 'getModelNews()';
 
-        SELECT substring(title from (_pos*50) for 50) INTO _ret FROM getNewsList() ORDER BY displayts DESC LIMIT 1;
+        SELECT substring(title from (_pos*_maxLineLen) for _maxLineLen) INTO _ret FROM getNewsList() ORDER BY displayts DESC LIMIT 1;
 
         -- Return
         RETURN _ret;
@@ -4622,7 +4623,7 @@ RETURNS varchar(40) AS $$
         -- Logging
         raise notice 'getModelTeamsTop()';
 
-        SELECT team INTO _ret FROM getScore() LIMIT 1 OFFSET _pos;
+        SELECT (_pos+1) || '- ' || team INTO _ret FROM getScore() LIMIT 1 OFFSET _pos;
         
         -- Return
         RETURN _ret;
