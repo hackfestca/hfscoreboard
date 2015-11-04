@@ -230,7 +230,7 @@ class InitController(UpdaterController.UpdaterController):
                         privateId = self._getBMItemPrivateId(int(bmiId))
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmiImportName,privateId)
+                        self._uploadBMItemOnScoreboard(bmiImportName,privateId+bmiImportName)
 
                         # update status (From TO_PUBLISH to FOR_SALE)
                         self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
