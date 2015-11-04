@@ -3481,7 +3481,8 @@ RETURNS TABLE (
                 ir.comments AS comments,
                 w.name AS owner,
                 i.amount AS cost,
-                i.qty AS qty
+                i.qty AS qty,
+                i.dllink AS link
          INTO _ret
          FROM bmItem AS i
          LEFT OUTER JOIN (
@@ -3518,7 +3519,8 @@ RETURNS TABLE (
                      UNION ALL SELECT 'Comments'::varchar, _ret.comments
                      UNION ALL SELECT 'Owner'::varchar, _ret.owner
                      UNION ALL SELECT 'Cost'::varchar, _ret.cost::varchar 
-                     UNION ALL SELECT 'Qty'::varchar, _qty;
+                     UNION ALL SELECT 'Qty'::varchar, _qty
+                     UNION ALL SELECT 'Link'::varchar, _ret.link;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
