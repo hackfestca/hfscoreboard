@@ -187,6 +187,7 @@ class ClientController():
         x.align['Release date&time'] = 'l'
         x.align['News'] = 'l'
         x.padding_width = 1
+        x.max_width=60
         for row in score:
             x.add_row(row)
         return x.get_string()
@@ -198,6 +199,7 @@ class ClientController():
         x.align['Name'] = 'l'
         x.align['Description'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in score:
             x.add_row(row)
         return x.get_string()
@@ -209,6 +211,7 @@ class ClientController():
         x.align['Name'] = 'l'
         x.align['Description'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in score:
             x.add_row(row)
         return x.get_string()
@@ -221,6 +224,7 @@ class ClientController():
         x.align['Dst Wallet'] = 'l'
         x.align['Type'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in info:
             x.add_row(row)
         return x.get_string()

@@ -253,7 +253,7 @@ variables:
 '''
 pstatEpi = '''\
 examples:
-    --general
+    --list
     --flagsSubmitHistory
     --flagsSubmitCount 'ssh%'
     --teamProgress 12           # Print progression of team 12

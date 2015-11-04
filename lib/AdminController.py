@@ -262,6 +262,7 @@ class AdminController(ClientController.ClientController):
         x.align['Author'] = 'l'
         x.align['Description'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in score:
             x.add_row(row)
         return x.get_string()
@@ -354,6 +355,7 @@ class AdminController(ClientController.ClientController):
         x.align['Flag'] = 'l'
         x.align['Submit timestamp'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in info:
             x.add_row(row)
         return x.get_string()
@@ -365,6 +367,7 @@ class AdminController(ClientController.ClientController):
         x.align['Team'] = 'l'
         x.align['Submit timestamp'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in info:
             x.add_row(row)
         return x.get_string()
@@ -373,6 +376,7 @@ class AdminController(ClientController.ClientController):
         info = self.getScoreProgress()
         x = PrettyTable()
         x.padding_width = 1
+        x.max_width = 40
         for row in info:
             x.add_row(row)
         return x.get_string()
@@ -381,7 +385,9 @@ class AdminController(ClientController.ClientController):
         title = ['Key', 'Value']
         settings = self.getSettings()
         x = PrettyTable(title)
+        x.align['Key'] = 'l'
         x.padding_width = 1
+        x.max_width = 40
         for row in settings:
             x.add_row(row)
         return x.get_string()
@@ -418,6 +424,7 @@ class AdminController(ClientController.ClientController):
         x = PrettyTable(title)
         x.align['Title'] = 'l'
         x.padding_width = 1
+        x.max_width = 80
         for row in events:
             x.add_row(row)
         return x.get_string()
