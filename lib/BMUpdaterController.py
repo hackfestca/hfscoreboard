@@ -100,24 +100,25 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                 bmiImportName = row[8]
                 bmiUpdCmd = row[9]
                 timestamp = str(time.strftime("%Y-%m-%d-%H%M"))
+                remoteName = bmiPrivateId+bmiImportName
               
                 # Remove items
                 if bmiStatusCode == config.BMI_STATUS_REMOVED or \
                     bmiStatusCode == config.BMI_STATUS_SOLD:
                     print('[+] %s Item "%s" was deleted or sold. Removing.' % (timestamp,bmiName))
-                    self._removeBMItemFromScoreboard(bmiPrivateId)
+                    self._removeBMItemFromScoreboard(remoteName)
                 # Retrieve player's items
                 elif bmiStatusCode == config.BMI_STATUS_TO_RETRIEVE:
                     print('[+] %s Item "%s" must be retrieved. Downloading from DB.' % (timestamp,bmiName))
                     self._saveBMItemData(bmiId,bmiImportName)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_TO_PUBLISH)
                     print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))
-                    self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
+                    self._uploadBMItemOnScoreboard(bmiImportName,remoteName)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Publish new items
                 elif bmiStatusCode == config.BMI_STATUS_TO_PUBLISH:
                     print('[+] %s Item "%s" must be published. Publishing.' % (timestamp,bmiName))
-                    self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
+                    self._uploadBMItemOnScoreboard(bmiImportName,remoteName)
                     self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
                 # Item is for sale
                 elif bmiStatusCode == config.BMI_STATUS_FOR_SALE:
@@ -129,7 +130,7 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                             ret = self._localExec(cmd)
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmiImportName,bmiPrivateId)
+                        self._uploadBMItemOnScoreboard(bmiImportName,remoteName)
                 # Send a reminder in the events
                 elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
                     print('[+] %s Item "%s" is waiting for approval. Adding reminder event.' % (timestamp,bmiName))

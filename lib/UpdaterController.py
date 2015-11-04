@@ -135,22 +135,22 @@ class UpdaterController(ClientController.ClientController):
         exitStatus = channel.get_exit_status()
         channel.close()
 
-    def _uploadBMItemOnScoreboard(self,bmiImportName,privateId):
+    def _uploadBMItemOnScoreboard(self,bmiImportName,bmiRemoteName):
         bmiLocalPath = config.BMI_LOCAL_PATH + '/' + bmiImportName
         # Send on web servers
-        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + bmiRemoteName
         updateSecurityCmd = 'chmod 644 %s' % bmiRemotePath
         for host in config.BMI_HOSTS:
-            print('[+] Uploading %s on %s' % (privateId,host))
+            print('[+] Uploading %s on %s' % (bmiRemoteName,host))
             self._remotePut(host,bmiLocalPath,bmiRemotePath)
             self._remoteExec(host,updateSecurityCmd)
 
-    def _removeBMItemFromScoreboard(self,privateId):
-        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + privateId
+    def _removeBMItemFromScoreboard(self,bmiRemoteName):
+        bmiRemotePath = config.BMI_REMOTE_PATH + '/' + bmiRemoteName
         cmd = 'rm '+bmiRemotePath
         for host in config.BMI_HOSTS:
             self._remoteExec(host,cmd)
-            print('[+] Removing %s on %s' % (privateId,host))
+            print('[+] Removing %s on %s' % (bmiRemoteName,host))
 
     def _updateBMItemStatus(self,bmItemId,statusCode):
         return self.exec('setBMItemStatus',bmItemId,statusCode)

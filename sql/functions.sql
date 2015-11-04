@@ -3352,7 +3352,7 @@ RETURNS bmItem.id%TYPE AS $$
         _privateId bmItem.privateId%TYPE;
         _dlLink bmItem.dlLink%TYPE;
         -- DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/bmi/?privateId=%s';
-        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarket/%s';
+        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarket/%s%s';
     BEGIN
         -- Logging
         raise notice 'addBMItem(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,'data',$11;
@@ -3390,7 +3390,7 @@ RETURNS bmItem.id%TYPE AS $$
         _privateId := random_64();
 
         -- Set download link
-        _dlLink := format(DL_LINK,_privateId);
+        _dlLink := format(DL_LINK,_privateId,_importName);
 
         -- Insert a new row
         INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,
