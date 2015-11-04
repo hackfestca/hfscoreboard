@@ -40,22 +40,118 @@ import sys
 if sys.version_info < (3,2,0):
     print('Python version 3.2 or later is needed for this script')
     exit(1);
-
 sys.path.insert(0, 'lib')
-del sys
 
 # Project imports
 import config
-from lib import PlayerController
 
 # System imports
 import argparse
 import socket
 import os.path
-from xmlrpc.client import Fault,ProtocolError,Binary
+from xmlrpc.client import Fault,ProtocolError,Binary,ServerProxy
 from urllib.request import Request, urlopen, HTTPSHandler, build_opener
 from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse
+from time import sleep
+from datetime import datetime
+import ssl
+
+class PlayerController():
+    """
+    Player controller class used by player.py
+    """
+    _oRPC = None
+
+    def __init__(self):
+        # Setup SSL context
+        if sys.version_info >= (3,4,0) and config.PLAYER_API_URI.startswith('https'):
+            context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+            context.verify_mode = ssl.CERT_REQUIRED
+            context.check_hostname = True
+            #context.load_default_certs()       # To use installed CAs on the machine
+            context.load_verify_locations(config.PLAYER_API_SSL_ROOT_CA)
+        else:
+            context = None
+
+        if sys.version_info >= (3,4,0):
+            self._oRPC = ServerProxy(config.PLAYER_API_URI,allow_none=True,use_builtin_types=True,context=context)
+        else:
+            self._oRPC = ServerProxy(config.PLAYER_API_URI_OLD,allow_none=True,use_datetime=True)
+
+    def submitFlag(self,flagValue):
+        return self._oRPC.submitFlag(flagValue)
+
+    def getScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
+        return self._oRPC.getScore(top,ts,cat)
+
+    def buyBMItem(self,bmItemId):
+        return self._oRPC.buyBMItem(bmItemId)
+
+    def sellBMItem(self,name,amount,qty,desc,data):
+        return self._oRPC.sellBMItem(name,amount,qty,desc,data)
+
+    def getBMItemInfo(self,bmItemId):
+        return self._oRPC.getBMItemInfo(bmItemId)
+
+    def getBMItemLink(self,bmItemId):
+        return self._oRPC.getBMItemLink(bmItemId)
+
+    def getBMItemData(self,bmItemId):
+        return self._oRPC.getBMItemData(bmItemId)
+
+    def getBMItemList(self,top):
+        return self._oRPC.getBMItemList(top)
+
+    def getBMItemCategoryList(self):
+        return self._oRPC.getBMItemCategoryList()
+
+    def getBMItemStatusList(self):
+        return self._oRPC.getBMItemStatusList()
+
+    def buyLoto(self,amount):
+        return self._oRPC.buyLoto(amount)
+
+    def getLotoHistory(self,top):
+        return self._oRPC.getLotoHistory(top)
+
+    def getLotoInfo(self):
+        return self._oRPC.getLotoInfo()
+
+    def getCatProgress(self):
+        return str(self._oRPC.getCatProgress())
+
+    def getFlagProgress(self):
+        return str(self._oRPC.getFlagProgress())
+
+    def getNews(self):
+        return self._oRPC.getNews()
+
+    def getTeamInfo(self):
+        return self._oRPC.getTeamInfo()
+
+    def getTeamSecrets(self):
+        return self._oRPC.getTeamSecrets()
+
+    def getEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
+        return self._oRPC.getEvents(lastUpdate,facility,severity,grep,top)
+
+    def getLogEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300):
+        return self._oRPC.getLogEvents(lastUpdate,facility,severity,grep,top)
+
+    def printLiveEvents(self,lastUpdate=None,facility=None,severity=None,grep=None,top=300,refresh=10):
+        events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
+        print(events)
+        lastUpdate = datetime.now()
+        sleep(refresh)
+
+        while True:
+            events = self.getLogEvents(lastUpdate,facility,severity,grep,top)
+            if len(events) > 0:
+                print(events)
+                lastUpdate = datetime.now()
+            sleep(refresh)
+
 
 # Get args
 usage = 'usage: %prog action [options]'
@@ -130,7 +226,7 @@ if args.debug:
 
 # Step 1: Connect to API
 try:
-    c = PlayerController.PlayerController()
+    c = PlayerController()
 except Exception as e:
     print(e)
     exit(1)
