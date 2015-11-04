@@ -2287,7 +2287,7 @@ RETURNS TABLE (
                             f.description AS description,
                             tf2.pts AS pts,
                             f.pts AS flagPts,
-                            (coalesce(tf2.pts,0) || '/' || f.pts)::varchar AS displayPts,
+                            (f.pts || 'pts/' || f.cash || '$')::varchar AS displayPts,
                             f.category AS catId,
                             c.name AS catName,
                             tf2.teamId IS NOT NULL AS isDone,
