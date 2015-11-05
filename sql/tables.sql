@@ -49,7 +49,7 @@ CREATE TABLE wallet(
     publicId varchar(64) not null unique,
     name varchar(50) not null,
     description text,
-    amount NUMERIC(9,2) not null,
+    amount NUMERIC(10,2) not null,
     ts timestamp not null default current_timestamp,
     constraint valid_wallet_name check (name != ''),
     constraint valid_wallet_amount check (amount >= 0)
@@ -185,7 +185,7 @@ CREATE TABLE flag(
     name varchar(50) not null unique,
     value varchar(64) not null unique,
     pts integer not null,
-    cash NUMERIC(9,2) not null,
+    cash NUMERIC(10,2) not null,
     host integer not null references host(id),
     category integer not null references flagCategory(id),
     statusCode integer not null references flagStatus(code),
@@ -287,7 +287,7 @@ CREATE TABLE transaction(
     id serial primary key,
     srcWalletId integer not null references wallet(id) on delete cascade,
     dstWalletId integer not null references wallet(id) on delete cascade,
-    amount NUMERIC(9,2) not null,
+    amount NUMERIC(10,2) not null,
     type integer not null references transactionType(code) on delete cascade,
     description text,
     ts timestamp not null default current_timestamp
@@ -341,7 +341,7 @@ CREATE TABLE bmItem(
     statusCode integer not null references bmItemStatus(code) on delete cascade,
     review integer default null references bmItemReview(id) on delete cascade,
     ownerWallet integer not null references wallet(id) on delete cascade,
-    amount NUMERIC(9,2) not null,
+    amount NUMERIC(10,2) not null,
     qty integer default null,
     displayInterval interval default null,
     description text,
@@ -442,6 +442,6 @@ CREATE TABLE settings(
     id serial primary key,
     gameStartTs timestamp not null,
     gameEndTs timestamp not null,
-    teamStartMoney NUMERIC(9,2) not null default 0,
+    teamStartMoney NUMERIC(10,2) not null default 0,
     ts timestamp not null default current_timestamp
     ); 

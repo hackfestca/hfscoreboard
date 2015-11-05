@@ -293,6 +293,7 @@ RETURNS text AS $$
         end if;
 
         -- DB Logging
+        PERFORM addNews(_ret,NOW()::timestamp);
         PERFORM addEvent(_ret,'loto');
 
         RETURN _ret;
@@ -316,6 +317,7 @@ RETURNS TABLE (
         TR_LOTO_CODE transactionType.code%TYPE := 5;
         LOTO_ID wallet.id%TYPE := 2;
         _lastWinTs transaction.ts%TYPE;
+        _gameStartTs settings.gameStartTS%TYPE;
     BEGIN
         -- Logging
         raise notice 'getLotoCurrentList(%)',$1;
@@ -331,8 +333,12 @@ RETURNS TABLE (
         FROM transaction AS t
         WHERE type = TR_LOTO_CODE
             and srcWalletId = LOTO_ID
-        ORDER BY ts DESC LIMIT 1;
+        ORDER BY t.ts DESC LIMIT 1;
 
+        if _lastWinTs IS NULL then
+            -- Get team starting money
+            SELECT gameStartTs into _lastWinTs FROM settings AS st ORDER BY st.ts DESC LIMIT 1;
+        end if;
 
         RETURN QUERY SELECT t.srcWalletId,
                             w1.name as srcWallet,
