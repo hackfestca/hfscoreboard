@@ -92,7 +92,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.processLotoWinner(integer) TO hflotoupdater
 -- Grants for rpi
 GRANT EXECUTE ON FUNCTION scoreboard.getModelCountDown() TO hfrpi;
 GRANT EXECUTE ON FUNCTION scoreboard.getModelNews(integer) TO hfrpi;
-GRANT EXECUTE ON FUNCTION scoreboard.getModelTopTeams() TO hfrpi;
+GRANT EXECUTE ON FUNCTION scoreboard.getModelTeamsTop(integer) TO hfrpi;
 
 -- Grants for players only
 GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfplayers;

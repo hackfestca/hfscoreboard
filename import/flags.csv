@@ -33,12 +33,12 @@ hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,5000,scoreboard.hf,hydrohf,Null,js
 hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
 hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,10000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You need to log on the TerminalServer. (You need to have 2 of 3 flag from hydrohf1,hydrohf2,hydrohf3)",,Bypass 2FA - connect with winrm
 hydrohf5,922ec9531b1f94add983a8ce2ebdc97b,200,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,Enter the password to shutdown the Dam. (There is a serial port near the model. you must finish hydrohf4 before),,
-phenix1,51e4981a217faefdcee90c1b0539a59c,100,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
-phenix2,9a10464438ceadde9db997296ea0dffe,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
-phenix3,8797b5958c380a821f3bfbb5f6202424,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
-phenix4,7750cc58024f134d86b2609f603dd7f1,400,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
-phenix5,a83ddc3ba512af707704c261cb525e28,400,8000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
-phenix6,ece2f915b23bcb9bd108651357dcdf30,500,10000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix1,51e4981a217faefdcee90c1b0539a59c,100,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Can you go on the web scanners?,,
+phenix2,9a10464438ceadde9db997296ea0dffe,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Where are the startups?,,
+phenix3,8797b5958c380a821f3bfbb5f6202424,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Do you like my pups?,,
+phenix4,7750cc58024f134d86b2609f603dd7f1,400,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Do you know run PE?,,
+phenix5,a83ddc3ba512af707704c261cb525e28,400,8000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Aggressive registry. Are you stronger?,,
+phenix6,ece2f915b23bcb9bd108651357dcdf30,500,10000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,"Crypter, Rat, and Fake are present in the system.",,
 phenix7,baMQEUQn59NzkU64cOUtiiNxSy4RKGeA,200,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Poupée russe #2 // Russian Dolls #2,,
 lotohf1,0dbcadc23ba311d1698382eba06dec1e,200,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""http://lotohf.ctf.hf""> lotohf.ctf.hf</a> ",LotoHF got hack by a group of hacker named  $team. They stoled 10 000 credits card number of online player,
 lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From the web server pivot in the lan subnet,,
@@ -47,11 +47,11 @@ lotohf4,c41da8273f46eab41694111de52b4a39,500,20000,scoreboard.hf,lotohf,Null,cha
 lotohf5,93181fa8565af6e79b6208778b90a3c7,0,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,LotoHF is out of money. The hacker group $team stole all they money !,
 electro1,Vk9xRcdsYSovkfNtiOQ6UwJoMBmhHneU,100,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,The SSRC use these two pins named TX and RX to interact with an emergency section of the Hydro-Electric Dam. Find your way in!,,
 electro2,tU6yTmaXaSyIOSUC0PcUWkJgAnNIxGE2,200,5000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",,
-electro3,hqf5kn879fgcbkpoeszcc5fh3497ttgh,300,7000,scoreboard.hf,ssrc,Null,mdube,Unique,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",$team completely owned the Hackfest city pipeline. ,last minute flag with flow meter
+electro3,hqf5kn879fgcbkpoeszcc5fh3497ttgh,300,7000,scoreboard.hf,ssrc,Null,mdube,Unique,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>. That can be useful: <a href=""/public/pipeline.jpg"">board</a>",$team completely owned the Hackfest city pipeline. ,last minute flag with flow meter
 electro4,1bw1GLlNrqQrzBTxnGMWrpIBGJDa0m6v,200,0,scoreboard.hf,ssrc,Null,mdube,Standard,Null,This 2 pins communication protocol also let you interact with the Casino. Find your way in.,,
 electro5,yADvkHWQBzO1QLvEb1g5HYeadTZm13FK,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on Bradzilla, the robotic arm. Find the right 1 byte messages to control it.",,
 electro6,E3Lrpcd35X8nUxTxjyBGVBgFJ2Id8xmp,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on Bradzilla, the robotic arm. Find the right 1 byte messages to control it.",$team completely owned the army robotic arm.,
-electro7,idhfj87bat458jhgvzzasd839amnsjdy,100,1000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hidden somewhere on the model.,,
+electro7,idhfj87bat458jhgvzzasd839amnsjdy,100,1000,scoreboard.hf,ssrc,Null,mdube,Unique,Null,Hidden somewhere on the model.,,
 re1,ModifiedBase64IsStillBase64!!,200,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,"Find the first password. <a href=""https://scoreboard.hf/public/HFRE.zip"">here</a> Password : hackfest2015",,
 re2,NoNeedToReverseWhenYouHaveTheKey,200,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the second password.,,
 re3,GoodJobBreakingThisNanomitesProtection!!,500,10000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the last password.,,

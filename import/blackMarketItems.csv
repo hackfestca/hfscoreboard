@@ -1,7 +1,6 @@
 Name,Description,Author,Cost,Quantity,DisplayInterval,PathToItem (relative to scoreboard git repo),updateCmd
 bmlotossh,A backdoor in lotohf.ctf.hf ssh server. ,cechaput,75000,Null,Null,LOTOHF_BackDoor.txt,
 bmlotoNetwork,LotoHF Network diagram with all IPs and box,cechaput,20000,Null,Null,LOTOHF.pdf,
-pipe_schema,Pipeline Emergency Circuit photo,mdube,10000,Null,Null,pipeline.ino,
 casino_src,Casino LCD source code,mdube,10000,Null,Null,casino.ino,
 arm_src,Robotic Arm schema,mdube,10000,Null,Null,roboticArm.ino,
 csa1,Code for creating a client side attack track in a CTF event using phantomJS. If you found security issues in it you will receive extra points.,flr,100000,Null,Null,CSA_Client.zip,

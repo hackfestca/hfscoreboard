@@ -1,59 +1,59 @@
 Team Name,Team Net,PHOENIX_USER,PHOENIX_PASS,PHOENIX_HOST,PHOENIX_PORT
-_TMIH_,172.28.101.0/24,user1,pass1,hf01.cloudblabla,444
-0-bae,172.28.102.0/24,user2,pass2,hf01.cloudblabla,444
-A Laval Mon Shell,172.28.103.0/24,user3,pass3,hf01.cloudblabla,444
-admin:admin,172.28.104.0/24,user4,pass4,hf01.cloudblabla,444
-ASP. Hack,172.28.105.0/24,user5,pass5,hf01.cloudblabla,444
-BAISSEZ LE VOLUME!,172.28.106.0/24,user6,pass6,hf01.cloudblabla,444
-Beer Overflow,172.28.107.0/24,user7,pass7,hf01.cloudblabla,444
-BonziBuddy,172.28.108.0/24,user8,pass8,hf01.cloudblabla,444
-Cascading Style Sheeps,172.28.109.0/24,user9,pass9,hf01.cloudblabla,444
-Catch Me If You Scan,172.28.110.0/24,user10,pass10,hf01.cloudblabla,444
-Collège Shawinigan,172.28.111.0/24,user11,pass11,hf01.cloudblabla,444
-Coprolite,172.28.112.0/24,user12,pass12,hf01.cloudblabla,444
-DCI1,172.28.113.0/24,user13,pass13,hf01.cloudblabla,444
-DCI2,172.28.114.0/24,user14,pass14,hf01.cloudblabla,444
-DCI3,172.28.115.0/24,user15,pass15,hf01.cloudblabla,444
-DevQc,172.28.116.0/24,user16,pass16,hf01.cloudblabla,444
-dnk,172.28.117.0/24,user17,pass17,hf01.cloudblabla,444
-Domain Uncontroled,172.28.118.0/24,user18,pass18,hf01.cloudblabla,444
-error404,172.28.119.0/24,user19,pass19,hf01.cloudblabla,444
-ESC-CRAC,172.28.120.0/24,user20,pass20,hf01.cloudblabla,444
-Flag Spoofing,172.28.121.0/24,user21,pass21,hf01.cloudblabla,444
-furious bastard and Geekinfinity,172.28.122.0/24,user22,pass22,hf01.cloudblabla,444
-Gentlemen en fête,172.28.123.0/24,user23,pass23,hf01.cloudblabla,444
-Gliderous Tigers,172.28.124.0/24,user24,pass24,hf01.cloudblabla,444
-Gugfull,172.28.125.0/24,user25,pass25,hf01.cloudblabla,444
-Gugless,172.28.126.0/24,user26,pass26,hf01.cloudblabla,444
-h4ck1ng team,172.28.127.0/24,user27,pass27,hf01.cloudblabla,444
-Hack to the metal,172.28.128.0/24,user28,pass28,hf01.cloudblabla,444
-Hackable Team,172.28.129.0/24,user29,pass29,hf01.cloudblabla,444
-hackademic,172.28.130.0/24,user30,pass30,hf01.cloudblabla,444
-Helixors,172.28.131.0/24,user31,pass31,hf01.cloudblabla,444
-Hopeless,172.28.132.0/24,user32,pass32,hf01.cloudblabla,444
-JDIs,172.28.133.0/24,user33,pass33,hf01.cloudblabla,444
-Keep Calm and Craic On,172.28.134.0/24,user34,pass34,hf01.cloudblabla,444
-"Kevin, Stuart, Bob & friends",172.28.135.0/24,user35,pass35,hf01.cloudblabla,444
-Les amateurs de sécurité informatique,172.28.136.0/24,user36,pass36,hf01.cloudblabla,444
-More Violent Python,172.28.137.0/24,user37,pass37,hf01.cloudblabla,444
-Nop Slider,172.28.138.0/24,user38,pass38,hf01.cloudblabla,444
-Over the rainbow Table,172.28.139.0/24,user39,pass39,hf01.cloudblabla,444
-PolyHack,172.28.140.0/24,user40,pass40,hf01.cloudblabla,444
-PolyHack2,172.28.141.0/24,user41,pass41,hf01.cloudblabla,444
-Port Smasher,172.28.142.0/24,user42,pass42,hf01.cloudblabla,444
-Raven,172.28.143.0/24,user43,pass43,hf01.cloudblabla,444
-Rootmont,172.28.144.0/24,user44,pass44,hf01.cloudblabla,444
-Shell Hero,172.28.145.0/24,user45,pass45,hf01.cloudblabla,444
-Sniff my packets,172.28.146.0/24,user46,pass46,hf01.cloudblabla,444
-SPY VS CAT4,172.28.147.0/24,user47,pass47,hf01.cloudblabla,444
-StalkathonStalkers,172.28.148.0/24,user48,pass48,hf01.cloudblabla,444
-Tchoupi & Doudou,172.28.149.0/24,user49,pass49,hf01.cloudblabla,444
-The root is on fire,172.28.150.0/24,user50,pass50,hf01.cloudblabla,444
-tinker^or^die,172.28.151.0/24,user51,pass51,hf01.cloudblabla,444
-Unicorn as a Service,172.28.152.0/24,user52,pass52,hf01.cloudblabla,444
-Unicorn as a Software,172.28.153.0/24,user53,pass53,hf01.cloudblabla,444
-Usedoils,172.28.154.0/24,user54,pass54,hf01.cloudblabla,444
-Venom,172.28.155.0/24,user55,pass55,hf01.cloudblabla,444
+_TMIH_,172.28.101.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53334
+0-bae,172.28.102.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,63334
+A Laval Mon Shell,172.28.103.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,48752
+admin:admin,172.28.104.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,47852
+ASP. Hack,172.28.105.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,54322
+BAISSEZ LE VOLUME!,172.28.106.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,56333
+Beer Overflow,172.28.107.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,57444
+BonziBuddy,172.28.108.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,58289
+Cascading Style Sheeps,172.28.109.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,59123
+Catch Me If You Scan,172.28.110.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,60322
+Collège Shawinigan,172.28.111.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,61245
+Coprolite,172.28.112.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,63254
+DCI1,172.28.113.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,54899
+DCI2,172.28.114.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,58478
+DCI3,172.28.115.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,62852
+DevQc,172.28.116.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,62456
+dnk,172.28.117.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,62954
+Domain Uncontroled,172.28.118.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,61741
+error404,172.28.119.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,61789
+ESC-CRAC,172.28.120.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,61963
+Flag Spoofing,172.28.121.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,61258
+furious bastard and Geekinfinity,172.28.122.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,54963
+Gentlemen en fête,172.28.123.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53258
+Gliderous Tigers,172.28.124.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53456
+Gugfull,172.28.125.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53897
+Gugless,172.28.126.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53951
+h4ck1ng team,172.28.127.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,53159
+Hack to the metal,172.28.128.0/24,hfphenix,Soleil76,hackfestquebec2015a.cloudapp.net,51951
+Hackable Team,172.28.129.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,52951
+hackademic,172.28.130.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,52159
+Helixors,172.28.131.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,52789
+Hopeless,172.28.132.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,51753
+JDIs,172.28.133.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,51357
+Keep Calm and Craic On,172.28.134.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,51654
+"Kevin, Stuart, Bob & friends",172.28.135.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,51456
+More Violent Python,172.28.136.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58753
+Nop Slider,172.28.137.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58357
+Only Noobs Below This Line,172.28.138.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58789
+Over the rainbow Table,172.28.139.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58123
+PolyHack,172.28.140.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,63753
+PolyHack2,172.28.141.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,63357
+Port Smasher,172.28.142.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,63951
+Raven,172.28.143.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,63159
+Rootmont,172.28.144.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,62546
+Shell Hero,172.28.145.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,62951
+Sniff my packets,172.28.146.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,62789
+SPY VS CAT4,172.28.147.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,62852
+Tchoupi & Doudou,172.28.148.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58519
+The one who listens to bob and alice,172.28.149.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58456
+The root is on fire,172.28.150.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58987
+tinker^or^die,172.28.151.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,58321
+Unicorn as a Service,172.28.152.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,54951
+Unicorn as a Software,172.28.153.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,54582
+Usedoils,172.28.154.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,54753
+Venom,172.28.155.0/24,hfphenix,Soleil76,hackfestquebec2015b.cloudapp.net,54321
 Team HF Crew,172.16.66.0/24,user56,pass56,hf01.cloudblabla,444
 Team Dube,192.168.1.0/24,user57,pass57,hf01.cloudblabla,444
 Team HF DMZ,192.168.6.0/24,user58,pass58,hf01.cloudblabla,444

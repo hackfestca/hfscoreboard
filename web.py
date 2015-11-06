@@ -305,7 +305,6 @@ class IndexHandler(BaseHandler):
             submit_message = self.client.submitFlagFromIp(
                 flag,
                 self.remote_ip)
-
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
             if e.diag.message_primary.startswith('Invalid flag'):
