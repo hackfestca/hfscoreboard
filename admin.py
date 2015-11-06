@@ -457,8 +457,6 @@ try:
             print("[+] Displaying black market item information")
             print(c.getFormatBMItemInfo(int(id)))
         elif args.get != '':
-
-
             id = args.get
             assert id.isdigit(), "ID is not an integer : %r" % id
             print("[+] Downloading black market item")
@@ -467,6 +465,7 @@ try:
             # Parse byte array and write file
             if link.startswith('http'):
                 # Download item
+                data = b''
                 try:
                     f = urlopen(link,cafile=config.PLAYER_API_SSL_ROOT_CA)
                     data = f.read()
