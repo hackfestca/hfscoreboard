@@ -311,6 +311,8 @@ class IndexHandler(BaseHandler):
             if e.diag.message_primary.startswith('Invalid flag'):
                 rand = random.randint(0, len(self._insults)-1)
                 submit_message = e.diag.message_primary+ "!  " + self.getInsult(rand)
+            elif e.diag.message_primary.startswith('Unique flag already submitted'):
+                submit_message = e.diag.message_primary
             elif e.diag.message_primary.startswith('duplicate key'):
                 submit_message = 'Flag already submitted'
             else:

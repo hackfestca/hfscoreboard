@@ -49,7 +49,7 @@ DB_HOST = 'db.hf'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
 DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
-DB_CONNECT_TIMEOUT = 5
+DB_CONNECT_TIMEOUT = 10
 
 DB_INIT_USER = 'owner'
 DB_INIT_PASS = None
