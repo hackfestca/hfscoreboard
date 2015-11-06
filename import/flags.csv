@@ -1,5 +1,5 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,10000,scoreboard.hf,demat,Null,flr,Unique,Null,<h4>Call Home:</h4> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,An anonymous source says that Demat Corporation as poor security practices and standards.,CALL HOME
+csa1,Hs17K6LakjDeTeLlwoQ5gVGP,0,10000,scoreboard.hf,demat,Null,flr,Unique,Null,<h4>Call Home:</h4> Call home as fast as you can. The first team will get a free flag. Others better luck next time.,An anonymous source says that Demat Corporation has poor security practices and standards.,CALL HOME
 csa2,RfyVOKvGbemApCaq6Mq1OBcg,0,15000,scoreboard.hf,demat,Null,flr,Standard,Null,<h4>Search for it</h4> Four parts of a flag have been hidden in the page context. Find each of them and the submit the flag : PART1PART2PART3PART4,"This morning, officials of Demat reported that they were victim of a data breach.",
 csa3,0AB2C8DZzO7W0zo0WdRrS6mv,150,5000,scoreboard.hf,demat,Null,flr,Standard,Null,"<h4>Scan the network :</h4> Look for reachable services.  Each identified service will give you points.
 <br/>
@@ -33,12 +33,13 @@ hydrohf2,dj8pvnRJuEFL5VVHyOVPFffS6hVpLG7C,100,5000,scoreboard.hf,hydrohf,Null,js
 hydrohf3,WNmQS80CMQfdoRd75ObXAPUNl2Sq3c,100,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"Attention, you have find the door, can you open to come inside the server room ? Come near the model.",,unlock with tool
 hydrohf4,4731bc7fb04a10fb387c79a82412c70e,400,10000,scoreboard.hf,hydrohf,Null,js,Standard,Null,"You need to log on the TerminalServer. (You need to have 2 of 3 flag from hydrohf1,hydrohf2,hydrohf3)",,Bypass 2FA - connect with winrm
 hydrohf5,922ec9531b1f94add983a8ce2ebdc97b,200,5000,scoreboard.hf,hydrohf,Null,js,Standard,Null,Enter the password to shutdown the Dam. (There is a serial port near the model. you must finish hydrohf4 before),,
-phenix1,VvnxkP4ZmWOHwNKHBMHNUJJGnMCFKWQg,100,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix2,gF9vPgej3edVmIFiear4ksm8ovypgT01,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix3,4HP8AKHjUPWSgQMhaayboFU3k6pCo6fr,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix4,e9b3f00ab0207776cd2dd3e00f272c26,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix5,vWxIvh7X8X4QbHK1Ql293QxvxMFcwbFE,400,8000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
-phenix6,PQjhWo3FbS7wmxcAUiO4MMbcJlj0RTuj,500,10000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,,,
+phenix1,51e4981a217faefdcee90c1b0539a59c,100,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix2,9a10464438ceadde9db997296ea0dffe,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix3,8797b5958c380a821f3bfbb5f6202424,300,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix4,7750cc58024f134d86b2609f603dd7f1,400,6000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix5,a83ddc3ba512af707704c261cb525e28,400,8000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix6,ece2f915b23bcb9bd108651357dcdf30,500,10000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,NC,,
+phenix7,baMQEUQn59NzkU64cOUtiiNxSy4RKGeA,200,2000,scoreboard.hf,phenix,Null,hiddenman,Standard,Null,Poupée russe #2 // Russian Dolls #2,,
 lotohf1,0dbcadc23ba311d1698382eba06dec1e,200,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,"Try to have a shell on the web server <a html=""http://lotohf.ctf.hf""> lotohf.ctf.hf</a> ",LotoHF got hack by a group of hacker named  $team. They stoled 10 000 credits card number of online player,
 lotohf2,95dcfb02bbb2630c13402d61ad002d69,100,5000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From the web server pivot in the lan subnet,,
 lotohf3,6235401daa92365013116dac3eddc38e,200,15000,scoreboard.hf,lotohf,Null,chaput,Standard,Null,From LAN try to have a domain user access,Internal document of LotoHF have been leak on the internet. LotoHf CSO said the breach has been fix. Our source say it's the group of hacker $team that leak the information,
@@ -46,14 +47,14 @@ lotohf4,c41da8273f46eab41694111de52b4a39,500,20000,scoreboard.hf,lotohf,Null,cha
 lotohf5,93181fa8565af6e79b6208778b90a3c7,0,0,scoreboard.hf,lotohf,Null,chaput,Standard,Null,Try to get domain admin access,LotoHF is out of money. The hacker group $team stole all they money !,
 electro1,Vk9xRcdsYSovkfNtiOQ6UwJoMBmhHneU,100,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,The SSRC use these two pins named TX and RX to interact with an emergency section of the Hydro-Electric Dam. Find your way in!,,
 electro2,tU6yTmaXaSyIOSUC0PcUWkJgAnNIxGE2,200,5000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",,
-electro3,oKoupgMXvvILwFSwg0cULgkGWPKzA6YR,300,7000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",$team completely owned the Hackfest city pipeline. ,last minute flag with flow meter
+electro3,hqf5kn879fgcbkpoeszcc5fh3497ttgh,300,7000,scoreboard.hf,ssrc,Null,mdube,Unique,Null,"This 2 pins communication protocol let you interact with the Hackfest City Pipeline. The code behind it can be found <a href=""/public/pipeline.ino"">here</a>",$team completely owned the Hackfest city pipeline. ,last minute flag with flow meter
 electro4,1bw1GLlNrqQrzBTxnGMWrpIBGJDa0m6v,200,0,scoreboard.hf,ssrc,Null,mdube,Standard,Null,This 2 pins communication protocol also let you interact with the Casino. Find your way in.,,
-electro5,yADvkHWQBzO1QLvEb1g5HYeadTZm13FK,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",,
-electro6,E3Lrpcd35X8nUxTxjyBGVBgFJ2Id8xmp,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on the Army robotic arm. Find the right 1x byte messages to control it.",$team completely owned the army robotic arm.,
+electro5,yADvkHWQBzO1QLvEb1g5HYeadTZm13FK,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on Bradzilla, the robotic arm. Find the right 1 byte messages to control it.",,
+electro6,E3Lrpcd35X8nUxTxjyBGVBgFJ2Id8xmp,400,3000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,"An implant which communicate in a 3+n pins full-duplex protocol, is stored on Bradzilla, the robotic arm. Find the right 1 byte messages to control it.",$team completely owned the army robotic arm.,
+electro7,idhfj87bat458jhgvzzasd839amnsjdy,100,1000,scoreboard.hf,ssrc,Null,mdube,Standard,Null,Hidden somewhere on the model.,,
 re1,ModifiedBase64IsStillBase64!!,200,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the first password,,
-re2,NoNeedToReverseWhenYouHaveTheKey,200,4000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the second password,,
-re3,whateverdin3n3njf,300,7000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the third password,,
-re4,GoodJobBreakingThisNanomitesProtection!,400,8000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the last password,,
+re2,NoNeedToReverseWhenYouHaveTheKey,200,3000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the second password,,
+re3,GoodJobBreakingThisNanomitesProtection!!,500,10000,scoreboard.hf,elcaro,Null,_eko,Standard,Null,Find the last password,,
 lock1,098bbc25fd30692492bd33986078e826,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock2,d21c4c7507d792b50e356ec348adaff0,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
 lock3,whatever123egregergerg,0,2000,scoreboard.hf,misc,24 hours,HFCrew,Standard,Null,,,
@@ -68,7 +69,7 @@ pipe08,E4118FD4A90256685141D9DC268B4CDB,300,3000,scoreboard.hf,pipeline,Null,sig
 pipe09,5CD5AC600D2904910C8A6EFA3520CD10,400,4000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,"Can you pwn forest root Domain DC<br/>Dump users hash ... find someone special, his hash should be PROFIT !!!<br/>dcalpha.pipeline.local (172.28.17.100) ... don't come to see me if you can't ping it from your computer.",,
 pipe10,FLAGu6HYwtkpnReVfWeHrBse,500,6000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Can you get c:\flag.txt from forest root Domain DC ?,,
 pipe11,FLAGH1iq8NEN7n4OoWFLMzse,200,2000,scoreboard.hf,pipeline,Null,sigmen,Standard,Null,Did you find the hidden domain .. look for c:\flag.txt,,
-fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,gp,Standard,Null,FM01,,
+fm1,whateverf49gf9jj49j3f9jfj4f,0,10000,scoreboard.hf,thirdparty,Null,js,Standard,Null,Hackfest Radio is broadcasting. Can you ear us ? ,,
 cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,
 cash03,646bc3da08eeec46d8e592b1e3434be2,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,argent,$team received 5000$ from Hackfest Crew ,

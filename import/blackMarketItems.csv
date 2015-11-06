@@ -10,11 +10,7 @@ csa3,A command and control server for performing client side attacks,flr,50000,N
 csa4,Demat network diagram,flr,10000,Null,Null,demat_network_diagram.png,
 csa5,We've hack demat !!! Get the latest requests for being a qualified customer.,flr,15000,Null,Null,demat.tar,ssh -p 2200 scoreboard@172.28.19.30 /home/scoreboard/getFiles && scp -P 2200 scoreboard@172.28.19.30:/home/scoreboard/file.tar ./blackmarket/demat.tar
 Phenix,A windows old trick.,hiddenman,25000,Null,Null,phenix1.txt,
-hydro_sw1,The switch configuration for HydroDam switch core 01,js,30000,Null,Null,Hydro_HF_Core_01.txt,
-hydro_sw2,The switch configuration for HydroDam switch core 02,js,30000,Null,Null,running_config_Hydro_HF_dist_sw_01.txt,
+hydro_sw1,The switch configuration for Hydro HF Core switch 01,js,30000,Null,Null,Config_SW_Hydro_HF_Core_01.txt,
+hydro_sw2,The switch configuration for Hydro HF Dam switch 01,js,30000,Null,Null,Config_SW_Hydro_HF_DAM_sw_01.txt,
 hydro_2fa,PCAP of communication between the client and the server,js,75000,Null,Null,pcap_track_hydro_hf_challenge_4.pcapng,
 misc1,One real life beer !,crew,10000,5,Null,beer.txt ,
-,,,,,,,
-,,player max,240000,340000,,,
-,,total,480000,480000,0.5,,
-,,,,,0.7083333333,,
