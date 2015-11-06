@@ -105,6 +105,12 @@ class BMUpdaterController(UpdaterController.UpdaterController):
                     bmiStatusCode == config.BMI_STATUS_SOLD:
                     print('[+] %s Item "%s" was deleted or sold. Removing.' % (timestamp,bmiName))
                     self._removeBMItemFromScoreboard(remoteName)
+                # Items to be approved by an admin
+                elif bmiStatusCode == config.BMI_STATUS_FOR_APPROVAL:
+                    print('[+] %s Item "%s" must be approved by an admin. Downloading from DB.' % (timestamp,bmiName))
+                    self._saveBMItemData(bmiId,bmiImportName)
+                    print('[+] %s Item "%s" must be approved by an admin. Publishing.' % (timestamp,bmiName))
+                    self._uploadBMItemOnScoreboard(bmiImportName,remoteName)
                 # Retrieve player's items
                 elif bmiStatusCode == config.BMI_STATUS_TO_RETRIEVE:
                     print('[+] %s Item "%s" must be retrieved. Downloading from DB.' % (timestamp,bmiName))

@@ -149,9 +149,9 @@ class InitController(UpdaterController.UpdaterController):
                                 self._sanitize(fdesc,'str'), \
                                 self._sanitize(fnews,'str'))
                     else:
-                        self.exec('addRandomFlag',[self._sanitize(fname,'str'), \
+                        self.exec('addRandomFlag',self._sanitize(fname,'str'), \
                                 self._sanitize(fpts,'int'), \
-                                self._sanitize(cash,'float'), \
+                                self._sanitize(fcash,'float'), \
                                 self._sanitize(fhost,'str'), \
                                 self._sanitize(fcat,'str'), \
                                 self._sanitize(fstatus,'int'), \
@@ -160,7 +160,7 @@ class InitController(UpdaterController.UpdaterController):
                                 self._sanitize(ftype,'str'), \
                                 self._sanitize(ftypeext,'str'), \
                                 self._sanitize(fdesc,'str'), \
-                                self._sanitize(fnews,'str')])
+                                self._sanitize(fnews,'str'))
         self.commit()
 
     def importTeams(self):

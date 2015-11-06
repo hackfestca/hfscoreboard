@@ -1737,6 +1737,18 @@ $$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addRandomFlag(...);
+                                    _value flag.value%TYPE, 
+                                    _pts flag.pts%TYPE,
+                                    _cash flag.cash%TYPE,
+                                    _host host.name%TYPE,
+                                    _category flagCategory.name%TYPE,
+                                    _statusCode flagStatus.code%TYPE,
+                                    _displayInterval varchar(20),
+                                    _author flagAuthor.nick%TYPE,
+                                    _type flagType.name%TYPE,
+                                    _typeExt flagTypeExt.name%TYPE,
+                                    _description flag.description%TYPE,
+                                    _news flag.news%TYPE
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
