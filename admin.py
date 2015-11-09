@@ -564,21 +564,18 @@ try:
         if args.general:
             print("[+] Displaying games stats")
             print(c.getFormatGameStats())
-        elif args.flagsSubmitCount:
+        elif args.flagsSubmitCount != '':
             print("[+] Displaying flags submit count")
-            print(c.getFormatFlagsSubmitCount(args.flagFilter))
+            print(c.getFormatFlagsSubmitCount(args.flagsSubmitCount))
         elif args.teamProgress:
             if args.id:
                 print("[+] Displaying team progression")
                 print(c.getFormatTeamProgress(args.id))
             else:
                 print('You must specify a team id with --id')
-        elif args.flagProgress:
-            if args.flagName:
-                print("[+] Displaying flag progression")
-                print(c.getFormatFlagProgress(args.flagName))
-            else:
-                print('You must specify a flag name with --flagName')
+        elif args.flagProgress != '':
+            print("[+] Displaying flag progression")
+            print(c.getFormatFlagProgress(args.flagProgress))
         else:
             print("[+] Displaying stats")
             print(c.getFormatGameStats())
