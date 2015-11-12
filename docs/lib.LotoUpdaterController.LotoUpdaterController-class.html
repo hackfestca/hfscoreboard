@@ -3,7 +3,7 @@
           "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>lib.InitController.InitController</title>
+  <title>lib.LotoUpdaterController.LotoUpdaterController</title>
   <link rel="stylesheet" href="epydoc.css" type="text/css" />
   <script type="text/javascript" src="epydoc.js"></script>
 </head>
@@ -38,8 +38,8 @@
     <td width="100%">
       <span class="breadcrumbs">
         <a href="lib-module.html">Package&nbsp;lib</a> ::
-        <a href="lib.InitController-module.html">Module&nbsp;InitController</a> ::
-        Class&nbsp;InitController
+        <a href="lib.LotoUpdaterController-module.html">Module&nbsp;LotoUpdaterController</a> ::
+        Class&nbsp;LotoUpdaterController
       </span>
     </td>
     <td>
@@ -49,19 +49,19 @@
     onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
         <tr><td align="right"><span class="options"
             >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="lib.InitController.InitController-class.html"
+            >]&nbsp;|&nbsp;<a href="lib.LotoUpdaterController.LotoUpdaterController-class.html"
             target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
 </table>
 <!-- ==================== CLASS DESCRIPTION ==================== -->
-<h1 class="epydoc">Class InitController</h1><p class="nomargin-top"><span class="codelink"><a href="lib.InitController-pysrc.html#InitController">source&nbsp;code</a></span></p>
+<h1 class="epydoc">Class LotoUpdaterController</h1><p class="nomargin-top"><span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController">source&nbsp;code</a></span></p>
 <center>
 
 </center>
 <hr />
-<p>Init controller class used by initDB.py.</p>
+<p>Black market updater controller class used by bmUpdater.py</p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -86,25 +86,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="lib.InitController.InitController-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td><span class="summary-sig"><a href="lib.LotoUpdaterController.LotoUpdaterController-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.__init__">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="__del__"></a><span class="summary-sig-name">__del__</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.__del__">source&nbsp;code</a></span>
+            <span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController.__init__">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -118,11 +102,44 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_sanitize"></a><span class="summary-sig-name">_sanitize</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">data</span>,
-        <span class="summary-sig-arg">t</span>)</span></td>
+          <td><span class="summary-sig"><a name="_getLotoCurrentList"></a><span class="summary-sig-name">_getLotoCurrentList</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">top</span>=<span class="summary-sig-default">30</span>)</span></td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController._sanitize">source&nbsp;code</a></span>
+            <span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController._getLotoCurrentList">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_processLotoWinner"></a><span class="summary-sig-name">_processLotoWinner</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">walletId</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController._processLotoWinner">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_uniq"></a><span class="summary-sig-name">_uniq</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">seq</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController._uniq">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -136,137 +153,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="importTables"></a><span class="summary-sig-name">importTables</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td><span class="summary-sig"><a name="processWinner"></a><span class="summary-sig-name">processWinner</span>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importTables">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importFunctions"></a><span class="summary-sig-name">importFunctions</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importFunctions">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importData"></a><span class="summary-sig-name">importData</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importData">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importCategories"></a><span class="summary-sig-name">importCategories</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importCategories">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importFlags"></a><span class="summary-sig-name">importFlags</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importFlags">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importTeams"></a><span class="summary-sig-name">importTeams</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importTeams">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importBlackMarketItems"></a><span class="summary-sig-name">importBlackMarketItems</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importBlackMarketItems">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importSecurity"></a><span class="summary-sig-name">importSecurity</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importSecurity">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="importAll"></a><span class="summary-sig-name">importAll</span>(<span class="summary-sig-arg">self</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="lib.InitController-pysrc.html#InitController.importAll">source&nbsp;code</a></span>
+            <span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController.processWinner">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -330,6 +219,13 @@
     </table>
   </td>
 </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="BMI_STATUS_COL_ID"></a><span class="summary-name">BMI_STATUS_COL_ID</span> = <code title="3">3</code>
+    </td>
+  </tr>
   <tr>
     <td colspan="2" class="summary">
     <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="lib.UpdaterController.UpdaterController-class.html">UpdaterController.UpdaterController</a></code></b> (private):
@@ -403,7 +299,7 @@
     <br /><em class="fname">(Constructor)</em>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="lib.InitController-pysrc.html#InitController.__init__">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="lib.LotoUpdaterController-pysrc.html#LotoUpdaterController.__init__">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
