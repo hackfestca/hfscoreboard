@@ -63,6 +63,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,boolean,integer,text) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemLink(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.getTransactionHistory(integer) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;

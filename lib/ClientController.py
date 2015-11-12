@@ -171,12 +171,13 @@ class ClientController():
         return self.exec('getNewsList')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        title = ['ID','TeamName','Cash','Notoriety'] 
+        title = ['Pos','ID','TeamName','Cash','Notoriety'] 
         score = self.getScore(top,ts,cat)
+        score2 = [tuple([score.index(x)+1]+list(x)) for x in score]
         x = PrettyTable(title)
         x.align['TeamName'] = 'l'
         x.padding_width = 1
-        for row in score:
+        for row in score2:
             x.add_row(row)
         return x.get_string()
 
