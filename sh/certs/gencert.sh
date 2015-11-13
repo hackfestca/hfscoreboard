@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ROOT='.'
-CA_NAME='sb-ca'                 # Should fit with openssl.cnf ca name (line 2)
+CA_NAME='hf.ca.sb'               # Should fit with openssl.cnf ca name (line 2)
 CONFIG_FILE=$ROOT'/openssl.cnf'
 CA_FILE_PATH=$ROOT'/'$CA_NAME
 CA_KEY_FILE=$CA_FILE_PATH'.key'
 CA_CRT_FILE=$CA_FILE_PATH'.crt'
 CA_SUBJECT="/C=CA/ST=Qc/L=Quebec/O=My Org/OU=My Org Department/CN=My Org CA"
-DB_FILE_PATH=$ROOT'/srv.psql.scoreboard.db'
+DB_FILE_PATH=$ROOT'/hf.srv.db.hf'
 DB_KEY_FILE=$DB_FILE_PATH'.key'
 DB_CSR_FILE=$DB_FILE_PATH'.csr'
 DB_CRT_FILE=$DB_FILE_PATH'.crt'

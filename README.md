@@ -133,7 +133,7 @@ The web interface let players submit and display scores but also shows live prog
 Install
 =======
 
-This procedure will describe a three(3) tier architecture but all steps can be done on a single box. Let's say we have the following topology:
+This procedure roughly describe a three(3) tier architecture but all steps can be done on a single box. Let's say we have the following topology:
 
 * 2x Web presentation servers at 172.28.71.11-12, resolving to scoreboard.hf (cyclic round robin)
 * 2x Web application servers at 172.28.70.22-23, resolving to sb-app01.hf and sb-app02.hf
@@ -143,7 +143,9 @@ This procedure will describe a three(3) tier architecture but all steps can be d
 
 You can change DNS names and IPs as you wish.
 
-1. Install three(3) VMs with the latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players, bruteforce, several binaries to download, etc.)
+1. Install one or many VMs with the latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players, bruteforce, several binaries to download, etc.)
+
+ For Hackfest 2015, 7 VMs were setup with 512mb of RAM, 8gb of disk and 1 CPU on each. 
   
  **It will work with another OS as long as you are resourceful :)**
 
@@ -177,39 +179,8 @@ You can change DNS names and IPs as you wish.
     Add another user? (y/n) [y]: n
     Goodbye!
     ```
- Then, clone this git project in sb's home.
-    ```bash
-    su - sb
-    git clone https://github.com/hackfestca/hfscoreboard
-    ```
 
-3. [On sb-db01.hf and sb-db02.hf] Generate a CA, generate a signed server certificate for the database and then 4 client certificates for different components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
-
-    ```bash
-    cd sh/cert
-    ./gencert.sh
-    ```
- Copy the database certificate and key file to postgresql folder
-    ```bash
-    mkdir /var/postgresql/data/certs
-    cp srv.psql.scoreboard.db.{crt,key} /var/postgresql/data/certs/
-    ```
- Copy the flagUpdater certificate and key file to certs folder
-    ```bash
-    cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
-    ```
- Upload the web certificate and key file to sb-app
-    ```bash
-    scp cli.psql.scoreboard.web.{crt,key} root@sb-app01.hf:/home/sb/scoreboard/certs/
-    ssh root@sb-app01.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
-    ```
- Upload the player certificate and key file to scoreboard.hf
-    ```bash
-    scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
-    ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
-    ```
-
-4. [On sb-db01.hf and sb-db02.hf] Install and configure postgresql
+3. [On sb-db01.hf and sb-db02.hf] Install and configure postgresql
 
     ```bash
     pkg_add postgresql-server
@@ -233,18 +204,25 @@ You can change DNS names and IPs as you wish.
 
  Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
     ```
-    hostssl scoreboard  owner       192.168.1.0/24         cert clientcert=1 
-    hostssl scoreboard  admin       192.168.1.0/24         md5 
-    hostssl scoreboard  flagupdater 172.28.0.10/32         cert clientcert=1
-    hostssl scoreboard  web         172.28.0.11/32         cert clientcert=1 
-    hostssl scoreboard  player      172.28.0.12/32         cert clientcert=1 
+    host scoreboard  owner       172.28.70.21/32            trust
+    host scoreboard  flagupdater 172.28.70.21/32            trust
+    host scoreboard  player      172.28.70.21/32            trust
+    host scoreboard  web         172.28.70.21/32            trust
+    host scoreboard  admin       172.28.70.21/32            trust
+
+    hostssl scoreboard  owner       172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  flagupdater 172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  flagupdater 172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  flagupdater 172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  player      172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  player      172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  player      172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  web         172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  web         172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  web         172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  admin       172.16.66.0/24          md5
     ```
- Some useful rules for development purpose:
-    ```
-    hostssl scoreboard  flagupdater 192.168.1.0/24         cert clientcert=1
-    hostssl scoreboard  player      192.168.1.0/24         cert clientcert=1 
-    hostssl scoreboard  web         192.168.1.0/24         cert clientcert=1
-    ```
+
  Then install ssh4py, to push new flags on challenges box using SSH but also black market items.
     ```bash
     git clone https://github.com/wallunit/ssh4py.git
@@ -257,7 +235,7 @@ You can change DNS names and IPs as you wish.
     ```
  Edit `/var/postgresql/data/postgresql.conf` and set the following variables.
     ```
-    listen_addresses = '172.28.0.10'
+    listen_addresses = '0.0.0.0'
     ...
     ssl = on
     ssl_ciphers = 'DEFAULT:!LOW:!EXP:!MD5:@STRENGTH'
@@ -273,6 +251,69 @@ You can change DNS names and IPs as you wish.
     ```bash
     /etc/rc.d/postgresql restart
     ```
+
+4. [On sb-db00.hf] Install pgpool-II
+    ```bash
+    pkg_add pgpool-II
+    ```
+
+ Configure pgpool-II in `/etc/pgpool.conf`. Here, two backends are configured and SSL is enabled.
+    ```
+    backend_hostname0 = 'sb-db01.hf'
+    backend_port0 = 5432
+    backend_weight0 = 1 
+    backend_data_directory0 = '/var/postgresql/data'
+    backend_flag0 = 'DISALLOW_TO_FAILOVER'
+    
+    backend_hostname1 = 'sb-db02.hf'
+    backend_port1 = 5432
+    backend_weight1 = 1 
+    backend_data_directory1 = '/var/postgresql/data'
+    backend_flag1 = 'DISALLOW_TO_FAILOVER'
+    ```
+
+    ```
+    ssl = on
+    ssl_cert = '/etc/pgpool/hf.srv.db.hf.crt'        # (change requires restart)
+    ssl_key = '/etc/pgpool/hf.srv.db.hf.key'     # (change requires restart)
+    ssl_ca = '/etc/pgpool/hf.ca.sb.chain.crt'        # (change requires restart)
+    ```
+
+ Configure database access: `/etc/pool_hba.conf`
+    ```
+    hostssl scoreboard  owner       172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  flagupdater 172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  flagupdater 172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  flagupdater 172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  player      172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  player      172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  player      172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  web         172.16.66.0/24          cert clientcert=1
+    hostssl scoreboard  web         172.28.70.22/32         cert clientcert=1
+    hostssl scoreboard  web         172.28.70.23/32         cert clientcert=1
+    hostssl scoreboard  admin       172.16.66.0/24          md5
+    ```
+
+ Enable load balancing mode. Whitelisted patterns will be load balanced between the master and the slaves. This means that these functions must only read data, not write. 
+    ```
+    load_balance_mode = on
+    ```
+
+    ```
+    white_function_list = 'getScore*,getTeamInfoFromIp*,getCatProgressFromIp*,
+                           getFlagProgressFromIp*,getNewsList*,getLotoCurrentList*,
+                           getLotoHistory*,getLotoInfo,getNewsList,getModelCountDown,
+                           getModelTeamsTop'
+    black_function_list = '*,currval,lastval,nextval,setval'
+    ```
+
+ Enable Master/Slave mode.
+    ```
+    master_slave_mode = on
+    ```
+
+ Note that Automatic Failover was not configured this year. TODO 2016 ;)
+
 5. [On sb-app] Install python dependencies
 
     ```bash
@@ -318,6 +359,39 @@ You can change DNS names and IPs as you wish.
     cp config.default.py config.py
     vim config.py
     ```
+ Then, clone this git project in `/var/www`
+    ```bash
+    cd /var/www
+    git clone https://github.com/hackfestca/hfscoreboard scoreboard
+    chown -R sb:sb scoreboard
+    su - sb
+    ```
+
+ Generate a CA, generate a signed server certificate for the database and then 4 client certificates for the different components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
+    ```bash
+    cd sh/cert
+    ./gencert.sh
+    ```
+ Copy the database certificate and key file to postgresql folder
+    ```bash
+    scp hf.srv.sb.hf.{crt,key} root@sb-db01.hf:/var/postgresql/data/certs/
+    scp sb-ca.crt root@sb-db01.hf:/var/postgresql/data/certs/
+    ```
+ Copy the flagUpdater certificate and key file to certs folder
+    ```bash
+    cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
+    ```
+ Upload the web certificate and key file to sb-app
+    ```bash
+    scp cli.psql.scoreboard.web.{crt,key} root@sb-app01.hf:/home/sb/scoreboard/certs/
+    ssh root@sb-app01.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
+    ```
+ Upload the player certificate and key file to scoreboard.hf
+    ```bash
+    scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
+    ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
+    ```
+
 6. [On scoreboard.hf] Install nginx and python dependencies for player API
 
     ```bash
@@ -460,17 +534,18 @@ You can change DNS names and IPs as you wish.
 How to use
 ==========
 
-Running the scoreboard
-----------------------
+Starting the scoreboard
+-----------------------
 
-[On sb-db01] You only need postgresql running with data initialized. Simply run `python3 ./initDB.py --all`
-
-[On sb-app] Run `supervisorctl start all`
+[On sb-db01.hf and sb-db02.hf] Run `/etc/rc.d/postgresql start`
+[On sb-db00.hf] Run `/etc/rc.d/pgpool start`
+[On sb-app01.hf and sb-app02.hf] Run `supervisorctl start all`
+[On sb-web01.hf and sb-web02.hf] Run `/etc/rc.d/nginx start`
 
 Initialize database
 -------------------
 
-You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql` and run `initDB.py -d`. Important: This will delete all data.
+You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
     ```
     $ ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data]
@@ -733,6 +808,13 @@ Flags & Teams management
 
 The `initDB.py` script let database owner import flags and teams from CSV files. Use google spreadsheet to write flags at a central location so multiple admins can prepare their flags before the CTF. On a regular basis, export the spreadsheet in CSV format, move it to `import/flags.csv` and import flags by running `python3.3 ./initDB --flags`. The same procedure apply for teams.
 
+
+Benchmark
+=========
+
+This is what it looks like in action. 20 000 requests are sent on the index page are sent in 50 seconds using `ab -n 1000 -c 20 https://scoreboard.hf/`
+
+![benchmark](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/benchmark2015.png)
 
 Docs
 ====
