@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.ClientController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.ClientController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Client controller class. Mostly an abstract class for other controllers.</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span> 
+<span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<div class="viewcode-block" id="ClientController"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController">[docs]</a><span class="k">class</span> <span class="nc">ClientController</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Client controller class. Mostly an abstract class for other controllers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_bDebug</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: Determine if we run in debug mode or not.</span>
+<span class="sd">    @type: Boolean</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_sUser</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: User name to use for authentication.</span>
+<span class="sd">    @type: String</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_sPass</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: Password to use for authentication. If set, _sCrtFile and _sKeyFile must be None.</span>
+<span class="sd">    @type: String</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_sCrtFile</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: Client certificate crt file to use for authentification. If set, _sPass must be None.</span>
+<span class="sd">    @type: String</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_sKeyFile</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: Client certificate key file to use for authentification. If set, _sPass must be None.</span>
+<span class="sd">    @type: String</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_oDB</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @ivar: Database connection object</span>
+<span class="sd">    @type: tbd</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">_oDBCursor</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>\
+                            <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span><span class="p">,</span> \
+                            <span class="n">password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sPass</span><span class="p">,</span> \
+                            <span class="n">host</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_HOST</span><span class="p">,</span> \
+                            <span class="n">database</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_NAME</span><span class="p">,</span> \
+                            <span class="n">connect_timeout</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_CONNECT_TIMEOUT</span><span class="p">,</span> \
+                            <span class="n">sslmode</span> <span class="o">=</span> <span class="s">&#39;require&#39;</span><span class="p">,</span>
+                            <span class="n">sslcert</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sCrtFile</span><span class="p">,</span> \
+                            <span class="n">sslkey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sKeyFile</span><span class="p">,</span> \
+                            <span class="n">sslrootcert</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_SSL_ROOT_CA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="o">.</span><span class="n">set_isolation_level</span><span class="p">(</span><span class="n">psycopg2</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="bp">True</span>     <span class="c"># Important for when submitFlag return an error (such as: invalid flag, already submit, etc.)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SET search_path = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_SCHEMA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;SET bytea_output TO escape;&quot;</span><span class="p">)</span>
+
+<span class="c">#    def __del__(self):</span>
+<span class="c">#        if self._oDB:</span>
+<span class="c">#            self.close()</span>
+
+    <span class="k">def</span> <span class="nf">_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcDef</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bDebug</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_benchmark</span><span class="p">(</span><span class="n">funcDef</span><span class="p">,</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">callproc</span><span class="p">(</span><span class="n">funcDef</span><span class="p">,</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ClientController.exec"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.exec">[docs]</a>    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcDef</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="n">funcDef</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.fetchall"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.fetchall">[docs]</a>    <span class="k">def</span> <span class="nf">fetchall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+       
+        <span class="c"># If the return set has a single value, return this value </span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> \
+            <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">]</span> \
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ret</span>
+</div>
+<div class="viewcode-block" id="ClientController.commit"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.commit">[docs]</a>    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">_benchmark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">callproc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Debug: &#39;</span><span class="o">+</span><span class="n">f</span><span class="o">+</span><span class="s">&#39;() was executed in &#39;</span> \
+                  <span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span><span class="o">.</span><span class="n">__round__</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">+</span><span class="s">&#39;ms&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">def</span> <span class="nf">_benchmarkMany</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nb</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nb</span><span class="p">):</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">callproc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Debug: &#39;</span><span class="o">+</span><span class="n">f</span><span class="o">+</span><span class="s">&#39;() was executed &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nb</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; times in &#39;</span> \
+                  <span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span><span class="o">.</span><span class="n">__round__</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">+</span><span class="s">&#39;ms&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+<div class="viewcode-block" id="ClientController.close"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.setDebug"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.setDebug">[docs]</a>    <span class="k">def</span> <span class="nf">setDebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">debug</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bDebug</span> <span class="o">=</span> <span class="n">debug</span>
+        </div>
+<div class="viewcode-block" id="ClientController.getScore"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getScore">[docs]</a>    <span class="k">def</span> <span class="nf">getScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="n">ts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="s">&#39;getScore&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">cat</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.getBMItemCategoryList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getBMItemCategoryList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemCategoryList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemCategoryList&#39;</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="ClientController.getBMItemStatusList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getBMItemStatusList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemStatusList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemStatusList&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.getLotoCurrentList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getLotoCurrentList">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoCurrentList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getLotoCurrentList&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.getLotoInfo"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getLotoInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getLotoInfo&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.getNewsList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getNewsList">[docs]</a>    <span class="k">def</span> <span class="nf">getNewsList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getNewsList&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatScore"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatScore">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="n">ts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Pos&#39;</span><span class="p">,</span><span class="s">&#39;ID&#39;</span><span class="p">,</span><span class="s">&#39;TeamName&#39;</span><span class="p">,</span><span class="s">&#39;Cash&#39;</span><span class="p">,</span><span class="s">&#39;Notoriety&#39;</span><span class="p">]</span> 
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">cat</span><span class="p">)</span>
+        <span class="n">score2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">score</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">score</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;TeamName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score2</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatNews"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatNews">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatNews</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">,</span><span class="s">&#39;Release date&amp;time&#39;</span><span class="p">,</span> <span class="s">&#39;News&#39;</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNewsList</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Release date&amp;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;News&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span><span class="o">=</span><span class="mi">60</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatBMItemCategoryList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatBMItemCategoryList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatBMItemCategoryList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Description&#39;</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBMItemCategoryList</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatBMItemStatusList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatBMItemStatusList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatBMItemStatusList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Description&#39;</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBMItemStatusList</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatLotoCurrentList"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatLotoCurrentList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatLotoCurrentList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Src id&#39;</span><span class="p">,</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Dst ID&#39;</span><span class="p">,</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Amount&#39;</span><span class="p">,</span><span class="s">&#39;Type&#39;</span><span class="p">,</span><span class="s">&#39;TS&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLotoCurrentList</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ClientController.getFormatLotoInfo"><a class="viewcode-back" href="../../lib.html#lib.ClientController.ClientController.getFormatLotoInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatLotoInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLotoInfo</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

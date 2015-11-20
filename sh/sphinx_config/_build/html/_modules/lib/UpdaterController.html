@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.UpdaterController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.UpdaterController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Flag updater controller class used by flagUpdater.py</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">ClientController</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">libssh2</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">call</span>
+
+<div class="viewcode-block" id="UpdaterController"><a class="viewcode-back" href="../../lib.html#lib.UpdaterController.UpdaterController">[docs]</a><span class="k">class</span> <span class="nc">UpdaterController</span><span class="p">(</span><span class="n">ClientController</span><span class="o">.</span><span class="n">ClientController</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Updater controller class used by FlagUpdaterController, InitController and more.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_sSSHUser</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_sSSHPubKey</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_sSSHPrivKey</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_sSSHPrivKeyPwd</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_localExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Executing: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cmd</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_remoteExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bDebug</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Connecting to </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">host</span><span class="p">)</span>
+            <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+            <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+            
+            <span class="n">session</span> <span class="o">=</span> <span class="n">libssh2</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">startup</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+
+            <span class="c">#session.userauth_password(&#39;john&#39;, &#39;******&#39;)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">userauth_publickey_fromfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sSSHUser</span><span class="p">,</span> \
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPubKey</span><span class="p">,</span> \
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKey</span><span class="p">,</span> \
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKeyPwd</span><span class="p">)</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">channel</span><span class="p">()</span>
+            <span class="n">channel</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bDebug</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Debug: SSH cmd output: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">channel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">libssh2</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_remoteGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">):</span>
+        <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+        <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+        
+        <span class="n">session</span> <span class="o">=</span> <span class="n">libssh2</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">startup</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        
+        <span class="n">session</span><span class="o">.</span><span class="n">userauth_publickey_fromfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sSSHUser</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPubKey</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKey</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKeyPwd</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="p">(</span><span class="n">st_size</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">scp_recv</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">fhDst</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span>
+        
+        <span class="n">got</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">got</span> <span class="o">&lt;</span> <span class="n">st_size</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">st_size</span> <span class="o">-</span> <span class="n">got</span><span class="p">,</span> <span class="mi">1024</span><span class="p">))</span>
+            <span class="n">got</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">fhDst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">exitStatus</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">get_exit_status</span><span class="p">()</span>
+        <span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_remotePut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">):</span>
+        <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+        <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+        
+        <span class="n">session</span> <span class="o">=</span> <span class="n">libssh2</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">startup</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        
+        <span class="n">session</span><span class="o">.</span><span class="n">userauth_publickey_fromfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sSSHUser</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPubKey</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKey</span><span class="p">,</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKeyPwd</span><span class="p">)</span>
+
+        <span class="n">fhSrc</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">scp_send</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span><span class="mi">0</span><span class="n">o660</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span><span class="p">)</span>
+       
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">fhSrc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">channel</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+ 
+        <span class="n">exitStatus</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">get_exit_status</span><span class="p">()</span>
+        <span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">bmiRemoteName</span><span class="p">):</span>
+        <span class="n">bmiLocalPath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_LOCAL_PATH</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">bmiImportName</span>
+        <span class="c"># Send on web servers</span>
+        <span class="n">bmiRemotePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_REMOTE_PATH</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">bmiRemoteName</span>
+        <span class="n">updateSecurityCmd</span> <span class="o">=</span> <span class="s">&#39;chmod 644 </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">bmiRemotePath</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_HOSTS</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Uploading </span><span class="si">%s</span><span class="s"> on </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bmiRemoteName</span><span class="p">,</span><span class="n">host</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remotePut</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">bmiLocalPath</span><span class="p">,</span><span class="n">bmiRemotePath</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remoteExec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">updateSecurityCmd</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_removeBMItemFromScoreboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmiRemoteName</span><span class="p">):</span>
+        <span class="n">bmiRemotePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_REMOTE_PATH</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">bmiRemoteName</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;rm &#39;</span><span class="o">+</span><span class="n">bmiRemotePath</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_HOSTS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remoteExec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Removing </span><span class="si">%s</span><span class="s"> on </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bmiRemoteName</span><span class="p">,</span><span class="n">host</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_updateBMItemStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">,</span><span class="n">statusCode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;setBMItemStatus&#39;</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">,</span><span class="n">statusCode</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_getBMItemPrivateId</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemPrivateId&#39;</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.AdminController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.AdminController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Admin controller class used by admin.py.</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">ClientController</span>
+<span class="kn">import</span> <span class="nn">WebController</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span> 
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="c">#from termcolor import colored</span>
+
+<span class="c"># Used for benchmark test only</span>
+<div class="viewcode-block" id="MyThread"><a class="viewcode-back" href="../../lib.html#lib.AdminController.MyThread">[docs]</a><span class="k">class</span> <span class="nc">MyThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">con</span><span class="p">,</span><span class="n">reqNum</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">con</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reqNum</span> <span class="o">=</span> <span class="n">reqNum</span>
+<div class="viewcode-block" id="MyThread.run"><a class="viewcode-back" href="../../lib.html#lib.AdminController.MyThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">benchScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reqNum</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="colors"><a class="viewcode-back" href="../../lib.html#lib.AdminController.colors">[docs]</a><span class="k">class</span> <span class="nc">colors</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Colors class:</span>
+<span class="sd">        reset all colors with colors.reset</span>
+<span class="sd">        two subclasses fg for foreground and bg for background.</span>
+<span class="sd">        use as colors.subclass.colorname.</span>
+<span class="sd">        i.e. colors.fg.red or colors.bg.green</span>
+<span class="sd">        also, the generic bold, disable, underline, reverse, strikethrough,</span>
+<span class="sd">        and invisible work with the main class</span>
+<span class="sd">        i.e. colors.bold</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">reset</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[0m&#39;</span>
+    <span class="n">bold</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[01m&#39;</span>
+    <span class="n">disable</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[02m&#39;</span>
+    <span class="n">underline</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[04m&#39;</span>
+    <span class="n">reverse</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[07m&#39;</span>
+    <span class="n">strikethrough</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[09m&#39;</span>
+    <span class="n">invisible</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[08m&#39;</span>
+<div class="viewcode-block" id="colors.fg"><a class="viewcode-back" href="../../lib.html#lib.AdminController.colors.fg">[docs]</a>    <span class="k">class</span> <span class="nc">fg</span><span class="p">:</span>
+        <span class="n">black</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[30m&#39;</span>
+        <span class="n">red</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[31m&#39;</span>
+        <span class="n">green</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[32m&#39;</span>
+        <span class="n">orange</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[33m&#39;</span>
+        <span class="n">blue</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[34m&#39;</span>
+        <span class="n">purple</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[35m&#39;</span>
+        <span class="n">cyan</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[36m&#39;</span>
+        <span class="n">lightgrey</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[37m&#39;</span>
+        <span class="n">darkgrey</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[90m&#39;</span>
+        <span class="n">lightred</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[91m&#39;</span>
+        <span class="n">lightgreen</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[92m&#39;</span>
+        <span class="n">yellow</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[93m&#39;</span>
+        <span class="n">lightblue</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[94m&#39;</span>
+        <span class="n">pink</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[95m&#39;</span>
+        <span class="n">lightcyan</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[96m&#39;</span></div>
+<div class="viewcode-block" id="colors.bg"><a class="viewcode-back" href="../../lib.html#lib.AdminController.colors.bg">[docs]</a>    <span class="k">class</span> <span class="nc">bg</span><span class="p">:</span>
+        <span class="n">black</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[40m&#39;</span>
+        <span class="n">red</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[41m&#39;</span>
+        <span class="n">green</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[42m&#39;</span>
+        <span class="n">orange</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[43m&#39;</span>
+        <span class="n">blue</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[44m&#39;</span>
+        <span class="n">purple</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[45m&#39;</span>
+        <span class="n">cyan</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[46m&#39;</span>
+        <span class="n">lightgrey</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\033</span><span class="s">[47m&#39;</span>
+</div></div>
+<div class="viewcode-block" id="AdminController"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController">[docs]</a><span class="k">class</span> <span class="nc">AdminController</span><span class="p">(</span><span class="n">ClientController</span><span class="o">.</span><span class="n">ClientController</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Admin controller class used by admin.py</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_ADMIN_USER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sPass</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_ADMIN_PASS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sCrtFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_ADMIN_CRT_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sKeyFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_ADMIN_KEY_FILE</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="AdminController.benchmarkDB"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.benchmarkDB">[docs]</a>    <span class="k">def</span> <span class="nf">benchmarkDB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">reqNum</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">BENCH_DEFAULT_REQ_NUM</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Testing getScore()&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_benchmarkMany</span><span class="p">(</span><span class="n">reqNum</span><span class="p">,</span><span class="s">&#39;getScore&#39;</span><span class="p">,[</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Testing getNewsList()&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_benchmarkMany</span><span class="p">(</span><span class="n">reqNum</span><span class="p">,</span><span class="s">&#39;getNewsList&#39;</span><span class="p">,[])</span>
+</div>
+<div class="viewcode-block" id="AdminController.benchmarkDBCon"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.benchmarkDBCon">[docs]</a>    <span class="k">def</span> <span class="nf">benchmarkDBCon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">reqNum</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">BENCH_DEFAULT_REQ_NUM</span><span class="p">,</span><span class="n">reqCon</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">BENCH_DEFAULT_CON_NUM</span><span class="p">):</span>
+        <span class="n">aThreads</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Opening </span><span class="si">%i</span><span class="s"> connections&#39;</span> <span class="o">%</span> <span class="n">reqCon</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">reqCon</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Nb of connections opened: </span><span class="si">%i</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">aThreads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MyThread</span><span class="p">(</span><span class="n">WebController</span><span class="o">.</span><span class="n">WebController</span><span class="p">(),</span><span class="n">reqNum</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">reqCon</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">aThreads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Running getScoreProgress() </span><span class="si">%i</span><span class="s"> times on instance #</span><span class="si">%i</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reqNum</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c"># Wait for all threads to complete</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">aThreads</span><span class="p">:</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.addTeam"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.addTeam">[docs]</a>    <span class="k">def</span> <span class="nf">addTeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">net</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="s">&#39;addTeam&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">net</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.modTeam"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.modTeam">[docs]</a>    <span class="k">def</span> <span class="nf">modTeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">net</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="s">&#39;modTeam&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">net</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getTeamList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getTeamList">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="s">&#39;listTeams&#39;</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.rewardTeam"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.rewardTeam">[docs]</a>    <span class="k">def</span> <span class="nf">rewardTeam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">pts</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exec</span><span class="p">(</span><span class="s">&#39;rewardTeam&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">pts</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.launderMoney"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.launderMoney">[docs]</a>    <span class="k">def</span> <span class="nf">launderMoney</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">cash</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;launderMoneyFromTeamid&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">cash</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getTeamsVariables"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getTeamsVariables">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamsVariables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getTeamsVariables&#39;</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.addNews"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.addNews">[docs]</a>    <span class="k">def</span> <span class="nf">addNews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">ts</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addNews&#39;</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">ts</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.modNews"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.modNews">[docs]</a>    <span class="k">def</span> <span class="nf">modNews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">ts</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;modNews&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">ts</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.checkFlag"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.checkFlag">[docs]</a>    <span class="k">def</span> <span class="nf">checkFlag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">flagValue</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;checkFlag&#39;</span><span class="p">,</span><span class="n">flagValue</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFlagList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFlagList">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getFlagList&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFlagsSubmitCount"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFlagsSubmitCount">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagsSubmitCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nameFilter</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getFlagsSubmitCount&#39;</span><span class="p">,</span><span class="n">nameFilter</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.addBMItem"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.addBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">addBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">disp</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">wallet</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addBMItem&#39;</span><span class="p">,</span>\
+                          <span class="n">name</span><span class="p">,</span><span class="n">category</span><span class="p">,</span><span class="n">status</span><span class="p">,</span><span class="n">wallet</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">disp</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.modBMItem"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.modBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">modBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">disp</span><span class="p">,</span><span class="n">desc</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;modBMItem&#39;</span><span class="p">,</span>\
+                          <span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">disp</span><span class="p">,</span><span class="n">desc</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getBMItemInfo"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getBMItemInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemInfo&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getBMItemLink"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getBMItemLink">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemLink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemLink&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.reviewBMItem"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.reviewBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">reviewBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">approve</span><span class="p">,</span><span class="n">rating</span><span class="p">,</span><span class="n">comments</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;reviewBMItem&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">approve</span><span class="p">,</span><span class="n">rating</span><span class="p">,</span><span class="n">comments</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getBMItemList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getBMItemList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemList&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.setBMItemStatus"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.setBMItemStatus">[docs]</a>    <span class="k">def</span> <span class="nf">setBMItemStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">status</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;setBMItemStatus&#39;</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">status</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getLotoHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getLotoHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getLotoHistory&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getTransactionHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getTransactionHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getTransactionHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getTransactionHistory&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.startGame"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.startGame">[docs]</a>    <span class="k">def</span> <span class="nf">startGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;startGame&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.setSetting"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.setSetting">[docs]</a>    <span class="k">def</span> <span class="nf">setSetting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="nb">type</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;setSetting&#39;</span><span class="p">,</span><span class="n">attr</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="nb">type</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getSettings"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getSettings">[docs]</a>    <span class="k">def</span> <span class="nf">getSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getSettings&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getGameStats"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getGameStats">[docs]</a>    <span class="k">def</span> <span class="nf">getGameStats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getGameStats&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getTeamProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getTeamProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">teamId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getTeamProgress&#39;</span><span class="p">,</span><span class="n">teamId</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFlagProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFlagProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">flagName</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getFlagProgress&#39;</span><span class="p">,</span><span class="n">flagName</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFlagTypeList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFlagTypeList">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagTypeList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getFlagTypeList&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getScoreProgress&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getSubmitHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getSubmitHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getSubmitHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getSubmitHistory&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">,</span><span class="nb">type</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getEvents"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lastUpdate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">facility</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">severity</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getEvents&#39;</span><span class="p">,</span>\
+                            <span class="n">lastUpdate</span><span class="p">,</span><span class="n">facility</span><span class="p">,</span><span class="n">severity</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatTeamList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatTeamList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatTeamList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;ID&#39;</span><span class="p">,</span><span class="s">&#39;Name&#39;</span><span class="p">,</span><span class="s">&#39;Net&#39;</span><span class="p">,</span><span class="s">&#39;FlagPts&#39;</span><span class="p">,</span><span class="s">&#39;KFlagPts&#39;</span><span class="p">,</span><span class="s">&#39;Total&#39;</span><span class="p">,</span><span class="s">&#39;Cash&#39;</span><span class="p">]</span> 
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTeamList</span><span class="p">(</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Net&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatTeamsVariables"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatTeamsVariables">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatTeamsVariables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Team Name&#39;</span><span class="p">,</span><span class="s">&#39;Name&#39;</span><span class="p">,</span><span class="s">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTeamsVariables</span><span class="p">(</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Team Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatFlagList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatFlagList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatFlagList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;ID&#39;</span><span class="p">,</span><span class="s">&#39;Name&#39;</span><span class="p">,</span><span class="s">&#39;Pts&#39;</span><span class="p">,</span><span class="s">&#39;Cash&#39;</span><span class="p">,</span><span class="s">&#39;Category&#39;</span><span class="p">,</span><span class="s">&#39;Status&#39;</span><span class="p">,</span><span class="s">&#39;Type&#39;</span><span class="p">,</span><span class="s">&#39;TypeExt&#39;</span><span class="p">,</span><span class="s">&#39;Author&#39;</span><span class="p">,</span><span class="s">&#39;Display Int.&#39;</span><span class="p">,</span><span class="s">&#39;Description&#39;</span><span class="p">]</span> 
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFlagList</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Author&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">score</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getGraphScore"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getGraphScore">[docs]</a>    <span class="k">def</span> <span class="nf">getGraphScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">ascii_graph</span> <span class="kn">import</span> <span class="n">Pyasciigraph</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;ascii_graph module is needed for this function. (pip install ascii_graph)&#39;</span><span class="p">)</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="bp">None</span><span class="p">)))</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">Pyasciigraph</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatFlagsSubmitCount"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatFlagsSubmitCount">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatFlagsSubmitCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nameFilter</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Flag&#39;</span><span class="p">,</span><span class="s">&#39;Submit Count&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFlagsSubmitCount</span><span class="p">(</span><span class="n">nameFilter</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Flag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Submit Count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatBMItemInfo"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatBMItemInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatBMItemInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">,</span><span class="s">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBMItemInfo</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatBMItemList"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatBMItemList">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatBMItemList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">,</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;description&#39;</span><span class="p">,</span><span class="s">&#39;category&#39;</span><span class="p">,</span><span class="s">&#39;status&#39;</span><span class="p">,</span><span class="s">&#39;rating&#39;</span><span class="p">,</span><span class="s">&#39;owner&#39;</span><span class="p">,</span><span class="s">&#39;cost&#39;</span><span class="p">,</span><span class="s">&#39;qty&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBMItemList</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatLotoHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatLotoHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatLotoHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Src id&#39;</span><span class="p">,</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Dst ID&#39;</span><span class="p">,</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Amount&#39;</span><span class="p">,</span><span class="s">&#39;Type&#39;</span><span class="p">,</span><span class="s">&#39;TS&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLotoHistory</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatTransactionHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatTransactionHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatTransactionHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">,</span><span class="s">&#39;Amount&#39;</span><span class="p">,</span><span class="s">&#39;Type&#39;</span><span class="p">,</span><span class="s">&#39;TS&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTransactionHistory</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Src Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Dst Wallet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatGameStats"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatGameStats">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatGameStats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">,</span><span class="s">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGameStats</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatTeamProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatTeamProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatTeamProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">teamId</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Flag&#39;</span><span class="p">,</span><span class="s">&#39;isDone&#39;</span><span class="p">,</span><span class="s">&#39;Submit timestamp&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTeamProgress</span><span class="p">(</span><span class="n">teamId</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Flag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Submit timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatFlagProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatFlagProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatFlagProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">flagName</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Team&#39;</span><span class="p">,</span><span class="s">&#39;isDone&#39;</span><span class="p">,</span><span class="s">&#39;Submit timestamp&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFlagProgress</span><span class="p">(</span><span class="n">flagName</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Team&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Submit timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getScoreProgress</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">()</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatSettings"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatSettings">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Key&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSettings</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatSubmitHistory"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatSubmitHistory">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatSubmitHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Timestamp&#39;</span><span class="p">,</span> <span class="s">&#39;TeamName&#39;</span><span class="p">,</span> <span class="s">&#39;FlagName&#39;</span><span class="p">,</span> <span class="s">&#39;Pts&#39;</span><span class="p">,</span> <span class="s">&#39;Category&#39;</span><span class="p">,</span> <span class="s">&#39;Type&#39;</span><span class="p">]</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSubmitHistory</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="nb">type</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getCsvScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getCsvScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getCsvScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">csvh</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_MINIMAL</span><span class="p">)</span>
+        <span class="n">teams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">newTeams</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getScoreProgress</span><span class="p">())</span>
+        <span class="n">newScore</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">x</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)][</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">score</span><span class="p">]</span>
+
+        <span class="c"># Write header</span>
+        <span class="n">csvh</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&#39;Time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">newTeams</span><span class="p">)</span>
+
+        <span class="c"># Write content</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">newScore</span><span class="p">:</span>
+            <span class="n">csvh</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&quot;</span><span class="p">)]</span> <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.getFormatEvents"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.getFormatEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lastUpdate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">facility</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">severity</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Title&#39;</span><span class="p">,</span> <span class="s">&#39;Facility&#39;</span><span class="p">,</span> <span class="s">&#39;Severity&#39;</span><span class="p">,</span> <span class="s">&#39;Ts&#39;</span><span class="p">]</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getEvents</span><span class="p">(</span><span class="n">lastUpdate</span><span class="p">,</span><span class="n">facility</span><span class="p">,</span><span class="n">severity</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s">&#39;Title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">get_string</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AdminController.printLiveFormatEvents"><a class="viewcode-back" href="../../lib.html#lib.AdminController.AdminController.printLiveFormatEvents">[docs]</a>    <span class="k">def</span> <span class="nf">printLiveFormatEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lastUpdate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">facility</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">severity</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">grep</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">refresh</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">formatStr</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s"> </span><span class="si">%s%s</span><span class="s"> </span><span class="si">%s%s</span><span class="s"> </span><span class="si">%s%s</span><span class="s">&quot;</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getEvents</span><span class="p">(</span><span class="n">lastUpdate</span><span class="p">,</span><span class="n">facility</span><span class="p">,</span><span class="n">severity</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">formatStr</span> <span class="o">%</span> <span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">green</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                               <span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">yellow</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">orange</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                               <span class="n">colors</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">lastUpdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getEvents</span><span class="p">(</span><span class="n">lastUpdate</span><span class="p">,</span><span class="n">facility</span><span class="p">,</span><span class="n">severity</span><span class="p">,</span><span class="n">grep</span><span class="p">,</span><span class="n">top</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="n">formatStr</span> <span class="o">%</span> <span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">green</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                       <span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">yellow</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="n">colors</span><span class="o">.</span><span class="n">fg</span><span class="o">.</span><span class="n">orange</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                       <span class="n">colors</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                    <span class="n">lastUpdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

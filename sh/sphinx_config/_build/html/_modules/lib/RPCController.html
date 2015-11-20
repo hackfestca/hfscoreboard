@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.RPCController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.RPCController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">RPC Handler class used by player-api.py</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="kn">from</span> <span class="nn">xmlrpc.server</span> <span class="kn">import</span> <span class="n">SimpleXMLRPCRequestHandler</span><span class="p">,</span><span class="n">Fault</span>
+<span class="kn">from</span> <span class="nn">lib</span> <span class="kn">import</span> <span class="n">PlayerApiController</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<div class="viewcode-block" id="expose"><a class="viewcode-back" href="../../lib.html#lib.RPCController.expose">[docs]</a><span class="k">def</span> <span class="nf">expose</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    A decorator to identify which methods are exposed (accessible from player.py)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s">&#39;EXPOSE&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">decorate</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">decorate</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="RPCHandler"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler">[docs]</a><span class="k">class</span> <span class="nc">RPCHandler</span><span class="p">(</span><span class="n">SimpleXMLRPCRequestHandler</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    RPC Handler class used by player-api.py</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">_bDebug</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_oC</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">behindProxy</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="c"># Find the method</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+           <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">method</span> <span class="ow">and</span> \
+              <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">and</span> \
+              <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s">&#39;EXPOSE&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="c"># if a valid method is found, process.</span>
+        <span class="k">if</span> <span class="n">func</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">behindProxy</span><span class="p">:</span>
+                <span class="n">clientIP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getProxiedClientIp</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">clientIP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_address</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">clientIP</span><span class="p">,</span> <span class="o">*</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_dbConnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oC</span> <span class="o">=</span> <span class="n">PlayerApiController</span><span class="o">.</span><span class="n">PlayerApiController</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oC</span><span class="o">.</span><span class="n">setDebug</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bDebug</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">submit_message</span> <span class="o">=</span> <span class="s">&#39;Error while connecting the database&#39;</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgerror</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Fault</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">submit_message</span><span class="p">)</span> 
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_dbClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oC</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_dbExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">func</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbConnect</span><span class="p">()</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oC</span><span class="p">,</span><span class="n">func</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbClose</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">ret</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">InternalError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> <span class="c"># All &quot;raise&quot; trigger this type of exception.</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">diag</span><span class="o">.</span><span class="n">message_primary</span><span class="p">)</span>   <span class="c"># Hopefully, it will not leak too much :/</span>
+            <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">diag</span><span class="o">.</span><span class="n">message_primary</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">diag</span><span class="o">.</span><span class="n">message_primary</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;duplicate key value violates unique constraint &quot;u_flag_constraint&quot;&#39;</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Flag already submitted.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s">&#39;Flag already submitted.&#39;</span>
+            <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">diag</span><span class="o">.</span><span class="n">message_primary</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;duplicate key value violates unique constraint &quot;bmitem_name_key&quot;&#39;</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Item already submitted.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s">&#39;Item already submitted.&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&#39;An error occured. Please contact an administrator.&#39;</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgerror</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s">&#39;An error occured. Please contact an administrator.&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_getProxiedClientIp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">r&quot;(?P&lt;name&gt;.*?): (?P&lt;value&gt;.*?)\n&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="s">&#39;X-Real-IP&#39;</span> <span class="ow">in</span> <span class="n">h</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">h</span><span class="p">[</span><span class="s">&#39;X-Real-IP&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s">&#39;X-Forwarded-For&#39;</span> <span class="ow">in</span> <span class="n">h</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">h</span><span class="p">[</span><span class="s">&#39;X-Forwarded-For&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: Received a request without X-Real-IP or X-Forwarded-For headers&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.submitFlag"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.submitFlag">[docs]</a>    <span class="k">def</span> <span class="nf">submitFlag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">flagValue</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;submitFlagFromIp&#39;</span><span class="p">,</span><span class="n">flagValue</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getScore"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getScore">[docs]</a>    <span class="k">def</span> <span class="nf">getScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="n">ts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">ip</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatScore&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">cat</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.buyBMItem"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.buyBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">buyBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;buyBMItemFromIp&#39;</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">bmItemId</span><span class="p">),</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.sellBMItem"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.sellBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">sellBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;sellBMItemFromIp&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemInfo"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatBMItemInfoFromIp&#39;</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemLink"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemLink">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemLink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getBMItemLinkFromIp&#39;</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemData"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemData">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getBMItemDataFromIp&#39;</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemList"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatBMItemListFromIp&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemCategoryList"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemCategoryList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemCategoryList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatBMItemCategoryList&#39;</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getBMItemStatusList"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getBMItemStatusList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemStatusList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatBMItemStatusList&#39;</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.buyLoto"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.buyLoto">[docs]</a>    <span class="k">def</span> <span class="nf">buyLoto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;buyLotoFromIp&#39;</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getLotoCurrentList"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getLotoCurrentList">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoCurrentList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatLotoCurrentList&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getLotoInfo"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getLotoInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatLotoInfo&#39;</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getCatProgress"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getCatProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getCatProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatCatProgressFromIp&#39;</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getFlagProgress"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getFlagProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatFlagProgressFromIp&#39;</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getNews"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getNews">[docs]</a>    <span class="k">def</span> <span class="nf">getNews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatNews&#39;</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getTeamInfo"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getTeamInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatTeamInfoFromIp&#39;</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+</div>
+    <span class="nd">@expose</span><span class="p">()</span>
+<div class="viewcode-block" id="RPCHandler.getTeamSecrets"><a class="viewcode-back" href="../../lib.html#lib.RPCController.RPCHandler.getTeamSecrets">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamSecrets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">clientIP</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbExec</span><span class="p">(</span><span class="s">&#39;getFormatTeamSecretsFromIp&#39;</span><span class="p">,</span><span class="n">clientIP</span><span class="p">)</span>
+
+<span class="c">#    @expose()</span>
+<span class="c">#    def getEvents(self,clientIP,lastUpdate,facility,severity,grep,top):</span>
+<span class="c">#        return self._dbExec(&#39;getFormatEventsFromIp&#39;,lastUpdate,facility,severity,grep,top,clientIP)</span>
+
+<span class="c">#    @expose()</span>
+<span class="c">#    def getLogEvents(self,clientIP,lastUpdate,facility,severity,grep,top):</span>
+<span class="c">#        return self._dbExec(&#39;getLogEventsFromIp&#39;,lastUpdate,facility,severity,grep,top,clientIP)</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

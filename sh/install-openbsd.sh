@@ -10,8 +10,6 @@ initdb -D /var/postgresql/data
 /etc/rc.d/postgresql restart
 
 # Install pip 
-#curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
-#python3.3 get-pip.py
 pkg_add py3-pip
 pip install --upgrade pip
 
@@ -20,11 +18,8 @@ pkg_add py-pip
 pip2.7 install --upgrade pip
 pkg_add supervisor
 
-# Install postgresql
-#pip install py-postgresql
-
 # Install psycopg2
-pkg_add py3-psycopg3
+pkg_add py3-psycopg2
 
 # Install tornado (needed for scoreboard.py only)
 pip install tornado

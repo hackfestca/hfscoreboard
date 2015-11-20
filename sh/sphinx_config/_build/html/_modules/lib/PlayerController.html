@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.PlayerController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.PlayerController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Player controller class used by player.py</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">from</span> <span class="nn">xmlrpc.client</span> <span class="kn">import</span> <span class="n">ServerProxy</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="PlayerController"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController">[docs]</a><span class="k">class</span> <span class="nc">PlayerController</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Player controller class used by player.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_oRPC</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Setup SSL context</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">PLAYER_API_URI</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;https&#39;</span><span class="p">):</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLContext</span><span class="p">(</span><span class="n">ssl</span><span class="o">.</span><span class="n">PROTOCOL_TLSv1_2</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">verify_mode</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">CERT_REQUIRED</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">check_hostname</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="c">#context.load_default_certs()       # To use installed CAs on the machine</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">load_verify_locations</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">PLAYER_API_SSL_ROOT_CA</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span> <span class="o">=</span> <span class="n">ServerProxy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">PLAYER_API_URI</span><span class="p">,</span><span class="n">allow_none</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">use_builtin_types</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span> <span class="o">=</span> <span class="n">ServerProxy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">PLAYER_API_URI_OLD</span><span class="p">,</span><span class="n">allow_none</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">use_datetime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlayerController.submitFlag"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.submitFlag">[docs]</a>    <span class="k">def</span> <span class="nf">submitFlag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">flagValue</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">submitFlag</span><span class="p">(</span><span class="n">flagValue</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getScore"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getScore">[docs]</a>    <span class="k">def</span> <span class="nf">getScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="n">ts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">cat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">cat</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.buyBMItem"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.buyBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">buyBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">buyBMItem</span><span class="p">(</span><span class="n">bmItemId</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.sellBMItem"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.sellBMItem">[docs]</a>    <span class="k">def</span> <span class="nf">sellBMItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">sellBMItem</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">amount</span><span class="p">,</span><span class="n">qty</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemInfo"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemInfo</span><span class="p">(</span><span class="n">bmItemId</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemLink"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemLink">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemLink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemLink</span><span class="p">(</span><span class="n">bmItemId</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemData"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemData">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItemId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemData</span><span class="p">(</span><span class="n">bmItemId</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemList"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemList</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemCategoryList"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemCategoryList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemCategoryList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemCategoryList</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getBMItemStatusList"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getBMItemStatusList">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemStatusList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getBMItemStatusList</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.buyLoto"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.buyLoto">[docs]</a>    <span class="k">def</span> <span class="nf">buyLoto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">buyLoto</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getLotoCurrentList"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getLotoCurrentList">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoCurrentList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getLotoCurrentList</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getLotoInfo"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getLotoInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getLotoInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getLotoInfo</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getCatProgress"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getCatProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getCatProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getCatProgress</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getFlagProgress"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getFlagProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getFlagProgress</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getNews"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getNews">[docs]</a>    <span class="k">def</span> <span class="nf">getNews</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getNews</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getTeamInfo"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getTeamInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getTeamInfo</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PlayerController.getTeamSecrets"><a class="viewcode-back" href="../../lib.html#lib.PlayerController.PlayerController.getTeamSecrets">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamSecrets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oRPC</span><span class="o">.</span><span class="n">getTeamSecrets</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.InitController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.InitController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Init controller class used by initDB.py.</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">UpdaterController</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="InitController"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController">[docs]</a><span class="k">class</span> <span class="nc">InitController</span><span class="p">(</span><span class="n">UpdaterController</span><span class="o">.</span><span class="n">UpdaterController</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Init controller class used by initDB.py.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_INIT_USER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sPass</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_INIT_PASS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sCrtFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_INIT_CRT_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sKeyFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_INIT_KEY_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_categoriesFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">CATEGORIES_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flagsFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">FLAGS_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_teamsFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">TEAMS_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bmiFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_FILE</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_USER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPubKey</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PUB_KEY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKey</span><span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PRIV_KEY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKeyPwd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PRIV_PWD</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oDB</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_sanitize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">t</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;null&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;str&#39;</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> \
+                   <span class="s">&#39;int&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> \
+                   <span class="s">&#39;float&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> \
+                   <span class="s">&#39;bool&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">True</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;true&#39;</span> <span class="k">else</span> <span class="bp">False</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">options</span><span class="p">[</span><span class="n">t</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+                   
+<div class="viewcode-block" id="InitController.importTables"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importTables">[docs]</a>    <span class="k">def</span> <span class="nf">importTables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Importing DB structure&#39;</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">SQL_TABLE_FILE</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importFunctions"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importFunctions">[docs]</a>    <span class="k">def</span> <span class="nf">importFunctions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Importing DB functions&#39;</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">SQL_FUNC_FILE</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importData"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importData">[docs]</a>    <span class="k">def</span> <span class="nf">importData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Importing DB data&#39;</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">SQL_DATA_FILE</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importCategories"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importCategories">[docs]</a>    <span class="k">def</span> <span class="nf">importCategories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_categoriesFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">cname</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">ctitle</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cdesc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">chidden</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Category: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">cname</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">cname</span> <span class="o">!=</span> <span class="s">&#39;Name&#39;</span><span class="p">:</span>
+                    <span class="n">teamId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addFlagCategory&#39;</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">ctitle</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">cdesc</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">chidden</span><span class="p">,</span><span class="s">&#39;bool&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importFlags"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importFlags">[docs]</a>    <span class="k">def</span> <span class="nf">importFlags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flagsFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Flag: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">fvalue</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">fpts</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">fcash</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">fhost</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">fcat</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                <span class="n">fstatus</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">fdispint</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                <span class="n">fauthor</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="n">ftype</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="n">ftypeext</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+                <span class="n">fdesc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+                <span class="n">fnews</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+                
+                <span class="k">if</span> <span class="n">fname</span> <span class="o">!=</span> <span class="s">&#39;Flag Name&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">fvalue</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addFlag&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fvalue</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fpts</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fcash</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fhost</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fcat</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fstatus</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fdispint</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fauthor</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">ftypeext</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fdesc</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fnews</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addRandomFlag&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fpts</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fcash</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fhost</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fcat</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fstatus</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fdispint</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fauthor</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">ftypeext</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fdesc</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">fnews</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importTeams"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importTeams">[docs]</a>    <span class="k">def</span> <span class="nf">importTeams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SETTINGS_COLS_START</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_teamsFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Team: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+                <span class="n">tname</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tnet</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                
+                <span class="k">if</span> <span class="n">tname</span> <span class="o">!=</span> <span class="s">&#39;Team Name&#39;</span><span class="p">:</span>
+                    <span class="n">teamId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addTeam&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">tname</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">tnet</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SETTINGS_COLS_START</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addTeamSecrets&#39;</span><span class="p">,</span> <span class="n">teamId</span><span class="p">,</span>\
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&#39;str&#39;</span><span class="p">),</span>\
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">&#39;str&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importBlackMarketItems"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importBlackMarketItems">[docs]</a>    <span class="k">def</span> <span class="nf">importBlackMarketItems</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bmiFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+            
+            <span class="c"># Delete already existing items on web servers</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;rm &#39;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_REMOTE_PATH</span> <span class="o">+</span> <span class="s">&#39;/*&#39;</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_HOSTS</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;Deleting black market items on </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">host</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_remoteExec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">cmd</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;BM Item: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+                <span class="n">bmiName</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">bmiCat</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+                <span class="n">bmiStatusCode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_PUBLISH</span>
+                <span class="n">bmiOwnerWallet</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">bmiAuthor</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">bmiAmount</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">bmiQty</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">bmiDispInt</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                <span class="n">bmiDesc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">bmiImportName</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                <span class="n">bmiData</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">bmiUpdateCmd</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+
+                <span class="n">bmiLocalPath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_LOCAL_PATH</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">bmiImportName</span>
+                
+                <span class="k">if</span> <span class="n">bmiName</span> <span class="o">!=</span> <span class="s">&#39;Name&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">bmiLocalPath</span><span class="p">):</span>
+                        <span class="c"># Import in database</span>
+                        <span class="c">#print(&#39;Importing item &quot;%s&quot;&#39; % bmiName)</span>
+                        <span class="n">bmiId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addBMItem&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiName</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiCat</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiStatusCode</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiOwnerWallet</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiAmount</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiQty</span><span class="p">,</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiDispInt</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiDesc</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">),</span> \
+                                           <span class="n">bmiData</span><span class="p">,</span> \
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">bmiUpdateCmd</span><span class="p">,</span><span class="s">&#39;str&#39;</span><span class="p">))</span>
+
+                        <span class="c"># Get privateId from bmiId</span>
+                        <span class="n">privateId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemPrivateId</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bmiId</span><span class="p">))</span>
+
+                        <span class="c"># Send on web servers</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">privateId</span><span class="o">+</span><span class="n">bmiImportName</span><span class="p">)</span>
+
+                        <span class="c"># update status (From TO_PUBLISH to FOR_SALE)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_updateBMItemStatus</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_SALE</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;File &quot;</span><span class="si">%s</span><span class="s">&quot; not found. Import of &quot;</span><span class="si">%s</span><span class="s">&quot; was canceled&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importSecurity"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importSecurity">[docs]</a>    <span class="k">def</span> <span class="nf">importSecurity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">SQL_SEC_FILE</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oDBCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="InitController.importAll"><a class="viewcode-back" href="../../lib.html#lib.InitController.InitController.importAll">[docs]</a>    <span class="k">def</span> <span class="nf">importAll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importTables</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importFunctions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importCategories</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importFlags</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importTeams</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importBlackMarketItems</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">importSecurity</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

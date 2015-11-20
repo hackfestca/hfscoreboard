@@ -137,15 +137,15 @@ This procedure roughly describe a three(3) tier architecture but all steps can b
 
 * 2x Web presentation servers at 172.28.71.11-12, resolving to scoreboard.hf (cyclic round robin)
 * 2x Web application servers at 172.28.70.22-23, resolving to sb-app01.hf and sb-app02.hf
-* A database pooler server at 172.28.70.21, resolving to sb-db00.hf
+* A database load balancer server at 172.28.70.21, resolving to sb-db00.hf
 * 2x database servers at 172.28.70.19-20, resolving to sb-db01.hf and sb-db02.hf
 * Admins are in 172.16.66.0/24
 
-You can change DNS names and IPs as you wish.
+Indeed, you can change DNS names and IPs as you wish.
 
 1. Install one or many VMs with the latest version of [OpenBSD][openbsd]. Default config with no GUI will do. Increase the `var` partition if you plan to have a lot of logs (a lot of players, bruteforce, several binaries to download, etc.)
 
- For Hackfest 2015, 7 VMs were setup with 512mb of RAM, 8gb of disk and 1 CPU on each. 
+ For Hackfest 2015, 7 VMs were setup with 512mb of RAM, 8gb of disk and 1 CPU on each. This was overkill. 
   
  **It will work with another OS as long as you are resourceful :)**
 
@@ -202,7 +202,7 @@ You can change DNS names and IPs as you wish.
     ```
  Then customize `sql/install.sql` file and copy/paste in this shell.
 
- Edit `/var/postgresql/data/pg_hba.conf` to configure database access. Don't forget to replace admin by your username. It should looks like this:
+ Edit `/var/postgresql/data/pg_hba.conf` to configure database access. 
     ```
     host scoreboard  owner       172.28.70.21/32            trust
     host scoreboard  flagupdater 172.28.70.21/32            trust
@@ -223,16 +223,6 @@ You can change DNS names and IPs as you wish.
     hostssl scoreboard  admin       172.16.66.0/24          md5
     ```
 
- Then install ssh4py, to push new flags on challenges box using SSH but also black market items.
-    ```bash
-    git clone https://github.com/wallunit/ssh4py.git
-    pkg_add libssh2-1.4.3
-    cd /usr/local/include/python3.4m/
-    ln -s ../libssh2.h libssh2.h 
-    ln -s ../libssh2_sftp.h libssh2_sftp.h 
-    ln -s ../libssh2_publickey.h libssh2_publickey.h 
-    cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
-    ```
  Edit `/var/postgresql/data/postgresql.conf` and set the following variables.
     ```
     listen_addresses = '0.0.0.0'
@@ -240,16 +230,12 @@ You can change DNS names and IPs as you wish.
     ssl = on
     ssl_ciphers = 'DEFAULT:!LOW:!EXP:!MD5:@STRENGTH'
     ...
-    ssl_cert_file = '/etc/ssl/srv.psql.scoreboard.db.crt' # (change requires restart)
-    ssl_key_file = '/etc/ssl/srv.psql.scoreboard.db.key'  # (change requires restart)
-    ssl_ca_file = '/etc/ssl/sb-ca.crt'        i           # (change requires restart)
+    ssl_cert_file = '/etc/ssl/hf.srv.db.hf.crt' # (change requires restart)
+    ssl_key_file = '/etc/ssl/hf.srv.db.hf.key'  # (change requires restart)
+    ssl_ca_file = '/etc/ssl/hf.ca.sb.crt'       # (change requires restart)
     ...
     search_path = 'scoreboard'
     ...
-    ```
- Restart postgresql
-    ```bash
-    /etc/rc.d/postgresql restart
     ```
 
 4. [On sb-db00.hf] Install pgpool-II
@@ -274,9 +260,9 @@ You can change DNS names and IPs as you wish.
 
     ```
     ssl = on
-    ssl_cert = '/etc/pgpool/hf.srv.db.hf.crt'        # (change requires restart)
+    ssl_cert = '/etc/pgpool/hf.srv.db.hf.crt'    # (change requires restart)
     ssl_key = '/etc/pgpool/hf.srv.db.hf.key'     # (change requires restart)
-    ssl_ca = '/etc/pgpool/hf.ca.sb.chain.crt'        # (change requires restart)
+    ssl_ca = '/etc/pgpool/hf.ca.sb.crt'          # (change requires restart)
     ```
 
  Configure database access: `/etc/pool_hba.conf`
@@ -324,12 +310,24 @@ You can change DNS names and IPs as you wish.
     ```bash
     cd /var/www
     git clone https://github.com/hackfestca/hfscoreboard scoreboard
+    chown -R sb:sb scoreboard
+    cd scoreboard
     ```
  Download and install supervisor. This will be used to run the process as a service.
     ```bash
     pkg_add py-pip
     pip2.7 install --upgrade pip
     pkg_add supervisor
+    ```
+ Download, compile and install ssh4py
+    ```bash
+    git clone https://github.com/wallunit/ssh4py.git
+    pkg_add libssh2-1.4.3
+    cd /usr/local/include/python3.4m/
+    ln -s ../libssh2.h libssh2.h 
+    ln -s ../libssh2_sftp.h libssh2_sftp.h 
+    ln -s ../libssh2_publickey.h libssh2_publickey.h 
+    cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
     ```
  Setup a supervisor program for the player API in `/etc/supervisord.d/playerApi.ini`
     ```
@@ -353,46 +351,13 @@ You can change DNS names and IPs as you wish.
     autostart=true
     autorestart=true
     ```
- Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_HOST` and `DB_HOST`
+ Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_URI` and `DB_HOST`
     ```bash
-    cd hfscoreboard
     cp config.default.py config.py
     vim config.py
     ```
- Then, clone this git project in `/var/www`
-    ```bash
-    cd /var/www
-    git clone https://github.com/hackfestca/hfscoreboard scoreboard
-    chown -R sb:sb scoreboard
-    su - sb
-    ```
 
- Generate a CA, generate a signed server certificate for the database and then 4 client certificates for the different components. A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
-    ```bash
-    cd sh/cert
-    ./gencert.sh
-    ```
- Copy the database certificate and key file to postgresql folder
-    ```bash
-    scp hf.srv.sb.hf.{crt,key} root@sb-db01.hf:/var/postgresql/data/certs/
-    scp sb-ca.crt root@sb-db01.hf:/var/postgresql/data/certs/
-    ```
- Copy the flagUpdater certificate and key file to certs folder
-    ```bash
-    cp cli.psql.scoreboard.db.{crt,key} /home/sb/hfscoreboard/certs/
-    ```
- Upload the web certificate and key file to sb-app
-    ```bash
-    scp cli.psql.scoreboard.web.{crt,key} root@sb-app01.hf:/home/sb/scoreboard/certs/
-    ssh root@sb-app01.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.web.{crt,key}
-    ```
- Upload the player certificate and key file to scoreboard.hf
-    ```bash
-    scp cli.psql.scoreboard.player.{crt,key} root@scoreboard.hf:/home/sb/scoreboard/certs/
-    ssh root@scoreboard.hf chown sb:sb /home/sb/scoreboard/certs/cli.psql.scoreboard.player.{crt,key}
-    ```
-
-6. [On scoreboard.hf] Install nginx and python dependencies for player API
+6. [On scoreboard.hf] Install nginx
 
     ```bash
     pkg_add nginx
@@ -527,6 +492,51 @@ You can change DNS names and IPs as you wish.
         #ssl_prefer_server_ciphers   on;
     }
     ```
+7. Several certificates are required for database authentication or TLS on the web server.
+
+ Overview:
+ * Database CA
+   * Server certificate for db.hf
+   * Client certificate for player xmlrpc API
+   * Client certificate for web access
+   * Client certificate for owner
+   * Client certificate for flagUpdater.py / lotoUpdater.py / bmUpdater.py
+ * Player CA
+   * Server certificate for scoreboard.hf
+   
+ A simple way to generate certificates is to customize certificate properties in the `sh/cert/openssl.cnf` config file and then run the `sh/cert/gencert.sh` script. If you plan to use passwords instead, skip this step.
+    ```bash
+    cd sh/cert
+    ./gencert.sh
+    ```
+ Copy the database certificate and key file on the databases and load balancers
+    ```bash
+    scp hf.srv.sb.hf.{crt,key} root@sb-db01.hf:/var/postgresql/data/certs/
+    scp hf.srv.sb.hf.{crt,key} root@sb-db02.hf:/var/postgresql/data/certs/
+    scp hf.srv.sb.hf.{crt,key} root@sb-db00.hf:/etc/pgpool/
+    scp hf.ca.sb.crt root@sb-db01.hf:/var/postgresql/data/certs/
+    scp hf.ca.sb.crt root@sb-db02.hf:/var/postgresql/data/certs/
+    scp hf.ca.sb.crt root@sb-db00.hf:/etc/pgpool/
+    ```
+ Copy the flagUpdater certificate and key file on sb-app01.hf
+    ```bash
+    cp hf.cli.db.flagupdater.{crt,key} root@sb-app01.hf:/var/www/scoreboard/certs/
+    ssh root@sb-app01.hf chown sb:sb /var/www/scoreboard/certs/hf.cli.db.web.{crt,key}
+    ```
+ Upload the web certificate and key file to sb-app{01,02}.hf
+    ```bash
+    cp hf.cli.db.web.{crt,key} root@sb-app01.hf:/var/www/scoreboard/certs/
+    cp hf.cli.db.web.{crt,key} root@sb-app02.hf:/var/www/scoreboard/certs/
+    ssh root@sb-app01.hf chown sb:sb /var/www/scoreboard/certs/hf.cli.db.web.{crt,key}
+    ssh root@sb-app02.hf chown sb:sb /var/www/scoreboard/certs/hf.cli.db.web.{crt,key}
+    ```
+ Upload the player certificate and key file to scoreboard.hf
+    ```bash
+    cp hf.cli.db.player.{crt,key} root@sb-app01.hf:/var/www/scoreboard/certs/
+    cp hf.cli.db.player.{crt,key} root@sb-app02.hf:/var/www/scoreboard/certs/
+    ssh root@sb-app01.hf chown sb:sb /var/www/scoreboard/certs/hf.cli.db.player.{crt,key}
+    ssh root@sb-app02.hf chown sb:sb /var/www/scoreboard/certs/hf.cli.db.player.{crt,key}
+    ```
 
 [openbsd]: http://www.openbsd.org
 
@@ -545,7 +555,9 @@ Starting the scoreboard
 Initialize database
 -------------------
 
-You might want to configure categories, authors, flags and settings. To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
+You might want to configure categories, authors, flags and other settings. 
+
+To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
     ```
     $ ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data]
@@ -649,21 +661,19 @@ Some principle
 * For long time use, jail or chroot it
 * Certs > Passwords
 
-Use user/pass authentication instead
-------------------------------------
+Use user/pass authentication
+----------------------------
 
 Most authentication are made using client certificates. To change authentication scheme:
 
 1. Open `/var/postgresql/data/pg_hba.conf` on the database server.
 2. Find line corresponding to the user you want to change. For example:
-
     ```
-    hostssl scoreboard  player      172.28.71.11/32         cert clientcert=1 
+    hostssl scoreboard  player      172.28.70.21/32         cert clientcert=1 
     ```
 3. Replace `cert clientcert=1` to `md5` so it looks like:
-
     ```
-    hostssl scoreboard  player      172.28.71.11/32         md5
+    hostssl scoreboard  player      172.28.70.21/32         md5
     ```
 4. Restart database: `/etc/rc.d/postgresql restart`
 
@@ -674,7 +684,6 @@ Warning: The `player.py` script do not support SSL if the version of python is l
 
 1. To enable TLS on the web server, first generate a CSR and sign it by an authority.
 2. Add these lines to your nginx server configuration and replace `listen 80` to `listen 443`.
-
     ```
     ssl                  on;
     ssl_certificate      /etc/ssl/scoreboard.crt;
@@ -719,26 +728,6 @@ Database replication
     ```
     hot_standby = on
     ```
-
-Application Load Balancing and Fail Over
-----------------------------------------
-
-You might need to update code during a CTF, thus cause a downtime by restarting application server. Also, on high load, the web tier is the second buttle neck after the database. Spreading the web VMs on multiple hosts can enhance performance. 
-
-To configure web load balancing, clone the web server or make a fresh install using previous steps. Then, in the upstream block, append server lines as described here.
-
-    upstream backends{
-        server 172.28.0.11:5000;
-        server 172.28.0.21:5000;
-    }
-
-To avoid downtime, configure a backup upstream. This will cause connection failures on primary servers to be sent on the backup server. To do so, simply append `backup` to a server line.
-
-    upstream backends{
-        server 172.28.0.11:5000;
-        server 172.28.0.21:5000;
-        server 172.28.0.31:5000 backup;
-    }
 
 Hardening
 ---------

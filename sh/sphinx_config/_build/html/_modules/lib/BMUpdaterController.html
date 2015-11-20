@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.BMUpdaterController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.BMUpdaterController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Black market updater controller class used by bmUpdater.py</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">UpdaterController</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span> 
+
+<div class="viewcode-block" id="BMUpdaterController"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController">[docs]</a><span class="k">class</span> <span class="nc">BMUpdaterController</span><span class="p">(</span><span class="n">UpdaterController</span><span class="o">.</span><span class="n">UpdaterController</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Black market updater controller class used by bmUpdater.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">BMI_STATUS_COL_ID</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_FU_USER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sPass</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_FU_PASS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sCrtFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_FU_CRT_FILE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sKeyFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_FU_KEY_FILE</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_USER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPubKey</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PUB_KEY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKey</span><span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PRIV_KEY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sSSHPrivKeyPwd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">SSH_BMU_PRIV_PWD</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_getBMItems</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemListUpdater&#39;</span><span class="p">,</span><span class="n">top</span><span class="p">))</span>
+        
+    <span class="k">def</span> <span class="nf">_getBMItemsFromStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">statusCode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBMItems</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BMI_STATUS_COL_ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">statusCode</span><span class="p">]</span>
+        
+    <span class="k">def</span> <span class="nf">_getBMItemsDeleteAll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">BMI_STATUS_COL_ID</span><span class="p">]</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_REMOVED</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBMItems</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">_addReviewReminder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmiId</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;The Black Market Item </span><span class="si">%s</span><span class="s"> is waiting for a review&#39;</span> <span class="o">%</span> <span class="n">bmiId</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;addEvent&#39;</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="s">&#39;bm&#39;</span><span class="p">,</span><span class="s">&#39;warning&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_getBMItemData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmiId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemData&#39;</span><span class="p">,</span><span class="n">bmiId</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_saveBMItemData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmiId</span><span class="p">,</span><span class="n">fileName</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemData</span><span class="p">(</span><span class="n">bmiId</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_LOCAL_PATH</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">fileName</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bmItems</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bmItems</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">bmItems</span><span class="p">:</span>
+                <span class="n">bmiId</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">bmiName</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">bmiCategory</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">bmiStatusCode</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">bmiStatusName</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">bmiOwner</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                <span class="n">bmiQty</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                <span class="n">bmiPrivateId</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="n">bmiImportName</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="n">bmiUpdCmd</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">-%H%M&quot;</span><span class="p">))</span>
+                <span class="n">remoteName</span> <span class="o">=</span> <span class="n">bmiPrivateId</span><span class="o">+</span><span class="n">bmiImportName</span>
+              
+                <span class="c"># Remove items</span>
+                <span class="k">if</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_REMOVED</span> <span class="ow">or</span> \
+                    <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_SOLD</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; was deleted or sold. Removing.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_removeBMItemFromScoreboard</span><span class="p">(</span><span class="n">remoteName</span><span class="p">)</span>
+                <span class="c"># Items to be approved by an admin</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_APPROVAL</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; must be approved by an admin. Downloading from DB.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_saveBMItemData</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">bmiImportName</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; must be approved by an admin. Publishing.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">remoteName</span><span class="p">)</span>
+                <span class="c"># Retrieve player&#39;s items</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_RETRIEVE</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; must be retrieved. Downloading from DB.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_saveBMItemData</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">bmiImportName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_updateBMItemStatus</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_PUBLISH</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; must be published. Publishing.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">remoteName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_updateBMItemStatus</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_SALE</span><span class="p">)</span>
+                <span class="c"># Publish new items</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_PUBLISH</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; must be published. Publishing.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">remoteName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_updateBMItemStatus</span><span class="p">(</span><span class="n">bmiId</span><span class="p">,</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_SALE</span><span class="p">)</span>
+                <span class="c"># Item is for sale</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_SALE</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">bmiUpdCmd</span> <span class="o">!=</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">bmiUpdCmd</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; can be updated. Updating.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                        <span class="c"># Run the updateCmd</span>
+                        <span class="n">commands</span> <span class="o">=</span> <span class="n">bmiUpdCmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;&amp;&amp;&#39;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+                            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_localExec</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+                        <span class="c"># Send on web servers</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_uploadBMItemOnScoreboard</span><span class="p">(</span><span class="n">bmiImportName</span><span class="p">,</span><span class="n">remoteName</span><span class="p">)</span>
+                <span class="c"># Send a reminder in the events</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_APPROVAL</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] </span><span class="si">%s</span><span class="s"> Item &quot;</span><span class="si">%s</span><span class="s">&quot; is waiting for approval. Adding reminder event.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="n">bmiName</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_addReviewReminder</span><span class="p">(</span><span class="n">bmiId</span><span class="p">)</span>
+                <span class="c"># Refused items</span>
+                <span class="k">elif</span> <span class="n">bmiStatusCode</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_REFUSED</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] No item was found with specified criteas&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="BMUpdaterController.getFormatBMItems"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.getFormatBMItems">[docs]</a>    <span class="k">def</span> <span class="nf">getFormatBMItems</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;ID&#39;</span><span class="p">,</span><span class="s">&#39;Name&#39;</span><span class="p">,</span><span class="s">&#39;Category&#39;</span><span class="p">,</span><span class="s">&#39;Status&#39;</span><span class="p">,</span><span class="s">&#39;Status Name&#39;</span><span class="p">,</span><span class="s">&#39;Owner&#39;</span><span class="p">,</span><span class="s">&#39;Qty&#39;</span><span class="p">,</span><span class="s">&#39;privateId&#39;</span><span class="p">,</span><span class="s">&#39;importName&#39;</span><span class="p">,</span><span class="s">&#39;updateCmd&#39;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getBMItems</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="c">#x.align[&#39;Info&#39;] = &#39;l&#39;</span>
+        <span class="c">#x.align[&#39;Value&#39;] = &#39;l&#39;</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">padding_width</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</div>
+<div class="viewcode-block" id="BMUpdaterController.updateForApproval"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.updateForApproval">[docs]</a>    <span class="k">def</span> <span class="nf">updateForApproval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemsFromStatus</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_FOR_APPROVAL</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BMUpdaterController.updateToRetrieve"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.updateToRetrieve">[docs]</a>    <span class="k">def</span> <span class="nf">updateToRetrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemsFromStatus</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_RETRIEVE</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BMUpdaterController.updateToPublish"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.updateToPublish">[docs]</a>    <span class="k">def</span> <span class="nf">updateToPublish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemsFromStatus</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_TO_PUBLISH</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BMUpdaterController.updateSold"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.updateSold">[docs]</a>    <span class="k">def</span> <span class="nf">updateSold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getBMItemsFromStatus</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">BMI_STATUS_SOLD</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BMUpdaterController.updateAll"><a class="viewcode-back" href="../../lib.html#lib.BMUpdaterController.BMUpdaterController.updateAll">[docs]</a>    <span class="k">def</span> <span class="nf">updateAll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updateFromList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getBMItems</span><span class="p">())</span>
+
+    </div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

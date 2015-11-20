@@ -1,0 +1,208 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lib.WebController &mdash; HF Scoreboard 20151120 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '20151120',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="HF Scoreboard 20151120 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for lib.WebController</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Web controller class used by scoreboard.py</span>
+
+<span class="sd">@author: Martin Dubé</span>
+<span class="sd">@organization: Hackfest Communications</span>
+<span class="sd">@license: Modified BSD License</span>
+<span class="sd">@contact: martin.dube@hackfest.ca</span>
+
+<span class="sd">Copyright (c) 2015, Hackfest Communications</span>
+<span class="sd">All rights reserved.</span>
+
+<span class="sd">Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">    * Redistributions of source code must retain the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">    * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">      notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">      documentation and/or other materials provided with the distribution.</span>
+<span class="sd">    * Neither the name of the &lt;organization&gt; nor the</span>
+<span class="sd">      names of its contributors may be used to endorse or promote products</span>
+<span class="sd">      derived from this software without specific prior written permission.</span>
+
+<span class="sd">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd">ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="sd">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="sd">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">ClientController</span>
+<span class="kn">import</span> <span class="nn">config</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+
+<div class="viewcode-block" id="WebController"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController">[docs]</a><span class="k">class</span> <span class="nc">WebController</span><span class="p">(</span><span class="n">ClientController</span><span class="o">.</span><span class="n">ClientController</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Web controller class used by scoreboard.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Prevent overwrite for inherited classes</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sUser</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_WEB_USER</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sPass</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_WEB_PASS</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sCrtFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_WEB_CRT_FILE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sKeyFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DB_WEB_KEY_FILE</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="WebController.benchScore"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.benchScore">[docs]</a>    <span class="k">def</span> <span class="nf">benchScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">callLimit</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">BENCH_DEFAULT_REQ_NUM</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_benchmarkMany</span><span class="p">(</span><span class="n">callLimit</span><span class="p">,</span><span class="s">&#39;getScore&#39;</span><span class="p">,[</span><span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_TOP_VALUE</span><span class="p">,</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="WebController.benchScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.benchScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">benchScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">callLimit</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">BENCH_DEFAULT_REQ_NUM</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_benchmarkMany</span><span class="p">(</span><span class="n">callLimit</span><span class="p">,</span><span class="s">&#39;getScoreProgress&#39;</span><span class="p">,[</span><span class="bp">None</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="WebController.submitFlagFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.submitFlagFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">submitFlagFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">flagValue</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;logSubmit&#39;</span><span class="p">,</span><span class="n">flagValue</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;submitFlagFromIp&#39;</span><span class="p">,</span><span class="n">flagValue</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getBMItemDataFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getBMItemDataFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">getBMItemDataFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">privateId</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getBMItemDataFromIp&#39;</span><span class="p">,</span><span class="n">privateId</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getCatProgressFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getCatProgressFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">getCatProgressFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getCatProgressFromIp&#39;</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getFlagProgressFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getFlagProgressFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">getFlagProgressFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getFlagProgressFromIp&#39;</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getScoreProgress&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getTeamInfoFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getTeamInfoFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamInfoFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getTeamInfoFromIp&#39;</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getTeamSecretsFromIp"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getTeamSecretsFromIp">[docs]</a>    <span class="k">def</span> <span class="nf">getTeamSecretsFromIp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">playerIp</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="s">&#39;getTeamSecretsFromIp&#39;</span><span class="p">,</span><span class="n">playerIp</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="WebController.getJsDataScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getJsDataScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getJsDataScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;[</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="n">teams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">newTeams</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getScoreProgress</span><span class="p">())</span>
+        <span class="n">newScore</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">x</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)][</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">score</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;[&#39;Time&#39;, &#39;{}&#39;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;&#39;, &#39;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newTeams</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">newScore</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;,[&#39;{}&#39;, {}]</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M&quot;</span><span class="p">),</span>
+                <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                <span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;]&quot;</span>
+        <span class="k">return</span> <span class="n">s</span>
+</div>
+<div class="viewcode-block" id="WebController.getCsvScoreProgress"><a class="viewcode-back" href="../../lib.html#lib.WebController.WebController.getCsvScoreProgress">[docs]</a>    <span class="k">def</span> <span class="nf">getCsvScoreProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">csvh</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_MINIMAL</span><span class="p">)</span>
+        <span class="n">teams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getScore</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">newTeams</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getScoreProgress</span><span class="p">())</span>
+        <span class="n">newScore</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">x</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)][</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">score</span><span class="p">]</span>
+
+        <span class="c"># Write header</span>
+        <span class="n">csvh</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&#39;Time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">newTeams</span><span class="p">)</span>
+
+        <span class="c"># Write content</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">newScore</span><span class="p">:</span>
+            <span class="n">csvh</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y/%m/</span><span class="si">%d</span><span class="s"> %H:%M:%S&quot;</span><span class="p">)]</span> <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">HF Scoreboard 20151120 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Martin Dubé.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
