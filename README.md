@@ -651,6 +651,31 @@ Players can interact with the scoreboard using `player.py` script.
       --debug               Run the tool in debug mode
     ```
 
+How to update a feature
+=======================
+
+Say you want to add a feature in `admin.py`, steps are:
+
+1. Analyze the feature. Make sure you know and detail the inputs and outputs of this feature.
+2. Write the relevents stored procedure in the `sql/functions.sql` file. Add fields or tables in `sql/tables.sql` if needed.
+3. Write the associated functions in the `lib/AdminController.py` file. This is the controller class for `admin.py`
+4. Write the help of this feature in `admin.py` file. Also bind user inputs to functions call.
+5. Test -> Fix issues -> start again
+
+Say you want to add a feature in `player.py`, some additional steps are required as xmlrpc is used. Steps are:
+
+1. Analyze the feature. Make sure you know and detail the inputs and outputs of this feature.
+2. Write the relevents stored procedure in the `sql/functions.sql` file. Add fields or tables in `sql/tables.sql` if needed.
+3. Write the associated functions in the `lib/PlayerApiController.py` file. This is the controller class for `player-api.py`
+4. Write the associated functions in the `lib/RPCController.py` file. This class contains all exposed methods. Someday it should be merged with `lib/PlayerApiController.py`
+5. Write the associated functions in the `lib/PlayerController.py` file. This is the controller class for `player.py`
+6. Write the help of this feature in `player.py` file. Also bind user inputs to functions call.
+7. Test -> Fix issues -> start again
+8. Add the feature to `sh/test-player.sh` to have it tested during unit tests
+
+The same principle occur for other scripts.
+
+
 Security
 ========
 
