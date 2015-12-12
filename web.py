@@ -5,11 +5,12 @@
 This script is the main interface for players to submit flags and display score
 
 @author: _eko
+@updatedBy: mdube
 @organization: Hackfest Communications
 @license: Modified BSD License
-@contact: mail.jessy.campos@gmail.com
+@contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

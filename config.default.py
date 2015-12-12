@@ -9,7 +9,7 @@ Scripts config file
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -46,13 +46,13 @@ PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
 DB_HOST = 'db.hf'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
-DB_SSL_ROOT_CA = 'certs/scoreboard-root-ca.crt'
-DB_CONNECT_TIMEOUT = 2
+DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
+DB_CONNECT_TIMEOUT = 10
 
 DB_INIT_USER = 'owner'
 DB_INIT_PASS = None
-DB_INIT_CRT_FILE = 'certs/cli.psql.scoreboard.owner.crt'
-DB_INIT_KEY_FILE = 'certs/cli.psql.scoreboard.owner.key'
+DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
+DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
 
 DB_ADMIN_USER = 'admin'
 DB_ADMIN_PASS = 'zWMmhIpSQlcFlNOu8rfpr'
@@ -61,33 +61,50 @@ DB_ADMIN_KEY_FILE = None
 
 DB_WEB_USER = 'web'
 DB_WEB_PASS = None
-DB_WEB_CRT_FILE = 'certs/cli.psql.scoreboard.web.crt'
-DB_WEB_KEY_FILE = 'certs/cli.psql.scoreboard.web.key'
+DB_WEB_CRT_FILE = 'certs/hf.cli.db.web.crt'
+DB_WEB_KEY_FILE = 'certs/hf.cli.db.web.key'
 
 DB_PLAYER_USER = 'player'
 DB_PLAYER_PASS = None
-DB_PLAYER_CRT_FILE = 'certs/cli.psql.scoreboard.player.crt'
-DB_PLAYER_KEY_FILE = 'certs/cli.psql.scoreboard.player.key'
+DB_PLAYER_CRT_FILE = 'certs/hf.cli.db.player.crt'
+DB_PLAYER_KEY_FILE = 'certs/hf.cli.db.player.key'
 
 DB_FU_USER = 'flagupdater'
 DB_FU_PASS = None
-DB_FU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
-DB_FU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
+DB_FU_CRT_FILE = 'certs/hf.cli.db.flagupdater.crt'
+DB_FU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
 
 DB_BMU_USER = 'flagupdater'
 DB_BMU_PASS = None
-DB_BMU_CRT_FILE = 'certs/cli.psql.scoreboard.flagupdater.crt'
-DB_BMU_KEY_FILE = 'certs/cli.psql.scoreboard.flagupdater.key'
+DB_BMU_CRT_FILE = 'certs/hf.cli.db.flagupdater.crt'
+DB_BMU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
 
 SQL_DATA_FILE = 'sql/data.sql'
 SQL_FUNC_FILE = 'sql/functions.sql'
 SQL_TABLE_FILE = 'sql/tables.sql'
 SQL_SEC_FILE = 'sql/security.sql'
 
-FLAG_UPDATER_SSH_USER = 'root'
-FLAG_UPDATER_SSH_PUB_KEY = 'certs/id_rsa.hf2014.pub'
-FLAG_UPDATER_SSH_PRIV_KEY = 'certs/id_rsa.hf2014'
-FLAG_UPDATER_SSH_PRIV_PWD = ''
+SSH_FU_USER = 'root'
+SSH_FU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
+SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_FU_PRIV_PWD = ''
+
+SSH_BMU_USER = 'sb'
+SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
+SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_BMU_PRIV_PWD = ''
+
+BMI_HOSTS = ['sb-web01.hf','sb-web02.hf']
+BMI_LOCAL_PATH = './blackmarket'
+BMI_REMOTE_PATH = '/var/www/htdocs/blackmarket'
+
+BMI_STATUS_FOR_SALE = 1
+BMI_STATUS_SOLD = 2
+BMI_STATUS_FOR_APPROVAL= 3
+BMI_STATUS_REFUSED = 4
+BMI_STATUS_REMOVED = 5
+BMI_STATUS_TO_PUBLISH = 6
+BMI_STATUS_TO_RETRIEVE = 7
 
 COMPETITION_MODE = True
 '''

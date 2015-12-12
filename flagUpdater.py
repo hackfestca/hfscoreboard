@@ -9,7 +9,7 @@ This script reads the database and upload new flags to KOTH servers.
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2014, Hackfest Communications
+Copyright (c) 2015, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
