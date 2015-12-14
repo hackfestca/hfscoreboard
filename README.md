@@ -547,10 +547,10 @@ How to use
 Starting the scoreboard
 -----------------------
 
-[On sb-db01.hf and sb-db02.hf] Run `/etc/rc.d/postgresql start`
-[On sb-db00.hf] Run `/etc/rc.d/pgpool start`
-[On sb-app01.hf and sb-app02.hf] Run `supervisorctl start all`
-[On sb-web01.hf and sb-web02.hf] Run `/etc/rc.d/nginx start`
+ [On sb-db01.hf and sb-db02.hf] Run `/etc/rc.d/postgresql start`
+ [On sb-db00.hf] Run `/etc/rc.d/pgpool start`
+ [On sb-app01.hf and sb-app02.hf] Run `supervisorctl start all`
+ [On sb-web01.hf and sb-web02.hf] Run `/etc/rc.d/nginx start`
 
 Initialize database
 -------------------
@@ -559,7 +559,7 @@ You might want to configure categories, authors, flags and other settings.
 
 To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
     ```
-    $ ./initDB.py -h
+    ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data]
                      [--flags] [--teams] [--black-market] [--security] [--all]
     
@@ -591,7 +591,7 @@ Administer the CTF
 Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
     ```
-    $ ./admin.py -h
+    ./admin.py -h
     usage: admin.py [-h] [-v] [--debug]
                     {team,news,flag,bm,cash,settings,score,stat,events,bench,conbench,security}
                     ...
@@ -626,7 +626,7 @@ Play the CTF
 Players can interact with the scoreboard using `player.py` script.
 
     ```
-    $ ./player.py -h
+    ./player.py -h
     usage: player.py [-h] [-v] [--debug]
                      {submit,score,bm,loto,catProg,flagProg,news,info,secrets} ...
     
@@ -826,7 +826,7 @@ The `initDB.py` script let database owner import flags and teams from CSV files.
 Benchmark
 =========
 
-This is what it looks like in action. 20 000 requests are sent on the index page are sent in 50 seconds using `ab -n 1000 -c 20 https://scoreboard.hf/`
+This is what it looks like in action. 1k requests, from 20 clients, are sent on the index page are sent in 50 seconds using `ab -n 1000 -c 20 https://scoreboard.hf/`. No cache was used.
 
 ![benchmark](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/benchmark2015.png)
 
