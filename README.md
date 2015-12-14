@@ -547,17 +547,17 @@ How to use
 Starting the scoreboard
 -----------------------
 
- [On sb-db01.hf and sb-db02.hf] Run `/etc/rc.d/postgresql start`
- [On sb-db00.hf] Run `/etc/rc.d/pgpool start`
- [On sb-app01.hf and sb-app02.hf] Run `supervisorctl start all`
- [On sb-web01.hf and sb-web02.hf] Run `/etc/rc.d/nginx start`
+* [On sb-db01.hf and sb-db02.hf] Run `/etc/rc.d/postgresql start`
+* [On sb-db00.hf] Run `/etc/rc.d/pgpool start`
+* [On sb-app01.hf and sb-app02.hf] Run `supervisorctl start all`
+* [On sb-web01.hf and sb-web02.hf] Run `/etc/rc.d/nginx start`
 
 Initialize database
 -------------------
 
-You might want to configure categories, authors, flags and other settings. 
+ You might want to configure categories, authors, flags and other settings. 
 
-To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
+ To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
     ```
     ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data]
@@ -588,7 +588,7 @@ To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`.
 Administer the CTF
 ------------------
 
-Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
+ Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
     ```
     ./admin.py -h
@@ -623,7 +623,7 @@ Once data are initialized, several informations can be managed or displayed usin
 Play the CTF
 ------------
 
-Players can interact with the scoreboard using `player.py` script.
+ Players can interact with the scoreboard using `player.py` script.
 
     ```
     ./player.py -h
