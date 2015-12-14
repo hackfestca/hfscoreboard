@@ -714,6 +714,7 @@ Warning: The `player.py` script do not support SSL if the version of python is l
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
     ```
+    
 3. Add this section if you wish to redirect port 80 to 443.
 
     ```
