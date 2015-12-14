@@ -555,10 +555,10 @@ Starting the scoreboard
 Initialize database
 -------------------
 
- You might want to configure categories, authors, flags and other settings. 
+You might want to configure categories, authors, flags and other settings. 
 
- To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
-    ```
+To do so, edit `sql/data.sql`, update files in `import/` and run `initDB.py -d`. Important: This will delete all data.
+
     ./initDB.py -h
     usage: initDB.py [-h] [-v] [--debug] [--tables] [--functions] [--data]
                      [--flags] [--teams] [--black-market] [--security] [--all]
@@ -583,14 +583,13 @@ Initialize database
                           import/blackmarket.csv)
       --security, -s      Import security only
       --all, -a           Import all
-    ```
+
 
 Administer the CTF
 ------------------
 
  Once data are initialized, several informations can be managed or displayed using `admin.py`. Note that every positional arguments have a sub-help page.
 
-    ```
     ./admin.py -h
     usage: admin.py [-h] [-v] [--debug]
                     {team,news,flag,bm,cash,settings,score,stat,events,bench,conbench,security}
@@ -618,14 +617,12 @@ Administer the CTF
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
       --debug               Run the tool in debug mode
-    ```
 
 Play the CTF
 ------------
 
  Players can interact with the scoreboard using `player.py` script.
 
-    ```
     ./player.py -h
     usage: player.py [-h] [-v] [--debug]
                      {submit,score,bm,loto,catProg,flagProg,news,info,secrets} ...
@@ -649,7 +646,6 @@ Play the CTF
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
       --debug               Run the tool in debug mode
-    ```
 
 How to update a feature
 =======================
@@ -852,4 +848,3 @@ License
 =======
 
 Modified BSD License
-
