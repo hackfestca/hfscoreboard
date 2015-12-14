@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lib.ModelController</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lib-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lib-module.html">Package&nbsp;lib</a> ::
+        Module&nbsp;ModelController
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lib.ModelController-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="lib.ModelController-module.html">Module lib.ModelController</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">Crypto</tt><tt class="py-op">.</tt><tt class="py-name">Cipher</tt> <tt class="py-keyword">import</tt> <tt class="py-name">AES</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">time</tt> <tt class="py-keyword">import</tt> <tt class="py-name">sleep</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">binascii</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">quick2wire</tt><tt class="py-op">.</tt><tt class="py-name">i2c</tt> <tt class="py-keyword">as</tt> <tt class="py-name">i2c</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">quick2wire</tt><tt class="py-op">.</tt><tt class="py-name">spi</tt> <tt class="py-keyword">as</tt> <tt class="py-name">spi</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">curses</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Module lib.ClientController=lib.ClientController-module.html,Class lib.ClientController.ClientController=lib.ClientController.ClientController-class.html"><a title="lib.ClientController
+lib.ClientController.ClientController" class="py-name" href="#" onclick="return doclink('link-0', 'ClientController', 'link-0');">ClientController</a></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">config</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"> </tt>
+<a name="ModelController"></a><div id="ModelController-def"><a name="L14"></a><tt class="py-lineno"> 14</tt> <a class="py-toggle" href="#" id="ModelController-toggle" onclick="return toggle('ModelController');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="lib.ModelController.ModelController-class.html">ModelController</a><tt class="py-op">(</tt><tt class="py-base-class">ClientController</tt><tt class="py-op">.</tt><tt class="py-base-class">ClientController</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ModelController-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="ModelController-expanded"><a name="ModelController.initLogging"></a><div id="ModelController.initLogging-def"><a name="L15"></a><tt class="py-lineno"> 15</tt> <a class="py-toggle" href="#" id="ModelController.initLogging-toggle" onclick="return toggle('ModelController.initLogging');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.ModelController-class.html#initLogging">initLogging</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ModelController.initLogging-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ModelController.initLogging-expanded"><a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-string">"model_logger"</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">formatter</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">Formatter</tt><tt class="py-op">(</tt><tt class="py-string">'%(asctime)s - %(message)s'</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-name">ch</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">StreamHandler</tt><tt class="py-op">(</tt><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-name">ch</tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-name">ch</tt><tt class="py-op">.</tt><tt class="py-name">setFormatter</tt><tt class="py-op">(</tt><tt class="py-name">formatter</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-name">info_file</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">FileHandler</tt><tt class="py-op">(</tt><tt class="py-string">"model.log"</tt><tt class="py-op">,</tt> <tt class="py-name">encoding</tt><tt class="py-op">=</tt><tt class="py-string">"utf-8"</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">        <tt class="py-name">info_file</tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt class="py-name">info_file</tt><tt class="py-op">.</tt><tt class="py-name">setFormatter</tt><tt class="py-op">(</tt><tt class="py-name">formatter</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">ch</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">info_file</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"> </tt>
+<a name="ModelController._send_i2c"></a><div id="ModelController._send_i2c-def"><a name="L32"></a><tt class="py-lineno"> 32</tt> <a class="py-toggle" href="#" id="ModelController._send_i2c-toggle" onclick="return toggle('ModelController._send_i2c');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.ModelController-class.html#_send_i2c">_send_i2c</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">msg</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ModelController._send_i2c-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ModelController._send_i2c-expanded"><a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">i2c</tt><tt class="py-op">.</tt><tt class="py-name">I2CMaster</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">master</tt><tt class="py-op">:</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">            <tt class="py-name">master</tt><tt class="py-op">.</tt><tt class="py-name">transaction</tt><tt class="py-op">(</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">                <tt class="py-name">i2c</tt><tt class="py-op">.</tt><tt class="py-name">writing</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Variable lib.ModelController.CasinoController.i2cAddr=lib.ModelController.CasinoController-class.html#i2cAddr,Variable lib.ModelController.PipelineController.i2cAddr=lib.ModelController.PipelineController-class.html#i2cAddr"><a title="lib.ModelController.CasinoController.i2cAddr
+lib.ModelController.PipelineController.i2cAddr" class="py-name" href="#" onclick="return doclink('link-1', 'i2cAddr', 'link-1');">i2cAddr</a></tt><tt class="py-op">,</tt> <tt class="py-name">msg</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">     </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"> </tt>
+<a name="CasinoController"></a><div id="CasinoController-def"><a name="L38"></a><tt class="py-lineno"> 38</tt> <a class="py-toggle" href="#" id="CasinoController-toggle" onclick="return toggle('CasinoController');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html">CasinoController</a><tt class="py-op">(</tt><tt class="py-base-class">ModelController</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="CasinoController-expanded"><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">    <tt id="link-2" class="py-name"><a title="lib.ModelController.CasinoController.i2cAddr
+lib.ModelController.PipelineController.i2cAddr" class="py-name" href="#" onclick="return doclink('link-2', 'i2cAddr', 'link-1');">i2cAddr</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0x04</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"> </tt>
+<a name="CasinoController.__init__"></a><div id="CasinoController.__init__-def"><a name="L41"></a><tt class="py-lineno"> 41</tt> <a class="py-toggle" href="#" id="CasinoController.__init__-toggle" onclick="return toggle('CasinoController.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="CasinoController.__init__-expanded"><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method lib.ModelController.ModelController.initLogging()=lib.ModelController.ModelController-class.html#initLogging"><a title="lib.ModelController.ModelController.initLogging" class="py-name" href="#" onclick="return doclink('link-3', 'initLogging', 'link-3');">initLogging</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Variable lib.ClientController.ClientController._sUser=lib.ClientController.ClientController-class.html#_sUser"><a title="lib.ClientController.ClientController._sUser" class="py-name" href="#" onclick="return doclink('link-4', '_sUser', 'link-4');">_sUser</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_USER</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Variable lib.ClientController.ClientController._sPass=lib.ClientController.ClientController-class.html#_sPass"><a title="lib.ClientController.ClientController._sPass" class="py-name" href="#" onclick="return doclink('link-5', '_sPass', 'link-5');">_sPass</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_PASS</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Variable lib.ClientController.ClientController._sCrtFile=lib.ClientController.ClientController-class.html#_sCrtFile"><a title="lib.ClientController.ClientController._sCrtFile" class="py-name" href="#" onclick="return doclink('link-6', '_sCrtFile', 'link-6');">_sCrtFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_CRT_FILE</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Variable lib.ClientController.ClientController._sKeyFile=lib.ClientController.ClientController-class.html#_sKeyFile"><a title="lib.ClientController.ClientController._sKeyFile" class="py-name" href="#" onclick="return doclink('link-7', '_sKeyFile', 'link-7');">_sKeyFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_KEY_FILE</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Method lib.AdminController.AdminController.__init__()=lib.AdminController.AdminController-class.html#__init__,Method lib.AdminController.MyThread.__init__()=lib.AdminController.MyThread-class.html#__init__,Method lib.BMUpdaterController.BMUpdaterController.__init__()=lib.BMUpdaterController.BMUpdaterController-class.html#__init__,Method lib.ClientController.ClientController.__init__()=lib.ClientController.ClientController-class.html#__init__,Method lib.InitController.InitController.__init__()=lib.InitController.InitController-class.html#__init__,Method lib.LotoUpdaterController.LotoUpdaterController.__init__()=lib.LotoUpdaterController.LotoUpdaterController-class.html#__init__,Method lib.ModelController.CasinoController.__init__()=lib.ModelController.CasinoController-class.html#__init__,Method lib.ModelController.PipelineController.__init__()=lib.ModelController.PipelineController-class.html#__init__,Method lib.ModelController.RoboticArmController.__init__()=lib.ModelController.RoboticArmController-class.html#__init__,Method lib.PlayerApiController.PlayerApiController.__init__()=lib.PlayerApiController.PlayerApiController-class.html#__init__,Method lib.PlayerController.PlayerController.__init__()=lib.PlayerController.PlayerController-class.html#__init__,Method lib.SecTestController.SecTestController.__init__()=lib.SecTestController.SecTestController-class.html#__init__,Method lib.UpdaterController.UpdaterController.__init__()=lib.UpdaterController.UpdaterController-class.html#__init__,Method lib.WebController.WebController.__init__()=lib.WebController.WebController-class.html#__init__,Method lib.benchmark.benchmark.__init__()=lib.benchmark.benchmark-class.html#__init__,Method lib.prettytable.PrettyTable.__init__()=lib.prettytable.PrettyTable-class.html#__init__,Method lib.prettytable.TableHandler.__init__()=lib.prettytable.TableHandler-class.html#__init__"><a title="lib.AdminController.AdminController.__init__
+lib.AdminController.MyThread.__init__
+lib.BMUpdaterController.BMUpdaterController.__init__
+lib.ClientController.ClientController.__init__
+lib.InitController.InitController.__init__
+lib.LotoUpdaterController.LotoUpdaterController.__init__
+lib.ModelController.CasinoController.__init__
+lib.ModelController.PipelineController.__init__
+lib.ModelController.RoboticArmController.__init__
+lib.PlayerApiController.PlayerApiController.__init__
+lib.PlayerController.PlayerController.__init__
+lib.SecTestController.SecTestController.__init__
+lib.UpdaterController.UpdaterController.__init__
+lib.WebController.WebController.__init__
+lib.benchmark.benchmark.__init__
+lib.prettytable.PrettyTable.__init__
+lib.prettytable.TableHandler.__init__" class="py-name" href="#" onclick="return doclink('link-8', '__init__', 'link-8');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"> </tt>
+<a name="CasinoController.updateCountDown"></a><div id="CasinoController.updateCountDown-def"><a name="L50"></a><tt class="py-lineno"> 50</tt> <a class="py-toggle" href="#" id="CasinoController.updateCountDown-toggle" onclick="return toggle('CasinoController.updateCountDown');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html#updateCountDown">updateCountDown</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController.updateCountDown-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="CasinoController.updateCountDown-expanded"><a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Updating count down'</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">cd</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Method lib.ClientController.ClientController._exec()=lib.ClientController.ClientController-class.html#_exec"><a title="lib.ClientController.ClientController._exec" class="py-name" href="#" onclick="return doclink('link-9', '_exec', 'link-9');">_exec</a></tt><tt class="py-op">(</tt><tt class="py-string">'getModelCountDown'</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Received from DB: %s'</tt> <tt class="py-op">%</tt> <tt class="py-name">cd</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Method lib.ModelController.ModelController._send_i2c()=lib.ModelController.ModelController-class.html#_send_i2c"><a title="lib.ModelController.ModelController._send_i2c" class="py-name" href="#" onclick="return doclink('link-10', '_send_i2c', 'link-10');">_send_i2c</a></tt><tt class="py-op">(</tt><tt class="py-string">b'c'</tt><tt class="py-op">+</tt><tt class="py-name">cd</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">     </tt>
+<a name="CasinoController.updateNews"></a><div id="CasinoController.updateNews-def"><a name="L56"></a><tt class="py-lineno"> 56</tt> <a class="py-toggle" href="#" id="CasinoController.updateNews-toggle" onclick="return toggle('CasinoController.updateNews');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html#updateNews">updateNews</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController.updateNews-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="CasinoController.updateNews-expanded"><a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">6</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Updating news[%s]'</tt> <tt class="py-op">%</tt> <tt class="py-name">i</tt><tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">            <tt class="py-name">news</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="lib.ClientController.ClientController._exec" class="py-name" href="#" onclick="return doclink('link-11', '_exec', 'link-9');">_exec</a></tt><tt class="py-op">(</tt><tt class="py-string">'getModelNews'</tt><tt class="py-op">,</tt><tt class="py-name">i</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Received from DB: %s'</tt> <tt class="py-op">%</tt> <tt class="py-name">news</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="lib.ModelController.ModelController._send_i2c" class="py-name" href="#" onclick="return doclink('link-12', '_send_i2c', 'link-10');">_send_i2c</a></tt><tt class="py-op">(</tt><tt class="py-string">b'n'</tt><tt class="py-op">+</tt><tt class="py-name">bytes</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">ord</tt><tt class="py-op">(</tt><tt class="py-string">'%s'</tt> <tt class="py-op">%</tt> <tt class="py-name">i</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">+</tt><tt class="py-name">news</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">            <tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">     </tt>
+<a name="CasinoController.updateTopTeams"></a><div id="CasinoController.updateTopTeams-def"><a name="L64"></a><tt class="py-lineno"> 64</tt> <a class="py-toggle" href="#" id="CasinoController.updateTopTeams-toggle" onclick="return toggle('CasinoController.updateTopTeams');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html#updateTopTeams">updateTopTeams</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController.updateTopTeams-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="CasinoController.updateTopTeams-expanded"><a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Updating Top Teams[%s]'</tt> <tt class="py-op">%</tt> <tt class="py-name">i</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">            <tt class="py-name">topTeams</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="lib.ClientController.ClientController._exec" class="py-name" href="#" onclick="return doclink('link-13', '_exec', 'link-9');">_exec</a></tt><tt class="py-op">(</tt><tt class="py-string">'getModelTeamsTop'</tt><tt class="py-op">,</tt><tt class="py-name">i</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Received from DB: %s'</tt> <tt class="py-op">%</tt> <tt class="py-name">topTeams</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name"><a title="lib.ModelController.ModelController._send_i2c" class="py-name" href="#" onclick="return doclink('link-14', '_send_i2c', 'link-10');">_send_i2c</a></tt><tt class="py-op">(</tt><tt class="py-string">b't'</tt><tt class="py-op">+</tt><tt class="py-name">bytes</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">ord</tt><tt class="py-op">(</tt><tt class="py-string">'%s'</tt> <tt class="py-op">%</tt> <tt class="py-name">i</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">+</tt><tt class="py-name">topTeams</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">            <tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"> </tt>
+<a name="CasinoController.drawFlag"></a><div id="CasinoController.drawFlag-def"><a name="L72"></a><tt class="py-lineno"> 72</tt> <a class="py-toggle" href="#" id="CasinoController.drawFlag-toggle" onclick="return toggle('CasinoController.drawFlag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.CasinoController-class.html#drawFlag">drawFlag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CasinoController.drawFlag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="CasinoController.drawFlag-expanded"><a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">logger</tt><tt class="py-op">.</tt><tt class="py-name">info</tt><tt class="py-op">(</tt><tt class="py-string">'Drawing flag'</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="lib.ModelController.ModelController._send_i2c" class="py-name" href="#" onclick="return doclink('link-15', '_send_i2c', 'link-10');">_send_i2c</a></tt><tt class="py-op">(</tt><tt class="py-string">b'f'</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">     </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">     </tt>
+<a name="PipelineController"></a><div id="PipelineController-def"><a name="L77"></a><tt class="py-lineno"> 77</tt> <a class="py-toggle" href="#" id="PipelineController-toggle" onclick="return toggle('PipelineController');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="lib.ModelController.PipelineController-class.html">PipelineController</a><tt class="py-op">(</tt><tt class="py-base-class">ModelController</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="PipelineController-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="PipelineController-expanded"><a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">    <tt id="link-16" class="py-name"><a title="lib.ModelController.CasinoController.i2cAddr
+lib.ModelController.PipelineController.i2cAddr" class="py-name" href="#" onclick="return doclink('link-16', 'i2cAddr', 'link-1');">i2cAddr</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0x05</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"> </tt>
+<a name="PipelineController.__init__"></a><div id="PipelineController.__init__-def"><a name="L80"></a><tt class="py-lineno"> 80</tt> <a class="py-toggle" href="#" id="PipelineController.__init__-toggle" onclick="return toggle('PipelineController.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.PipelineController-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="PipelineController.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="PipelineController.__init__-expanded"><a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="lib.ModelController.ModelController.initLogging" class="py-name" href="#" onclick="return doclink('link-17', 'initLogging', 'link-3');">initLogging</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="lib.ClientController.ClientController._sUser" class="py-name" href="#" onclick="return doclink('link-18', '_sUser', 'link-4');">_sUser</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_USER</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="lib.ClientController.ClientController._sPass" class="py-name" href="#" onclick="return doclink('link-19', '_sPass', 'link-5');">_sPass</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_PASS</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="lib.ClientController.ClientController._sCrtFile" class="py-name" href="#" onclick="return doclink('link-20', '_sCrtFile', 'link-6');">_sCrtFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_CRT_FILE</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="lib.ClientController.ClientController._sKeyFile" class="py-name" href="#" onclick="return doclink('link-21', '_sKeyFile', 'link-7');">_sKeyFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_KEY_FILE</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="lib.AdminController.AdminController.__init__
+lib.AdminController.MyThread.__init__
+lib.BMUpdaterController.BMUpdaterController.__init__
+lib.ClientController.ClientController.__init__
+lib.InitController.InitController.__init__
+lib.LotoUpdaterController.LotoUpdaterController.__init__
+lib.ModelController.CasinoController.__init__
+lib.ModelController.PipelineController.__init__
+lib.ModelController.RoboticArmController.__init__
+lib.PlayerApiController.PlayerApiController.__init__
+lib.PlayerController.PlayerController.__init__
+lib.SecTestController.SecTestController.__init__
+lib.UpdaterController.UpdaterController.__init__
+lib.WebController.WebController.__init__
+lib.benchmark.benchmark.__init__
+lib.prettytable.PrettyTable.__init__
+lib.prettytable.TableHandler.__init__" class="py-name" href="#" onclick="return doclink('link-22', '__init__', 'link-8');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"> </tt>
+<a name="PipelineController.getFlag"></a><div id="PipelineController.getFlag-def"><a name="L89"></a><tt class="py-lineno"> 89</tt> <a class="py-toggle" href="#" id="PipelineController.getFlag-toggle" onclick="return toggle('PipelineController.getFlag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.PipelineController-class.html#getFlag">getFlag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">key</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="PipelineController.getFlag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="PipelineController.getFlag-expanded"><a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="lib.ModelController.ModelController._send_i2c" class="py-name" href="#" onclick="return doclink('link-23', '_send_i2c', 'link-10');">_send_i2c</a></tt><tt class="py-op">(</tt><tt class="py-string">b'f'</tt><tt class="py-op">+</tt><tt class="py-name">key</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-comment"># Get flag</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">i2c</tt><tt class="py-op">.</tt><tt class="py-name">I2CMaster</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">master</tt><tt class="py-op">:</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-name">encFlag</tt> <tt class="py-op">=</tt> <tt class="py-name">master</tt><tt class="py-op">.</tt><tt class="py-name">transaction</tt><tt class="py-op">(</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">                    <tt class="py-name">i2c</tt><tt class="py-op">.</tt><tt class="py-name">reading</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="lib.ModelController.CasinoController.i2cAddr
+lib.ModelController.PipelineController.i2cAddr" class="py-name" href="#" onclick="return doclink('link-24', 'i2cAddr', 'link-1');">i2cAddr</a></tt><tt class="py-op">,</tt><tt class="py-number">16</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">'Encrypted Flag: %s'</tt> <tt class="py-op">%</tt> <tt class="py-name">encFlag</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">     </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">            <tt class="py-comment"># Decrypt</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">            <tt class="py-name">IV</tt> <tt class="py-op">=</tt> <tt class="py-number">16</tt> <tt class="py-op">*</tt> <tt class="py-string">"\x00"</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">            <tt class="py-name">mode</tt> <tt class="py-op">=</tt> <tt class="py-name">AES</tt><tt class="py-op">.</tt><tt class="py-name">MODE_CBC</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">            <tt class="py-name">encryptor</tt> <tt class="py-op">=</tt> <tt class="py-name">AES</tt><tt class="py-op">.</tt><tt class="py-name">new</tt><tt class="py-op">(</tt><tt class="py-name">key</tt><tt class="py-op">,</tt><tt class="py-name">mode</tt><tt class="py-op">,</tt><tt class="py-name">IV</tt><tt class="py-op">=</tt><tt class="py-name">IV</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">            <tt id="link-25" class="py-name" targets="Method lib.benchmark.benchmark.flag()=lib.benchmark.benchmark-class.html#flag"><a title="lib.benchmark.benchmark.flag" class="py-name" href="#" onclick="return doclink('link-25', 'flag', 'link-25');">flag</a></tt> <tt class="py-op">=</tt> <tt class="py-name">encryptor</tt><tt class="py-op">.</tt><tt class="py-name">decrypt</tt><tt class="py-op">(</tt><tt class="py-name">encFlag</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">b'Flag is: '</tt> <tt class="py-op">+</tt> <tt id="link-26" class="py-name"><a title="lib.benchmark.benchmark.flag" class="py-name" href="#" onclick="return doclink('link-26', 'flag', 'link-25');">flag</a></tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">     </tt>
+<a name="RoboticArmController"></a><div id="RoboticArmController-def"><a name="L105"></a><tt class="py-lineno">105</tt> <a class="py-toggle" href="#" id="RoboticArmController-toggle" onclick="return toggle('RoboticArmController');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="lib.ModelController.RoboticArmController-class.html">RoboticArmController</a><tt class="py-op">(</tt><tt class="py-base-class">ModelController</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="RoboticArmController-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="RoboticArmController-expanded"><a name="RoboticArmController.__init__"></a><div id="RoboticArmController.__init__-def"><a name="L106"></a><tt class="py-lineno">106</tt> <a class="py-toggle" href="#" id="RoboticArmController.__init__-toggle" onclick="return toggle('RoboticArmController.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.RoboticArmController-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="RoboticArmController.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="RoboticArmController.__init__-expanded"><a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="lib.ModelController.ModelController.initLogging" class="py-name" href="#" onclick="return doclink('link-27', 'initLogging', 'link-3');">initLogging</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name"><a title="lib.ClientController.ClientController._sUser" class="py-name" href="#" onclick="return doclink('link-28', '_sUser', 'link-4');">_sUser</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_USER</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="lib.ClientController.ClientController._sPass" class="py-name" href="#" onclick="return doclink('link-29', '_sPass', 'link-5');">_sPass</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_PASS</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="lib.ClientController.ClientController._sCrtFile" class="py-name" href="#" onclick="return doclink('link-30', '_sCrtFile', 'link-6');">_sCrtFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_CRT_FILE</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="lib.ClientController.ClientController._sKeyFile" class="py-name" href="#" onclick="return doclink('link-31', '_sKeyFile', 'link-7');">_sKeyFile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">DB_RPI_KEY_FILE</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="lib.AdminController.AdminController.__init__
+lib.AdminController.MyThread.__init__
+lib.BMUpdaterController.BMUpdaterController.__init__
+lib.ClientController.ClientController.__init__
+lib.InitController.InitController.__init__
+lib.LotoUpdaterController.LotoUpdaterController.__init__
+lib.ModelController.CasinoController.__init__
+lib.ModelController.PipelineController.__init__
+lib.ModelController.RoboticArmController.__init__
+lib.PlayerApiController.PlayerApiController.__init__
+lib.PlayerController.PlayerController.__init__
+lib.SecTestController.SecTestController.__init__
+lib.UpdaterController.UpdaterController.__init__
+lib.WebController.WebController.__init__
+lib.benchmark.benchmark.__init__
+lib.prettytable.PrettyTable.__init__
+lib.prettytable.TableHandler.__init__" class="py-name" href="#" onclick="return doclink('link-32', '__init__', 'link-8');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"> </tt>
+<a name="RoboticArmController.send_spi_live"></a><div id="RoboticArmController.send_spi_live-def"><a name="L114"></a><tt class="py-lineno">114</tt> <a class="py-toggle" href="#" id="RoboticArmController.send_spi_live-toggle" onclick="return toggle('RoboticArmController.send_spi_live');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.RoboticArmController-class.html#send_spi_live">send_spi_live</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="RoboticArmController.send_spi_live-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="RoboticArmController.send_spi_live-expanded"><a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">spi</tt><tt class="py-op">.</tt><tt class="py-name">SPIDevice</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">spi0</tt><tt class="py-op">:</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">            <tt class="py-name">stdscr</tt> <tt class="py-op">=</tt> <tt class="py-name">curses</tt><tt class="py-op">.</tt><tt class="py-name">initscr</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">            <tt class="py-keyword">while</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">                <tt class="py-comment">#c = input('&gt;')</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">                <tt class="py-name">c</tt> <tt class="py-op">=</tt> <tt class="py-name">stdscr</tt><tt class="py-op">.</tt><tt class="py-name">getch</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">chr</tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">startswith</tt><tt class="py-op">(</tt><tt class="py-string">'q'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">                    <tt class="py-keyword">break</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">                <tt class="py-name">spi0</tt><tt class="py-op">.</tt><tt class="py-name">transaction</tt><tt class="py-op">(</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">                    <tt class="py-name">spi</tt><tt class="py-op">.</tt><tt class="py-name">writing_bytes</tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">            <tt class="py-name">curses</tt><tt class="py-op">.</tt><tt class="py-name">endwin</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">     </tt>
+<a name="RoboticArmController.getFlag"></a><div id="RoboticArmController.getFlag-def"><a name="L126"></a><tt class="py-lineno">126</tt> <a class="py-toggle" href="#" id="RoboticArmController.getFlag-toggle" onclick="return toggle('RoboticArmController.getFlag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="lib.ModelController.RoboticArmController-class.html#getFlag">getFlag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="RoboticArmController.getFlag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="RoboticArmController.getFlag-expanded"><a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt id="link-33" class="py-name"><a title="lib.benchmark.benchmark.flag" class="py-name" href="#" onclick="return doclink('link-33', 'flag', 'link-25');">flag</a></tt> <tt class="py-op">=</tt> <tt class="py-string">b''</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">spi</tt><tt class="py-op">.</tt><tt class="py-name">SPIDevice</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">spi0</tt><tt class="py-op">:</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">            <tt class="py-comment"># Get only first char</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">            <tt class="py-name">spi0</tt><tt class="py-op">.</tt><tt class="py-name">transaction</tt><tt class="py-op">(</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">                <tt class="py-name">spi</tt><tt class="py-op">.</tt><tt class="py-name">writing_bytes</tt><tt class="py-op">(</tt><tt class="py-name">ord</tt><tt class="py-op">(</tt><tt class="py-string">'_'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">            <tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">0.5</tt><tt class="py-op">)</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">            <tt class="py-keyword">while</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt>  </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">                <tt class="py-name">raw</tt> <tt class="py-op">=</tt> <tt class="py-name">spi0</tt><tt class="py-op">.</tt><tt class="py-name">transaction</tt><tt class="py-op">(</tt><tt class="py-name">spi</tt><tt class="py-op">.</tt><tt class="py-name">reading</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">                <tt class="py-comment">#print(raw)</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">                <tt class="py-name">c</tt> <tt class="py-op">=</tt> <tt class="py-name">raw</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">c</tt> <tt class="py-op">==</tt> <tt class="py-string">b'\x00'</tt><tt class="py-op">:</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">                    <tt class="py-keyword">break</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">                <tt id="link-34" class="py-name"><a title="lib.benchmark.benchmark.flag" class="py-name" href="#" onclick="return doclink('link-34', 'flag', 'link-25');">flag</a></tt> <tt class="py-op">+=</tt> <tt class="py-name">c</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt id="link-35" class="py-name"><a title="lib.benchmark.benchmark.flag" class="py-name" href="#" onclick="return doclink('link-35', 'flag', 'link-25');">flag</a></tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lib-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun Dec 13 21:51:55 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
