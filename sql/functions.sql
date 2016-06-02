@@ -55,7 +55,7 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION sha256(text) returns text AS $$
     SELECT encode(pgcrypto.digest($1, 'sha256'), 'hex');
-$$ LANGUAGE SQL STRICT IMMUTABLE;
+$$ LANGUAGE sql STRICT IMMUTABLE;
 
 /*
     random_64()
@@ -63,7 +63,7 @@ $$ LANGUAGE SQL STRICT IMMUTABLE;
 CREATE OR REPLACE FUNCTION random_64() returns text AS $$
     SELECT encode(pgcrypto.digest(random()::text, 'sha256'), 'hex');
     --SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'sha256'), 'hex')
-$$ LANGUAGE SQL;
+$$ LANGUAGE sql;
 
 /*
     random_32()
@@ -71,7 +71,7 @@ $$ LANGUAGE SQL;
 CREATE OR REPLACE FUNCTION random_32() returns text AS $$
     SELECT encode(pgcrypto.digest(random()::text, 'md5'), 'hex');
     --SELECT encode(pgcrypto.digest(to_char(random(),'9.999999999999999'), 'md5'), 'hex')
-$$ LANGUAGE SQL;
+$$ LANGUAGE sql;
 
 /*
     idx: Used in some ORDER BY
@@ -91,7 +91,19 @@ $$ LANGUAGE sql IMMUTABLE;
 */
 CREATE OR REPLACE FUNCTION formatCash(cash NUMERIC(9,2)) returns NUMERIC(9,2) AS $$
     SELECT cash::NUMERIC(9,2);
-$$ LANGUAGE SQL STRICT IMMUTABLE;
+$$ LANGUAGE sql STRICT IMMUTABLE;
+
+/*
+    raise_p()
+    Error code T3GA0 is used for scoreboard as errors printable to users.
+*/
+CREATE OR REPLACE FUNCTION raise_p(msg text) 
+RETURNS integer AS 
+$$
+    BEGIN
+        raise exception USING MESSAGE = msg, ERRCODE = 'T3GA0';
+    END;
+$$ LANGUAGE plpgsql STRICT IMMUTABLE;
 
 /*
     Stored Proc: transferMoney(srcWalletId,dstWalletId,amount,transactionType)
@@ -3021,6 +3033,12 @@ RETURNS TABLE (
     BEGIN
         -- Logging
         raise notice 'getScoreProgress(%)',$1;
+
+        -- if less than 15 teams are registered, raise exception
+        PERFORM id FROM team OFFSET _maxTeams LIMIT 1;
+        if not FOUND then
+            PERFORM raise_p(FORMAT('Dashboard will be printed when %s teams are registered.',_maxTeams));
+        end if;
         
         if _intLimit is NULL then
             _intLimit := 21;        -- Kinda redundant...

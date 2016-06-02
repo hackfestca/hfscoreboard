@@ -94,7 +94,7 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to Hackfest CTF 2015 !', NOW()::timestamp);
+SELECT addNews('Welcome to iHack 2016!', NOW()::timestamp);
 
 /*
     Add transaction types
@@ -114,15 +114,15 @@ SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
 /*
     fake teams for tests
 */
-/*
-SELECT addTeam('Team HF Crew', '172.16.66.0/24');
-SELECT addTeam('Team Dube', '192.168.1.0/24');
-SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
-SELECT addTeam('Team VPN', '192.168.9.0/24');
-SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
-SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
-SELECT addTeam('Team Eko', '127.0.0.1/8');
-*/
+
+--SELECT addTeam('Team HF Crew', '172.16.66.0/24');
+SELECT addTeam('Team Dube', '172.22.0.0/28');
+--SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
+--SELECT addTeam('Team VPN', '192.168.9.0/24');
+--SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
+--SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
+SELECT addTeam('Team Dev', '127.0.0.1/8');
+
 /*
     Identify fake names
 */

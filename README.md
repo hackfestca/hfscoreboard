@@ -186,6 +186,7 @@ Indeed, you can change DNS names and IPs as you wish.
     pkg_add postgresql-server
     pkg_add postgresql-contrib    # for pgcrypto
     mkdir -p /var/postgresql/data
+    chown _postgresql:_postgresql /var/postgresql/data
     su - _postgresql
     initdb -D /var/postgresql/data
     exit
@@ -303,7 +304,8 @@ Indeed, you can change DNS names and IPs as you wish.
 5. [On sb-app] Install python dependencies
 
     ```bash
-    pkg_add py3-pip py3-psycopg3 tornado
+    pkg_add py3-pip py3-psycopg2 tornado
+    ln -sf /usr/local/bin/pip3.4 /usr/local/bin/pip
     pip install --upgrade pip
     ```
  Download the code from git
@@ -322,7 +324,7 @@ Indeed, you can change DNS names and IPs as you wish.
  Download, compile and install ssh4py
     ```bash
     git clone https://github.com/wallunit/ssh4py.git
-    pkg_add libssh2-1.4.3
+    pkg_add libssh2
     cd /usr/local/include/python3.4m/
     ln -s ../libssh2.h libssh2.h 
     ln -s ../libssh2_sftp.h libssh2_sftp.h 
@@ -353,6 +355,7 @@ Indeed, you can change DNS names and IPs as you wish.
     ```
  Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_URI` and `DB_HOST`
     ```bash
+    cd /var/www/scoreboard
     cp config.default.py config.py
     vim config.py
     ```

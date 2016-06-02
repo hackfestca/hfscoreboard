@@ -18,7 +18,7 @@ REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfadmins;
 --REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM hfadmins;
 REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfplayers;
 --REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgcrypto FROM hfplayers;
-REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfflagupdater;
+--REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfflagupdater;
 REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfscore;
 
 --REVOKE CREATE ON SCHEMA public FROM PUBLIC;             -- From internet
@@ -27,14 +27,14 @@ REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA scoreboard FROM hfscore;
 --REVOKE ALL PRIVILEGES ON SCHEMA public FROM PUBLIC;     -- Why not...
 
 -- Grant privileges
-GRANT CONNECT ON DATABASE scoreboard TO owner,hfadmins,hfplayers,hfscore,hfflagupdater,hfrpi;
+GRANT CONNECT ON DATABASE scoreboard TO owner,hfadmins,hfplayers,hfscore;
 
 --GRANT ALL PRIVILEGES ON SCHEMA scoreboard TO owner;
 --GRANT ALL PRIVILEGES ON SCHEMA pgcrypto TO owner;
 
-GRANT USAGE ON SCHEMA scoreboard TO hfadmins,hfplayers,hfscore,hfflagupdater,hfrpi;
-GRANT USAGE ON SCHEMA pgcrypto TO hfadmins,hfplayers,hfscore,hfrpi;
-GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore,hfrpi;
+GRANT USAGE ON SCHEMA scoreboard TO hfadmins,hfplayers,hfscore;
+GRANT USAGE ON SCHEMA pgcrypto TO hfadmins,hfplayers,hfscore;
+GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore;
 
 -- Grants for admins only
 GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
@@ -75,25 +75,25 @@ GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemDataFromIp(varchar,varchar) TO hfscore;
 
 -- Grants for flagUpdater
-GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromHost(varchar) TO hfflagupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromName(varchar) TO hfflagupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO hfflagupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromHost(varchar) TO hfflagupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getKingFlagsFromName(varchar) TO hfflagupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.addRandomKingFlagFromId(integer,integer) TO hfflagupdater;
 
 -- Grants for bmUpdater
-GRANT EXECUTE ON FUNCTION scoreboard.getBMItemListUpdater(integer) TO hfbmupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.getBMItemData(integer) TO hfbmupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.addEvent(text,varchar,varchar) TO hfbmupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.setBMItemStatus(integer,integer) TO hfbmupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getBMItemListUpdater(integer) TO hfbmupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getBMItemData(integer) TO hfbmupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.addEvent(text,varchar,varchar) TO hfbmupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.setBMItemStatus(integer,integer) TO hfbmupdater;
 
 -- Grants for lotoUpdater
-GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hflotoupdater;
-GRANT EXECUTE ON FUNCTION scoreboard.processLotoWinner(integer) TO hflotoupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hflotoupdater;
+--GRANT EXECUTE ON FUNCTION scoreboard.processLotoWinner(integer) TO hflotoupdater;
 
 -- Grants for rpi
-GRANT EXECUTE ON FUNCTION scoreboard.getModelCountDown() TO hfrpi;
-GRANT EXECUTE ON FUNCTION scoreboard.getModelNews(integer) TO hfrpi;
-GRANT EXECUTE ON FUNCTION scoreboard.getModelTeamsTop(integer) TO hfrpi;
+--GRANT EXECUTE ON FUNCTION scoreboard.getModelCountDown() TO hfrpi;
+--GRANT EXECUTE ON FUNCTION scoreboard.getModelNews(integer) TO hfrpi;
+--GRANT EXECUTE ON FUNCTION scoreboard.getModelTeamsTop(integer) TO hfrpi;
 
 -- Grants for players only
 GRANT EXECUTE ON FUNCTION scoreboard.logSubmit(varchar,flag.value%TYPE) TO hfplayers;
