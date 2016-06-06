@@ -42,6 +42,7 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler,Fault
 from lib import PlayerApiController
 import re
 
+
 def expose(*args, **kwargs):
     """ 
     A decorator to identify which methods are exposed (accessible from player.py)
@@ -63,6 +64,8 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
     _oC = None
     behindProxy = False
 
+    ERROR_MESSAGE = 'Oops. Something wrong happened. :)'
+
     def _dispatch(self, method, params):
         # Find the method
         for name, func in inspect.getmembers(self):
@@ -79,14 +82,21 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
                 clientIP = self.client_address[0]
             return func(clientIP, *params)
 
+    def _get_pgsql_error(self, pgsql_error):
+        if pgsql_error.pgcode == config.PGSQL_ERRCODE:
+            message = pgsql_error.diag.message_primary
+        else:
+            message = self.ERROR_MESSAGE
+        return message 
+
     def _dbConnect(self):
         try:
             self._oC = PlayerApiController.PlayerApiController()
             self._oC.setDebug(self._bDebug)
         except psycopg2.Error as e:
-            submit_message = 'Error while connecting the database'
+            message = 'Error while connecting the database.'
             print(e.pgerror)
-            raise Fault(1, submit_message) 
+            raise Fault(1, message) 
             exit(1)
         except Exception as e:
             print(e)
@@ -102,22 +112,13 @@ class RPCHandler(SimpleXMLRPCRequestHandler):
             ret = getattr(self._oC,func)(*args)
             self._dbClose()
             return ret
-        except psycopg2.InternalError as e: # All "raise" trigger this type of exception.
-            print(e.diag.message_primary)   # Hopefully, it will not leak too much :/
-            return e.diag.message_primary
-        except psycopg2.IntegrityError as e:
-            if e.diag.message_primary.startswith('duplicate key value violates unique constraint "u_flag_constraint"'):
-                print('Flag already submitted.')
-                return 'Flag already submitted.'
-            elif e.diag.message_primary.startswith('duplicate key value violates unique constraint "bmitem_name_key"'):
-                print('Item already submitted.')
-                return 'Item already submitted.'
-            else:
-                return 'An error occured. Please contact an administrator.'
         except psycopg2.Error as e:
-            print(type(e))
-            print(e.pgerror)
-            return 'An error occured. Please contact an administrator.'
+            message = self._get_pgsql_error(e)
+            print(message)
+            return message
+        except Exception as e:
+            print(e)
+            exit(1)
 
     def _getProxiedClientIp(self):
         h = dict(re.findall(r"(?P<name>.*?): (?P<value>.*?)\n", str(self.headers)))

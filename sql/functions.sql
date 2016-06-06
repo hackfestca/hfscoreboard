@@ -120,35 +120,35 @@ RETURNS integer AS $$
         -- Some checks
         PERFORM id FROM wallet WHERE id = _srcWalletId;
         if not FOUND then
-            raise exception 'Could not find the source wallet "%"',_srcWalletId;
+            PERFORM raise_p(format('Could not find the source wallet "%"',_srcWalletId));
         end if;
 
         PERFORM id FROM wallet WHERE id = _dstWalletId;
         if not FOUND then
-            raise exception 'Could not find the destination wallet "%"',_dstWalletId;
+            PERFORM raise_p(format('Could not find the destination wallet "%"',_dstWalletId));
         end if;
 
         if _amount < 0.01 then
-            raise exception 'Cannot transfer less than 0.01$';
+            PERFORM raise_p(format('Cannot transfer less than 0.01$'));
         end if;
 
         if _amount < 0 then
-            raise exception 'Cannot transfer negative value';
+            PERFORM raise_p(format('Cannot transfer negative value'));
         end if;
 
         if _amount = 0 then
-            raise exception 'Cannot transfer a null value';
+            PERFORM raise_p(format('Cannot transfer a null value'));
         end if;
 
         PERFORM code FROM transactionType WHERE code = _transactionTypeCode;
         if not FOUND then
-            raise exception 'Could not find transaction type "%"',_transactionTypeCode;
+            PERFORM raise_p(format('Could not find transaction type "%"',_transactionTypeCode));
         end if;
 
         -- Verify source wallet has enough money to transfer the amount
         PERFORM id,amount FROM wallet WHERE id = _srcWalletId and (amount - _amount) >= 0;
         if not FOUND then
-            raise exception 'Sender does not have enough money';
+            PERFORM raise_p(format('Sender does not have enough money'));
         end if;
 
         -- Update source wallet
@@ -242,7 +242,7 @@ RETURNS text AS $$
         -- Get team from userIp 
         SELECT name,wallet INTO _teamName,_srcWalletId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         PERFORM transferMoney(_srcWalletId,LOTO_ID,_amount,TR_LOTO_CODE);
@@ -336,7 +336,7 @@ RETURNS TABLE (
 
         -- Some check 
         if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
         end if;
 
         -- Get last win timestamp
@@ -404,7 +404,7 @@ RETURNS TABLE (
 
         -- Some check 
         if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
         end if;
 
         RETURN QUERY SELECT t.srcWalletId,
@@ -559,7 +559,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
 
         -- Contextualize the flag pts based on flag types
@@ -567,7 +567,7 @@ RETURNS TABLE (
             -- Check if the flag was already submitted
             PERFORM id FROM team_flag WHERE flagId = _flagRec.id;
             if FOUND then
-                raise exception 'Unique flag already submitted by a team. Too late. :)';
+                PERFORM raise_p(format('Unique flag already submitted by a team. Too late. :)'));
             end if;
             _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
             --PERFORM addEvent(_ret,'flag');
@@ -594,7 +594,7 @@ RETURNS TABLE (
             -- Calculate new value
             RETURN QUERY SELECT _flagRec.pts,'trap';
         else
-            raise exception 'Unsupported flag type "%"',_flagRec.type;
+            PERFORM raise_p(format('Unsupported flag type "%"',_flagRec.type));
         end if;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -644,7 +644,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
 
         -- Get count() of this flag's last submission
@@ -713,7 +713,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
 
         -- Get count() of this flag's last submission
@@ -796,7 +796,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
         
         -- Get a list of all flags with the same type extension
@@ -892,7 +892,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
 
         -- Get a list of all flags with the same type extension
@@ -995,7 +995,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            raise exception 'Could not find flag "%"',_flagId;
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
         end if;
 
         -- Get a list of all flags with the same type extension
@@ -1130,7 +1130,7 @@ RETURNS TABLE (
 
         -- Some check 
         if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
         end if;
 
         RETURN QUERY SELECT
@@ -1180,7 +1180,7 @@ RETURNS TABLE (
 
         -- Some check 
         if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
         end if;
 
         -- Get walletId from teamId
@@ -1996,6 +1996,7 @@ RETURNS text AS $$
         _ret text := '';
         _retEvent text := '';
         _news text := '';
+        _alreadySubmit team_flag.id%TYPE;
         ANTI_BF_INT interval := '20 second';
         ANTI_BF_LIMIT integer := 20;
         STATUS_CODE_OK integer := 1;
@@ -2013,19 +2014,20 @@ RETURNS text AS $$
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            raise exception 'Game is not started yet. Game will start at: %',_settings.gameStartTs;
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
         -- Get team from userIp 
         SELECT id,name,net INTO _teamRec FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         -- Validate flag max length
         if length(_flagValue) > FLAG_MAX_LENGTH then
-            raise exception 'Flag too long';
+            PERFORM raise_p(format('Flag too long'));
         end if;
+
 
         --Remove because it was rollbacked for invalid flags.
         -- Save attempt in submit_history table
@@ -2043,7 +2045,7 @@ RETURNS text AS $$
                 AND ts + ANTI_BF_INT > current_timestamp
             ) as hist;
         if _rowCount > ANTI_BF_LIMIT then
-            raise exception 'Anti-Bruteforce: Limit reached! (% attempts per team every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text;
+            PERFORM raise_p(format('Anti-Bruteforce: Limit reached! (% attempts per team every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text));
         end if;
 
         -- Search for the flag in flag and kingFlag tables
@@ -2059,12 +2061,17 @@ RETURNS text AS $$
             WHERE value = _flagValue
         ) AS x INTO _flagRec;
 
-        
-
         -- if the flag is found, determine if it is a flag or a kingFlag
         -- then assign the flag
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount = 1 then
+
+            -- Validate already submitted
+            SELECT id INTO _alreadySubmit FROM team_flag WHERE teamId = _teamRec.id and flagId = _flagRec.id;
+            if FOUND then
+                PERFORM raise_p('Flag already submitted.');
+            end if;
+
             if _flagRec.tableId = 1 then
                 -- If flag is standard or king, process now. Otherwise, manage in processNonStandardFlag() function.
                 if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
@@ -2103,7 +2110,7 @@ RETURNS text AS $$
                 _retEvent := _retEvent || _teamRec.name || ' received ' || _flagRec.pts::text || 'pts for this flag. ';
             end if;
         else
-            raise exception 'Invalid flag';
+            PERFORM raise_p(format('Invalid flag'));
         end if;
  
         PERFORM addEvent(_retEvent,'flag');
@@ -2141,12 +2148,12 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            raise exception 'Game is not started yet. Game will start at: %',_settings.gameStartTs;
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
         -- Some check 
         if _top <= 0 then
-            raise exception '_top argument cannot be a negative value. _top=%',_top;
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
         end if;
 
         -- Prepare filters
@@ -2284,14 +2291,14 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            raise exception 'Game is not started yet. Game will start at: %',_settings.gameStartTs;
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
         -- Get team ID from client address
         _iPlayerIp := _playerIp::inet;
         SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %.',_iPlayerIp;
+            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
         end if;
     
         return QUERY SELECT c.id AS id,
@@ -2364,14 +2371,14 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            raise exception 'Game is not started yet. Game will start at: %',_settings.gameStartTs;
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
         -- Get team ID from client address
         _iPlayerIp := _playerIp::inet;
         SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %.',_iPlayerIp;
+            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
         end if;
 
     
@@ -2538,7 +2545,7 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            raise exception 'Game is not started yet. Game will start at: %',_settings.gameStartTs;
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
         RETURN QUERY SELECT news.id,
@@ -2582,7 +2589,7 @@ RETURNS TABLE (
         LIMIT 1;
         GET DIAGNOSTICS _rowCount = ROW_COUNT;
         if _rowCount <> 1 then
-            raise exception 'Team not found.';
+            PERFORM raise_p(format('Team not found.'));
         end if;
 
         -- Get active players count;
@@ -3045,7 +3052,7 @@ RETURNS TABLE (
         end if;
 
         if _intLimit < 1 then
-            raise exception 'Interval Limit cannot be NULL or lower than 1';
+            PERFORM raise_p(format('Interval Limit cannot be NULL or lower than 1'));
         end if;
 
         -- Determine minimum timestamp
@@ -3752,13 +3759,13 @@ RETURNS text AS $$
         -- Get teamId FROM playerIp
         SELECT id INTO _teamId FROM team WHERE _playerIp << net;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            PERFORM raise_p(format('You do not have permission to download this item'));
         end if;
 
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
-            raise exception 'You have not bought the item yet.';
+            PERFORM raise_p(format('You have not bought the item yet.'));
 
             -- Reset the item's private ID is an authorized access was performed
             UPDATE bmItem
@@ -3808,13 +3815,13 @@ RETURNS bytea AS $$
         -- Get teamId FROM playerIp
         SELECT id INTO _teamId FROM team WHERE _playerIp << net;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            PERFORM raise_p(format('You do not have permission to download this item'));
         end if;
 
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
-            raise exception 'You have not bought the item yet.';
+            PERFORM raise_p(format('You have not bought the item yet.'));
 
             -- Reset the item's private ID is an authorized access was performed
             UPDATE bmItem
@@ -3848,19 +3855,19 @@ RETURNS bytea AS $$
         -- Get bmItemId FROM privateId
         SELECT id INTO _bmItemId FROM bmItem WHERE privateId = _privateId;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            PERFORM raise_p(format('You do not have permission to download this item'));
         end if;
 
         -- Get teamId FROM playerIp
         SELECT id INTO _teamId FROM team WHERE _playerIp << net;
         if NOT FOUND then
-            raise exception 'You do not have permission to download this item';
+            PERFORM raise_p(format('You do not have permission to download this item'));
         end if;
 
         -- Verify that the team have successfuly bought the item
         PERFORM id FROM team_bmItem WHERE teamId = _teamId AND bmItemId = _bmItemId;
         if NOT FOUND then
-            raise exception 'You have not bought the item yet.';
+            PERFORM raise_p(format('You have not bought the item yet.'));
 
             -- Reset the item's private ID is an authorized access was performed
             UPDATE bmItem
@@ -3949,7 +3956,7 @@ RETURNS TABLE (
         -- Get teamId FROM playerIp
         SELECT team.id INTO _teamId FROM team WHERE _playerIp << net;
         if NOT FOUND then
-            raise exception 'Your team does not exist';
+            PERFORM raise_p(format('Your team does not exist'));
         end if;
 
         -- Get list of item already bought
@@ -4173,7 +4180,7 @@ RETURNS integer AS $$
         _playerIp := _playerIpStr::inet;
         SELECT id,name INTO _teamId,_teamName FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         -- Check item availability
@@ -4236,7 +4243,7 @@ RETURNS integer AS $$
         _playerIp := _playerIpStr::inet;
         SELECT name,wallet INTO _teamName,_ownerWalletId FROM team where _playerIp << net ORDER BY wallet DESC LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         -- Add a new black market item
@@ -4427,7 +4434,7 @@ RETURNS TABLE (
         -- Determine player's team
         SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         -- Get team's settings
@@ -4459,7 +4466,7 @@ RETURNS text AS $$
         -- Determine player's team
         SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
         if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+            PERFORM raise_p(format('Team not found for %',_playerIp));
         end if;
 
         -- Determine if IP is already used

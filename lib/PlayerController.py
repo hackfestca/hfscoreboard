@@ -59,7 +59,7 @@ class PlayerController():
         else:
             context = None
 
-        if sys.version_info >= (3,4,0):
+        if sys.version_info >= (3,4,0) and config.PLAYER_API_URI.startswith('https'):
             self._oRPC = ServerProxy(config.PLAYER_API_URI,allow_none=True,use_builtin_types=True,context=context)
         else:
             self._oRPC = ServerProxy(config.PLAYER_API_URI_OLD,allow_none=True,use_datetime=True)

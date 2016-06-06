@@ -47,6 +47,7 @@ del sys
 
 # Project imports
 from lib.WebController import WebController
+import config
 
 import tornado.web
 import tornado.ioloop
@@ -129,15 +130,14 @@ class BaseHandler(tornado.web.RequestHandler):
         # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
         #                                    exc_obj.message))
-        self.render("templates/error.html", error_msg=msg)
+        self.renderCriticalFailure(error_msg=msg)
 
     def _connect(self):
         try:
             self.client = WebController()
         except psycopg2.Error as e:
             self.logger.error(e)
-            message = e.diag.message_primary
-            self.renderCriticalFailure(error_msg=message)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -150,16 +150,13 @@ class BaseHandler(tornado.web.RequestHandler):
             self.team_ip = team_info[3][1]
             self.team_score = team_info[7][1]
         except psycopg2.Error as e:
+            if e.pgcode == config.PGSQL_ERRCODE:
+                message = e.diag.message_primary
+            else:
+                message = WEB_ERROR_MESSAGE
+
             self.logger.error(e)
-            self.team_name = "None"
-            self.team_ip = "None"
-            self.team_score = "None"
-            message = WEB_ERROR_MESSAGE
-            super().render('templates/error.html', 
-                          error_msg=message,
-                          team_name=self.team_name,
-                          team_ip=self.team_ip,
-                          team_score=self.team_score)
+            self.renderCriticalFailure(error_msg=message)
         except Exception as e: 
             self.logger.error(e)
             self.team_name = "None"
@@ -185,6 +182,20 @@ class BaseHandler(tornado.web.RequestHandler):
                        team_name='None',
                        team_ip='None',
                        team_score='None',
+                       **kwargs)
+
+    def render_pgsql_error(self, pgsql_error, **kwargs):
+        self._getTeamInfo()
+        template_name = 'templates/error.html'
+        if pgsql_error.pgcode == config.PGSQL_ERRCODE:
+            message = pgsql_error.diag.message_primary
+        else:
+            message = WEB_ERROR_MESSAGE
+        super().render(template_name,
+                       team_name=self.team_name,
+                       team_ip=self.team_ip,
+                       team_score=self.team_score,
+                       error_msg=message,
                        **kwargs)
 
     def render(self, template_name, **kwargs):
@@ -250,11 +261,11 @@ class ScoreHandler(BaseHandler):
             score = self.client.getScore(top=200)
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
             self.render('templates/score.html', score_table=list(score))
 
@@ -267,7 +278,7 @@ class ChallengesHandler(BaseHandler):
             challenges = self.client.getFlagProgressFromIp(self.remote_ip)
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -287,7 +298,7 @@ class IndexHandler(BaseHandler):
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -308,15 +319,7 @@ class IndexHandler(BaseHandler):
                 self.remote_ip)
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
-            if e.diag.message_primary.startswith('Invalid flag'):
-                rand = random.randint(0, len(self._insults)-1)
-                submit_message = e.diag.message_primary+ "!  " + self.getInsult(rand)
-            elif e.diag.message_primary.startswith('Unique flag already submitted'):
-                submit_message = e.diag.message_primary
-            elif e.diag.message_primary.startswith('duplicate key'):
-                submit_message = 'Flag already submitted'
-            else:
-                submit_message = WEB_ERROR_MESSAGE
+            self.render_pgsql_error(pgsql_error=e)
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
@@ -353,7 +356,7 @@ class DashboardHandler(BaseHandler):
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -376,7 +379,7 @@ class BlackMarketItemHandler(BaseHandler):
                                                          )
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -422,7 +425,7 @@ class IndexProjectorHandler(BaseHandler):
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
@@ -446,7 +449,7 @@ class DashboardProjectorHandler(BaseHandler):
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)

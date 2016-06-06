@@ -1,3 +1,16 @@
+Change exceptions with raise_p for better handling of what is printed to players
+Adjust *.py scripts to support raise_p (Error code T3GA0)
+
+Manage sessions on tornado
+Create login page
+Create signup page
+Clone functions "byIP" to functions "byToken"
+Assign unique data per team (Dave)
+Write single method to identify team from IP
+Write single method to identify team from TOKEN
+Check if game is started on all player methods. Allow admin to see scoreboard.
+
+
 Let players submit their nick (optional)
 Code a function that tells which flags remain to be displayed
 Print all submitted flags
