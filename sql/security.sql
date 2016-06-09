@@ -38,7 +38,7 @@ GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore;
 
 -- Grants for admins only
 GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.rewardTeam(integer,text,integer) TO hfadmins;
@@ -64,6 +64,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,boolean,integer,text) 
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemLink(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTransactionHistory(integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.addTeamLocation(varchar) TO hfadmins;
 
 -- Grants for web
 GRANT EXECUTE ON FUNCTION scoreboard.getCatProgressFromIp(varchar) TO hfscore;
@@ -73,6 +74,9 @@ GRANT EXECUTE ON FUNCTION scoreboard.submitFlagFromIp(varchar,flag.value%TYPE) T
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getScoreProgress(integer) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemDataFromIp(varchar,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.registerTeam(varchar,varchar,varchar,integer) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.loginTeam(varchar,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfo(integer) TO hfscore;
 
 -- Grants for flagUpdater
 --GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;

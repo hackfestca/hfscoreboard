@@ -13,17 +13,18 @@
       <form method="POST">
 	<div class="col-md-1">
 	  <h3>Flag</h3>
-	</div>
-	<div class="col-md-11">
-	  <h3>
-	    <div class="input-group">
-	      <input type="text" name="flag" class="form-control" placeholder="Your flag without 'FLAG-'">
-	      <span class="input-group-btn">
-		<button class="btn btn-default" type="submit">Submit</button>
-	      </span>
-	    </div><!-- /input-group -->
-	  </h3>
-	</div>    
+    	</div>
+    	<div class="col-md-11">
+    	  <h3>
+    	    <div class="input-group">
+    	      <input type="text" name="flag" class="form-control" placeholder="Your flag without 'FLAG-'">
+              {% module xsrf_form_html() %}
+    	      <span class="input-group-btn">
+    		<button class="btn btn-default" type="submit">Submit</button>
+    	      </span>
+    	    </div><!-- /input-group -->
+    	  </h3>
+    	</div>    
       </form>
     </div>
   </div>

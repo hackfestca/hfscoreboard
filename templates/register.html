@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="main-row">
+  <div class="jumbotron">
+    <div class="container">
+      {% if submit_message %}
+      <div class="alert alert-danger" role="alert"> {{ submit_message }} </div>
+      {% end %}
+
+    	<div class="col-md-1">
+    	  <h3>Register</h3>
+    	</div>
+
+        <form action="/auth/register" method="POST">
+          <input placeholder="Team Name" class="form-control" name="team_name"
+                 type="text" value="{{ form["name"] }}"/><br>
+          <input placeholder="Password" class="form-control" name="team_pwd1"
+          type="password"  value="{{ form["pwd1"] }}"/><br>
+          <input placeholder="Repeat password" class="form-control" name="team_pwd2"
+          type="password"  value="{{ form["pwd2"] }}"/><br>
+          <select class="form-control" name="team_loc">
+              <option value="">Choose a location</option>
+              <option value="1">Quebec</option>
+              <option value="2">Sherbrooke</option>
+          </select><br/>
+          {% module xsrf_form_html() %}
+          <input type="submit" class="btn btn-default">
+        </form>
+        {% end %}
+    </div>
+  </div>
+</div>

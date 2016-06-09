@@ -1216,10 +1216,33 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: addTeam(name,net)
+    Stored Proc: addTeamLocation(name)
+*/
+CREATE OR REPLACE FUNCTION addTeamLocation(_name teamLocation.name%TYPE)
+RETURNS teamLocation.id%TYPE AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addTeamLocation(%)',$1;
+
+        -- Some checks
+        if _name is NULL then
+            raise exception 'Name cannot be NULL';
+        end if;
+
+        -- Insert a new row
+        INSERT INTO teamLocation(name) VALUES(_name);
+
+        RETURN LASTVAL();
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: addTeam(name,net,pwd,loc)
 */
 CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
-                                   _net varchar(20)) 
+                                   _net varchar(20) DEFAULT Null,
+                                   _pwd team.pwd%TYPE DEFAULT Null,
+                                   _loc team.loc%TYPE DEFAULT Null) 
 RETURNS team.id%TYPE AS $$
     DECLARE
         _inet inet;
@@ -1227,15 +1250,14 @@ RETURNS team.id%TYPE AS $$
         _teamStartMoney settings.teamStartMoney%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addTeam(%,%)',$1,$2;
+        raise notice 'addTeam(%,%,pwd,%)',$1,$2,$4;
 
         _inet := _net::inet;
 
         -- Some checks
-        if _name is NULL then
-            raise exception 'Name cannot be NULL';
+        if _name is NULL OR _name = '' then
+            PERFORM raise_p('Name cannot be NULL');
         end if;
-
         if family(_inet) <> 4 then
             raise exception 'Only IPv4 addresses are supported';
         end if;
@@ -1247,9 +1269,58 @@ RETURNS team.id%TYPE AS $$
         _walletId := addWallet(_name,'Wallet of team: '||_name,_teamStartMoney);
 
         -- Insert a new row
-        INSERT INTO team(name,net,wallet) VALUES(_name,_inet,_walletId);
+        INSERT INTO team(name,net,pwd,loc,wallet) VALUES(_name,_inet,sha256(_pwd),_loc,_walletId);
 
         RETURN LASTVAL();
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: registerTeam(name,pwd1,pwd2,loc)
+*/
+CREATE OR REPLACE FUNCTION registerTeam(_name team.name%TYPE,
+                                    _pwd1 team.pwd%TYPE,
+                                    _pwd2 team.pwd%TYPE,
+                                    _loc team.loc%TYPE)
+RETURNS team.id%TYPE AS $$
+    BEGIN
+        -- Logging
+        raise notice 'registerTeam(%,pwd,%)',$1,$2;
+
+        -- Some validations
+        if _pwd1 = '' OR _pwd2 = '' then
+            PERFORM raise_p('Please fill both password fields.');
+        end if;
+        if _pwd1 <> _pwd2 then
+            PERFORM raise_p('Both password must be identical.');
+        end if;
+        PERFORM id FROM teamLocation WHERE id = _loc;
+        if not FOUND then
+            PERFORM raise_p('Please choose a valid location');
+        end if;
+
+        RETURN addTeam(_name, Null, _pwd1, _loc);
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: loginTeam(name,pwd)
+*/
+CREATE OR REPLACE FUNCTION loginTeam(_name team.name%TYPE,
+                                    _pwd team.pwd%TYPE)
+RETURNS team.id%TYPE AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'loginTeam(%,pwd)',$1;
+
+        SELECT id INTO _teamId FROM team where name = _name AND pwd = sha256(_pwd) LIMIT 1;
+        if not FOUND then
+            PERFORM raise_p('Incorrect password.');
+        end if;
+
+        RETURN _teamId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1979,10 +2050,11 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /* 
-    Stored Proc: submitFlagFromIp(userIp,flagValue)
+    Stored Proc: submitFlag(flagValue,teamId)
 */ 
-CREATE OR REPLACE FUNCTION submitFlagFromIp(_flagValue flag.value%TYPE,
-                                             _playerIpStr varchar(20)) 
+CREATE OR REPLACE FUNCTION submitFlag(_flagValue flag.value%TYPE,
+                                      _teamId team.id%TYPE,
+                                      _playerIpStr varchar(20)) 
 RETURNS text AS $$
     DECLARE
         _teamRec team%ROWTYPE;
@@ -2005,7 +2077,7 @@ RETURNS text AS $$
         FLAG_TYPE_KING flagType.code%TYPE := 11;
     BEGIN
         -- Logging
-        raise notice 'submitFlagFromIp(%,%)',$1,$2;
+        raise notice 'submitFlag(%,%,%)',$1,$2,$3;
     
         _playerIp := _playerIpStr::inet;
 
@@ -2017,17 +2089,16 @@ RETURNS text AS $$
             PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
-        -- Get team from userIp 
-        SELECT id,name,net INTO _teamRec FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        -- Get team from teamId
+        SELECT id,name,net INTO _teamRec FROM team where _teamId = id ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %',_playerIp));
+            PERFORM raise_p(format('Team "%" not found',_teamId));
         end if;
 
         -- Validate flag max length
         if length(_flagValue) > FLAG_MAX_LENGTH then
             PERFORM raise_p(format('Flag too long'));
         end if;
-
 
         --Remove because it was rollbacked for invalid flags.
         -- Save attempt in submit_history table
@@ -2118,6 +2189,30 @@ RETURNS text AS $$
         RETURN _ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+/* 
+    Stored Proc: submitFlagFromIp(userIp,flagValue)
+*/ 
+CREATE OR REPLACE FUNCTION submitFlagFromIp(_flagValue flag.value%TYPE,
+                                             _playerIpStr varchar(20)) 
+RETURNS text AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+        _playerIp inet;
+    BEGIN
+        -- Logging
+        raise notice 'submitFlagFromIp(%,%)',$1,$2;
+    
+        _playerIp := _playerIpStr::inet;
+
+        -- Get team from teamId
+        SELECT id INTO _teamId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
+        if NOT FOUND then
+            PERFORM raise_p(format('Team not found for IP %',_playerIp));
+        end if;
+
+        RETURN submitFlag(_flagValue,_teamId,_playerIpStr);
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
     Stored Proc: getScore(top = 30)
@@ -2128,6 +2223,7 @@ CREATE OR REPLACE FUNCTION getScore(_top integer default 30,
 RETURNS TABLE (
                 id team.id%TYPE,
                 team team.name%TYPE,
+                loc teamLocation.name%TYPE,
                 cash text,
                 flagTotal flag.pts%TYPE
               ) AS $$
@@ -2175,9 +2271,15 @@ RETURNS TABLE (
 
         return QUERY SELECT t.id AS id,
                             t.name AS team,
+                            tl.name AS location,
                             w.amount::text || ' $' AS cash,
                             coalesce(tf3.sum::integer,0) AS flagPts
                          FROM team AS t
+                         LEFT OUTER JOIN (
+                            SELECT tl.id,
+                                   tl.name
+                            FROM teamLocation as tl
+                         ) AS tl ON t.loc = tl.id
                          LEFT OUTER JOIN (
                             SELECT w.id,
                                    w.amount
@@ -2264,9 +2366,9 @@ RETURNS flag.value%TYPE AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: getCatProgressFromIp(varchar)
+    Stored Proc: getCatProgress(teamId)
 */
-CREATE OR REPLACE FUNCTION getCatProgressFromIp(_playerIp varchar(20)) 
+CREATE OR REPLACE FUNCTION getCatProgress(_teamId team.id%TYPE) 
 RETURNS TABLE (
                 id flagCategory.id%TYPE,
                 name flagCategory.name%TYPE,
@@ -2277,15 +2379,13 @@ RETURNS TABLE (
                 hidden flagCategory.hidden%TYPE
               ) AS $$
     DECLARE
-        _teamId team.id%TYPE;
-        _iPlayerIp inet;
         _settings settings%ROWTYPE;
 
         KING_FLAG_TYPE integer := 11;
     BEGIN
         -- Logging
-        raise notice 'getCatProgressFromIp(%)',$1;
-
+        raise notice 'getCatProgress(%)',$1;
+    
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
 
@@ -2294,13 +2394,6 @@ RETURNS TABLE (
             PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
-        -- Get team ID from client address
-        _iPlayerIp := _playerIp::inet;
-        SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
-        if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
-        end if;
-    
         return QUERY SELECT c.id AS id,
                             c.name AS name,
                             c.displayName AS displayName,
@@ -2341,9 +2434,41 @@ RETURNS TABLE (
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getFlagProgressFromIp(varchar)
+    Stored Proc: getCatProgressFromIp(varchar)
 */
-CREATE OR REPLACE FUNCTION getFlagProgressFromIp(_playerIp varchar(20)) 
+CREATE OR REPLACE FUNCTION getCatProgressFromIp(_playerIp varchar(20)) 
+RETURNS TABLE (
+                id flagCategory.id%TYPE,
+                name flagCategory.name%TYPE,
+                displayName flagCategory.displayName%TYPE,
+                description flagCategory.description%TYPE,
+                pts flag.pts%TYPE,
+                total flag.pts%TYPE,
+                hidden flagCategory.hidden%TYPE
+              ) AS $$
+    DECLARE
+        _teamId team.id%TYPE;
+        _iPlayerIp inet;
+    BEGIN
+        -- Logging
+        raise notice 'getCatProgressFromIp(%)',$1;
+
+        -- Get team ID from client address
+        _iPlayerIp := _playerIp::inet;
+        SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
+        if NOT FOUND then
+            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
+        end if;
+
+        RETURN QUERY SELECT * FROM getCatProgress(_teamId);
+    
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getFlagProgress(teamId)
+*/
+CREATE OR REPLACE FUNCTION getFlagProgress(_teamId team.id%TYPE) 
 RETURNS TABLE (
                 id flag.id%TYPE,
                 name flag.name%TYPE,
@@ -2358,13 +2483,11 @@ RETURNS TABLE (
                 displayInterval flag.displayInterval%TYPE
               ) AS $$
     DECLARE 
-        _teamId team.id%TYPE;
-        _iPlayerIp inet;
         _settings settings%ROWTYPE;
         KING_FLAG_TYPE flagType.code%TYPE := 11;
     BEGIN
         -- Logging
-        raise notice 'getFlagProgressFromIp(%)',$1;
+        raise notice 'getFlagProgress(%)',$1;
 
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
@@ -2373,14 +2496,6 @@ RETURNS TABLE (
         if _settings.gameStartTs > current_timestamp then
             PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
-
-        -- Get team ID from client address
-        _iPlayerIp := _playerIp::inet;
-        SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
-        if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
-        end if;
-
     
         return QUERY SELECT f.id AS id,
                             f.name AS name,
@@ -2414,6 +2529,41 @@ RETURNS TABLE (
                           and f.type <> KING_FLAG_TYPE
                           and c.hidden = False
                     ORDER BY f.id;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getFlagProgressFromIp(varchar)
+*/
+CREATE OR REPLACE FUNCTION getFlagProgressFromIp(_playerIp varchar(20)) 
+RETURNS TABLE (
+                id flag.id%TYPE,
+                name flag.name%TYPE,
+                description flag.description%TYPE,
+                pts flag.pts%TYPE,
+                flagPts flag.pts%TYPE,
+                displayPts varchar(20),
+                catId flagCategory.id%TYPE,
+                catName flagCategory.name%TYPE,
+                isDone boolean,
+                author flagAuthor.nick%TYPE,
+                displayInterval flag.displayInterval%TYPE
+              ) AS $$
+    DECLARE 
+        _teamId team.id%TYPE;
+        _iPlayerIp inet;
+    BEGIN
+        -- Logging
+        raise notice 'getFlagProgressFromIp(%)',$1;
+
+        -- Get team ID from client address
+        _iPlayerIp := _playerIp::inet;
+        SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
+        if NOT FOUND then
+            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
+        end if;
+
+        return QUERY SELECT * from getFlagProgress(_teamId);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -2554,6 +2704,92 @@ RETURNS TABLE (
                      FROM news
                      WHERE news.displayTs < current_timestamp
                      ORDER BY news.id DESC;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamInfo(teamId)
+*/
+CREATE OR REPLACE FUNCTION getTeamInfo(_teamId team.id%TYPE)
+RETURNS TABLE (
+                info varchar(50),
+                value varchar(200)
+              ) AS $$
+    DECLARE
+        _rowCount integer;
+        _playerIp inet;
+        _teamRec team%ROWTYPE;
+        _activePlayerCt integer;
+        _teamFlagSubmitCt integer;
+        _playerNick player.nick%TYPE;
+        _playerFlagSubmitCt integer;
+        _teamScore flag.pts%TYPE;
+        _teamMoney wallet.amount%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'getTeamInfo(%)',$1;
+
+        -- Get team informations
+        SELECT id,name,net 
+        INTO _teamRec 
+        FROM team 
+        WHERE _teamId = team.id
+        LIMIT 1;
+        GET DIAGNOSTICS _rowCount = ROW_COUNT;
+        if _rowCount <> 1 then
+            PERFORM raise_p(format('Team not found.'));
+        end if;
+
+        -- Get team score
+        SELECT sum(sum) AS total
+        INTO _teamScore
+        FROM (
+                SELECT sum(tf.pts) AS sum
+                FROM (
+                    SELECT flagId,
+                           teamId,
+                           pts
+                    FROM team_flag
+                    WHERE teamId = _teamRec.id
+                    ) AS tf
+                UNION
+                SELECT sum(tfi2.pts) AS sum
+                FROM (
+                    SELECT tfi.kingFlagId,
+                           tfi.teamId,
+                           fi.pts
+                    FROM team_kingFlag as tfi
+                    LEFT OUTER JOIN (
+                        SELECT kingFlag.id,
+                               kingFlag.pts
+                        FROM kingFlag
+                        ) as fi ON tfi.kingFlagId = fi.id
+                    ) AS tfi2
+                    WHERE tfi2.teamId = _teamRec.id
+                ) as score;
+
+        -- Get team money
+        SELECT w.amount
+        INTO _teamMoney
+        FROM team
+        LEFT OUTER JOIN (
+            SELECT id,
+                   amount
+            FROM wallet
+        ) AS w ON team.wallet = w.id
+        WHERE team.id = _teamRec.id;
+        
+        -- Return
+        RETURN QUERY SELECT 'ID'::varchar, _teamRec.id::varchar
+                     UNION ALL SELECT 'Name'::varchar, _teamRec.name
+                     UNION ALL SELECT 'Player Nick'::varchar, _playerNick
+                     UNION ALL SELECT 'Net'::varchar, _teamRec.net::varchar
+                     UNION ALL SELECT 'Active Players'::varchar, 'Undefined'::varchar
+                     UNION ALL SELECT 'Team Submit Attempts'::varchar, 'Undefined'::varchar
+                     UNION ALL SELECT 'Player Submit Attempts'::varchar, 'Undefined'::varchar
+                     UNION ALL SELECT 'Team score'::varchar, _teamScore::varchar
+                     UNION ALL SELECT 'Team money'::varchar, _teamMoney::varchar;
+                     --ORDER BY 1;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

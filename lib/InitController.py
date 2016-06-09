@@ -164,7 +164,7 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importTeams(self):
-        SETTINGS_COLS_START = 2
+        SETTINGS_COLS_START = 4
         with open(self._teamsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
@@ -172,10 +172,13 @@ class InitController(UpdaterController.UpdaterController):
                 print('Team: %s' % '|'.join(row))
                 tname = row[0]
                 tnet = row[1]
+                pwd = row[2]
                 
                 if tname != 'Team Name':
                     teamId = self.exec('addTeam',self._sanitize(tname,'str'), \
-                                     self._sanitize(tnet,'str'))
+                                     self._sanitize(tnet,'str'), \
+                                     self._sanitize(pwd,'str'),
+                                     None)
                     for i in range(SETTINGS_COLS_START,len(headers)):
                         self.exec('addTeamSecrets', teamId,\
                                        self._sanitize(headers[i],'str'),\
@@ -249,7 +252,7 @@ class InitController(UpdaterController.UpdaterController):
         self.importData()
         self.importCategories()
         self.importFlags()
-        self.importTeams()
-        self.importBlackMarketItems()
+        #self.importTeams()
+        #self.importBlackMarketItems()
         self.importSecurity()
 

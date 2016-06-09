@@ -52,7 +52,10 @@ import config
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
-import tornado.log
+import tornado.log 
+from tornado import gen
+from tornado.options import define, options
+
 
 # System imports
 import os
@@ -62,6 +65,14 @@ import random
 import psycopg2
 
 WEB_ERROR_MESSAGE = 'Oops. Something wrong happened. :)'
+
+define("port", default=5000, help="run on the given port", type=int)
+define("debug", default=False, help="Enable debug mode", type=bool)
+
+# Use True for Hackfest
+# Use False for iHack
+define("authByIP", default=False, help="When true, the scoreboard authenticate"\
+                                    " by IP", type=bool)
 
 class Logger(logging.getLoggerClass()):
 
@@ -90,17 +101,21 @@ class Logger(logging.getLoggerClass()):
         self.logger.info(msg)
 
 
-class BaseHandler(tornado.web.RequestHandler):
-
-    def initialize(self, sponsors_imgs, logger, debug=False):
-        self._debug = debug
+class Application(tornado.web.Application):
+    def __init__(self):
+        # Prety stdout logs
+        tornado.log.enable_pretty_logging()
+    
+        sponsors_imgs_path = os.path.join(os.path.dirname(__file__),
+                                          "static/sponsors")
+        self._sponsors = ["/static/sponsors/" +
+                         f for f in os.listdir(sponsors_imgs_path)
+                         if os.path.isfile(os.path.join(sponsors_imgs_path, f))]
+    
         self._client = None
-        self._logger = logger
         self._team_name = None
         self._team_ip = None
-        self.remote_ip = self.request.headers.get('X-Forwarded-For', self.request.headers.get('X-Real-Ip', self.request.remote_ip))
         self._team_score = None
-        self._sponsors = sponsors_imgs
         self._insults = [
             "Just what do you think you're doing Dave?",
             "It can only be attributed to human error.",
@@ -115,22 +130,57 @@ class BaseHandler(tornado.web.RequestHandler):
             "What, what, what, what, what, what, what, what, what, what?",
             "I think ... err ... I think ... I think I'll go home"
         ]
+        self.logger = Logger("HF2k15_Logger")
+
+        handlers = [
+            (r"/", IndexHandler),
+            (r"/challenges/?", ChallengesHandler),
+            (r"/scoreboard/?", ScoreHandler),
+            (r"/dashboard/?", DashboardHandler),
+            (r"/rules/?", RulesHandler),
+            #(r"/bmi/?", BlackMarketItemHandler, args),
+            (r"/projector/1/?", IndexProjectorHandler),
+            (r"/projector/2/?", DashboardProjectorHandler),
+            (r"/projector/3/?", SponsorsProjectorHandler),
+            (r"/auth/register", AuthRegisterHandler),
+            (r"/auth/login", AuthLoginHandler),
+            (r"/auth/logout", AuthLogoutHandler),
+         ]
+
+        settings = dict(
+            blog_title=u"iHack 2016",
+            template_path=os.path.join(os.path.dirname(__file__), "templates"),
+            static_path=os.path.join(os.path.dirname(__file__), "static"),
+            #ui_modules={"Entry": EntryModule},
+            xsrf_cookies=True,
+            cookie_secret="naL=p]BR',*R]k+ndt0(QT/m4[T&kHo=[\<~MM2r^5neb<}x`B",
+            default_handler_class=Error404Handler,  # 404 Handling
+            login_url="/auth/login",
+            debug=options.debug,
+            xheaders=True
+        )
+        super(Application, self).__init__(handlers, **settings)
+
+class BaseHandler(tornado.web.RequestHandler):
+
+    def initialize(self):
+        self.remote_ip = self.request.headers.get('X-Forwarded-For', self.request.headers.get('X-Real-Ip', self.request.remote_ip))
 
     def write_error(self, status_code, **kwargs):
         # Handler for all the internals Error (500)
         # Handle every exception thrown by any BaseHadler
-        import traceback
+        #import traceback
 
-        if self._debug:
-            exc_type, exc_obj, exc_tb = kwargs["exc_info"]
-            msg = "{}".format(exc_obj)
-        else:
-            msg = WEB_ERROR_MESSAGE
+        #if options.debug:
+        #    exc_type, exc_obj, exc_tb = kwargs["exc_info"]
+        #    msg = "{}".format(exc_obj)
+        #else:
+        #    msg = WEB_ERROR_MESSAGE
 
         # self.logger.error("{}:{}:{}".format(self.request.remote_ip,
         #                                    exc_type.__name__,
         #                                    exc_obj.message))
-        self.renderCriticalFailure(error_msg=msg)
+        self.renderCriticalFailure()
 
     def _connect(self):
         try:
@@ -141,22 +191,28 @@ class BaseHandler(tornado.web.RequestHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg="Error")
 
     def _getTeamInfo(self):
         try:
-            team_info = list(self.client.getTeamInfoFromIp(self.remote_ip))
-            self.team_name = team_info[1][1]
-            self.team_ip = team_info[3][1]
-            self.team_score = team_info[7][1]
-        except psycopg2.Error as e:
-            if e.pgcode == config.PGSQL_ERRCODE:
-                message = e.diag.message_primary
+            if options.authByIP:
+                team_info = list(self.client.getTeamInfoFromIp(self.remote_ip))
+                self.team_name = team_info[1][1]
+                self.team_ip = team_info[3][1]
+                self.team_score = team_info[7][1]
+            elif self.is_logged():
+                team_id = int(self.get_secure_cookie("team_id"))
+                team_info = self.client.getTeamInfo(team_id)
+                self.team_name = team_info[1][1]
+                self.team_ip = self.remote_ip
+                self.team_score = team_info[7][1]
             else:
-                message = WEB_ERROR_MESSAGE
-
+                self.team_name = "None"
+                self.team_ip = "None"
+                self.team_score = "None"
+        except psycopg2.Error as e:
             self.logger.error(e)
-            self.renderCriticalFailure(error_msg=message)
+            self.renderCriticalFailure()
         except Exception as e: 
             self.logger.error(e)
             self.team_name = "None"
@@ -176,22 +232,35 @@ class BaseHandler(tornado.web.RequestHandler):
     def on_finish(self):
         self._disconnect()
 
-    def renderCriticalFailure(self, **kwargs):
-        template_name = 'templates/error.html'
-        super().render(template_name,
-                       team_name='None',
-                       team_ip='None',
-                       team_score='None',
-                       **kwargs)
+    def get_current_user(self):
+        team_id = self.get_secure_cookie("team_id")
+        if team_id is None: return None
+        elif not team_id.isdigit(): return None
+        return int(team_id.decode('UTF-8'))
 
-    def render_pgsql_error(self, pgsql_error, **kwargs):
-        self._getTeamInfo()
-        template_name = 'templates/error.html'
+    def get_pgsql_error(self, pgsql_error):
         if pgsql_error.pgcode == config.PGSQL_ERRCODE:
             message = pgsql_error.diag.message_primary
         else:
             message = WEB_ERROR_MESSAGE
+        return message
+
+    def renderCriticalFailure(self, **kwargs):
+        template_name = 'error.html'
         super().render(template_name,
+                       is_logged='None',
+                       team_name='None',
+                       team_ip='None',
+                       team_score='None',
+                       error_msg=WEB_ERROR_MESSAGE,
+                       **kwargs)
+
+    def render_pgsql_error(self, pgsql_error, **kwargs):
+        self._getTeamInfo()
+        template_name = 'error.html'
+        message = self.get_pgsql_error(pgsql_error)
+        super().render(template_name,
+                       is_logged=self.is_logged(),
                        team_name=self.team_name,
                        team_ip=self.team_ip,
                        team_score=self.team_score,
@@ -201,6 +270,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def render(self, template_name, **kwargs):
         self._getTeamInfo()
         super().render(template_name,
+                       is_logged=self.is_logged(),
                        team_name=self.team_name,
                        team_ip=self.team_ip,
                        team_score=self.team_score,
@@ -209,52 +279,55 @@ class BaseHandler(tornado.web.RequestHandler):
     def getInsult(self, index):
         return self._insults[index]
 
+    def is_logged(self):
+        return bool(self.get_secure_cookie("team_id"))
+
     @property
     def sponsors(self):
-        return self._sponsors
+        return self.application._sponsors
 
     @property
     def client(self):
-        return self._client
+        return self.application._client
 
     @client.setter
     def client(self, arg):
-        self._client = arg
+        self.application._client = arg
 
     @property
     def logger(self):
-        return self._logger
+        return self.application.logger
 
     @logger.setter
     def logger(self, arg):
-        self._logger = arg
+        self.application.logger = arg
 
     @property
     def team_name(self):
-        return self._team_name
+        return self.application._team_name
 
     @team_name.setter
     def team_name(self, arg):
-        self._team_name = arg
+        self.application._team_name = arg
 
     @property
     def team_ip(self):
-        return self._team_ip
+        return self.application._team_ip
 
     @team_ip.setter
     def team_ip(self, arg):
-        self._team_ip = arg
+        self.application._team_ip = arg
 
     @property
     def team_score(self):
-        return self._team_score
+        return self.application._team_score
 
     @team_score.setter
     def team_score(self, arg):
-        self._team_score = arg
-
+        self.application._team_score = arg 
 
 class ScoreHandler(BaseHandler):
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -265,32 +338,33 @@ class ScoreHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/score.html', score_table=list(score))
+            self.render('score.html', score_table=list(score))
 
 
 class ChallengesHandler(BaseHandler):
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
-            categories = self.client.getCatProgressFromIp(self.remote_ip)
-            challenges = self.client.getFlagProgressFromIp(self.remote_ip)
+            categories = self.client.getCatProgress(self.get_current_user())
+            challenges = self.client.getFlagProgress(self.get_current_user())
         except psycopg2.Error as e:
             self.logger.error(e)
             self.render_pgsql_error(pgsql_error=e)
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/challenges.html',
+            self.render('challenges.html',
                         cat=list(categories),
                         chal=list(challenges))
 
 
 class IndexHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -302,31 +376,30 @@ class IndexHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/index.html',
+            self.render('index.html',
                         table=score,
                         news=valid_news,
                         sponsors=self.sponsors)
 
+    @tornado.web.authenticated
     def post(self):
         flag = self.get_argument("flag")
         valid_news = self.client.getNewsList()
 
         try:
-            submit_message = self.client.submitFlagFromIp(
-                flag,
-                self.remote_ip)
+            team_id = self.get_current_user()
+            submit_message = self.client.submitFlag(flag,team_id,self.remote_ip)
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
-            self.render_pgsql_error(pgsql_error=e)
+            submit_message = self.get_pgsql_error(e)
             flag_is_valid = False
         except Exception as e:
             self.logger.error(e)
             self.set_status(500)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            # submit_message = "Flag successfully submitted"
             flag_is_valid = True
 
         match = re.search("^(FLAG\-|flag\-)", flag)
@@ -335,7 +408,7 @@ class IndexHandler(BaseHandler):
               "\"Your flag without 'FLAG-'\""
 	
         score = self.client.getScore(top=15)
-        self.render('templates/index.html',
+        self.render('index.html',
                     table=score,
                     news=valid_news,
                     sponsors=self.sponsors,
@@ -344,7 +417,7 @@ class IndexHandler(BaseHandler):
 
 
 class DashboardHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -360,15 +433,15 @@ class DashboardHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/dashboard.html',
+            self.render('dashboard.html',
                         sponsors=self.sponsors,
                         jsArray=jsArray)
 
 
 class BlackMarketItemHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         privateId = self.get_argument("privateId")
@@ -383,7 +456,7 @@ class BlackMarketItemHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
             self.set_header('Content-Type', 'application/octet-stream')
             self.set_header('Content-Disposition',
@@ -411,13 +484,13 @@ class Error404Handler(BaseHandler):
 
 
 class RulesHandler(BaseHandler):
-
+    @tornado.web.authenticated
     def get(self):
-        self.render('templates/rules.html')
+        self.render('rules.html')
 
 
 class IndexProjectorHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -429,15 +502,15 @@ class IndexProjectorHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/projector.html',
+            self.render('projector.html',
                         table=score,
                         news=valid_news)
 
 
 class DashboardProjectorHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -453,55 +526,106 @@ class DashboardProjectorHandler(BaseHandler):
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('templates/error.html', error_msg="Error")
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('templates/projector_js.html',
+            self.render('projector_js.html',
                         jsArray=jsArray)
 
 
 class SponsorsProjectorHandler(BaseHandler):
-
+    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
-        self.render('templates/projector_sponsors.html',
+        self.render('projector_sponsors.html',
                     sponsors=self.sponsors)
 
+class AuthRegisterHandler(BaseHandler):
+    form = {'name': '',
+            'pwd1': '',
+            'pwd2': '',
+            'loc': 0}
+
+    def get(self):
+        self.render("register.html", form=self.form,
+                                     submit_message='')
+
+    @gen.coroutine
+    def post(self):
+        form = self.form
+        try:
+            form['name'] = self.get_argument('team_name')
+            form['pwd1'] = self.get_argument('team_pwd1')
+            form['pwd2'] = self.get_argument('team_pwd2')
+            form['loc'] = self.get_argument('team_loc',None)
+            if form['loc'].isdigit():
+                form['loc'] = int(form['loc'])
+            else:
+                form['loc'] = None
+            team_id = self.client.registerTeam(form['name'],form['pwd1'],
+                                               form['pwd2'],form['loc'])
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            error_msg = self.get_pgsql_error(e)
+            form['pwd1'] = ''
+            form['pwd2'] = ''
+            self.render("register.html", form=form,
+                                         submit_message=error_msg)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg="Error")
+        else:
+            self.logger.info('Team %s registered' % form['name'])
+            self.set_secure_cookie("team_id", str(team_id))
+            self.redirect(self.get_argument("next", "/"))
+
+class AuthLoginHandler(BaseHandler):
+    form = {'name': '',
+            'pwd': ''}
+
+    def get(self):
+        self.render("login.html", form=self.form,
+                                  submit_message='')
+
+    @gen.coroutine
+    def post(self):
+        if self.is_logged():
+            self.clear_cookie("team_id")
+
+        try:
+            form = self.form
+            form['name'] = self.get_argument('team_name')
+            form['pwd'] = self.get_argument('team_pwd')
+            team_id = self.client.loginTeam(form['name'],form['pwd'])
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            error_msg = self.get_pgsql_error(e)
+            form['pwd'] = ''
+            self.render("login.html", form=form,
+                                         submit_message=error_msg)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            self.logger.info('Team %s registered' % form['name'])
+            self.set_secure_cookie("team_id", str(team_id))
+            form['name'] = ''
+            form['pwd'] = ''
+            self.redirect(self.get_argument("next", "/"))
+
+class AuthLogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie("team_id")
+        self.redirect(self.get_argument("next", "/"))
+
 if __name__ == '__main__':
-    # For the CSS
-    root = os.path.dirname(__file__)
 
-    # Prety stdout logs
-    tornado.log.enable_pretty_logging()
+    tornado.options.parse_command_line()
+    server = tornado.httpserver.HTTPServer(Application())
 
-    sponsors_imgs_path = os.path.join(os.path.dirname(__file__),
-                                      "static/sponsors")
-    sponsors_imgs = ["/static/sponsors/" +
-                     f for f in os.listdir(sponsors_imgs_path)
-                     if os.path.isfile(os.path.join(sponsors_imgs_path, f))]
-
-    logger = Logger("HF2k15_Logger")
-
-    args = dict(logger=logger, sponsors_imgs=sponsors_imgs, debug=False)
-
-    app = tornado.web.Application([
-            (r"/", IndexHandler, args),
-            (r"/challenges/?", ChallengesHandler, args),
-            (r"/scoreboard/?", ScoreHandler, args),
-            (r"/dashboard/?", DashboardHandler, args),
-            (r"/rules/?", RulesHandler, args),
-            (r"/bmi/?", BlackMarketItemHandler, args),
-            (r"/projector/1/?", IndexProjectorHandler, args),
-            (r"/projector/2/?", DashboardProjectorHandler, args),
-            (r"/projector/3/?", SponsorsProjectorHandler, args)
-        ],
-         debug=True,
-         static_path=os.path.join(root, 'static'),
-         default_handler_class=Error404Handler  # 404 Handling
-         )
-
-    server = tornado.httpserver.HTTPServer(app,
-                                           xheaders=True
-                                           )
-
-    server.listen(5000)
+    server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
+
+if __name__ == "__main__":
+    main()

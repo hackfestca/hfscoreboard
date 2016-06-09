@@ -59,6 +59,10 @@ class WebController(ClientController.ClientController):
     def benchScoreProgress(self,callLimit=config.BENCH_DEFAULT_REQ_NUM):
         self._benchmarkMany(callLimit,'getScoreProgress',[None])
 
+    def submitFlag(self,flagValue,teamId,playerIp):
+        self.exec('logSubmit',flagValue,playerIp)
+        return self.exec('submitFlag',flagValue,teamId,playerIp)
+
     def submitFlagFromIp(self,flagValue,playerIp):
         self.exec('logSubmit',flagValue,playerIp)
         return self.exec('submitFlagFromIp',flagValue,playerIp)
@@ -66,8 +70,14 @@ class WebController(ClientController.ClientController):
     def getBMItemDataFromIp(self,privateId,playerIp):
         return self.exec('getBMItemDataFromIp',privateId,playerIp)
 
+    def getCatProgress(self,teamId):
+        return self.exec('getCatProgress',teamId)
+
     def getCatProgressFromIp(self,playerIp):
         return self.exec('getCatProgressFromIp',playerIp)
+
+    def getFlagProgress(self,teamId):
+        return self.exec('getFlagProgress',teamId)
 
     def getFlagProgressFromIp(self,playerIp):
         return self.exec('getFlagProgressFromIp',playerIp)
@@ -75,11 +85,20 @@ class WebController(ClientController.ClientController):
     def getScoreProgress(self):
         return self.exec('getScoreProgress',None)
 
+    def getTeamInfo(self,teamId):
+        return self.exec('getTeamInfo',teamId)
+
     def getTeamInfoFromIp(self,playerIp):
         return self.exec('getTeamInfoFromIp',playerIp)
 
     def getTeamSecretsFromIp(self,playerIp):
         return self.exec('getTeamSecretsFromIp',playerIp)
+
+    def registerTeam(self,name,pwd1,pwd2,loc):
+        return self.exec('registerTeam',name,pwd1,pwd2,loc)
+
+    def loginTeam(self,name,pwd):
+        return self.exec('loginTeam',name,pwd)
 
     def getJsDataScoreProgress(self):
         s = "[\n"

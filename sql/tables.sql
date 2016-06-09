@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS flagTypeExt CASCADE;
 DROP TABLE IF EXISTS player CASCADE;
 DROP TABLE IF EXISTS teamSecrets CASCADE;
 DROP TABLE IF EXISTS team CASCADE;
+DROP TABLE IF EXISTS teamLocation CASCADE;
 DROP TABLE IF EXISTS bmItemStatus_history CASCADE;
 DROP TABLE IF EXISTS eventFacility CASCADE;
 DROP TABLE IF EXISTS eventSeverity CASCADE;
@@ -56,12 +57,23 @@ CREATE TABLE wallet(
     );
 
 /*
+    Represent a team location. As of iHack 2016, available locations will be 
+    Quebec and Sherbrooke
+*/
+CREATE TABLE teamLocation(
+    id serial primary key,
+    name varchar(100) not null
+    );
+
+/*
     Represent a team. A team can submit flags.
 */
 CREATE TABLE team(
     id serial primary key,
     name varchar(50) not null unique,
-    net inet not null unique,
+    net inet null unique,
+    pwd varchar(64) null,
+    loc integer null references teamLocation(id),
     wallet integer not null references wallet(id),
     hide boolean not null default false,
     ts timestamp not null default current_timestamp,
