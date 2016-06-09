@@ -4625,7 +4625,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: listTeamSecrets(grep,top)
     TODO: Remap this function in admin.py. It was getTeamSecrets
 */
-CREATE OR REPLACE FUNCTION listTeamsSecrets(_grep varchar(30) DEFAULT NULL,
+CREATE OR REPLACE FUNCTION listTeamSecrets(_grep varchar(30) DEFAULT NULL,
                                             _top integer DEFAULT 30) 
 RETURNS TABLE (                             
                 TeamName team.name%TYPE,
@@ -4634,7 +4634,7 @@ RETURNS TABLE (
               ) AS $$
     BEGIN
         -- Logging
-        raise notice 'listTeamsSecrets(%,%)',$1,$2;
+        raise notice 'listTeamSecrets(%,%)',$1,$2;
 
         -- Get team's settings
         return QUERY SELECT a.teamName,

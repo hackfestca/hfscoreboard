@@ -45,23 +45,26 @@ SELECT addFlagStatus(3,'Disabled','The flag is removed by admins');
 /*
     Add hosts
 */
-SELECT addHost('scoreboard.hf', 'OpenBSD5.5 x64', 'Scoreboard');
+SELECT addHost('scoreboard.hf', 'OpenBSD5.9 x64', 'Scoreboard');
 
 
 /*
     Add authors
 */
-SELECT addAuthor('Martin Dube', 'mdube');
-SELECT addAuthor('Jessy Campos', '_eko');
+--SELECT addAuthor('Martin Dube', 'mdube');
+--SELECT addAuthor('Jessy Campos', '_eko');
+SELECT addAuthor('@mrvaughan', '@mrvaughan');
 SELECT addAuthor('Cedrick Chaput', 'chaput');
-SELECT addAuthor('Stephane Sigmen', 'sigmen');
+SELECT addAuthor('Dave Cloutier', 'dave');
+SELECT addAuthor('Stephane Sigmen', 'sigs');
 SELECT addAuthor('Jean-Sebastien Grenon', 'js');
-SELECT addAuthor('François Lajeunesse-Robert', 'flr');
-SELECT addAuthor('Franck Desert','hiddenman');
-SELECT addAuthor('Guillaume Parent','gp');
-SELECT addAuthor('Patrick Mathieu','patoff');
-SELECT addAuthor('HF Crew', 'HFCrew');
-SELECT addAuthor('Scoreboard', 'Scoreboard');
+--SELECT addAuthor('François Lajeunesse-Robert', 'flr');
+SELECT addAuthor('Franck Desert','phenix');
+--SELECT addAuthor('Guillaume Parent','gp');
+--SELECT addAuthor('Patrick Mathieu','patoff');
+--SELECT addAuthor('HF Crew', 'HFCrew');
+--SELECT addAuthor('Scoreboard', 'Scoreboard');
+SELECT addAuthor('Lei He', 'lei');
 
 /* 
     Create flag type definitions
