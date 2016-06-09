@@ -54,6 +54,7 @@ class InitController(UpdaterController.UpdaterController):
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
         self._bmiFile = config.BMI_FILE
+        self._gateKeysFile = config.GATE_KEYS_FILE
 
         self._sSSHUser = config.SSH_BMU_USER
         self._sSSHPubKey = config.SSH_BMU_PUB_KEY
@@ -246,9 +247,22 @@ class InitController(UpdaterController.UpdaterController):
         self._oDBCursor.execute(sql)
         self.commit()
 
+    def importGateKeys(self):
+        with open(self._gateKeysFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            headers = reader.__next__()
+            for row in reader:
+                print('GateKey: %s' % '|'.join(row))
+                gatekey = row[1]
+                
+                if gatekey != 'Team':
+                    id = self.exec('addGateKey',self._sanitize(gatekey,'str'))
+        self.commit()
+
     def importAll(self):
         self.importTables()
         self.importFunctions()
+        self.importGateKeys()   # Must be imported before data
         self.importData()
         self.importCategories()
         self.importFlags()

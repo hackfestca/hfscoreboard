@@ -134,10 +134,11 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
-            (r"/challenges/?", ChallengesHandler),
-            (r"/scoreboard/?", ScoreHandler),
-            (r"/dashboard/?", DashboardHandler),
-            (r"/rules/?", RulesHandler),
+            (r"/rules/", RulesHandler),
+            (r"/secrets/", SecretsHandler),
+            (r"/challenges/", ChallengesHandler),
+            (r"/scoreboard/", ScoreHandler),
+            (r"/dashboard/", DashboardHandler),
             #(r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
@@ -326,42 +327,6 @@ class BaseHandler(tornado.web.RequestHandler):
     def team_score(self, arg):
         self.application._team_score = arg 
 
-class ScoreHandler(BaseHandler):
-    @tornado.web.authenticated
-    @tornado.web.addslash
-    def get(self):
-        try:
-            score = self.client.getScore(top=200)
-        except psycopg2.Error as e:
-            self.logger.error(e)
-            self.render_pgsql_error(pgsql_error=e)
-        except Exception as e:
-            self.set_status(500)
-            self.logger.error(e)
-            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
-        else:
-            self.render('score.html', score_table=list(score))
-
-
-class ChallengesHandler(BaseHandler):
-    @tornado.web.authenticated
-    @tornado.web.addslash
-    def get(self):
-        try:
-            categories = self.client.getCatProgress(self.get_current_user())
-            challenges = self.client.getFlagProgress(self.get_current_user())
-        except psycopg2.Error as e:
-            self.logger.error(e)
-            self.render_pgsql_error(pgsql_error=e)
-        except Exception as e:
-            self.set_status(500)
-            self.logger.error(e)
-            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
-        else:
-            self.render('challenges.html',
-                        cat=list(categories),
-                        chal=list(challenges))
-
 
 class IndexHandler(BaseHandler):
     @tornado.web.authenticated
@@ -389,8 +354,11 @@ class IndexHandler(BaseHandler):
         valid_news = self.client.getNewsList()
 
         try:
-            team_id = self.get_current_user()
-            submit_message = self.client.submitFlag(flag,team_id,self.remote_ip)
+            if options.authByIP:
+                submit_message = self.client.submitFlagFromIP(flag,self.remote_ip)
+            else:
+                team_id = self.get_current_user()
+                submit_message = self.client.submitFlag(flag,team_id,self.remote_ip)
         except psycopg2.Error as e:  # already submitted, invalid flag = insult
             self.logger.error(e)
             submit_message = self.get_pgsql_error(e)
@@ -414,6 +382,71 @@ class IndexHandler(BaseHandler):
                     sponsors=self.sponsors,
                     flag_is_valid=flag_is_valid,
                     submit_message=submit_message)
+
+
+class RulesHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('rules.html')
+
+
+class SecretsHandler(BaseHandler):
+    @tornado.web.authenticated
+    @tornado.web.addslash
+    def get(self):
+        try:
+            team_id = self.get_current_user()
+            secrets = self.client.getTeamSecrets(team_id)
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.render_pgsql_error(pgsql_error=e)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            self.render('secrets.html', secrets_table=list(secrets))
+
+
+class ChallengesHandler(BaseHandler):
+    @tornado.web.authenticated
+    @tornado.web.addslash
+    def get(self):
+        try:
+            if options.authByIP:
+                categories = self.client.getCatProgressFromIP(self.remote_ip)
+                challenges = self.client.getFlagProgressFromIP(self.remote_ip)
+            else:
+                categories = self.client.getCatProgress(self.get_current_user())
+                challenges = self.client.getFlagProgress(self.get_current_user())
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.render_pgsql_error(pgsql_error=e)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            self.render('challenges.html',
+                        cat=list(categories),
+                        chal=list(challenges))
+
+
+class ScoreHandler(BaseHandler):
+    @tornado.web.authenticated
+    @tornado.web.addslash
+    def get(self):
+        try:
+            score = self.client.getScore(top=200)
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.render_pgsql_error(pgsql_error=e)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            self.render('score.html', score_table=list(score))
 
 
 class DashboardHandler(BaseHandler):
@@ -481,12 +514,6 @@ class Error404Handler(BaseHandler):
     def get(self):
         # Cedrick Chaput don't want me to tell you when you're wrong
         self.redirect('/')
-
-
-class RulesHandler(BaseHandler):
-    @tornado.web.authenticated
-    def get(self):
-        self.render('rules.html')
 
 
 class IndexProjectorHandler(BaseHandler):

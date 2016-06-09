@@ -121,4 +121,5 @@ CATEGORIES_FILE = 'import/categories.csv'
 FLAGS_FILE = 'import/flags.csv'
 TEAMS_FILE = 'import/teams.csv'
 BMI_FILE = 'import/blackMarketItems.csv'
+GATE_KEYS_FILE = 'import/gatekeys.csv'
 

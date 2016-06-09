@@ -11,6 +11,7 @@ SET search_path TO scoreboard;
 /*
     Some cleanup
 */
+DROP TABLE IF EXISTS gateKey;
 DROP TABLE IF EXISTS settings CASCADE;
 DROP TABLE IF EXISTS flagStatus_history CASCADE;
 DROP TABLE IF EXISTS submit_history CASCADE;
@@ -457,3 +458,12 @@ CREATE TABLE settings(
     teamStartMoney NUMERIC(10,2) not null default 0,
     ts timestamp not null default current_timestamp
     ); 
+
+/*
+    Temporary for iHack 2016: Gate keys used by Dave's challenges
+*/
+CREATE TABLE gateKey(
+    id serial primary key,
+    value varchar(20) not null,
+    used boolean not null default False
+    );

@@ -91,6 +91,9 @@ class WebController(ClientController.ClientController):
     def getTeamInfoFromIp(self,playerIp):
         return self.exec('getTeamInfoFromIp',playerIp)
 
+    def getTeamSecrets(self,teamId):
+        return self.exec('getTeamSecrets',teamId)
+
     def getTeamSecretsFromIp(self,playerIp):
         return self.exec('getTeamSecretsFromIp',playerIp)
 

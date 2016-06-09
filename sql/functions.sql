@@ -1245,6 +1245,7 @@ CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
                                    _loc team.loc%TYPE DEFAULT Null) 
 RETURNS team.id%TYPE AS $$
     DECLARE
+        _teamId team.id%TYPE;
         _inet inet;
         _walletId wallet.id%TYPE;
         _teamStartMoney settings.teamStartMoney%TYPE;
@@ -1270,8 +1271,12 @@ RETURNS team.id%TYPE AS $$
 
         -- Insert a new row
         INSERT INTO team(name,net,pwd,loc,wallet) VALUES(_name,_inet,sha256(_pwd),_loc,_walletId);
+        _teamId := LASTVAL();
 
-        RETURN LASTVAL();
+        -- Assign gate keys (iHack 2016)
+        PERFORM assignGateKey(_teamId);
+
+        RETURN _teamId;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -1296,7 +1301,11 @@ RETURNS team.id%TYPE AS $$
         end if;
         PERFORM id FROM teamLocation WHERE id = _loc;
         if not FOUND then
-            PERFORM raise_p('Please choose a valid location');
+            PERFORM raise_p('Please choose a valid location.');
+        end if;
+        PERFORM id FROM team WHERE name = _name;
+        if FOUND then
+            PERFORM raise_p('Team name already choosen.');
         end if;
 
         RETURN addTeam(_name, Null, _pwd1, _loc);
@@ -4613,9 +4622,10 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 /*
-    Stored Proc: getTeamSecrets(grep,top)
+    Stored Proc: listTeamSecrets(grep,top)
+    TODO: Remap this function in admin.py. It was getTeamSecrets
 */
-CREATE OR REPLACE FUNCTION getTeamsSecrets(_grep varchar(30) DEFAULT NULL,
+CREATE OR REPLACE FUNCTION listTeamsSecrets(_grep varchar(30) DEFAULT NULL,
                                             _top integer DEFAULT 30) 
 RETURNS TABLE (                             
                 TeamName team.name%TYPE,
@@ -4624,7 +4634,7 @@ RETURNS TABLE (
               ) AS $$
     BEGIN
         -- Logging
-        raise notice 'getTeamsSecrets(%,%)',$1,$2;
+        raise notice 'listTeamsSecrets(%,%)',$1,$2;
 
         -- Get team's settings
         return QUERY SELECT a.teamName,
@@ -4653,6 +4663,26 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: getTeamSecretsFromIp(playerIp)
 */
+CREATE OR REPLACE FUNCTION getTeamSecrets(_teamId team.id%TYPE) 
+RETURNS TABLE (
+                name teamSecrets.name%TYPE,
+                value teamSecrets.value%TYPE
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTeamSecrets(%)',$1;
+
+        -- Get team's settings
+        return QUERY SELECT ts.name,
+                            ts.value
+                     FROM teamSecrets AS ts
+                     WHERE ts.teamId = _teamId;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTeamSecretsFromIp(playerIp)
+*/
 CREATE OR REPLACE FUNCTION getTeamSecretsFromIp(_playerIpStr varchar) 
 RETURNS TABLE (
                 name teamSecrets.name%TYPE,
@@ -4675,10 +4705,7 @@ RETURNS TABLE (
         end if;
 
         -- Get team's settings
-        return QUERY SELECT ts.name,
-                            ts.value
-                     FROM teamSecrets AS ts
-                     WHERE ts.teamId = _teamId;
+        return QUERY SELECT * from getTeamSecrets(_teamId);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -4993,3 +5020,42 @@ RETURNS varchar(40) AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: addGateKey(value)
+*/
+CREATE OR REPLACE FUNCTION addGateKey(_value gateKey.value%TYPE)
+RETURNS integer AS $$
+    BEGIN
+        -- Logging
+        raise notice 'addGateKey(%)',$1;
+
+        -- Insert a new row
+        INSERT INTO gateKey(value) VALUES(_value);
+
+        RETURN LASTVAL();
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: assignGateKey(teamId)
+*/
+CREATE OR REPLACE FUNCTION assignGateKey(_teamId team.id%TYPE)
+RETURNS integer AS $$
+    DECLARE
+        _gateKeyRec gateKey%ROWTYPE;
+    BEGIN
+        -- Logging
+        raise notice 'assignGateKey(%)',$1;
+
+        -- Get unique and unused gateKey
+        SELECT id,value INTO _gateKeyRec FROM gateKey WHERE used = False LIMIT 1;
+
+        -- Set the gatekey as Used
+        UPDATE gateKey SET used = True WHERE id = _gateKeyRec.id;
+
+        -- Create a team secret 
+        PERFORM addTeamSecrets(_teamId,'Gate Key',_gateKeyRec.value);
+
+        RETURN 0;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
