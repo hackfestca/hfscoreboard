@@ -2304,6 +2304,7 @@ RETURNS TABLE (
                                 WHERE tf2.ts <= _ts
                             GROUP BY tf2.teamId
                             ) AS tf3 ON t.id = tf3.teamId
+                         WHERE t.hide = False
                          ORDER BY flagPts DESC,w.amount DESC NULLS LAST
                          LIMIT _top;
 
