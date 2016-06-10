@@ -2033,11 +2033,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
     Stored Proc: logSubmit(playerip,flagValue)
 */ 
 CREATE OR REPLACE FUNCTION logSubmit(_flagValue flag.value%TYPE,
+                                     _teamId team.id%TYPE,
                                      _playerIpStr varchar(20))
 RETURNS integer AS $$
     DECLARE
         _playerIp inet;
-        _teamId team.id%TYPE;
     BEGIN
         -- Logging
         raise notice 'logSubmit(%,%)',$1,$2;
@@ -2045,9 +2045,11 @@ RETURNS integer AS $$
         _playerIp := _playerIpStr::inet;
 
         -- Get team from userIp 
-        SELECT id INTO _teamId FROM team WHERE _playerIp << net ORDER BY id DESC LIMIT 1;
-        if NOT FOUND then
-            raise exception 'Team not found for %',_playerIp;
+        if _teamId is Null then
+            SELECT id INTO _teamId FROM team WHERE _playerIp << net ORDER BY id DESC LIMIT 1;
+            if NOT FOUND then
+                raise exception 'Team not found for %',_playerIp;
+            end if;
         end if;
 
         -- Save attempt in submit_history table

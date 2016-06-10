@@ -60,11 +60,11 @@ class WebController(ClientController.ClientController):
         self._benchmarkMany(callLimit,'getScoreProgress',[None])
 
     def submitFlag(self,flagValue,teamId,playerIp):
-        self.exec('logSubmit',flagValue,playerIp)
+        self.exec('logSubmit',flagValue,teamId,playerIp)
         return self.exec('submitFlag',flagValue,teamId,playerIp)
 
     def submitFlagFromIp(self,flagValue,playerIp):
-        self.exec('logSubmit',flagValue,playerIp)
+        self.exec('logSubmit',flagValue,None,playerIp)
         return self.exec('submitFlagFromIp',flagValue,playerIp)
 
     def getBMItemDataFromIp(self,privateId,playerIp):
