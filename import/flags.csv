@@ -7,24 +7,24 @@ C= 6XXXXXXX<br>
 D= 2XXXXXXX<br>
 <a href=""https://scoreboard.poptheshell.com/public/sunnydays"">file</a>",,
 misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.poptheshell.com/public/fw.txt"">file</a>",,
-misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""http://fw.poptheshell.com"">fw.poptheshell.com</a>",,
-web01,552dacb15f2019c8f3f74c55befa242c,10,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web02,af05669796eac419835d84d5791b4bfe,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web03,987ddd03eb3f374d0d60e5d5b53852e5,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web04,4f2604c4aa4b911ac3c18ec17d0fb9b4,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web05,2b52d7254dfe9ddf2ce35f9ab6a826e9,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web06,1f681635c89df401ef18598ffe3a0694,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web07,635427cccad763586edabbd77d9e7d40,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web08,0b59fd40b443549c917f88a348b3b9c9,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web09,166d77ac1b46a1ec38aa35ab7e628ab5,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web10,87db0521c1be46a4aaa990a453319f9a,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web11,5faad111f881808010439518e016bf23,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web12,924c25e60c986648bf6f973013fbe5e3,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web13,3250fdb9be1e01c063d5a65c98f97c43,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web14,9dd9a49eeb62f97f5211f698d78b5a12,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-web15,1a6bbf2332304b46df88b44deaee3bb0,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
+misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""https://fw.poptheshell.com"">fw.poptheshell.com</a>",,
+web01,552dacb15f2019c8f3f74c55befa242c,10,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web02,af05669796eac419835d84d5791b4bfe,20,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web03,987ddd03eb3f374d0d60e5d5b53852e5,30,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web04,4f2604c4aa4b911ac3c18ec17d0fb9b4,40,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web05,2b52d7254dfe9ddf2ce35f9ab6a826e9,50,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web06,1f681635c89df401ef18598ffe3a0694,60,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web07,635427cccad763586edabbd77d9e7d40,70,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web08,0b59fd40b443549c917f88a348b3b9c9,80,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web09,166d77ac1b46a1ec38aa35ab7e628ab5,90,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web10,87db0521c1be46a4aaa990a453319f9a,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web11,5faad111f881808010439518e016bf23,110,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web12,924c25e60c986648bf6f973013fbe5e3,120,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web13,3250fdb9be1e01c063d5a65c98f97c43,130,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web14,9dd9a49eeb62f97f5211f698d78b5a12,140,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
+web15,1a6bbf2332304b46df88b44deaee3bb0,150,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
 pcap01,63d0cea9d550e495fde1b81310951bd7,100,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"My cat transfer fetch some special file from my server. Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level1.pcapng"">pcap01</a>",,transfère http gziper/utilier wireshark pour exporter le http
-pcap02,bfdeeace1c0f2f0d7ca6e8197737edee,150,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"One of my agent bring me this capture of my cat dowloading important file. Try to find it ! <br><a href=""https://scoreboard.hf/public/level2.tar.gz"">pcap02</a>",,Connection wep. aicrack dessus pour avoir le password. airdecap-ng pour enlevere l'entête 802.11. transfère http d'un ISO 
+pcap02,bfdeeace1c0f2f0d7ca6e8197737edee,150,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"One of my agent bring me this capture of my cat dowloading important file. Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level2.tar.gz"">pcap02</a>",,Connection wep. aicrack dessus pour avoir le password. airdecap-ng pour enlevere l'entête 802.11. transfère http d'un ISO 
 pcap03,e1df851e98a89cddc3559dd299bd8b90,200,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"I think my cat think we spy on it ! He dowload is file differently ! Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level3.pcap"">pcap03</a>",,reconstruire un bitorrent 
 pcap04,4f76de6683804e545d31e6b490d51c63,250,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"ooooo my cat used encryption !  try to find a way to retreive the message <br><a href=""https://scoreboard.poptheshell.com/public/level4.tar.gz"">pcap04</a>",,dechiffrer du ssl avec les sessions
 for01,4e9210e63fb0a5f31939188f16ebbe66,100,0,scoreboard.hf,for,Null,chaput,Standard,Null,I know my cat hide special file some where. Try to access it  ,,password in the excel file in a hide sheets encfs enc/ doc/ 
@@ -65,8 +65,8 @@ illum07,0feb59a7b249f99561ddb5327dc8dc98,25,0,scoreboard.hf,trivia,Null,stackfau
 illum08,c64c284096a3ea6b558778e2b3e4aa58,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 7,,scripting
 pcap05,XSsv3rCCCkRFG3FVuZBd,300,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Someone is exfiltrating data from my network. <br>Here's a pcap from my ids. Find out the extracted data.<br><a href=""https://scoreboard.poptheshell.com/public/pcap_exfiltration.pcap.zip"">Pcap trace</a>",,
 pcap06,mysuperadminrdppassword,400,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.poptheshell.com/public/trace01.pcap.zip"">Pcap trace</a>",,
-misc01,fHm3BY0eyWuu3bSTMTXL,100,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,Find the password to get the flag. Connect to lamerescue.poptheshell.com:4441,,
-misc02,GjueXbVYavuZZPrrPA3H,200,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,Just connect and get the flag. Connect to easyflag.poptheshell.com:4442,,
+misc01,fHm3BY0eyWuu3bSTMTXL,100,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Find the password to get the flag. Connect to lamerescue.poptheshell.com:4441,,
+misc02,GjueXbVYavuZZPrrPA3H,200,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Just connect and get the flag. Connect to easyflag.poptheshell.com:4442,,
 ent01,2ced1f8cdeee3baea879b0846f70a1b5,200,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
 ent02,a5781d740456e37010b4192b04ac4bf3,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
 ent03,669c4fb17bc500e01c5006bb64617a02,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
