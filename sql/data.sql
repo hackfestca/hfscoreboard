@@ -55,7 +55,7 @@ SELECT addHost('scoreboard.hf', 'OpenBSD5.9 x64', 'Scoreboard');
 --SELECT addAuthor('Jessy Campos', '_eko');
 SELECT addAuthor('@mrvaughan', '@mrvaughan');
 SELECT addAuthor('Cedrick Chaput', 'chaput');
-SELECT addAuthor('Dave Cloutier', 'dave');
+SELECT addAuthor('Dave Cloutier', 'stackfault');
 SELECT addAuthor('Stephane Sigmen', 'sigs');
 SELECT addAuthor('Jean-Sebastien Grenon', 'js');
 --SELECT addAuthor('François Lajeunesse-Robert', 'flr');

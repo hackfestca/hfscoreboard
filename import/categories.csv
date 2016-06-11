@@ -2,13 +2,13 @@ Name,Title,Description,Hidden,Authors
 web,web,brought back from 2011 this web level up will be a pieace of cake .... or not :) ,FALSE,chaput
 misc,misc,Challenge with no category !,FALSE,chaput
 pcap,Network Capute,"wireshark,tcpdump,networkminer, hex editor ! Choose your tool you need to see the good communication ! ",FALSE,chaput
-for,Forensics,you know normal easy forensic. A walk in the park .... or a jogging ... or maybe more a run ! ,FALSE,chaput
+for,Forensics,"you know normal easy forensic. A walk in the park .... or a jogging ... or maybe more a run !  <a href=""https://scoreboard.poptheshell.com/public/forensic.img.7z"">forensic</a> ",FALSE,chaput
 trivia,Interactive Trivia,ncat to wizardtower.poptheshell.com 4400 to stat the aventure ! ,FALSE,chaput
 bug,Bug Bounty,Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.,FALSE,chaput
 thirdparty,Third Party,"LockPick, babyfoot, surprise ",TRUE,chaput
 bonus,Bonus,"Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team",TRUE,chaput
 elec,electro,[*** Local only ****] Near admin's table,FALSE,chaput
 ent,entreprise,try to hack into la-tasse coporation. ,FALSE,chaput
-CrkMe,Crack Me,Just like nuts. You need to crack me. Becareful a lot Trap! ,FALSE,chaput
-RevMe,Reverse Me,Reverve this serial with your brain and win ! But it's not easy,FALSE,chaput
-RuDoll,Russian Doll,Find what's in the thing that is in the thing that is ... Just three words DIG IT STRONGER! ,FALSE,chaput
+CrkMe,Crack Me,"Just like nuts. You need to crack me. Becareful a lot Trap!  <br><a href=""https://scoreboard.poptheshell.com/public/phenix.rar"">phenix</a> <br>pass: PhenixCorpIHACK2016",FALSE,chaput
+RevMe,Reverse Me,"Reverve this serial with your brain and win ! But it's not easy <a href=""https://scoreboard.poptheshell.com/public/phenix.rar"">phenix</a> <br>pass: PhenixCorpIHACK2016",FALSE,chaput
+RuDoll,Russian Doll,"Find what's in the thing that is in the thing that is ... Just three words DIG IT STRONGER!  <a href=""https://scoreboard.poptheshell.com/public/phenix.rar"">phenix</a> <br>pass: PhenixCorpIHACK2016",FALSE,chaput

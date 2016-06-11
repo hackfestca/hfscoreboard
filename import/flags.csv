@@ -5,8 +5,8 @@ A= bXXXXXXX<br>
 B= eXXXXXXX<br>
 C= 6XXXXXXX<br>
 D= 2XXXXXXX<br>
-<a href=""https://scoreboard.hf/public/sunnydays"">file</a>",,
-misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.hf/public/fw.txt"">file</a>",,
+<a href=""https://scoreboard.poptheshell.com/public/sunnydays"">file</a>",,
+misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.poptheshell.com/public/fw.txt"">file</a>",,
 misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""http://fw.poptheshell.com"">fw.poptheshell.com</a>",,
 web01,552dacb15f2019c8f3f74c55befa242c,10,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
 web02,af05669796eac419835d84d5791b4bfe,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
@@ -23,109 +23,63 @@ web12,924c25e60c986648bf6f973013fbe5e3,100,0,scoreboard.hf,web,Null,chaput,Stand
 web13,3250fdb9be1e01c063d5a65c98f97c43,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
 web14,9dd9a49eeb62f97f5211f698d78b5a12,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
 web15,1a6bbf2332304b46df88b44deaee3bb0,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,http://level.poptheshell.com/,,
-pcap01,63d0cea9d550e495fde1b81310951bd7,100,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"My cat transfer fetch some special file from my server. Try to find it ! <br><a href=""https://scoreboard.hf/public/level1.pcapng"">pcap01</a>",,transfère http gziper/utilier wireshark pour exporter le http
+pcap01,63d0cea9d550e495fde1b81310951bd7,100,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"My cat transfer fetch some special file from my server. Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level1.pcapng"">pcap01</a>",,transfère http gziper/utilier wireshark pour exporter le http
 pcap02,bfdeeace1c0f2f0d7ca6e8197737edee,150,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"One of my agent bring me this capture of my cat dowloading important file. Try to find it ! <br><a href=""https://scoreboard.hf/public/level2.tar.gz"">pcap02</a>",,Connection wep. aicrack dessus pour avoir le password. airdecap-ng pour enlevere l'entête 802.11. transfère http d'un ISO 
-pcap03,e1df851e98a89cddc3559dd299bd8b90,200,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"I think my cat think we spy on it ! He dowload is file differently ! Try to find it ! <br><a href=""https://scoreboard.hf/public/level3.pcap"">pcap03</a>",,reconstruire un bitorrent 
-pcap04,4f76de6683804e545d31e6b490d51c63,250,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"ooooo my cat used encryption !  try to find a way to retreive the message <br><a href=""https://scoreboard.hf/public/level4.tar.gz"">pcap04</a>",,dechiffrer du ssl avec les sessions
+pcap03,e1df851e98a89cddc3559dd299bd8b90,200,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"I think my cat think we spy on it ! He dowload is file differently ! Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level3.pcap"">pcap03</a>",,reconstruire un bitorrent 
+pcap04,4f76de6683804e545d31e6b490d51c63,250,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"ooooo my cat used encryption !  try to find a way to retreive the message <br><a href=""https://scoreboard.poptheshell.com/public/level4.tar.gz"">pcap04</a>",,dechiffrer du ssl avec les sessions
 for01,4e9210e63fb0a5f31939188f16ebbe66,100,0,scoreboard.hf,for,Null,chaput,Standard,Null,I know my cat hide special file some where. Try to access it  ,,password in the excel file in a hide sheets encfs enc/ doc/ 
 for02,ea0b7ac1da066d752c1902b108ea3d49,150,0,scoreboard.hf,for,Null,chaput,Standard,Null,My cat change my website password! Try to find witch value he put.  ,,in the .mozilla profile 
-for03,5e1f7cfe70ede8abb6c3c386d33ae73a,250,0,scoreboard.hf,for,Null,dave,Standard,Null,"I got a picture from an H4X0R board and I can't figure out what to do with it, can you help me?",,stego
-for04,54328f6b27a45c51986ed436f3f609bf,500,0,scoreboard.hf,for,Null,dave,Standard,Null,"A mobster's driver came to the carwash where I work and left his USB drive in the car, I grabbed some files but they are corrupt, can you uncover anything?",,deleted files recovery and reconstruction
-wisdom01,622c55c6365b13a33b271adab483baa2,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - First conquest,,trivia
-wisdom02,d531581e6c00be1c7f4336096fe6c07e,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 1,,trivia
-wisdom03,65b2f976458308b37b234f343ddf759d,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 2,,trivia
-wisdom04,21ca3407fb80d56858436b03e7d4f80c,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 3,,trivia
-wisdom05,c4ed44099dc74b132e3073a89d9a5ec6,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 4,,trivia
-wisdom06,783414b7431e1b0636a72ed988b449b6,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 5,,trivia
-wisdom07,f1e7b88304fd8b6c3cbfce11a9f91119,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 6,,trivia
-wisdom08,6380c0165c2707588f3b3ff2f387f265,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 7,,trivia
-wisdom09,374582fe7c7ba9237a53520a164a02ff,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 8,,trivia
-wisdom10,1b7214492fec3b94f690619f261b7998,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 9,,trivia
-wisdom11,fb6a00f82322fe54975c64d21a19472e,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 10,,trivia
-wisdom12,f0a5f5c8f19b65644c15eb74a16b8921,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 11,,trivia
-wisdom13,f47f954988c105e1b303e07576edd9a5,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 12,,trivia
-wisdom14,351b3dd1945a9cc2878e487b5c03e8f1,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 13,,trivia
-wisdom15,a78a767cb454adaa443ecfb79c714c52,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 14,,trivia
-wisdom16,3fd7d05698fc7be79dd308e9e8acc326,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 15,,trivia
-intel01,ae0714631668c750e516d80796cc22aa,250,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - First conquest,,trivia
-intel02,bc1e3a7f076caf69441e9fea8278bd9a,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 1,,trivia
-intel03,238dd03e3c179ab8a32e0a7cfebafe5c,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 2,,trivia
-intel04,068f059e212022323e68ed126dc90787,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 3,,trivia
-intel05,2257fe1d44f2a5350b72353a0a571a37,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 4,,trivia
-intel06,f3b9e7b8cf975c4534890541b8db0e18,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 5,,trivia
-intel07,43df259ea9edde717934d7708b50b10d,125,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 6,,trivia
-intel08,84c110960c2e84383413c97f4ded436b,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 7,,trivia
-intel09,e084a14df1ce3de5c85c8bc44aa89a36,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 8,,trivia
-intel10,1195211dcd7b5571294ce57c88b9195d,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 9,,trivia
-intel11,b8ebdb981fd460309394f89093058f93,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 10,,trivia
-intel12,8f129bb6069f13294b281e534d0afe43,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 11,,trivia
-intel13,dca599c7ae5e08418e0791e6b08d47bb,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 12,,trivia
-intel14,18bf89328e7f94f10ef74272971c1b3a,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 13,,trivia
-intel15,50614f86ac5a57bfc90c3a23eb044bea,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 14,,trivia
-intel16,05da82b89321141084ea1e8ccfaed158,75,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 15,,trivia
-intel17,e5da6ac40f630812e9075dd4542ccdf3,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 16,,trivia
-intel18,0eb0b63145ad91f4ed4e643175a7e767,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 17,,trivia
-intel19,8fbd00d23ddaffbf966ec2fd58c91517,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 18,,trivia
-intel20,e24033d1b13771ffa1dfb6f555423c3f,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 19,,trivia
-intel21,36ac546825cb0d828c83bde1d15773bc,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 20,,trivia
-intel22,6aa2b6357d37cb6d0c8fff2dd5e71a25,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 21,,trivia
-intel23,9f155b5c0ff10ef0f56f3b14f8ac258f,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 22,,trivia
-intel24,aad8671ff6dbc46a32a0173db954dde9,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 23,,trivia
-know01,1a962a89ce9fe28090adda1f19026fb6,350,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - First conquest,,scripting
-know02,7257d1fdd66899699dd713b00d504883,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 1,,scripting
-know03,08a186e58b19924a4c54cc9185996a9e,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 2,,scripting
-know04,1e32d887c509b1c5fa99ef92491db1ca,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 3,,scripting
-know05,784e5ea9e9448c97b261d8a94805cb6d,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 4,,scripting
-know06,04f6e5d1a814093a09a2c29644497af4,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 5,,scripting
-know07,d4abe99da3dc74fcf0a4469ff181148a,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 6,,scripting
-know08,300fa2d0ae768bd1c7a243b6f53365ef,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 7,,scripting
-know09,8173b56fccf89c0ed8669df8563e8039,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 8,,scripting
-know10,13723b2f2877db68d371bb76aab20297,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 9,,scripting
-know11,5d511b1b1aa9a8db530c16b6d64caf9c,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 10,,scripting
-know12,c057fac8873677c77c4aa285837012c9,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 11,,scripting
-know13,d1d03eee7c0e58a315eadbbb7b4fc9d5,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 12,,scripting
-know14,6a2089ba48e005891f5c56b71d9505c6,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 13,,scripting
-know15,b9be51a7bb09246a52dde9866c680703,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 14,,scripting
-know16,ae66ff5e4c009d1c45abe5e16bc78250,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 15,,scripting
-know17,c0c2b095926d8ab5cbc31fff8463e03a,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 16,,scripting
-know18,e1feeefb42a6eef522a073403e950105,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 17,,scripting
-know19,ad50b184958f43a2073328170569bd5c,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 18,,scripting
-know20,917ede94e08cf8c52dc1b696043c35c5,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 19,,scripting
-know21,8374044338a918b16ef76b2c6742eee3,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 20,,scripting
-know22,c1d6e1a9b4e2bc53f5d6f48c2b7e11a1,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 21,,scripting
-know23,6f36591a130a5deaf7a19b37fc870227,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 22,,scripting
-know24,676d07e144db0690e968f5d7ce0177ae,50,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 23,,scripting
-know25,801719171a4550a4831490f6bd39e8a6,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 24,,scripting
-know26,08b3ae42ad6b285a5c89b3559bf7be96,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 25,,scripting
-know27,6230183f91e892259f5d8e86e13021b5,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 26,,scripting
-know28,318a6480285db4eb48c290c93af25873,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 27,,scripting
-know29,da19cd8ce46f1b155f96fcdb08414b36,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 28,,scripting
-know30,e8fb083e1b215a1ab5f3ed6d5bdc563d,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 29,,scripting
-know31,f2a0bc43e12448b5bebc1373801d0bf4,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 30,,scripting
-know32,0058d0b28a9c47232eb1828323c833a1,25,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 31,,scripting
-illum01,cc8f4379dab9d8860948992a2dbf51c8,500,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - First conquest,,scripting
-illum02,cd7b578405a866604b60e1d9beb8bc17,400,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 1,,scripting
-illum03,e1df708ba65df0046259ad006a830661,400,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 2,,scripting
-illum04,50eeed2b67731a09ecaca2df740758c5,300,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 3,,scripting
-illum05,e5b14b335e75075953d3c2500f14aa35,300,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 4,,scripting
-illum06,6e18a1e4b95a342ffd7bc4d359f5b55a,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 5,,scripting
-illum07,0feb59a7b249f99561ddb5327dc8dc98,200,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 6,,scripting
-illum08,c64c284096a3ea6b558778e2b3e4aa58,100,0,scoreboard.hf,trivia,Null,dave,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 7,,scripting
-pcap05,XSsv3rCCCkRFG3FVuZBd,300,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Someone is exfiltrating data from my network. <br>Here's a pcap from my ids. Find out the extracted data.<br><a href=""https://scoreboard.hf/public/pcap_exfiltration.pcap.zip"">Pcap trace</a>",,
-pcap06,mysuperadminrdppassword,400,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.hf/public/trace01.pcap.zip"">Pcap trace</a>",,
+for03,5e1f7cfe70ede8abb6c3c386d33ae73a,250,0,scoreboard.hf,for,Null,stackfault,Standard,Null,"I got a picture from an H4X0R board and I can't figure out what to do with it, can you help me?",,"stego hidden in Kitty_Velez.jpg, some hints in deleted voicemails files"
+for04,54328f6b27a45c51986ed436f3f609bf,500,0,scoreboard.hf,for,Null,stackfault,Standard,Null,"A mobster's driver came to the carwash where I work and left his USB drive in the car, I grabbed some files but they are corrupt, can you uncover anything?",,
+wisdom01,622c55c6365b13a33b271adab483baa2,125,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - First conquest,,trivia
+wisdom02,d531581e6c00be1c7f4336096fe6c07e,75,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 1,,trivia
+wisdom03,65b2f976458308b37b234f343ddf759d,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 2,,trivia
+wisdom04,21ca3407fb80d56858436b03e7d4f80c,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 3,,trivia
+wisdom05,c4ed44099dc74b132e3073a89d9a5ec6,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 4,,trivia
+wisdom06,783414b7431e1b0636a72ed988b449b6,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 5,,trivia
+wisdom07,f1e7b88304fd8b6c3cbfce11a9f91119,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 6,,trivia
+wisdom08,6380c0165c2707588f3b3ff2f387f265,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 7,,trivia
+intel01,ae0714631668c750e516d80796cc22aa,150,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - First conquest,,trivia
+intel02,bc1e3a7f076caf69441e9fea8278bd9a,75,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 1,,trivia
+intel03,238dd03e3c179ab8a32e0a7cfebafe5c,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 2,,trivia
+intel04,068f059e212022323e68ed126dc90787,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 3,,trivia
+intel05,2257fe1d44f2a5350b72353a0a571a37,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 4,,trivia
+intel06,f3b9e7b8cf975c4534890541b8db0e18,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 5,,trivia
+intel07,43df259ea9edde717934d7708b50b10d,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 6,,trivia
+intel08,84c110960c2e84383413c97f4ded436b,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 7,,trivia
+know01,1a962a89ce9fe28090adda1f19026fb6,350,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - First conquest,,scripting
+know02,7257d1fdd66899699dd713b00d504883,150,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 1,,scripting
+know03,08a186e58b19924a4c54cc9185996a9e,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 2,,scripting
+know04,1e32d887c509b1c5fa99ef92491db1ca,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 3,,scripting
+know05,784e5ea9e9448c97b261d8a94805cb6d,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 4,,scripting
+know06,04f6e5d1a814093a09a2c29644497af4,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 5,,scripting
+know07,d4abe99da3dc74fcf0a4469ff181148a,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 6,,scripting
+know08,300fa2d0ae768bd1c7a243b6f53365ef,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 7,,scripting
+illum01,cc8f4379dab9d8860948992a2dbf51c8,500,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - First conquest,,scripting
+illum02,cd7b578405a866604b60e1d9beb8bc17,200,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 1,,scripting
+illum03,e1df708ba65df0046259ad006a830661,100,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 2,,scripting
+illum04,50eeed2b67731a09ecaca2df740758c5,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 3,,scripting
+illum05,e5b14b335e75075953d3c2500f14aa35,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 4,,scripting
+illum06,6e18a1e4b95a342ffd7bc4d359f5b55a,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 5,,scripting
+illum07,0feb59a7b249f99561ddb5327dc8dc98,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 6,,scripting
+illum08,c64c284096a3ea6b558778e2b3e4aa58,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 7,,scripting
+pcap05,XSsv3rCCCkRFG3FVuZBd,300,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Someone is exfiltrating data from my network. <br>Here's a pcap from my ids. Find out the extracted data.<br><a href=""https://scoreboard.poptheshell.com/public/pcap_exfiltration.pcap.zip"">Pcap trace</a>",,
+pcap06,mysuperadminrdppassword,400,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.poptheshell.com/public/trace01.pcap.zip"">Pcap trace</a>",,
 misc01,fHm3BY0eyWuu3bSTMTXL,100,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,Find the password to get the flag. Connect to lamerescue.poptheshell.com:4441,,
 misc02,GjueXbVYavuZZPrrPA3H,200,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,Just connect and get the flag. Connect to easyflag.poptheshell.com:4442,,
-ent01,2ced1f8cdeee3baea879b0846f70a1b5,200,0,scoreboard.hf,ent,Null,js,Standard,Null,"<a href=""http://www.la-tasse.com"">www.la-tasse.com</a> exploit WP",,
-ent02,a5781d740456e37010b4192b04ac4bf3,75,0,scoreboard.hf,ent,Null,js,Standard,Null,SSH into it,,
-ent03,669c4fb17bc500e01c5006bb64617a02,75,0,scoreboard.hf,ent,Null,js,Standard,Null,bonus local webserver (mysql),,
-ent04,2991e1cb67f2928db778af67240ed420,75,0,scoreboard.hf,ent,Null,js,Standard,Null,Flag dans la BD de prod du site WP sur le mysql,,
-ent05,700f1624a3a7b983598a16be8296a0f0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,Flag pour SSH sur mysql.la-tasse.com,,
-ent06,0cb4fa92cbd6d37641b3d2a9fb38bac0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,other,,
+ent01,2ced1f8cdeee3baea879b0846f70a1b5,200,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent02,a5781d740456e37010b4192b04ac4bf3,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent03,669c4fb17bc500e01c5006bb64617a02,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent04,2991e1cb67f2928db778af67240ed420,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent05,700f1624a3a7b983598a16be8296a0f0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent06,0cb4fa92cbd6d37641b3d2a9fb38bac0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent07,a29c35d44cf623de586c3646e5e62c3b,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
+ent08,3fe7d5a39843a44a999cb7d084d18184,150,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
 01Crkme50,B9116CC6AC1D42D18CDF377D7338E78F,50,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 02Crkme100,4447FC9B6F8D029CE36D8C4DC52B3E98,100,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 03Crkme200,53FF2C4AC1207E8AC0403CE93B1E2B16,200,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-04Crkme300,1E96A54C4F094D141E5141C3AA62F67F,300,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-05Crkme500,C89FA696B27891DA03EDD5EAB66B5DC0,500,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
+04Crkme300,1A6C5CE52B48BF388ACD528CC55A99DA,300,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
+05Crkme500,129B7720874A1487AF771781322B361D,500,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 06Revme300,CC5FF41E7B7C36BE31797DB7D753CA8D,300,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 07Revme500,00D37E2D017F026F57C68953AAE389FE,500,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 08Revme500,B9EB9B8462F25834695A8A7DBE52BF1C,500,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!

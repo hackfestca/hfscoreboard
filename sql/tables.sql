@@ -71,7 +71,7 @@ CREATE TABLE teamLocation(
 */
 CREATE TABLE team(
     id serial primary key,
-    name varchar(50) not null unique,
+    name varchar(40) not null unique,
     net inet null unique,
     pwd varchar(64) null,
     loc integer null references teamLocation(id),

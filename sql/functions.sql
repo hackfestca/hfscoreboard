@@ -1288,11 +1288,16 @@ CREATE OR REPLACE FUNCTION registerTeam(_name team.name%TYPE,
                                     _pwd2 team.pwd%TYPE,
                                     _loc team.loc%TYPE)
 RETURNS team.id%TYPE AS $$
+    DECLARE
+        NAME_MAX_LENGTH integer := 40;     -- TODO: Get length from table.
     BEGIN
         -- Logging
         raise notice 'registerTeam(%,pwd,%)',$1,$2;
 
         -- Some validations
+        if length(_name) > NAME_MAX_LENGTH then
+            PERFORM raise_p(format('Name cannot be longer than %',NAME_MAX_LENGTH));
+        end if;
         if _pwd1 = '' OR _pwd2 = '' then
             PERFORM raise_p('Please fill both password fields.');
         end if;
@@ -3270,22 +3275,15 @@ RETURNS TABLE (
                 t4_score flag.pts%TYPE,
                 t5_score flag.pts%TYPE,
                 t6_score flag.pts%TYPE,
-                t7_score flag.pts%TYPE,
-                t8_score flag.pts%TYPE,
-                t9_score flag.pts%TYPE,
-                t10_score flag.pts%TYPE,
-                t11_score flag.pts%TYPE,
-                t12_score flag.pts%TYPE,
-                t13_score flag.pts%TYPE,
-                t14_score flag.pts%TYPE
+                t7_score flag.pts%TYPE
               ) AS $$
     DECLARE
         MAX_TEAM_NUMBER integer := 200;
         _ts timestamp;
         _minTs timestamp;
         _maxTs timestamp;
-        _maxTeams integer := 15;
-        _topTeams integer[15];
+        _maxTeams integer := 8;
+        _topTeams integer[8];
     BEGIN
         -- Logging
         raise notice 'getScoreProgress(%)',$1;
@@ -3386,14 +3384,7 @@ RETURNS TABLE (
                         t4_score integer,
                         t5_score integer,
                         t6_score integer,
-                        t7_score integer,
-                        t8_score integer,
-                        t9_score integer,
-                        t10_score integer,
-                        t11_score integer,
-                        t12_score integer,
-                        t13_score integer,
-                        t14_score integer
+                        t7_score integer
                         );
                         
     END;

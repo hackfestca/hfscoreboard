@@ -37,7 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import ClientController
 import config
 from io import StringIO
-import csv
+import csv 
+import html # For html entities
 
 class WebController(ClientController.ClientController):
     """
@@ -105,7 +106,7 @@ class WebController(ClientController.ClientController):
 
     def getJsDataScoreProgress(self):
         s = "[\n"
-        teams = self.getScore(15)
+        teams = self.getScore(8)
         newTeams = [x[1] for x in teams]
         score = list(self.getScoreProgress())
         newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
@@ -120,8 +121,10 @@ class WebController(ClientController.ClientController):
 
     def getCsvScoreProgress(self):
         data = StringIO()
-        csvh = csv.writer(data, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        teams = self.getScore(15)
+        csvh = csv.writer(data, delimiter=',',
+                          quotechar='"',doublequote=False,escapechar='\\',
+                          quoting=csv.QUOTE_MINIMAL)
+        teams = self.getScore(8)
         newTeams = [x[1] for x in teams]
         score = list(self.getScoreProgress())
         newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
