@@ -63,6 +63,7 @@ import logging
 import re
 import random
 import psycopg2
+from copy import deepcopy
 
 WEB_ERROR_MESSAGE = 'Oops. Something wrong happened. :)'
 
@@ -578,7 +579,7 @@ class AuthRegisterHandler(BaseHandler):
 
     @gen.coroutine
     def post(self):
-        form = self.form
+        form = deepcopy(self.form)
         try:
             form['name'] = self.get_argument('team_name')
             form['pwd1'] = self.get_argument('team_pwd1')
@@ -620,7 +621,7 @@ class AuthLoginHandler(BaseHandler):
             self.clear_cookie("team_id")
 
         try:
-            form = self.form
+            form = deepcopy(self.form)
             form['name'] = self.get_argument('team_name')
             form['pwd'] = self.get_argument('team_pwd')
             team_id = self.client.loginTeam(form['name'],form['pwd'])

@@ -1,13 +1,4 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-misc05,b47cecbbe26241c36fe2a95e29c101bf,150,0,scoreboard.hf,misc,Null,@mrvaughan,Standard,Null,"<h3>Sunnydays </h3>
-In the challenge the flag is split into four parts: {AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDD}<br>
-A= bXXXXXXX<br>
-B= eXXXXXXX<br>
-C= 6XXXXXXX<br>
-D= 2XXXXXXX<br>
-<a href=""https://scoreboard.poptheshell.com/public/sunnydays"">file</a>",,
-misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.poptheshell.com/public/fw.txt"">file</a>",,
-misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""https://fw.poptheshell.com"">fw.poptheshell.com</a>",,
 web01,552dacb15f2019c8f3f74c55befa242c,10,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
 web02,af05669796eac419835d84d5791b4bfe,20,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
 web03,987ddd03eb3f374d0d60e5d5b53852e5,30,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
@@ -67,6 +58,15 @@ pcap05,XSsv3rCCCkRFG3FVuZBd,300,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"So
 pcap06,mysuperadminrdppassword,400,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.poptheshell.com/public/trace01.pcap.zip"">Pcap trace</a>",,
 misc01,fHm3BY0eyWuu3bSTMTXL,100,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Find the password to get the flag. Connect to lamerescue.poptheshell.com:4441,,
 misc02,GjueXbVYavuZZPrrPA3H,200,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Just connect and get the flag. Connect to easyflag.poptheshell.com:4442,,
+misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.poptheshell.com/public/fw.txt"">file</a>",,
+misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""https://fw.poptheshell.com"">fw.poptheshell.com</a>",,
+misc05,b47cecbbe26241c36fe2a95e29c101bf,150,0,scoreboard.hf,misc,Null,@mrvaughan,Standard,Null,"<h3>Sunnydays </h3>
+In the challenge the flag is split into four parts: {AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDD}<br>
+A= bXXXXXXX<br>
+B= eXXXXXXX<br>
+C= 6XXXXXXX<br>
+D= 2XXXXXXX<br>
+<a href=""https://scoreboard.poptheshell.com/public/sunnydays"">file</a>",,
 ent01,2ced1f8cdeee3baea879b0846f70a1b5,200,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
 ent02,a5781d740456e37010b4192b04ac4bf3,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
 ent03,669c4fb17bc500e01c5006bb64617a02,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
