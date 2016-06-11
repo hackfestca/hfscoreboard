@@ -2158,7 +2158,8 @@ RETURNS text AS $$
                 -- If flag is standard or king, process now. Otherwise, manage in processNonStandardFlag() function.
                 if _flagRec.type = FLAG_TYPE_STANDARD or _flagRec.type = FLAG_TYPE_KING then
                     _pts := _flagRec.pts;
-                    _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+                    --_ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+                    _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts for this flag.';
                     _retEvent := _teamRec.name || ' received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
 
                     -- Give cash if flag contains cash
