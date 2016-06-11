@@ -4,76 +4,40 @@
 {% block content %}
 
 <div class="row main-row">
-  <div class="col-md-4">
-    <div class="jumbotron" style="height:500px; overflow:auto;">
+    <div class="jumbotron" style="overflow:auto;">
       <div class="container">
-	<h3 class="hf-green">General Informations</h3>
-	<h5 class="hf-orange">Intro</h5>
-	<div class="text-justify">
-	  Welcome to Hackfest 2015 CTF.
-	  We hope you’ll enjoy!
-	</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-md-8">
-    <div class="jumbotron" style="height:500px; overflow:auto;">
-      <div class="container">
-	<h3 class="hf-green">Your tasks</h3>
-	<div class="text-justify">
-	  Your tasks is to complete the different challenge.
-	  You will find all challenge on the scoreboard.
-	  Once you complete a challenge, you’ll find a flag which can be submitted.
-        <ul>
-          <li>Flags are obtained by solving challenges.</li>
-          <li>They can be submitted once.</li>
-          <li>Some flags are unique (Only one team can submit it).</li>
-          <li>Format is: FLAG-[a-zA-Z0-9]{32,60}</li>
-        </ul>
+    	<h3 class="hf-green">General Informations</h3>
+    	<div class="text-justify">
+            Welcome to iHack 2016 CTF. We hope you’ll enjoy!<br/><br/>
+    	</div>
+    	<div class="text-justify">
+    
+    	  Your tasks is to complete the different challenge.
+    	  You will find all challenge on the scoreboard.
+    	  Once you complete a challenge, you’ll find a flag which can be submitted.
+            <ul>
+              <li>Flags are obtained by solving challenges.</li>
+              <li>They can be submitted once.</li>
+            </ul>
+    	</div>
+      </div> <!-- End container -->
 
-	</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row main-row">
-  <div class="col-md-4">
-    <div class="jumbotron" style="height:400px; overflow:auto;">
       <div class="container">
-	<h3 class="hf-green">Scoring system</h3>
-	<h5 class="hf-orange">URL :  <a href="http://scoreboard.hf">http://scoreboard.hf</a></h5>
-	<div class="text-justify">
-	  You can submit your flag directly on the scoreboard or download the command line script to push your flag and more <a href="https://scoreboard.hf/public/player.tar.gz">https://scoreboard.hf/public/player.tar.gz</a>
-	</div>
-	<h5 class="hf-orange">Integrity Check</h5>
-	<div>
-	  The scoreboard is signed by HF CA, which can be downloaded <a href="https://scoreboard.hf/public/hf.ca.root.crt">here</a><br><br> HF CA fingerprint B1 7F B2 7E B7 65 79 D4 F9 E2 ED 84 12 74 06 86 7F 6B 33 D6
-	</div>
-	<h5 class="hf-orange">Need help? IRC!</h5>
-	<div>
-	  Join the irc://irc.smashthestack.org, chan: #hackfest
-	</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-8">
-    <div class="jumbotron" style="height:400px; overflow:auto;">
-      <div class="container">
-	<h3 class="hf-green">man 42 CTF</h3>
-	<h5 class="hf-orange">Rules</h5>
-	<div>
-	  <ul>
-	    <li>All challenges are under ctf.hf TLD. (ex: misc01.ctf.hf)</li>
-	    <li>Never attack hf TLD. (ex: scoreboard.hf, dns.hf, irc.hf)</li>
-	    <li>Never attack a system outside the environment (ie. not *ctf.hf)</li>
-	    <li>DOS by saturation & Deleting flags = Disqualification!</li>
-	  </ul>
-	</div>
-      </div>
-    </div>
-  </div>
-</div>
+    	<h3 class="hf-green">Rules</h3>
+    	<div>
+    	  <ul>
+    	    <li>All challenges are under ctf.hf TLD. (ex: misc01.ctf.hf)</li>
+    	    <li>Never attack hf TLD. (ex: scoreboard.hf, dns.hf, irc.hf)</li>
+    	    <li>Never attack a system outside the environment (ie. not *ctf.hf)</li>
+    	    <li>DOS by saturation & Deleting flags = Disqualification!</li>
+    	  </ul>
+    	</div>
+    	<h3 class="hf-green">Help?</h3>
+    	<div>
+    	  Join the irc://irc.smashthestack.org, chan: #hackfest
+    	</div>
+      </div> <!-- End container -->
+    </div> <!-- End jumbotron -->
+</div> <!-- End main-row -->
 
 {% end %}

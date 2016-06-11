@@ -135,7 +135,8 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
-            (r"/rules/", RulesHandler),
+            #(r"/rules/", RulesHandler),
+            (r"/random/", RandomHandler),
             (r"/secrets/", SecretsHandler),
             (r"/challenges/", ChallengesHandler),
             (r"/scoreboard/", ScoreHandler),
@@ -143,7 +144,7 @@ class Application(tornado.web.Application):
             #(r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
-            (r"/projector/3/?", SponsorsProjectorHandler),
+            #(r"/projector/3/?", SponsorsProjectorHandler),
             (r"/auth/register", AuthRegisterHandler),
             (r"/auth/login", AuthLoginHandler),
             (r"/auth/logout", AuthLogoutHandler),
@@ -371,11 +372,6 @@ class IndexHandler(BaseHandler):
         else:
             flag_is_valid = True
 
-        match = re.search("^(FLAG\-|flag\-)", flag)
-        if match:
-            submit_message = "Are you fucking kidding me ? " + \
-              "\"Your flag without 'FLAG-'\""
-	
         score = self.client.getScore(top=15)
         self.render('index.html',
                     table=score,
@@ -389,6 +385,11 @@ class RulesHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         self.render('rules.html')
+
+class RandomHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('random.html')
 
 
 class SecretsHandler(BaseHandler):
