@@ -171,7 +171,7 @@ class ClientController():
         return self.exec('getNewsList')
 
     def getFormatScore(self,top=config.DEFAULT_TOP_VALUE,ts=None,cat=None):
-        title = ['Pos','ID','TeamName','Cash','Notoriety'] 
+        title = ['Pos','ID','TeamName','Location','Cash','Flag'] 
         score = self.getScore(top,ts,cat)
         score2 = [tuple([score.index(x)+1]+list(x)) for x in score]
         x = PrettyTable(title)

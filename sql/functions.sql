@@ -2261,12 +2261,12 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
         -- Some check 
         if _top <= 0 then
-            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%',_top));
+            PERFORM raise_p(format('_top argument cannot be a negative value. _top=%s',_top));
         end if;
 
         -- Prepare filters

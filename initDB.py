@@ -66,8 +66,8 @@ actGrp.add_argument('--tables','-t', action='store_true', dest='tables', default
               help='Import structure only (tables and functions)')
 actGrp.add_argument('--functions','-f', action='store_true', dest='functions', default=False, \
               help='Import structure only (tables and functions)')
-actGrp.add_argument('--data','-d', action='store_true', dest='data', default=False, \
-              help='Import data only')
+#actGrp.add_argument('--data','-d', action='store_true', dest='data', default=False, \
+#              help='Import data only')
 actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=False, \
               help='Import flags only (from csv file: import/flags.csv)')
 actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=False, \
@@ -76,8 +76,8 @@ actGrp.add_argument('--black-market','-b', action='store_true', dest='blackmarke
               help='Import black market items (from csv file: import/blackmarket.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
-actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
-              help='Import all')
+#actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
+#              help='Import all')
 
 args = parser.parse_args()
 

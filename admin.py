@@ -568,11 +568,8 @@ try:
             print("[+] Displaying flags submit count")
             print(c.getFormatFlagsSubmitCount(args.flagsSubmitCount))
         elif args.teamProgress:
-            if args.id:
-                print("[+] Displaying team progression")
-                print(c.getFormatTeamProgress(args.id))
-            else:
-                print('You must specify a team id with --id')
+            print("[+] Displaying team progression")
+            print(c.getFormatTeamProgress(args.teamProgress))
         elif args.flagProgress != '':
             print("[+] Displaying flag progression")
             print(c.getFormatFlagProgress(args.flagProgress))

@@ -86,6 +86,6 @@ ent08,3fe7d5a39843a44a999cb7d084d18184,150,0,scoreboard.hf,ent,Null,js,Standard,
 09RusDoll300,EF5062471627104B4CB8B519B7106D57,300,0,scoreboard.hf,RuDoll,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 10RusDoll400,3C5A162B4D786FFA7D6B70D888D9A573,400,0,scoreboard.hf,RuDoll,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
 elec01,071631f2606ef8f3e6e8fddd595e5494,100,0,scoreboard.hf,elec,Null,lei,Standard,Null,ComPort is old but  not obsolete,,
-elec02,4493eddaa6932d0e1d095da70,150,0,scoreboard.hf,elec,Null,lei,Standard,Null,Secret in memory E2PROM!,,
-elec03,cc291c213a62ca23da2605e200d2a3eb,200,0,scoreboard.hf,elec,Null,lei,Standard,Null,RAM attack online/offline.,,
-elec04,6984d8590359e8320ac7f0e2b769186d,250,0,scoreboard.hf,elec,Null,lei,Standard,Null,IR Communication (940nm @ 38KHz).,,
+elec02,4493eddaa6932d0e1d095da70,200,0,scoreboard.hf,elec,Null,lei,Standard,Null,Secret in memory E2PROM!,,
+elec03,cc291c213a62ca23da2605e200d2a3eb,300,0,scoreboard.hf,elec,Null,lei,Standard,Null,RAM attack online/offline.,,
+elec04,6984d8590359e8320ac7f0e2b769186d,400,0,scoreboard.hf,elec,Null,lei,Standard,Null,IR Communication (940nm @ 38KHz).,,
