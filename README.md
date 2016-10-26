@@ -304,9 +304,10 @@ Indeed, you can change DNS names and IPs as you wish.
 5. [On sb-app] Install python dependencies
 
     ```bash
-    pkg_add py3-pip py3-psycopg2 tornado
+    pkg_add py3-pip py3-psycopg2
     ln -sf /usr/local/bin/pip3.4 /usr/local/bin/pip
     pip install --upgrade pip
+    pip install tornado
     ```
  Download the code from git
     ```bash
@@ -314,6 +315,8 @@ Indeed, you can change DNS names and IPs as you wish.
     git clone https://github.com/hackfestca/hfscoreboard scoreboard
     chown -R sb:sb scoreboard
     cd scoreboard
+    mkdir logs
+    chmod g+w /home/sb/scoreboard/logs
     ```
  Download and install supervisor. This will be used to run the process as a service.
     ```bash
@@ -331,6 +334,11 @@ Indeed, you can change DNS names and IPs as you wish.
     ln -s ../libssh2_publickey.h libssh2_publickey.h 
     cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
     ```
+ Uncomment the last two lines of `/etc/supervisord.conf`
+   ```
+   [include]
+   files = supervisord.d/*.ini
+   ```
  Setup a supervisor program for the player API in `/etc/supervisord.d/playerApi.ini`
     ```
     [program:playerApi]
