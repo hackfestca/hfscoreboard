@@ -12,7 +12,7 @@ SELECT emptyTables();
     Set game start timestamp and other variables
 */
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2016-06-11 18:30'::timestamp,'2016-06-12 02:00'::timestamp,1000);
+       VALUES('2016-06-11 18:30'::timestamp,'2016-11-05 02:00'::timestamp,1000);
 
 -- Add EventFacility
 SELECT addEventFacility(0,'global','Global','');
@@ -20,7 +20,7 @@ SELECT addEventFacility(1,'flag','Flag Submissions','');
 SELECT addEventFacility(2,'news','News','');
 SELECT addEventFacility(3,'team','Teams','');
 SELECT addEventFacility(4,'bm','Black Market','');
-SELECT addEventFacility(5,'loto','Loto HF','');
+--SELECT addEventFacility(5,'loto','Loto HF','');
 SELECT addEventFacility(6,'cash','Cash related','');
 
 /*
@@ -45,7 +45,7 @@ SELECT addFlagStatus(3,'Disabled','The flag is removed by admins');
 /*
     Add hosts
 */
-SELECT addHost('scoreboard.hf', 'OpenBSD5.9 x64', 'Scoreboard');
+SELECT addHost('scoreboard.hf', 'OpenBSD6.0 x64', 'Scoreboard');
 
 
 /*
@@ -53,18 +53,20 @@ SELECT addHost('scoreboard.hf', 'OpenBSD5.9 x64', 'Scoreboard');
 */
 --SELECT addAuthor('Martin Dube', 'mdube');
 --SELECT addAuthor('Jessy Campos', '_eko');
-SELECT addAuthor('@mrvaughan', '@mrvaughan');
+--SELECT addAuthor('@mrvaughan', '@mrvaughan');
 SELECT addAuthor('Cedrick Chaput', 'chaput');
 SELECT addAuthor('Dave Cloutier', 'stackfault');
 SELECT addAuthor('Stephane Sigmen', 'sigs');
 SELECT addAuthor('Jean-Sebastien Grenon', 'js');
---SELECT addAuthor('François Lajeunesse-Robert', 'flr');
+SELECT addAuthor('François Lajeunesse-Robert', 'flr');
 SELECT addAuthor('Franck Desert','phenix');
---SELECT addAuthor('Guillaume Parent','gp');
+SELECT addAuthor('Viper', 'viper');
+SELECT addAuthor('Guillaume Parent','gp');
 --SELECT addAuthor('Patrick Mathieu','patoff');
 --SELECT addAuthor('HF Crew', 'HFCrew');
 --SELECT addAuthor('Scoreboard', 'Scoreboard');
-SELECT addAuthor('Lei He', 'lei');
+--SELECT addAuthor('Lei He', 'lei');
+SELECT addAuthor('Lei and Martin', 'lei&mdube');
 
 /* 
     Create flag type definitions
@@ -80,6 +82,8 @@ SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
 SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,ptsStep)
 -- Scope: Global. Purpose: Give a bonus when a flag is successfully submitted
 SELECT addFlagType(13,'Bonus');       -- Complex (pts + bonus,ptsStep)
+SELECT addFlagType(14,'Exclusive');
+SELECT addFlagType(15,'Exclusive Evil');
 
 -- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
 SELECT addFlagType(21,'Group Dynamic'); -- Complex (pts + limit,step,extName)
@@ -90,6 +94,7 @@ SELECT addFlagType(22,'Group Bonus'); -- Complex (pts + bonus,ptsStep,extName)
 SELECT addFlagType(31,'Team Group Dynamic');    -- Complex (pts + limit,step,extName)
 -- Scope: Team. Purpose: Grant points only when the entire group is submitted, on a per team basis.
 SELECT addFlagType(32,'Team Group Pokemon');  -- Complex (pts)
+SELECT addFlagType(33,'Team Group Unique');
 
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
 SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
@@ -97,7 +102,7 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to iHack 2016!', NOW()::timestamp);
+SELECT addNews('Welcome to Hackfest 2016!', NOW()::timestamp);
 
 /*
     Add transaction types
@@ -106,19 +111,18 @@ SELECT addTransactionType(1, 'Start Wallet', 'Money received at the begining of 
 SELECT addTransactionType(2, 'Cash Flag', 'Money received by submiting a cash or hybrid flag');
 SELECT addTransactionType(3, 'Item bought', 'Money sent by buying an item on the black market');
 SELECT addTransactionType(4, 'Money Laundering', 'Money received by laundering money with a CTF admin');
-SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
+--SELECT addTransactionType(5, 'Loto HF', 'Money won at loto HF');
 
 /*
     Create some "NPC" wallets
 */
 SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering, etc.',20000000, true);
-SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
+--SELECT addWallet('HF Loto','Default wallet used to manage loto.',0, true);
 
 /*
     Team Locations
 */
 SELECT addTeamLocation('Quebec');
-SELECT addTeamLocation('Sherbrooke');
 
 /*
     fake teams for tests

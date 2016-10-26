@@ -43,6 +43,32 @@ DROP TABLE IF EXISTS transaction CASCADE;
 DROP TABLE IF EXISTS transactionType CASCADE;
 DROP TABLE IF EXISTS wallet CASCADE;
 
+
+/*
+    Represent a team number and its derived attributes, including the subnet.
+    When a team register, this table is used to determine the team's subnet and number
+*/
+CREATE TABLE registration(
+    num integer not null unique,
+    name varchar(40) null unique,
+    net inet not null unique,
+    registered boolean not null,
+    constraint valid_registration_num check (num > 0)
+    );
+CREATE INDEX index_registration_net ON registration(net);
+
+/*
+    Represent a registration secret. When a team register, this table is used to assign team secrets.
+*/
+CREATE TABLE registration_secret(
+    num integer not null,
+    name text not null,
+    value text not null,
+    constraint valid_registration_secret_name check (name != ''),
+    constraint valid_registration_secret_value check (value != ''),
+    );
+CREATE INDEX index_registration_secret_num ON registration_secret(num);
+
 /*
     Represent an entity wallet, mostly used for teams. 
 */
@@ -58,7 +84,7 @@ CREATE TABLE wallet(
     );
 
 /*
-    Represent a team location. As of iHack 2016, available locations will be 
+    Represent a team location. As of iHack 2016, available locations were 
     Quebec and Sherbrooke
 */
 CREATE TABLE teamLocation(
@@ -71,6 +97,7 @@ CREATE TABLE teamLocation(
 */
 CREATE TABLE team(
     id serial primary key,
+    num integer null references registration(num),
     name varchar(40) not null unique,
     net inet null unique,
     pwd varchar(64) null,
@@ -180,9 +207,10 @@ CREATE TABLE flagTypeExt(
     pts integer default null,
     ptsLimit integer default null,    
     ptsStep integer default null,    
-    trapCmd text default null,                      -- For trap flags only
-    updateCmd text default null,                    -- For king flags only
-    flagIds integer[] default null,                 -- For bonus and group bonus only to store bonus flags
+    trapCmd text default null,                              -- For trap flags only
+    updateCmd text default null,                            -- For king flags only
+    teamNum integer not null references registration(num),  -- For exclusive flags only
+    flagIds integer[] default null,                         -- For bonus and group bonus only to store bonus flags
     ts timestamp not null default current_timestamp,
     constraint valid_flagTypeExt_name check (name != ''),
     constraint valid_flagTypeExt_pts check (pts >= -700 and pts <= 700),
@@ -459,11 +487,3 @@ CREATE TABLE settings(
     ts timestamp not null default current_timestamp
     ); 
 
-/*
-    Temporary for iHack 2016: Gate keys used by Dave's challenges
-*/
-CREATE TABLE gateKey(
-    id serial primary key,
-    value varchar(20) not null,
-    used boolean not null default False
-    );
