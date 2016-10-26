@@ -63,7 +63,7 @@ SELECT addAuthor('Franck Desert','phenix');
 SELECT addAuthor('Viper', 'viper');
 SELECT addAuthor('Guillaume Parent','gp');
 --SELECT addAuthor('Patrick Mathieu','patoff');
---SELECT addAuthor('HF Crew', 'HFCrew');
+SELECT addAuthor('HF Crew', 'HFCrew');
 --SELECT addAuthor('Scoreboard', 'Scoreboard');
 --SELECT addAuthor('Lei He', 'lei');
 SELECT addAuthor('Lei and Martin', 'lei&mdube');
