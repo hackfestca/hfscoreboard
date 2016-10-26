@@ -489,68 +489,6 @@ RETURNS flag.value%TYPE AS $$
 $$ LANGUAGE plpgsql;
 
 /*
-    Stored Proc: addTeamSecrets(teamId,name,value)
-*/
-CREATE OR REPLACE FUNCTION addTeamSecrets(_teamId team.id%TYPE,
-                                           _name teamSecrets.value%TYPE,
-                                           _value teamSecrets.value%TYPE)
-RETURNS integer AS $$
-    BEGIN
-        -- Logging
-        raise notice 'addTeamSecrets(%,%,%)',$1,$2,$3;
-
-        -- Some checks
-        if _name is NULL then
-            raise exception 'Name cannot be NULL';
-        end if;
-
-        -- Insert a new row
-        INSERT INTO teamSecrets(teamId,name,value) VALUES(_teamId,_name,_value);
-
-        RETURN 0;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
-    Stored Proc: listTeamSecrets(grep,top)
-    TODO: Remap this function in admin.py. It was getTeamSecrets
-*/
-CREATE OR REPLACE FUNCTION listTeamSecrets(_grep varchar(30) DEFAULT NULL,
-                                            _top integer DEFAULT 30) 
-RETURNS TABLE (                             
-                TeamName team.name%TYPE,
-                name teamSecrets.name%TYPE,
-                value teamSecrets.value%TYPE
-              ) AS $$
-    BEGIN
-        -- Logging
-        raise notice 'listTeamSecrets(%,%)',$1,$2;
-
-        -- Get team's settings
-        return QUERY SELECT a.teamName,
-                            a.name,
-                            a.value
-                     FROM (
-                         SELECT tv.teamId,
-                                tv.name,
-                                tv.value,
-                                t.name AS teamName
-                         FROM teamSecrets AS tv
-                         LEFT OUTER JOIN (
-                            SELECT t.id,
-                                   t.name
-                            FROM team AS t
-                            ) AS t ON t.id = tv.teamId
-                         WHERE (_grep IS NULL 
-                                OR t.name LIKE '%'||_grep||'%' 
-                                OR tv.name LIKE '%'||_grep||'%'
-                                OR tv.value LIKE '%'||_grep||'%')
-                     ) AS a
-                     LIMIT _top;
-    END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-/*
     Stored Proc: setSetting()
 */
 CREATE OR REPLACE FUNCTION startGame() 

@@ -11,8 +11,6 @@ SET search_path TO scoreboard;
 /*
     Some cleanup
 */
-DROP TABLE IF EXISTS registration CASCADE; 
-DROP TABLE IF EXISTS registration_secret CASCADE;
 DROP TABLE IF EXISTS gateKey;
 DROP TABLE IF EXISTS settings CASCADE;
 DROP TABLE IF EXISTS flagStatus_history CASCADE;
@@ -47,31 +45,6 @@ DROP TABLE IF EXISTS wallet CASCADE;
 
 
 /*
-    Represent a team number and its derived attributes, including the subnet.
-    When a team register, this table is used to determine the team's subnet and number
-*/
-CREATE TABLE registration(
-    num integer not null unique,
-    name varchar(40) null unique,
-    net inet not null unique,
-    registered boolean not null,
-    constraint valid_registration_num check (num > 0)
-    );
-CREATE INDEX index_registration_net ON registration(net);
-
-/*
-    Represent a registration secret. When a team register, this table is used to assign team secrets.
-*/
-CREATE TABLE registration_secret(
-    num integer not null,
-    name text not null,
-    value text not null,
-    constraint valid_registration_secret_name check (name != ''),
-    constraint valid_registration_secret_value check (value != '')
-    );
-CREATE INDEX index_registration_secret_num ON registration_secret(num);
-
-/*
     Represent an entity wallet, mostly used for teams. 
 */
 CREATE TABLE wallet(
@@ -99,7 +72,6 @@ CREATE TABLE teamLocation(
 */
 CREATE TABLE team(
     id serial primary key,
-    num integer null references registration(num),
     name varchar(40) not null unique,
     net inet null unique,
     pwd varchar(64) null,

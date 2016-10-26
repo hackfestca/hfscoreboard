@@ -131,7 +131,7 @@ class Application(tornado.web.Application):
             "What, what, what, what, what, what, what, what, what, what?",
             "I think ... err ... I think ... I think I'll go home"
         ]
-        self.logger = Logger("HF2k15_Logger")
+        self.logger = Logger("HF_Logger")
 
         handlers = [
             (r"/", IndexHandler),
@@ -151,12 +151,12 @@ class Application(tornado.web.Application):
          ]
 
         settings = dict(
-            blog_title=u"iHack 2016",
+            blog_title=u"Hackfest 2016",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             #ui_modules={"Entry": EntryModule},
             xsrf_cookies=True,
-            cookie_secret="naL=p]BR',*R]k+ndt0(QT/m4[T&kHo=[\<~MM2r^5neb<}x`B",
+            cookie_secret="%RS9H)zz'VxEm[]~8AyMEE$ED<ZFU*6mpB{3:g%HwWmv/^:.g",
             default_handler_class=Error404Handler,  # 404 Handling
             login_url="/auth/login",
             debug=options.debug,
@@ -236,10 +236,13 @@ class BaseHandler(tornado.web.RequestHandler):
         self._disconnect()
 
     def get_current_user(self):
-        team_id = self.get_secure_cookie("team_id")
-        if team_id is None: return None
-        elif not team_id.isdigit(): return None
-        return int(team_id.decode('UTF-8'))
+        if options.authByIP:
+            return self.team_name
+        else:
+            team_id = self.get_secure_cookie("team_id")
+            if team_id is None: return None
+            elif not team_id.isdigit(): return None
+            return int(team_id.decode('UTF-8'))
 
     def get_pgsql_error(self, pgsql_error):
         if pgsql_error.pgcode == config.PGSQL_ERRCODE:
@@ -283,7 +286,10 @@ class BaseHandler(tornado.web.RequestHandler):
         return self._insults[index]
 
     def is_logged(self):
-        return bool(self.get_secure_cookie("team_id"))
+        if options.authByIP:
+            return True
+        else:
+            return bool(self.get_secure_cookie("team_id"))
 
     @property
     def sponsors(self):
@@ -397,8 +403,11 @@ class SecretsHandler(BaseHandler):
     @tornado.web.addslash
     def get(self):
         try:
-            team_id = self.get_current_user()
-            secrets = self.client.getTeamSecrets(team_id)
+            if options.authByIP:
+                secrets = self.client.getTeamSecretsFromIp(self.remote_ip)
+            else:
+                team_id = self.get_current_user()
+                secrets = self.client.getTeamSecrets(team_id)
         except psycopg2.Error as e:
             self.logger.error(e)
             self.render_pgsql_error(pgsql_error=e)
@@ -416,8 +425,8 @@ class ChallengesHandler(BaseHandler):
     def get(self):
         try:
             if options.authByIP:
-                categories = self.client.getCatProgressFromIP(self.remote_ip)
-                challenges = self.client.getFlagProgressFromIP(self.remote_ip)
+                categories = self.client.getCatProgressFromIp(self.remote_ip)
+                challenges = self.client.getFlagProgressFromIp(self.remote_ip)
             else:
                 categories = self.client.getCatProgress(self.get_current_user())
                 challenges = self.client.getFlagProgress(self.get_current_user())
@@ -575,11 +584,17 @@ class AuthRegisterHandler(BaseHandler):
             'loc': 0}
 
     def get(self):
+        if options.authByIP:
+            self.redirect("/")
+
         self.render("register.html", form=self.form,
                                      submit_message='')
 
     @gen.coroutine
     def post(self):
+        if options.authByIP:
+            self.redirect("/")
+
         form = deepcopy(self.form)
         try:
             form['name'] = self.get_argument('team_name')
@@ -613,11 +628,17 @@ class AuthLoginHandler(BaseHandler):
             'pwd': ''}
 
     def get(self):
+        if options.authByIP:
+            self.redirect("/")
+
         self.render("login.html", form=self.form,
                                   submit_message='')
 
     @gen.coroutine
     def post(self):
+        if options.authByIP:
+            self.redirect("/")
+
         if self.is_logged():
             self.clear_cookie("team_id")
 
@@ -645,6 +666,9 @@ class AuthLoginHandler(BaseHandler):
 
 class AuthLogoutHandler(BaseHandler):
     def get(self):
+        if options.authByIP:
+            self.redirect("/")
+
         self.clear_cookie("team_id")
         self.redirect(self.get_argument("next", "/"))
 
