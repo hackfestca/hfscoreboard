@@ -59,7 +59,7 @@ DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
 DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
 
 DB_ADMIN_USER = 'admin'
-DB_ADMIN_PASS = 'otkyYNWrDTTAY1hGq3bXJXG9HPnAE6B0'
+DB_ADMIN_PASS = 'ZJnznoG48yJsQrEFVSZ5aNkjvYhcap3X'
 DB_ADMIN_CRT_FILE = None
 DB_ADMIN_KEY_FILE = None
 
@@ -123,4 +123,5 @@ CATEGORIES_FILE = 'import/categories.csv'
 FLAGS_FILE = 'import/flags.csv'
 TEAMS_FILE = 'import/teams.csv'
 BMI_FILE = 'import/blackMarketItems.csv'
+REGISTRATION_FILE = 'import/registration.csv'
 
