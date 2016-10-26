@@ -1,91 +1,115 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,Description,News,How to
-web01,552dacb15f2019c8f3f74c55befa242c,10,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web02,af05669796eac419835d84d5791b4bfe,20,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web03,987ddd03eb3f374d0d60e5d5b53852e5,30,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web04,4f2604c4aa4b911ac3c18ec17d0fb9b4,40,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web05,2b52d7254dfe9ddf2ce35f9ab6a826e9,50,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web06,1f681635c89df401ef18598ffe3a0694,60,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web07,635427cccad763586edabbd77d9e7d40,70,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web08,0b59fd40b443549c917f88a348b3b9c9,80,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web09,166d77ac1b46a1ec38aa35ab7e628ab5,90,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web10,87db0521c1be46a4aaa990a453319f9a,100,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web11,5faad111f881808010439518e016bf23,110,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web12,924c25e60c986648bf6f973013fbe5e3,120,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web13,3250fdb9be1e01c063d5a65c98f97c43,130,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web14,9dd9a49eeb62f97f5211f698d78b5a12,140,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-web15,1a6bbf2332304b46df88b44deaee3bb0,150,0,scoreboard.hf,web,Null,chaput,Standard,Null,"<a href=""https://level.poptheshell.com/"">link</a>",,
-pcap01,63d0cea9d550e495fde1b81310951bd7,100,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"My cat transfer fetch some special file from my server. Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level1.pcapng"">pcap01</a>",,transfère http gziper/utilier wireshark pour exporter le http
-pcap02,bfdeeace1c0f2f0d7ca6e8197737edee,150,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"One of my agent bring me this capture of my cat dowloading important file. Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level2.tar.gz"">pcap02</a>",,Connection wep. aicrack dessus pour avoir le password. airdecap-ng pour enlevere l'entête 802.11. transfère http d'un ISO 
-pcap03,e1df851e98a89cddc3559dd299bd8b90,200,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"I think my cat think we spy on it ! He dowload is file differently ! Try to find it ! <br><a href=""https://scoreboard.poptheshell.com/public/level3.pcap"">pcap03</a>",,reconstruire un bitorrent 
-pcap04,4f76de6683804e545d31e6b490d51c63,250,0,scoreboard.hf,pcap,Null,chaput,Standard,Null,"ooooo my cat used encryption !  try to find a way to retreive the message <br><a href=""https://scoreboard.poptheshell.com/public/level4.tar.gz"">pcap04</a>",,dechiffrer du ssl avec les sessions
-for01,4e9210e63fb0a5f31939188f16ebbe66,100,0,scoreboard.hf,for,Null,chaput,Standard,Null,I know my cat hide special file some where. Try to access it  ,,password in the excel file in a hide sheets encfs enc/ doc/ 
-for02,ea0b7ac1da066d752c1902b108ea3d49,150,0,scoreboard.hf,for,Null,chaput,Standard,Null,My cat change my website password! Try to find witch value he put.  ,,in the .mozilla profile 
-for03,5e1f7cfe70ede8abb6c3c386d33ae73a,250,0,scoreboard.hf,for,Null,stackfault,Standard,Null,"I got a picture from an H4X0R board and I can't figure out what to do with it, can you help me?",,"stego hidden in Kitty_Velez.jpg, some hints in deleted voicemails files"
-for04,54328f6b27a45c51986ed436f3f609bf,500,0,scoreboard.hf,for,Null,stackfault,Standard,Null,"A mobster's driver came to the carwash where I work and left his USB drive in the car, I grabbed some files but they are corrupt, can you uncover anything?",,
-wisdom01,622c55c6365b13a33b271adab483baa2,125,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - First conquest,,trivia
-wisdom02,d531581e6c00be1c7f4336096fe6c07e,75,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 1,,trivia
-wisdom03,65b2f976458308b37b234f343ddf759d,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 2,,trivia
-wisdom04,21ca3407fb80d56858436b03e7d4f80c,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 3,,trivia
-wisdom05,c4ed44099dc74b132e3073a89d9a5ec6,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 4,,trivia
-wisdom06,783414b7431e1b0636a72ed988b449b6,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 5,,trivia
-wisdom07,f1e7b88304fd8b6c3cbfce11a9f91119,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 6,,trivia
-wisdom08,6380c0165c2707588f3b3ff2f387f265,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Wisdom - Respawn 7,,trivia
-intel01,ae0714631668c750e516d80796cc22aa,150,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - First conquest,,trivia
-intel02,bc1e3a7f076caf69441e9fea8278bd9a,75,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 1,,trivia
-intel03,238dd03e3c179ab8a32e0a7cfebafe5c,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 2,,trivia
-intel04,068f059e212022323e68ed126dc90787,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 3,,trivia
-intel05,2257fe1d44f2a5350b72353a0a571a37,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 4,,trivia
-intel06,f3b9e7b8cf975c4534890541b8db0e18,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 5,,trivia
-intel07,43df259ea9edde717934d7708b50b10d,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 6,,trivia
-intel08,84c110960c2e84383413c97f4ded436b,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Intelligence - Respawn 7,,trivia
-know01,1a962a89ce9fe28090adda1f19026fb6,350,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - First conquest,,scripting
-know02,7257d1fdd66899699dd713b00d504883,150,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 1,,scripting
-know03,08a186e58b19924a4c54cc9185996a9e,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 2,,scripting
-know04,1e32d887c509b1c5fa99ef92491db1ca,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 3,,scripting
-know05,784e5ea9e9448c97b261d8a94805cb6d,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 4,,scripting
-know06,04f6e5d1a814093a09a2c29644497af4,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 5,,scripting
-know07,d4abe99da3dc74fcf0a4469ff181148a,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 6,,scripting
-know08,300fa2d0ae768bd1c7a243b6f53365ef,10,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Knowledge - Respawn 7,,scripting
-illum01,cc8f4379dab9d8860948992a2dbf51c8,500,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - First conquest,,scripting
-illum02,cd7b578405a866604b60e1d9beb8bc17,200,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 1,,scripting
-illum03,e1df708ba65df0046259ad006a830661,100,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 2,,scripting
-illum04,50eeed2b67731a09ecaca2df740758c5,50,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 3,,scripting
-illum05,e5b14b335e75075953d3c2500f14aa35,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 4,,scripting
-illum06,6e18a1e4b95a342ffd7bc4d359f5b55a,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 5,,scripting
-illum07,0feb59a7b249f99561ddb5327dc8dc98,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 6,,scripting
-illum08,c64c284096a3ea6b558778e2b3e4aa58,25,0,scoreboard.hf,trivia,Null,stackfault,Standard,Null,wizardtower.poptheshell.com:4400 - Flag of Illumination - Respawn 7,,scripting
-pcap05,XSsv3rCCCkRFG3FVuZBd,300,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Someone is exfiltrating data from my network. <br>Here's a pcap from my ids. Find out the extracted data.<br><a href=""https://scoreboard.poptheshell.com/public/pcap_exfiltration.pcap.zip"">Pcap trace</a>",,
-pcap06,mysuperadminrdppassword,400,0,scoreboard.hf,pcap,Null,sigs,Standard,Null,"Your mission is in the pcap !!!<br><a href=""https://scoreboard.poptheshell.com/public/trace01.pcap.zip"">Pcap trace</a>",,
-misc01,fHm3BY0eyWuu3bSTMTXL,100,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Find the password to get the flag. Connect to lamerescue.poptheshell.com:4441,,
-misc02,GjueXbVYavuZZPrrPA3H,200,0,scoreboard.hf,misc,Null,sigs,Standard,Null,Just connect and get the flag. Connect to easyflag.poptheshell.com:4442,,
-misc03,fe7812ec6cab9ae411c4920eb14905fa,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to connect to port 1234 on fw.poptheshell.com firewall. This will help you <br><a href=""https://scoreboard.poptheshell.com/public/fw.txt"">file</a>",,
-misc04,d0640c6b2211446b44361a25cbb369c2,100,0,scoreboard.hf,misc,Null,chaput,Standard,Null,"Try to log on the vulnerability admin page <a href=""https://fw.poptheshell.com"">fw.poptheshell.com</a>",,
-misc05,b47cecbbe26241c36fe2a95e29c101bf,150,0,scoreboard.hf,misc,Null,@mrvaughan,Standard,Null,"<h3>Sunnydays </h3>
-In the challenge the flag is split into four parts: {AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDD}<br>
-A= bXXXXXXX<br>
-B= eXXXXXXX<br>
-C= 6XXXXXXX<br>
-D= 2XXXXXXX<br>
-<a href=""https://scoreboard.poptheshell.com/public/sunnydays"">file</a>",,
-ent01,2ced1f8cdeee3baea879b0846f70a1b5,200,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent02,a5781d740456e37010b4192b04ac4bf3,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent03,669c4fb17bc500e01c5006bb64617a02,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent04,2991e1cb67f2928db778af67240ed420,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent05,700f1624a3a7b983598a16be8296a0f0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent06,0cb4fa92cbd6d37641b3d2a9fb38bac0,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent07,a29c35d44cf623de586c3646e5e62c3b,75,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-ent08,3fe7d5a39843a44a999cb7d084d18184,150,0,scoreboard.hf,ent,Null,js,Standard,Null,"Your goal is to hack La-Tasse Tea shop <a href=""http://www.la-tasse.com"">www.la-tasse.com</a>",,
-01Crkme50,B9116CC6AC1D42D18CDF377D7338E78F,50,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-02Crkme100,4447FC9B6F8D029CE36D8C4DC52B3E98,100,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-03Crkme200,53FF2C4AC1207E8AC0403CE93B1E2B16,200,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-04Crkme300,1A6C5CE52B48BF388ACD528CC55A99DA,300,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-05Crkme500,129B7720874A1487AF771781322B361D,500,0,scoreboard.hf,CrkMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-06Revme300,CC5FF41E7B7C36BE31797DB7D753CA8D,300,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-07Revme500,00D37E2D017F026F57C68953AAE389FE,500,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-08Revme500,B9EB9B8462F25834695A8A7DBE52BF1C,500,0,scoreboard.hf,RevMe,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-09RusDoll300,EF5062471627104B4CB8B519B7106D57,300,0,scoreboard.hf,RuDoll,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-10RusDoll400,3C5A162B4D786FFA7D6B70D888D9A573,400,0,scoreboard.hf,RuDoll,Null,phenix,Standard,Null,Go on the About on each Binairies for yours Instructions! Cheers!,,With yours Tools And mainly with your Brain ;-) No Disassembler is fundamental BadLuck!
-elec01,071631f2606ef8f3e6e8fddd595e5494,100,0,scoreboard.hf,elec,Null,lei,Standard,Null,ComPort is old but  not obsolete,,
-elec02,4493eddaa6932d0e1d095da70,200,0,scoreboard.hf,elec,Null,lei,Standard,Null,Secret in memory E2PROM!,,
-elec03,cc291c213a62ca23da2605e200d2a3eb,300,0,scoreboard.hf,elec,Null,lei,Standard,Null,RAM attack online/offline.,,
-elec04,6984d8590359e8320ac7f0e2b769186d,400,0,scoreboard.hf,elec,Null,lei,Standard,Null,IR Communication (940nm @ 38KHz).,,
+com1,0af49f0b45c215bc3c267490b079f5f6,10,0,scoreboard.hf,com,Null,chaput,Standard,Null,grab user/pass in clear text,,FTP: build ftp server and sniff user name and password 
+com2,663d500d8cd379177af35979afc72665,50,0,scoreboard.hf,com,Null,chaput,Standard,Null,grab http post information,,HTTPS:  ncat -l --ssl 443
+com3,e49d0abff7cfee5a4937909d4e0d9445,100,0,scoreboard.hf,com,Null,chaput,Standard,Null,grab User name and password,,"SSH: use kippo, modifytthe pam.d module et ssh server to grab credential "
+com4,73d50870f9acb670cb973eeb9b719837,150,0,scoreboard.hf,com,Null,chaput,Standard,Null,grab password,,RDP: xrdp and modified pam module
+com5,64e6410123f4f7341f281713213026d4,150,0,scoreboard.hf,com,Null,chaput,Standard,Null,grab user and password,,pptp grab handshake with chap2asleap https://samsclass.info/124/proj14/p10-pptp.htm
+inj1_1,FLAG-IIHAAVJENYFMQWIHHISAKPDXSUYFJL,50,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 1 - <em>(Easiest difficulty only)</em></h3><br/>
+Regex injection with no constraints.",,
+inj1_2,FLAG-AZVUHDRNTPJTCUOJPIDTZJQEHNINZM,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind Regex injection.",,
+inj1_3,FLAG-TGLFNPXJCUVFQBMYKUEOQHTPFCLHZL,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Regex injection.",,
+inj1_4,FLAG-LUPBQMVKCQNLSEJPJTUTAEZBLYUXAN,150,4000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind Regex injection.",,
+inj1_5,FLAG-OELSVGDCOOUFRFDHUEPPPWTTWNCKCQ,150,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Regex injection.",,
+inj1_6,FLAG-LRHTVUGBNLYQVWQQDXCMXGCPVPZKVK,500,8000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Regex injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Regex injection.",,
+inj2_1,FLAG-PSDEXKSDFYYJWJJRZFWHGUARDNSNSK,50,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 1  - <em>(Easiest difficulty only)</em></h3><br/>
+JCR SQL2 injection with no constraints.",,
+inj2_2,FLAG-KGMFDGUDOBNWPLRJFIRHLIPXANWTYC,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind JCR SQL2 injection",,
+inj2_3,FLAG-TIDDELTOCZBFBZPXRQYAJXWDOPLUVB,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered JCR SQL2 injection",,
+inj2_4,FLAG-QMRNDGPWVVDHEIJLAVBJPQEGQVTEHS,150,4000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind JCR SQL2 injection",,
+inj2_5,FLAG-WUAYNBMPHQLHABMNTQSDCIBCDYWRAO,150,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered JCR SQL2 injection",,
+inj2_6,FLAG-YYBHEOLILACAPUJADZZLPHLYEUKNAC,500,8000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>JCR SQL2 injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered JCR SQL2 injection",,
+inj3_1,FLAG-INQTIVDOIWFENBVGCGJHQYDKOTGHSY,50,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 1  - <em>(Easiest difficulty only)</em></h3><br/>
+Apache Solr injection with no constraints.",,
+inj3_2,FLAG-QJCUSJEYIJIBLRBLWXMQMVRTXQNUDS,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind Apache Solr injection",,
+inj3_3,FLAG-IDYGZCIXIRDEEZKQGRWUAQQJWDXKFN,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Apache Solr injection",,
+inj3_4,FLAG-OWWHNDJHFPUJEDUGZIRLIYCCVWENXC,150,4000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind Apache Solr injection",,
+inj3_5,FLAG-GFQDFATZPSHTMYENBBAKTGVEYRTHAS,150,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Apache Solr injection",,
+inj3_6,FLAG-NGVNXAKIREIVCZJMWPKCRTOASTMVQO,500,8000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>Apache Solr injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered Apache Solr injection",,
+inj4_1_1,FLAG-QTXSCPQXTLPGZIHOFOWVKQNWNPWWOR,50,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 1 - <em>(Easiest difficulty only)</em></h3><br/>
+MongoDB injection with no constraints.",,
+inj4_1_2,FLAG-VSJRIHMBKGMHFVVRJLKBSITLQAKJGB,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind MongoDB injection",,
+inj4_1_3,FLAG-ABWEJOVZWXEHXPEYSEXKRMUYUHTYGQ,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered MongoDB Solr injection",,
+inj4_2_1,FLAG-FPQIBRRUWKCJTHBYMMOMCHDGONCPKZ,150,4000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></h3><br/>
+Blind MongoDB injection",,
+inj4_2_2,FLAG-ABZQWZSUJMSUONNQAGDDLFCDDNNGTV,150,2000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered MongoDB injection",,
+inj4_3_1,FLAG-NASHNSWTYWHAJCQDUUDYUVXZKYCVAF,500,8000,scoreboard.hf,inject,Null,flr,Standard,Null,"<h3>MongoDB injection stage 3 - <em>(All dificulty levels)</em></h3><br/>
+Blind and filtered MongoDB injection",,
+inj5_1_1,FLAG-RSRIREOBYBCGLQAFIDJUWZYAHWDKWS,50,2000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+inj5_1_2,FLAG-CRBBDKEDSFDMRVRSMPIOJOXWHNTMTJ,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+inj5_1_3,FLAG-FKPJUHJKPSDPOMVOMDFQRFYKVRGDUG,50,1000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+inj5_2_1,FLAG-ZEVIWSLVWMPEEONJQHDYNGUVSVQUXH,150,4000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+inj5_2_2,FLAG-IMMIMIFRISUFZOJGNQOOJAQPVRLLGJ,150,2000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+inj5_3_1,FLAG-FTVRQGMIWLXMQYIJPQKGPVEGLKDOHG,500,8000,scoreboard.hf,inject,Null,flr,Standard,Null,,,
+elec1,mq2eFKgWVJHfiz8r,50,50,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,USB Propriete
+elec2,Lfzru0cYDmYOcc6k,200,200,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,"Virual COM Port,  (Windows inf fourni) Avec les buttoms"
+elec3,H3FspVtFkl6ZyqBN,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,I2C - EEPROM
+elec4,fpN30Zl5yDfFIOGc,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,SPI - RAM
+elec5,pNbgIDKEeu0lD1Sk,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,RS232 - Reacteur - jouer avec les buttoms
+elec6,9VFZAw4GnBjjimn1,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,"IR - dans scoreboard, adresses à leaker"
+elec7,T4pYbFHb6cEwCL0D,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,"RF - Key 2x button, mode debugu"
+elec8,asdfasdffdfdfdfdfd,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,,,Pokemon Go: Wifi broadcasted flag
+sg_chevron1,ce00e2a084d02fcb1d91995586f37a4c,100,1000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 1,"Follow the procedure on-screen, check all available commands",
+sg_chevron2,b2af5338557f9d41f53a24167428375e,150,2000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 2,"Follow the procedure on-screen, check all available commands",
+sg_chevron3,bdfcfcbb2fd0a4e7036e39534b6b0b4e,200,3000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 3,"Follow the procedure on-screen, check all available commands",
+sg_chevron4,3968fcd90ecf34594e71f25c6fae8c38,250,4000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 4,"Follow the procedure on-screen, check all available commands",
+sg_chevron5,4f768b62fd4b5d9876e136faa671b355,300,5000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 5,"From what you learned on previous chevrons, script the process for this one",
+sg_chevron6,e84ac430e42373df9557ab604ef79936,400,8000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 6,"From what you learned on previous chevrons, script the process for this one",
+sg_chevron7,2c3e595ec5a58cb0d74446fb8687c1fe,500,10000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Unlock the safety on Chevron 7,"From what you learned on previous chevrons, script the process for this one",
+sg_abydos,6409aa4a7ece7ec1300b77be9d76ea18,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,27-7-15-32-12-30 ABYDOS
+sg_apophis,431ff721ede5cb1ed7070f783a42dcf1,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,20-18-11-38-10-32 APOPHIS'S BASE
+sg_chulak,63171ce58b596cdb7585249ebf339d57,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,9-2-23-15-37-20 CHULAK
+sg_edora,f9b0b5a0243edba01fcd9e703fddef88,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,28-38-35-9-15-3 EDORA
+sg_euronda,7bc4d9b05c7e799abcd800c7a7428027,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,30-27-9-7-18-16 EURONDA
+sg_juna,d62c7030bbd3dd7329d676b6fc53c3ed,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,29-8-18-22-4-25 JUNA
+sg_kallana,72e5060da17ff03919cd4208869cb7e0,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,6-16-8-3-26-25 KALLANA
+sg_kheb,9bafdd809a94e4f459cc750157b2301b,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,26-35-6-8-23-14 KHEB
+sg_ktau,69a1f37a33ae13037ec20b2846a428cf,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,18-2-30-12-26-33 KTAU
+sg_martin,264b14ff76ff8642976943cd57745d0e,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,24-12-32-7-11-34 MARTIN'S HOMEWORLD
+sg_othala,ce93d9f80d9d030ecd58f87677e402c7,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,11-27-23-16-33-3-9 OTHALA
+sg_p2x-555,e12fe17c72ebee2d4221b1bfc8d00024,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,28-8-16-33-13-31 P2X-555
+sg_p34-353j,4f2c9b37b6dddefb18d457577233f4f5,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,38-9-28-15-35-3 P34-353J
+sg_p3w-451,e63889a4d49077ca8d44b98dac4c9d9a,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,19-8-4-37-26-16 P3W-451
+sg_p3x-118,803606914a19df2b96c0f62bda5a20ee,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,9-26-34-37-17-21 P3X-118
+sg_p3x-562,cad9ed470a19b7eeaeb954f80b622d6e,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,3-28-9-35-24-15 P3X-562
+sg_p9c-372,71b9b89f688f65a7110d734f52941aea,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,25-8-18-29-4-22 P9C-372
+sg_pb5-926,69a2a4f3909268dd0a8d46f6f7ee162f,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,12-36-23-18-7-27 PB5-926
+sg_praclarush,206ae956291587cc0c225822c0dbbbeb,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,35-3-31-29-5-17 PRACLARUSH TAONAS
+sg_sangreal,6a5ae33d34406343eae094f6a30b3573,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,30-19-34-9-33-18 SANGREAL PLANET
+sg_tartarus,4ce8b5cc72df510b3352adff2207c9c5,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,33-28-23-26-16-31 TARTARUS
+sg_tollan,7c3c437e842d6a1b257bd77365a2acf0,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,6-33-27-37-11-18 TOLLAN
+sg_tollana,34ef6aeb59182878ec71d855df426c26,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,4-29-8-22-18-25 TOLLANA
+sg_vagon_brei,c415f0f4e374e976019c68a5e79899a8,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,3-8-2-12-19-30 VAGON BREI
+sg_px1-767,056971c5f35e5dfeeaa026707c3ba143,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,20-2-35-8-26-15 PX1-767
+sg_castiana,8a0ec9b639e63d86bbbc4194e0e1851e,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,29-3-6-9-12-16 CASTIANA
+sg_sahal,b988d88e81845d4cd261b2dd6a835d1d,50,500,scoreboard.hf,sgwormhole,Null,stackfault,Standard,Null,Dial the chevrons to create a wormhole to this location,Dial the right chevrons to create a wormhole to this location,29-18-19-20-21-22 SAHAL
+sg_rtfm,c3666f1caa7ff36e2d0374f229f4d838,10,100,scoreboard.hf,sgmisc,Null,stackfault,Standard,Null,Read the RTFM text,Take time to read the instructions,
+sg_bug1,ca24a83186bba3abfc6c657c09909486,20,100,scoreboard.hf,sgbug,Null,stackfault,Standard,Null,Special flag for minor bug report,Take time to report a bug,
+sg_bug2,0896259413abd30212ea8e3503b3bd2b,50,200,scoreboard.hf,sgbug,Null,stackfault,Standard,Null,Special flag for major bug report,Take time to report a bug,
+sg_bug3,4a487d3aa9a24e1f736f05829c131841,100,500,scoreboard.hf,sgbug,Null,stackfault,Standard,Null,Special flag for critical bug report,Take time to report a bug,
+sg_story,da97dde0a3727f1a823edc31a255c766,10,100,scoreboard.hf,sgmisc,Null,stackfault,Standard,Null,Read the STORY text,Take time to read the story,
+Quaoar_Root,8e3f9ec016e3598c5eec11fd3d73f6fb,100,100,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+Quaoar_Initial,2bafe61f03117ac66a73c3c514de796e,100,100,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+Sedna_Root,a10828bee17db751de4b936614558305,200,200,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+Sedna_Initial,bfbb7e6e6e88d9ae66848b9aeac6b289,200,200,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+Sedna_Post_1,submitthisforpoints,300,300,scoreboard.hf,perseid,Null,viper,Standard,Null,Tomcat Service Password,,
+Orcus_Root,807307b49314f822985d0410de7d8bfe,300,300,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+Orcus_Initial,868c889965b7ada547fae81f922e45c4,400,400,scoreboard.hf,perseid,Null,viper,Standard,Null,,,
+lanyard1,infinityflaggetcurrencymarket,150,2500,scoreboard.hf,misc,Null,HFCrew,Standard,Null,On the lanyard.,,

@@ -62,7 +62,7 @@ GRANT EXECUTE ON FUNCTION scoreboard.getBMItemInfo(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemList(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.reviewBMItem(integer,boolean,integer,text) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getBMItemLink(integer) TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfadmins;
+--GRANT EXECUTE ON FUNCTION scoreboard.getLotoHistory(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.getTransactionHistory(integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.addTeamLocation(varchar) TO hfadmins;
 
@@ -117,9 +117,9 @@ GRANT EXECUTE ON FUNCTION scoreboard.getFlagProgressFromIp(varchar) TO hfplayers
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamInfoFromIp(varchar) TO hfplayers;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamSecretsFromIp(varchar) TO hfplayers;
 --GRANT EXECUTE ON FUNCTION scoreboard.getEventsFromIp(timestamp,varchar,varchar,varchar,integer,varchar) TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.buyLotoFromIp(varchar) TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hfplayers;
-GRANT EXECUTE ON FUNCTION scoreboard.getLotoInfo() TO hfplayers;
+--GRANT EXECUTE ON FUNCTION scoreboard.buyLotoFromIp(varchar) TO hfplayers;
+--GRANT EXECUTE ON FUNCTION scoreboard.getLotoCurrentList(integer) TO hfplayers;
+--GRANT EXECUTE ON FUNCTION scoreboard.getLotoInfo() TO hfplayers;
 
 -- Grants for multiple groups
 GRANT EXECUTE ON FUNCTION scoreboard.getScore(integer,varchar,flagCategory.name%TYPE) TO hfplayers,hfscore,hfadmins;

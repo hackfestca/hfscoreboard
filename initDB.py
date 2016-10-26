@@ -68,6 +68,8 @@ actGrp.add_argument('--functions','-f', action='store_true', dest='functions', d
               help='Import structure only (tables and functions)')
 actGrp.add_argument('--data','-d', action='store_true', dest='data', default=False, \
               help='Import data only')
+actGrp.add_argument('--categories','-c', action='store_true', dest='categories', default=False, \
+              help='Import categories only (from csv file: import/categories.csv)')
 actGrp.add_argument('--flags','-l', action='store_true', dest='flags', default=False, \
               help='Import flags only (from csv file: import/flags.csv)')
 actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=False, \
@@ -106,6 +108,9 @@ try:
     elif args.data:
         print('[+] Importing data')
         c.importData()
+    elif args.categories:
+        print('[+] Importing categories')
+        c.importCategories()
     elif args.flags:
         print('[+] Importing flags')
         c.importFlags()
