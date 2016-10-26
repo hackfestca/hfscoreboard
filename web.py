@@ -363,7 +363,7 @@ class IndexHandler(BaseHandler):
 
         try:
             if options.authByIP:
-                submit_message = self.client.submitFlagFromIP(flag,self.remote_ip)
+                submit_message = self.client.submitFlagFromIp(flag,self.remote_ip)
             else:
                 team_id = self.get_current_user()
                 submit_message = self.client.submitFlag(flag,team_id,self.remote_ip)
