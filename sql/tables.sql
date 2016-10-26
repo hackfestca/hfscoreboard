@@ -11,6 +11,8 @@ SET search_path TO scoreboard;
 /*
     Some cleanup
 */
+DROP TABLE IF EXISTS registration CASCADE; 
+DROP TABLE IF EXISTS registration_secret CASCADE;
 DROP TABLE IF EXISTS gateKey;
 DROP TABLE IF EXISTS settings CASCADE;
 DROP TABLE IF EXISTS flagStatus_history CASCADE;
@@ -65,7 +67,7 @@ CREATE TABLE registration_secret(
     name text not null,
     value text not null,
     constraint valid_registration_secret_name check (name != ''),
-    constraint valid_registration_secret_value check (value != ''),
+    constraint valid_registration_secret_value check (value != '')
     );
 CREATE INDEX index_registration_secret_num ON registration_secret(num);
 

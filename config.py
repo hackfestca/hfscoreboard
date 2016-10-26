@@ -84,7 +84,8 @@ DB_BMU_CRT_FILE = 'certs/hf.cli.db.flagupdater.crt'
 DB_BMU_KEY_FILE = 'certs/hf.cli.db.flagupdater.key'
 
 SQL_DATA_FILE = 'sql/data.sql'
-SQL_FUNC_FILE = 'sql/functions.sql'
+#SQL_FUNC_FILE = 'sql/functions.sql'
+SQL_FUNC_DIR = 'sql/functions'
 SQL_TABLE_FILE = 'sql/tables.sql'
 SQL_SEC_FILE = 'sql/security.sql'
 

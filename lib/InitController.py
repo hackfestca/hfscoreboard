@@ -54,7 +54,7 @@ class InitController(UpdaterController.UpdaterController):
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
         self._bmiFile = config.BMI_FILE
-        self._gateKeysFile = config.GATE_KEYS_FILE
+        #self._gateKeysFile = config.GATE_KEYS_FILE
 
         self._sSSHUser = config.SSH_BMU_USER
         self._sSSHPubKey = config.SSH_BMU_PUB_KEY
@@ -85,8 +85,12 @@ class InitController(UpdaterController.UpdaterController):
 
     def importFunctions(self):
         print('Importing DB functions')
-        sql = ''.join(open(config.SQL_FUNC_FILE, 'r').readlines())
-        self._oDBCursor.execute(sql)
+        for f in sorted(os.listdir(config.SQL_FUNC_DIR)):
+            file_path = "%s/%s" % (config.SQL_FUNC_DIR, f)
+            if f.endswith('.sql'):
+                print('  Importing: %s' % file_path)
+                sql = ''.join(open(file_path, 'r').readlines())
+                self._oDBCursor.execute(sql)
         self.commit()
 
     def importData(self):
@@ -262,7 +266,7 @@ class InitController(UpdaterController.UpdaterController):
     def importAll(self):
         self.importTables()
         self.importFunctions()
-        self.importGateKeys()   # Must be imported before data
+        #self.importGateKeys()   # Must be imported before data
         self.importData()
         self.importCategories()
         self.importFlags()
