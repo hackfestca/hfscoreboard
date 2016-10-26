@@ -628,9 +628,7 @@ class AuthLoginHandler(BaseHandler):
             'pwd': ''}
 
     def get(self):
-        if options.authByIP:
-            self.redirect("/")
-
+        # Cannot put self.redirect("/") because it makes an infinite loop. TODO: find why.
         self.render("login.html", form=self.form,
                                   submit_message='')
 
