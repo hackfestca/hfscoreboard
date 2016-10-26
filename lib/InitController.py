@@ -54,7 +54,6 @@ class InitController(UpdaterController.UpdaterController):
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
         self._bmiFile = config.BMI_FILE
-        #self._gateKeysFile = config.GATE_KEYS_FILE
 
         self._sSSHUser = config.SSH_BMU_USER
         self._sSSHPubKey = config.SSH_BMU_PUB_KEY
@@ -169,22 +168,23 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importTeams(self):
-        SETTINGS_COLS_START = 4
+        SECRETS_COLS_START = 3
         with open(self._teamsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
             for row in reader:
                 print('Team: %s' % '|'.join(row))
-                tname = row[0]
-                tnet = row[1]
-                pwd = row[2]
+                tnum = row[0]
+                tname = row[1]
+                tnet = row[2]
+                #pwd = row[2]
                 
                 if tname != 'Team Name':
                     teamId = self.exec('addTeam',self._sanitize(tname,'str'), \
                                      self._sanitize(tnet,'str'), \
-                                     self._sanitize(pwd,'str'),
+                                     None,
                                      None)
-                    for i in range(SETTINGS_COLS_START,len(headers)):
+                    for i in range(SECRETS_COLS_START,len(headers)):
                         self.exec('addTeamSecrets', teamId,\
                                        self._sanitize(headers[i],'str'),\
                                        self._sanitize(row[i],'str'))
@@ -251,26 +251,13 @@ class InitController(UpdaterController.UpdaterController):
         self._oDBCursor.execute(sql)
         self.commit()
 
-    def importGateKeys(self):
-        with open(self._gateKeysFile) as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            headers = reader.__next__()
-            for row in reader:
-                print('GateKey: %s' % '|'.join(row))
-                gatekey = row[1]
-                
-                if gatekey != 'Team':
-                    id = self.exec('addGateKey',self._sanitize(gatekey,'str'))
-        self.commit()
-
     def importAll(self):
         self.importTables()
         self.importFunctions()
-        #self.importGateKeys()   # Must be imported before data
         self.importData()
         self.importCategories()
         self.importFlags()
-        #self.importTeams()
+        self.importTeams()
         #self.importBlackMarketItems()
         self.importSecurity()
 
