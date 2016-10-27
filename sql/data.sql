@@ -132,6 +132,7 @@ SELECT addTeam('Team HF Crew', '172.28.66.0/24', Null, Null);
 SELECT addTeam('mdube', '172.22.0.0/28', Null, Null);
 SELECT addTeam('mdube_dev', '127.0.0.1/8', Null, Null);
 SELECT addTeam('Team HF VPN', '172.22.0.192/27', Null, Null);
+SELECT addTeam('Monitoring', '172.28.70.34/31', Null, Null);
 --SELECT addTeam('mdube1', '172.22.0.0/28', Null, Null);
 --SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
 --SELECT addTeam('Team VPN', '192.168.9.0/24');
@@ -139,7 +140,7 @@ SELECT addTeam('Team HF VPN', '172.22.0.192/27', Null, Null);
 --SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam('hf', Null, 'hf', Null);
---UPDATE team set hide=true WHERE id=1;   -- Put HF team hidden
+UPDATE team set hide=true WHERE id=5;   -- Hide Monitoring
 
 /*
     Identify fake names
