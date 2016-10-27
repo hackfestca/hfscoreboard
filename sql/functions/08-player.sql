@@ -285,8 +285,14 @@ RETURNS TABLE (
                                 WHERE tf2.ts <= _ts
                             GROUP BY tf2.teamId
                             ) AS tf3 ON t.id = tf3.teamId
+                         LEFT OUTER JOIN (
+                             SELECT tf4.teamId,
+                                    max(tf4.id) as last_submit
+                             FROM team_flag as tf4
+                             GROUP BY tf4.teamId
+                         ) AS tf4 ON t.id = tf4.teamId
                          WHERE t.hide = False
-                         ORDER BY flagPts DESC,w.amount DESC NULLS LAST
+                         ORDER BY flagPts DESC, tf4.last_submit NULLS LAST
                          LIMIT _top;
 
 --
