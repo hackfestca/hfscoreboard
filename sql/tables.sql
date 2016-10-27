@@ -72,6 +72,7 @@ CREATE TABLE teamLocation(
 */
 CREATE TABLE team(
     id serial primary key,
+    num integer not null unique,
     name varchar(40) not null unique,
     net inet null unique,
     pwd varchar(64) null,
@@ -206,7 +207,11 @@ CREATE TABLE flag(
     statusCode integer not null references flagStatus(code),
     author integer default null references flagAuthor(id),
     type integer not null references flagType(code),
-    typeExt integer references flagTypeExt(id),
+    typeExt integer references flagTypeExt(id),     -- Attribute for complexe flags
+    arg1 text default null,                         -- Arguments for complexe flags
+    arg2 text default null,                         -- Arguments for complexe flags
+    arg3 text default null,                         -- Arguments for complexe flags
+    arg4 text default null,                         -- Arguments for complexe flags
     displayInterval interval default null,
     description text default null,
     news text default null,

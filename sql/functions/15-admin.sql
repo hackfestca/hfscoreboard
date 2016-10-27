@@ -262,6 +262,10 @@ CREATE OR REPLACE FUNCTION addFlag(_name flag.name%TYPE,
                                     _author flagAuthor.nick%TYPE,
                                     _type flagType.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
+                                    _arg1 flag.arg1%TYPE,
+                                    _arg2 flag.arg2%TYPE,
+                                    _arg3 flag.arg3%TYPE,
+                                    _arg4 flag.arg4%TYPE,
                                     _description flag.description%TYPE,
                                     _news flag.news%TYPE
                                     ) 
@@ -275,7 +279,8 @@ RETURNS flag.id%TYPE AS $$
         _display flag.displayInterval%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13;    
+        raise notice 'addFlag(%,%,%,%,%,%,%,%,%,%,%,%,%,%,%,%,%)',
+                    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17;    
     
         -- Get host id from name
         SELECT id INTO _hostId FROM host WHERE name = _host;
@@ -329,9 +334,9 @@ RETURNS flag.id%TYPE AS $$
 
         -- Insert a new row
         INSERT INTO flag(name,value,pts,cash,host,category,statusCode,displayInterval,author,
-                        type,typeExt,description,news)
+                        type,typeExt,arg1,arg2,arg3,arg4,description,news)
                 VALUES(_name,_value,_pts,_cash,_hostId,_catId,_statusCode,_display,_authorId,
-                        _typeCode,_typeExtId,_description,_news);
+                        _typeCode,_typeExtId,_arg1,_arg2,_arg3,_arg4,_description,_news);
 
         RETURN LASTVAL();
     END;
@@ -339,18 +344,6 @@ $$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addRandomFlag(...);
-                                    _value flag.value%TYPE, 
-                                    _pts flag.pts%TYPE,
-                                    _cash flag.cash%TYPE,
-                                    _host host.name%TYPE,
-                                    _category flagCategory.name%TYPE,
-                                    _statusCode flagStatus.code%TYPE,
-                                    _displayInterval varchar(20),
-                                    _author flagAuthor.nick%TYPE,
-                                    _type flagType.name%TYPE,
-                                    _typeExt flagTypeExt.name%TYPE,
-                                    _description flag.description%TYPE,
-                                    _news flag.news%TYPE
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
@@ -362,6 +355,10 @@ CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE,
                                     _author flagAuthor.nick%TYPE,
                                     _type flagType.name%TYPE,
                                     _typeExt flagTypeExt.name%TYPE,
+                                    _arg1 flag.arg1%TYPE,
+                                    _arg2 flag.arg2%TYPE,
+                                    _arg3 flag.arg3%TYPE,
+                                    _arg4 flag.arg4%TYPE,
                                     _description flag.description%TYPE,
                                     _news flag.news%TYPE
                                     ) 
@@ -371,7 +368,8 @@ RETURNS flag.id%TYPE AS $$
         _flagValue flag.value%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12;    
+        raise notice 'addRandomFlag(%,%,%,%,%,%,%,%,%,%,%,%,%,%,%,%)',
+                    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16;    
 
         -- Loop just to be sure that we get no collision with random_32()
         LOOP
@@ -381,7 +379,8 @@ RETURNS flag.id%TYPE AS $$
 
                 -- addFlag
                 SELECT addFlag(_name,_flagValue,_pts,_cash,_host,_category,_statusCode,
-                                _displayInterval,_author,_type,_typeExt,_description,_news)
+                                _displayInterval,_author,_type,_typeExt,_arg1,_arg2,
+                                _arg3,_arg4,_description,_news)
                 INTO _flagId;
                 RETURN _flagId;
             EXCEPTION WHEN unique_violation THEN

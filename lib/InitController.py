@@ -134,8 +134,12 @@ class InitController(UpdaterController.UpdaterController):
                 fauthor = row[7]
                 ftype = row[8]
                 ftypeext = row[9]
-                fdesc = row[10]
-                fnews = row[11]
+                farg1 = row[10]
+                farg2 = row[11]
+                farg3 = row[12]
+                farg4 = row[13]
+                fdesc = row[14]
+                fnews = row[15]
                 
                 if fname != 'Flag Name':
                     if fvalue != '':
@@ -150,6 +154,10 @@ class InitController(UpdaterController.UpdaterController):
                                 self._sanitize(fauthor,'str'), \
                                 self._sanitize(ftype,'str'), \
                                 self._sanitize(ftypeext,'str'), \
+                                self._sanitize(farg1,'str'), \
+                                self._sanitize(farg2,'str'), \
+                                self._sanitize(farg3,'str'), \
+                                self._sanitize(farg4,'str'), \
                                 self._sanitize(fdesc,'str'), \
                                 self._sanitize(fnews,'str'))
                     else:
@@ -163,6 +171,10 @@ class InitController(UpdaterController.UpdaterController):
                                 self._sanitize(fauthor,'str'), \
                                 self._sanitize(ftype,'str'), \
                                 self._sanitize(ftypeext,'str'), \
+                                self._sanitize(farg1,'str'), \
+                                self._sanitize(farg2,'str'), \
+                                self._sanitize(farg3,'str'), \
+                                self._sanitize(farg4,'str'), \
                                 self._sanitize(fdesc,'str'), \
                                 self._sanitize(fnews,'str'))
         self.commit()
@@ -180,7 +192,8 @@ class InitController(UpdaterController.UpdaterController):
                 #pwd = row[2]
                 
                 if tname != 'Team Name':
-                    teamId = self.exec('addTeam',self._sanitize(tname,'str'), \
+                    teamId = self.exec('addTeam', self._sanitize(tnum,'int'), \
+                                     self._sanitize(tname,'str'), \
                                      self._sanitize(tnet,'str'), \
                                      None,
                                      None)

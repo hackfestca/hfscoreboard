@@ -53,7 +53,7 @@ RETURNS TABLE (
             if FOUND then
                 PERFORM raise_p(format('Unique flag already submitted by a team. Too late. :)'));
             end if;
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+            _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
             --PERFORM addEvent(_ret,'flag');
             RETURN QUERY SELECT _flagRec.pts,_ret;
         elsif _flagRec.type = 12 then
@@ -74,6 +74,9 @@ RETURNS TABLE (
         elsif _flagRec.type = 32 then
             -- Calculate new value
             RETURN QUERY SELECT * FROM processTeamGroupPokemonFlag(_flagId,_teamId,_playerIp);
+        elsif _flagRec.type = 33 then
+            -- Calculate new value
+            RETURN QUERY SELECT * FROM processTeamGroupUniqueFlag(_flagId,_teamId,_playerIp);
         elsif _flagRec.type = 41 then
             -- Calculate new value
             RETURN QUERY SELECT _flagRec.pts,'trap';
@@ -223,7 +226,7 @@ RETURNS TABLE (
             _ret := format('You have received a bonus of %spts for being the %sth team to submit flag "%s" with value %spts',
                      _bonusPts,(_ct+1),_flagRec.name,_flagRec.pts);
         else
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+            _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
@@ -421,7 +424,7 @@ RETURNS TABLE (
             _ret := format('You have received a bonus of %spts for being the %sth team to complete track "%s" and submitting flag "%s" for %spts',
                             _bonusPts,(_ct+1),_flagRec.typeExtName,_flagRec.name,_flagRec.pts);
         else
-            _ret = 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
+            _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' || _flagRec.cash::text || '$ for this flag. ';
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
@@ -524,16 +527,112 @@ RETURNS TABLE (
             INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                    VALUES(_teamId,_bonusId,_bonusPts,_playerIp);
     
-            PERFORM addEvent(format('Team "%s" successfully completed the track "%s" for %spts',_teamId,_flagRec.typeExtName,_bonusPts),'flag');
+            PERFORM addEvent(format('Team "%s" successfully completed the track "%s" for %spts',
+                                    _teamId,_flagRec.typeExtName,_bonusPts),'flag');
     
             _ret := format('You have successfully completed the track "%s" for %spts',
                             _flagRec.typeExtName,_bonusPts);
         else
-            _ret = 'You have submitted a pokemon flag. Capture them all to get points.';
+            _ret := 'You have submitted a pokemon flag. Capture them all to get points.';
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
 
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: processTeamGroupUniqueFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION processTeamGroupUniqueFlag(_flagId flag.id%TYPE, 
+                                                   _teamId team.id%TYPE,
+                                                   _playerIp team.net%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ret text;
+        _aFlagGroupIds integer[];
+        _subGroup text;
+    BEGIN
+        -- Logging
+        raise notice 'processTeamGroupUniqueFlag(%,%,%)',$1,$2,$3;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.cash,
+                f.arg1 as group,
+                f.arg2 as subgroup,
+                ft.code
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        WHERE f.id = _flagId;
+        if not FOUND then
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+        end if;
+
+        -- Get a list of all flags with the same group
+        -- Those flags can be submitted if no other subgroup have been submitted.
+        SELECT array(
+            SELECT id 
+            FROM flag
+            WHERE arg1 = _flagRec.group
+        ) 
+        INTO _aFlagGroupIds;
+
+        -- Determine if a flag was already submitted among this group. (Is a difficulty level already choosen?)
+        SELECT a.arg2
+        FROM (
+            SELECT f.id,
+                   f.arg2
+            FROM team_flag AS tf
+            LEFT OUTER JOIN(
+                SELECT id,
+                       arg2
+                FROM flag AS f
+            ) AS f ON f.id = tf.flagId
+            WHERE tf.flagId = ANY(_aFlagGroupIds)
+            LIMIT 1
+        ) AS a
+        INTO _subGroup;
+
+        -- If no flag was submitted, the player can submit any flag.
+        if not FOUND then
+            raise notice 'Subgroup not choosen yet. OK to submit.';
+    
+            PERFORM addEvent(format('Team "%s" choose subgroup "%s" on group "%s"',
+                                    _teamId,_subGroup,_flagRec.group),'flag');
+    
+            _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' 
+                    || _flagRec.cash::text || '$ for this flag of ' || _flagRec.subgroup || ' difficulty.';
+
+        -- If a flag was already submitted, the player can only submit flags of the same subgroup
+        else
+            raise notice 'Subgroup % choosen. Must attempt to submit on the same subgroup.',_subGroup;
+
+            -- Check if the flag is in the same group and subgroup.
+            if _subGroup = _flagRec.subgroup then
+                raise notice 'Subgroup the same than previous flag. OK to submit.';
+
+                PERFORM addEvent(format('Team "%s" submitted a new flag in subgroup "%s" and group "%s"',
+                                        _teamId,_subGroup,_flagRec.group),'flag');
+        
+                _ret := 'Congratulations. You received ' || _flagRec.pts::text || 'pts and ' 
+                        || _flagRec.cash::text || '$ for this flag of ' || _subGroup || ' difficulty.';
+            else
+                PERFORM raise_p(format('You cannot submit this flag because you already started the "%s" difficulty',_subGroup));
+            end if;
+        end if;
+
+        RETURN QUERY SELECT _flagRec.pts,_ret;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

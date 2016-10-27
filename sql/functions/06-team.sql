@@ -22,7 +22,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: addTeam(name,net,pwd,loc)
 */
-CREATE OR REPLACE FUNCTION addTeam(_name team.name%TYPE,
+CREATE OR REPLACE FUNCTION addTeam(_num team.num%TYPE,
+                                   _name team.name%TYPE,
                                    _net varchar(20) DEFAULT Null,
                                    _pwd team.pwd%TYPE DEFAULT Null,
                                    _loc team.loc%TYPE DEFAULT Null) 
@@ -34,7 +35,7 @@ RETURNS team.id%TYPE AS $$
         _teamStartMoney settings.teamStartMoney%TYPE;
     BEGIN
         -- Logging
-        raise notice 'addTeam(%,%,pwd,%)',$1,$2,$4;
+        raise notice 'addTeam(%,%,%,pwd,%)',$1,$2,$3,$5;
 
         _inet := _net::inet;
 
@@ -53,11 +54,10 @@ RETURNS team.id%TYPE AS $$
         _walletId := addWallet(_name,'Wallet of team: '||_name,_teamStartMoney);
 
         -- Insert a new row
-        INSERT INTO team(name,net,pwd,loc,wallet) VALUES(_name,_inet,sha256(_pwd),_loc,_walletId);
-        _teamId := LASTVAL();
+        INSERT INTO team(num,name,net,pwd,loc,wallet) 
+        VALUES(_num,_name,_inet,sha256(_pwd),_loc,_walletId);
 
-        -- Assign gate keys (iHack 2016)
-        --PERFORM assignGateKey(_teamId);
+        _teamId := LASTVAL();
 
         RETURN _teamId;
     END;

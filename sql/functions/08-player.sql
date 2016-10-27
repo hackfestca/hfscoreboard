@@ -70,7 +70,7 @@ RETURNS text AS $$
         end if;
 
         -- Get team from teamId
-        SELECT id,name,net INTO _teamRec FROM team where _teamId = id ORDER BY id DESC LIMIT 1;
+        SELECT id,num,name,net INTO _teamRec FROM team where _teamId = id ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
             PERFORM raise_p(format('Team "%" not found',_teamId));
         end if;
@@ -164,8 +164,9 @@ RETURNS text AS $$
         else
             PERFORM raise_p(format('Invalid flag'));
         end if;
- 
-        PERFORM addEvent(_retEvent,'flag');
+
+        -- TODO: FIX THIS SHIT
+        --PERFORM addEvent(_retEvent,'flag');
 
         RETURN _ret;
     END;
@@ -591,7 +592,7 @@ RETURNS TABLE (
         raise notice 'getTeamInfo(%)',$1;
 
         -- Get team informations
-        SELECT id,name,net 
+        SELECT id,num,name,net 
         INTO _teamRec 
         FROM team 
         WHERE _teamId = team.id
@@ -678,8 +679,9 @@ RETURNS TABLE (
 
         _playerIp := _playerIpStr::inet;
 
+
         -- Get team informations
-        SELECT id,name,net 
+        SELECT id,num,name,net 
         INTO _teamRec 
         FROM team 
         WHERE _playerIp << team.net

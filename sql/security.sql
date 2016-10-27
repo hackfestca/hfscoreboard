@@ -38,7 +38,7 @@ GRANT USAGE ON SCHEMA tablefunc TO hfadmins,hfplayers,hfscore;
 
 -- Grants for admins only
 GRANT EXECUTE ON FUNCTION scoreboard.getGameStats() TO hfadmins;
-GRANT EXECUTE ON FUNCTION scoreboard.addTeam(varchar,varchar,varchar,integer) TO hfadmins;
+GRANT EXECUTE ON FUNCTION scoreboard.addTeam(integer,varchar,varchar,varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.modTeam(integer,varchar,varchar) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.listTeams(varchar,integer) TO hfadmins;
 GRANT EXECUTE ON FUNCTION scoreboard.rewardTeam(integer,text,integer) TO hfadmins;
