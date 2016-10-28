@@ -454,7 +454,11 @@ RETURNS TABLE (
               ) AS $$
     DECLARE 
         _settings settings%ROWTYPE;
+        _teamNum team.num%TYPE;
+        STD_FLAG_TYPE flagType.code%TYPE := 1;
         KING_FLAG_TYPE flagType.code%TYPE := 11;
+        EXCL_FLAG_TYPE flagType.code%TYPE := 14;
+        TGU_FLAG_TYPE flagType.code%TYPE := 33 ;
     BEGIN
         -- Logging
         raise notice 'getFlagProgress(%)',$1;
@@ -466,6 +470,12 @@ RETURNS TABLE (
         if _settings.gameStartTs > current_timestamp then
             PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
+
+        -- Get team number
+        SELECT t.num
+        FROM team AS t
+        WHERE t.id = _teamId
+        INTO _teamNum;
     
         return QUERY SELECT f.id AS id,
                             f.name AS name,
@@ -496,8 +506,12 @@ RETURNS TABLE (
                          ) AS tf2 ON f.id = tf2.flagId
                     WHERE (f.displayInterval is NULL 
                             or _settings.gameStartTs + f.displayInterval < current_timestamp)
-                          and f.type <> KING_FLAG_TYPE
                           and c.hidden = False
+                          and f.type <> KING_FLAG_TYPE
+                          and ((f.type = STD_FLAG_TYPE) 
+                                OR (f.type = EXCL_FLAG_TYPE and f.arg1::integer = _teamNum) -- Show only the team's flags.
+                                OR (f.type = TGU_FLAG_TYPE and f.id = tf2.flagId)     -- Show submitted flags only.
+                              )
                     ORDER BY f.id;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
