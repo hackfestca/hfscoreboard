@@ -62,6 +62,9 @@ RETURNS TABLE (
         elsif _flagRec.type = 13 then
             -- Calculate new value
             RETURN QUERY SELECT * FROM processBonusFlag(_flagId,_teamId,_playerIp);
+        elsif _flagRec.type = 14 then
+            -- Calculate new value
+            RETURN QUERY SELECT * FROM processExclusiveFlag(_flagId,_teamId,_playerIp);
         elsif _flagRec.type = 21 then
             -- Calculate new value
             RETURN QUERY SELECT * FROM processGroupDynamicFlag(_flagId,_teamId);
@@ -230,6 +233,83 @@ RETURNS TABLE (
         end if;
 
         RETURN QUERY SELECT _flagRec.pts,_ret;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: processExclusiveFlag(flagId,teamId)
+*/
+CREATE OR REPLACE FUNCTION processExclusiveFlag(_flagId flag.id%TYPE, 
+                                                   _teamId team.id%TYPE,
+                                                   _playerIp team.net%TYPE)
+RETURNS TABLE (
+                pts flag.pts%TYPE,
+                ret text
+              ) AS $$
+    DECLARE
+        _flagRec RECORD;
+        _ret text;
+        _teamName team.name%TYPE;
+        _teamNum team.num%TYPE;
+        _flagTeamName team.name%TYPE;
+    BEGIN
+        -- Logging
+        raise notice 'processTeamGroupUniqueFlag(%,%,%)',$1,$2,$3;
+
+        -- Get flag attributes
+        SELECT  f.id,
+                f.name,
+                f.pts,
+                f.cash,
+                f.arg1::integer as num,
+                f.arg2::integer as penalty,
+                ft.code
+        INTO _flagRec
+        FROM flag AS f
+        LEFT OUTER JOIN (
+            SELECT  code
+            FROM flagType AS ft
+        ) AS ft ON f.type = ft.code
+        WHERE f.id = _flagId;
+        if not FOUND then
+            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+        end if;
+
+        -- Get team num
+        SELECT num,name
+        FROM team
+        WHERE id = _teamId
+        INTO _teamNum,_teamName;
+
+        -- Get flag's team name
+        SELECT name
+        FROM team
+        WHERE num = _flagRec.num
+        INTO _flagTeamName;
+
+        -- Check if the team have permission to submit
+        -- Apply penalty if the flag number is different than the _teamNum
+        if _teamNum <> _flagRec.num then
+            raise notice 'Team % have sent a flag from team %. Applying penalty of %pts.',
+                         _teamName,_flagRec.num,_flagRec.penalty;
+
+            PERFORM addNews(format('Team "%s" have FUCKED IT UP and got %spts for submitting a flag from "%s"',
+                            _teamName,_flagRec.penalty,_flagTeamName), NULL);
+    
+            PERFORM addEvent(format('Team "%s" have sent a flag from team "%s". Applying penalty of %spts',
+                                    _teamName,_flagTeamName,_flagRec.penalty),'flag');
+    
+            _ret := format('Cheater! You submitted a flag from team "%s". You received a %spts penalty. Oops!',
+                          _flagTeamName,_flagRec.penalty);
+            RETURN QUERY SELECT _flagRec.penalty,_ret;
+
+        -- otherwise, no special actions
+        else
+            _ret := format('Congratulations. You received %spts and %s$ for this flag.',
+                            _flagRec.pts::text,_flagRec.cash::text);
+            RETURN QUERY SELECT _flagRec.pts,_ret;
+        end if;
+
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

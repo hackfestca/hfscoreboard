@@ -188,7 +188,7 @@ CREATE TABLE flagTypeExt(
     flagIds integer[] default null,                         -- For bonus and group bonus only to store bonus flags
     ts timestamp not null default current_timestamp,
     constraint valid_flagTypeExt_name check (name != ''),
-    constraint valid_flagTypeExt_pts check (pts >= -700 and pts <= 700),
+    constraint valid_flagTypeExt_pts check (pts >= -1000 and pts <= 1000),
     constraint valid_flagTypeExt_ptsLimit check (ptsLimit > 0),
     constraint valid_flagTypeExt_ptsStep check (ptsStep <> 0)
     );
@@ -218,7 +218,7 @@ CREATE TABLE flag(
     ts timestamp not null default current_timestamp,
     constraint valid_flag_name check (name != ''),
     constraint valid_flag_value check (value != ''),
-    constraint valid_flag_pts check (pts >= -700 and pts <= 700),
+    constraint valid_flag_pts check (pts >= -1000 and pts <= 1000),
     constraint valid_flag_cash check (cash >= 0),
     constraint valid_flag_displayTs check (displayInterval > '0 hours'::interval)
     );
@@ -248,7 +248,7 @@ CREATE TABLE team_flag(
     pts integer not null,
     playerIp inet not null,
     ts timestamp not null default current_timestamp,
-    constraint valid_team_flag_pts check (pts >= -700 and pts <= 700),
+    constraint valid_team_flag_pts check (pts >= -1000 and pts <= 1000),
     constraint u_flag_constraint unique (teamId,flagId)
     );
 

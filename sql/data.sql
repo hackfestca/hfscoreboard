@@ -82,8 +82,7 @@ SELECT addFlagType(11,'King');          -- Complex (pts + updateCmd)
 SELECT addFlagType(12,'Dynamic');       -- Complex (pts + limit,ptsStep)
 -- Scope: Global. Purpose: Give a bonus when a flag is successfully submitted
 SELECT addFlagType(13,'Bonus');       -- Complex (pts + bonus,ptsStep)
-SELECT addFlagType(14,'Exclusive');
-SELECT addFlagType(15,'Exclusive Evil');
+SELECT addFlagType(14,'Exclusive'); -- New from HF2016
 
 -- Scope: Global. Purpose: Make a group of flags be less/more valuable the more it is submitted.
 SELECT addFlagType(21,'Group Dynamic'); -- Complex (pts + limit,step,extName)
@@ -94,7 +93,7 @@ SELECT addFlagType(22,'Group Bonus'); -- Complex (pts + bonus,ptsStep,extName)
 SELECT addFlagType(31,'Team Group Dynamic');    -- Complex (pts + limit,step,extName)
 -- Scope: Team. Purpose: Grant points only when the entire group is submitted, on a per team basis.
 SELECT addFlagType(32,'Team Group Pokemon');  -- Complex (pts)
-SELECT addFlagType(33,'Team Group Unique');
+SELECT addFlagType(33,'Team Group Unique'); -- New from HF2016
 
 -- Scope: Team. Purpose: Trigger a malicious action when submitted
 SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
