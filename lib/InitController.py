@@ -99,6 +99,7 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importCategories(self):
+        self._oDBCursor.execute('TRUNCATE TABLE flagCategory CASCADE');
         with open(self._categoriesFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
@@ -118,6 +119,7 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importFlags(self):
+        self._oDBCursor.execute('TRUNCATE TABLE flag CASCADE');
         with open(self._flagsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
@@ -180,6 +182,8 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importTeams(self):
+        #self._oDBCursor.execute('TRUNCATE TABLE team CASCADE');
+        #self._oDBCursor.execute('TRUNCATE TABLE teamSecrets CASCADE');
         SECRETS_COLS_START = 3
         with open(self._teamsFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
