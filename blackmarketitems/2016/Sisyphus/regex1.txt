@@ -1,0 +1,1 @@
+Is the charset validated for the entire format?
