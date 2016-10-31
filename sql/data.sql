@@ -127,11 +127,11 @@ SELECT addTeamLocation('Quebec');
     fake teams for tests
 */
 
-SELECT addTeam(101, 'Team HF Crew', '172.28.66.0/24', Null, Null);
+SELECT addTeam(100, 'Team HF Crew', '172.28.66.0/24', Null, Null);
+SELECT addTeam(101, 'Team HF VPN', '172.22.0.192/27', Null, Null);
 SELECT addTeam(102, 'mdube', '172.22.0.0/28', Null, Null);
 SELECT addTeam(103, 'mdube_dev', '127.0.0.1/8', Null, Null);
-SELECT addTeam(104, 'Team HF VPN', '172.22.0.192/27', Null, Null);
-SELECT addTeam(105, 'Monitoring', '172.28.70.34/31', Null, Null);
+SELECT addTeam(104, 'Monitoring', '172.28.70.34/31', Null, Null);
 --SELECT addTeam('mdube1', '172.22.0.0/28', Null, Null);
 --SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
 --SELECT addTeam('Team VPN', '192.168.9.0/24');
@@ -139,7 +139,7 @@ SELECT addTeam(105, 'Monitoring', '172.28.70.34/31', Null, Null);
 --SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam('hf', Null, 'hf', Null);
-UPDATE team set hide=true WHERE id=5;   -- Hide Monitoring
+UPDATE team set hide=true WHERE num=104;   -- Hide Monitoring
 
 /*
     Identify fake names

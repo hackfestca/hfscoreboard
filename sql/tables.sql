@@ -198,7 +198,7 @@ CREATE TABLE flagTypeExt(
 */
 CREATE TABLE flag(
     id serial primary key,
-    name varchar(50) not null unique,
+    name varchar(50) not null,          -- Was unique but was removed to support Exclusive flags.
     value varchar(64) not null unique,
     pts integer not null,
     cash NUMERIC(10,2) not null,

@@ -350,8 +350,12 @@ RETURNS TABLE (
               ) AS $$
     DECLARE
         _settings settings%ROWTYPE;
+        _teamNum team.num%TYPE;
 
-        KING_FLAG_TYPE integer := 11;
+        STD_FLAG_TYPE flagType.code%TYPE := 1;
+        KING_FLAG_TYPE flagType.code%TYPE := 11;
+        EXCL_FLAG_TYPE flagType.code%TYPE := 14;
+        TGU_FLAG_TYPE flagType.code%TYPE := 33 ;
     BEGIN
         -- Logging
         raise notice 'getCatProgress(%)',$1;
@@ -364,6 +368,12 @@ RETURNS TABLE (
             PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
         end if;
 
+        -- Get team number
+        SELECT t.num
+        FROM team AS t
+        WHERE t.id = _teamId
+        INTO _teamNum;
+    
         return QUERY SELECT c.id AS id,
                             c.name AS name,
                             c.displayName AS displayName,
@@ -372,7 +382,7 @@ RETURNS TABLE (
                             coalesce(tft3.sum::integer,0) AS total,
                             c.hidden as hidden
                      FROM flagCategory AS c
-                     LEFT OUTER JOIN (
+                     LEFT OUTER JOIN (      -- Join pts
                         SELECT tf2.category,
                                sum(tf2.pts) AS sum
                         FROM (
@@ -386,16 +396,24 @@ RETURNS TABLE (
                                        f.category
                                 FROM flag AS f
                                 WHERE f.type <> KING_FLAG_TYPE 
+                                and ((f.type = STD_FLAG_TYPE) 
+                                      OR (f.type = EXCL_FLAG_TYPE and f.arg1::integer = _teamNum) -- Show only the team's flags.
+                                      OR (f.type = TGU_FLAG_TYPE)
+                                    )
                                 ) as f ON tf.flagId = f.id
                             WHERE tf.teamId = _teamId
                             ) AS tf2
                         GROUP BY tf2.category
                         ) AS tf3 ON c.id = tf3.category
-                     LEFT OUTER JOIN (
+                     LEFT OUTER JOIN (      -- Join total
                          SELECT f2.category,
                                 sum(f2.pts) AS sum
                          FROM flag AS f2
                          WHERE f2.type <> KING_FLAG_TYPE
+                                and ((f2.type = STD_FLAG_TYPE) 
+                                      OR (f2.type = EXCL_FLAG_TYPE and f2.arg1::integer = _teamNum) -- Show only the team's flags.
+                                      OR (f2.type = TGU_FLAG_TYPE)
+                                    )
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
                      WHERE c.hidden = False
