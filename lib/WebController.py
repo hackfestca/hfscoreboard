@@ -124,10 +124,11 @@ class WebController(ClientController.ClientController):
         csvh = csv.writer(data, delimiter=',',
                           quotechar='"',doublequote=False,escapechar='\\',
                           quoting=csv.QUOTE_MINIMAL)
-        teams = self.getScore(8)
-        newTeams = [x[1] for x in teams]
         score = list(self.getScoreProgress())
         newScore = [[[x,str(x)][type(x) == int] for x in y] for y in score]
+        team_ct = len(score[0])-1
+        teams = self.getScore(team_ct)
+        newTeams = [x[1] for x in teams]
 
         # Write header
         csvh.writerow(['Time'] + newTeams)
