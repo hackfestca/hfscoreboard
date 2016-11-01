@@ -95,11 +95,11 @@ SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2015'
 SSH_FU_PRIV_PWD = ''
 
 SSH_BMU_USER = 'sb'
-SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
-SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2016.pub'
+SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2016'
 SSH_BMU_PRIV_PWD = ''
 
-BMI_HOSTS = []
+BMI_HOSTS = ['sb-web01.hf']
 BMI_LOCAL_PATH = './blackmarketitems'
 BMI_REMOTE_PATH = '/var/www/htdocs/blackmarketitems'
 

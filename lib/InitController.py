@@ -257,7 +257,9 @@ class InitController(UpdaterController.UpdaterController):
                         privateId = self._getBMItemPrivateId(int(bmiId))
 
                         # Send on web servers
-                        self._uploadBMItemOnScoreboard(bmiImportName,privateId+bmiImportName)
+                        remote_name = privateId+bmiImportName
+                        remote_name = remote_name.replace('/','_')
+                        self._uploadBMItemOnScoreboard(bmiImportName,remote_name)
 
                         # update status (From TO_PUBLISH to FOR_SALE)
                         self._updateBMItemStatus(bmiId,config.BMI_STATUS_FOR_SALE)
@@ -277,6 +279,6 @@ class InitController(UpdaterController.UpdaterController):
         self.importCategories()
         self.importFlags()
         self.importTeams()
-        #self.importBlackMarketItems()
+        self.importBlackMarketItems()
         self.importSecurity()
 
