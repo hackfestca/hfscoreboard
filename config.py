@@ -100,8 +100,8 @@ SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
 SSH_BMU_PRIV_PWD = ''
 
 BMI_HOSTS = []
-BMI_LOCAL_PATH = './blackmarket'
-BMI_REMOTE_PATH = '/var/www/htdocs/blackmarket'
+BMI_LOCAL_PATH = './blackmarketitems'
+BMI_REMOTE_PATH = '/var/www/htdocs/blackmarketitems'
 
 BMI_STATUS_FOR_SALE = 1
 BMI_STATUS_SOLD = 2

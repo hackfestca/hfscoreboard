@@ -208,6 +208,8 @@ class InitController(UpdaterController.UpdaterController):
         self.commit()
 
     def importBlackMarketItems(self):
+        self._oDBCursor.execute('TRUNCATE TABLE bmItem CASCADE');
+
         with open(self._bmiFile) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             headers = reader.__next__()
