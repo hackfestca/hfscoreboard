@@ -53,49 +53,51 @@ inj5_3,FLAG-FKPJUHJKPSDPOMVOMDFQRFYKVRGDUG,50,5000,scoreboard.hf,inject,Null,flr
 inj5_4,FLAG-ZEVIWSLVWMPEEONJQHDYNGUVSVQUXH,150,10000,scoreboard.hf,inject,Null,flr,Team Group Unique,Null,chal05,medium,Null,Null,,,,
 inj5_5,FLAG-IMMIMIFRISUFZOJGNQOOJAQPVRLLGJ,150,5000,scoreboard.hf,inject,Null,flr,Team Group Unique,Null,chal05,medium,Null,Null,,,,
 inj5_6,FLAG-FTVRQGMIWLXMQYIJPQKGPVEGLKDOHG,500,15000,scoreboard.hf,inject,Null,flr,Team Group Unique,Null,chal05,hard,Null,Null,,,,
-elec1,mq2eFKgWVJHfiz8r,50,50,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,USB Propriete,
-elec2,Lfzru0cYDmYOcc6k,200,200,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,"Virual COM Port,  (Windows inf fourni) Avec les buttoms",
-elec3,H3FspVtFkl6ZyqBN,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,I2C - EEPROM,
-elec4,fpN30Zl5yDfFIOGc,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,SPI - RAM,
-elec5,pNbgIDKEeu0lD1Sk,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,RS232 - Reacteur - jouer avec les buttoms,
-elec6,9VFZAw4GnBjjimn1,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,"IR - dans scoreboard, adresses à leaker",
-elec7,T4pYbFHb6cEwCL0D,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,"RF - Key 2x button, mode debugu",
-elec8,asdfasdffdfdfdfdfd,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,,,Pokemon Go: Wifi broadcasted flag,
-sgunum1,088eb0636962d404de97749f24dd4897,100,500,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the first chevron on the StarGate - There is some beeps coming from the room.,Track first run ,Easy
-sgunum2,858b638d058feb6a8c3b4f811faa559d,50,250,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Easy
-sgunum3,cda8d65b8546dbb43dcb39118cf788b1,25,100,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Easy
-shunum4,a76ee7049a190c979b7a781671f63cd4,10,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Easy
-sgunum5,6c4fa47425c6a87a4727e68d36dedf0a,5,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Easy
-sgduo1,0e33f76364380b3370733099897332e1,150,500,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the second chevron on the StarGate - There is a charging noise coming from the room.,Track first run,Moderate
-sgduo2,5c1fabee09eca85ff6a3b4a76d2d304f,75,250,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Moderate
-sgduo3,a3a3868f33c9fa9d3b8f4cc4d60cbcd6,50,100,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Moderate
-sgduo4,1e2055ac60f525fa3d2fecdfff1535e8,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Moderate
-sgduo5,783a092e902e76e344b7b9c55cd5e46b,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Moderate
-sgtres1,a9484b2a7f12e54950fa9f453199b764,200,500,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the third chevron on the StarGate - We can feel some vibration coming from the room.,Track first run,Intermediate
-sgtres2,5f9eb71fd5387f4f80b8e7079ab2fef5,100,250,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Intermediate
-sgtres3,6dcd9568c68e5067622276cc2b447493,50,100,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Intermediate
-sgtres4,d3c64f47fd6f85b0e7d479873bb335a9,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Intermediate
-sgtres5,14f9a68d0202bc2c62a4e36e6e227095,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Intermediate
-sgquattuor1,a9259d7f87ead460f08567481ee47634,250,1000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fourth chevron on the StarGate - Some kind of whistling noise is coming from the room.,Track first run,Advanced
-sgquattuor2,ec7ed773c0b55c74ca06fc0cf9b72ec6,100,500,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Advanced
-sgquattuor3,26157fe2ae0541d86e24c573b5000abf,50,250,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Advanced
-sgquattuor4,8628f149dc50f774112ce8415bec87dc,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Advanced
-sgquattuor5,89118de446edb07baa3198f965dc3e14,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Advanced
-sgquinque1,6a2ec8e9a881f14471b39c1e5efa5663,300,1500,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fifth chevron on the StarGate - The Star Gate is warming up.,Track first scripted run,Hard
-sgquinque2,61c1394ab576aa07c04a0e9ab3c4d20e,100,500,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard
-sgquinque3,8c22a8ed94c80db8dbddba4d9d4b43f2,50,250,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard
-sgquinque4,697f3564a76cf15a18fe8f304daaf85a,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard
-sgquinque5,8eb7b15a11f74b7c43fd6a9a7d0425b7,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard
-sgsex1,5923573aa7ac132dbb31849eb3cf5b44,400,2000,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the sixth chevron on the StarGate - The Star Gate is almost operational.,Track first scripted run,Very hard
-sgsex2,ae6c1d90ff6a88cd54f31952a21b1ee9,100,1000,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Very hard
-sgsex3,19df9cb415e5f052d40918b7a536a41b,50,500,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Very hard
-sgsex4,1b5b4bbe49e75415cde7cc5744cc9eab,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Very hard
-sgsex5,19b52c1213d5c7c152d79258ace6ffc8,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Very hard
-sgseptem1,70f287f0e3003f9a5fc3bf18e2beb769,500,2500,scoreboard.hf,sgchevron,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,"Team just unlocked the seventh chevron on the StarGate - The Star Gate is powered up and operational. Congratulations, you made it Jackson! Now where can we go?",Track first scripted run,Hard core
-sgseptem2,f9cb6470c13d495a39a2e43f555e2367,100,1000,scoreboard.hf,sgchevron,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard core
-sgseptem3,8f74bbd917be96b17240050d44c4ef3d,50,500,scoreboard.hf,sgchevron,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard core
-sgseptem4,6f91f4133f8904e5d3e9817306443fe8,25,100,scoreboard.hf,sgchevron,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard core
-sgseptem5,a5f47accecc4ff9a17ccc0bdadf4de6f,10,100,scoreboard.hf,sgchevron,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard core
+board1,mq2eFKgWVJHfiz8r,50,50,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,The vendor wrote its own.,,USB Propriete,
+board2,Lfzru0cYDmYOcc6k,200,200,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,"Virual COM Port,  (Windows inf fourni) Avec les buttoms",,"Virual COM Port,  (Windows inf fourni) Avec les buttoms",
+board3,aggfgfgggfgrrgrgrg6h6y6y6y6y,200,200,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,It is accessible through the Hacker Emblem.,,press flag in the uart of the hacker serial port.,
+board4,H3FspVtFkl6ZyqBN,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,It shall stay on this chip (almost) for ever,,I2C - EEPROM,
+board5,fpN30Zl5yDfFIOGc,300,300,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,"A secret message is sent to this chip every 10 seconds. Unfortunately, it is kept there only 1ms. ",,SPI - RAM,
+board6,pNbgIDKEeu0lD1Sk,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,"Even if I RTFM, I can't find the debug mode. The manual says to enable it to troubleshoot WiFi.",,RS232 - Reacteur - jouer avec les buttoms,
+board7,9VFZAw4GnBjjimn1,400,400,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,Some IR exchanges with the reactor,,"IR - dans scoreboard, adresses à leaker",
+board8,T4pYbFHb6cEwCL0D,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,"RF - Key 2x button, mode debugu",,"RF - Key 2x button, mode debugu",
+board9,asdfasdffdfdfdfdfd,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,Pokemon Go: Wifi broadcasted flag,,Pokemon Go: Wifi broadcasted flag,
+board10,gfrgtyhyukuiligdfsgsw45345456,500,500,scoreboard.hf,galaxy7,Null,lei&mdube,Standard,Null,Null,Null,Null,Null,"The Reactor: Using IR, send the correct key to terminate the reactor.",,,
+sgunum1,088eb0636962d404de97749f24dd4897,100,500,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the first chevron on the StarGate - There is some beeps coming from the room.,Track first run ,Easy
+sgunum2,858b638d058feb6a8c3b4f811faa559d,50,250,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Easy
+sgunum3,cda8d65b8546dbb43dcb39118cf788b1,25,100,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Easy
+shunum4,a76ee7049a190c979b7a781671f63cd4,10,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Easy
+sgunum5,6c4fa47425c6a87a4727e68d36dedf0a,5,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Easy
+sgduo1,0e33f76364380b3370733099897332e1,150,500,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the second chevron on the StarGate - There is a charging noise coming from the room.,Track first run,Moderate
+sgduo2,5c1fabee09eca85ff6a3b4a76d2d304f,75,250,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Moderate
+sgduo3,a3a3868f33c9fa9d3b8f4cc4d60cbcd6,50,100,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Moderate
+sgduo4,1e2055ac60f525fa3d2fecdfff1535e8,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Moderate
+sgduo5,783a092e902e76e344b7b9c55cd5e46b,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Moderate
+sgtres1,a9484b2a7f12e54950fa9f453199b764,200,500,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the third chevron on the StarGate - We can feel some vibration coming from the room.,Track first run,Intermediate
+sgtres2,5f9eb71fd5387f4f80b8e7079ab2fef5,100,250,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Intermediate
+sgtres3,6dcd9568c68e5067622276cc2b447493,50,100,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Intermediate
+sgtres4,d3c64f47fd6f85b0e7d479873bb335a9,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Intermediate
+sgtres5,14f9a68d0202bc2c62a4e36e6e227095,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Intermediate
+sgquattuor1,a9259d7f87ead460f08567481ee47634,250,1000,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fourth chevron on the StarGate - Some kind of whistling noise is coming from the room.,Track first run,Advanced
+sgquattuor2,ec7ed773c0b55c74ca06fc0cf9b72ec6,100,500,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Advanced
+sgquattuor3,26157fe2ae0541d86e24c573b5000abf,50,250,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Advanced
+sgquattuor4,8628f149dc50f774112ce8415bec87dc,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Advanced
+sgquattuor5,89118de446edb07baa3198f965dc3e14,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Advanced
+sgquinque1,6a2ec8e9a881f14471b39c1e5efa5663,300,1500,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fifth chevron on the StarGate - The Star Gate is warming up.,Track first scripted run,Hard
+sgquinque2,61c1394ab576aa07c04a0e9ab3c4d20e,100,500,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard
+sgquinque3,8c22a8ed94c80db8dbddba4d9d4b43f2,50,250,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard
+sgquinque4,697f3564a76cf15a18fe8f304daaf85a,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard
+sgquinque5,8eb7b15a11f74b7c43fd6a9a7d0425b7,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard
+sgsex1,5923573aa7ac132dbb31849eb3cf5b44,400,2000,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the sixth chevron on the StarGate - The Star Gate is almost operational.,Track first scripted run,Very hard
+sgsex2,ae6c1d90ff6a88cd54f31952a21b1ee9,100,1000,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Very hard
+sgsex3,19df9cb415e5f052d40918b7a536a41b,50,500,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Very hard
+sgsex4,1b5b4bbe49e75415cde7cc5744cc9eab,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Very hard
+sgsex5,19b52c1213d5c7c152d79258ace6ffc8,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Very hard
+sgseptem1,70f287f0e3003f9a5fc3bf18e2beb769,500,2500,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,"Team just unlocked the seventh chevron on the StarGate - The Star Gate is powered up and operational. Congratulations, you made it Jackson! Now where can we go?",Track first scripted run,Hard core
+sgseptem2,f9cb6470c13d495a39a2e43f555e2367,100,1000,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard core
+sgseptem3,8f74bbd917be96b17240050d44c4ef3d,50,500,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard core
+sgseptem4,6f91f4133f8904e5d3e9817306443fe8,25,100,scoreboard.hf,sgcomplex,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard core
+sgseptem5,a5f47accecc4ff9a17ccc0bdadf4de6f,10,100,scoreboard.hf,sgcomplex,04:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard core
 sg_abydos,6409aa4a7ece7ec1300b77be9d76ea18,500,5000,scoreboard.hf,sgwormhole,20,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Abydos</b>",Team managed to activate the StarGate to reach Abydos,27-7-15-32-12-30 ABYDOS,End game
 sg_apophis,431ff721ede5cb1ed7070f783a42dcf1,50,100,scoreboard.hf,sgwormhole,40,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Apophis's Base</b>",Team managed to activate the StarGate to reach Apophis's Base,20-18-11-38-10-32 APOPHIS'S BASE,End game
 sg_chulak,63171ce58b596cdb7585249ebf339d57,50,100,scoreboard.hf,sgwormhole,60,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Chulak</b>",Team managed to activate the StarGate to reach Chulak,9-2-23-15-37-20 CHULAK,End game
@@ -125,6 +127,7 @@ sg_castiana,8a0ec9b639e63d86bbbc4194e0e1851e,50,100,scoreboard.hf,sgwormhole,520
 sg_sahal,b988d88e81845d4cd261b2dd6a835d1d,50,100,scoreboard.hf,sgwormhole,540,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Sahal</b>",Team managed to activate the StarGate to reach Sahal,29-18-19-20-21-22 SAHAL,End game
 sg_rtfm,c3666f1caa7ff36e2d0374f229f4d838,10,500,scoreboard.hf,sgmisc,30,stackfault,Standard,Null,Null,Null,Null,Null,Read the fantastic manual,Just learned it pays to read the manual,,
 sg_story,da97dde0a3727f1a823edc31a255c766,10,500,scoreboard.hf,sgmisc,30,stackfault,Standard,Null,Null,Null,Null,Null,Read the storyline,Just learned it pays to read the storylines,,
+sg_web,lookingatwebpagecodeisfuntoo,10,500,scoreboard.hf,sgmisc,300,stackfault,Standard,Null,Null,Null,Null,Null,StarGate Web Interface is at http://stargate.ctf.hf,Peeks at web page code with an eagle eye,Flag hidden in helper web page code,
 Quaoar_Post_1,d46795f84148fd338603d0d6a9dbf8de,50,0,scoreboard.hf,perseid,Null,viper,Standard,Null,Null,Null,Null,Null,Do some post exploitation on Quaoar,Read /etc/cron.d/php5,,
 Sedna_Post_1,submitthisforpoints,100,100,scoreboard.hf,perseid,Null,viper,Standard,Null,Null,Null,Null,Null,Do some post exploitation on Sedna,Read Tomcat Password,,
 Sedna_Post_2,Wirefox,150,150,scoreboard.hf,perseid,Null,viper,Standard,Null,Null,Null,Null,Null,Do some post exploitation on Sedna,Crack the crackmeforpoints user's password (Wirefox) Avaialble in LinkedIN Leaks,,
@@ -407,7 +410,6 @@ com5,185dc3ebbfdea22e8da3f10a475ddb46sparky69,300,2000,scoreboard.hf,com,Null,ch
 com5,45d86809f8a0b9b4baafcc5b9dbf2397spanky3,300,2000,scoreboard.hf,com,Null,chaput,Exclusive,Null,53,-500,Null,Null,grab user and password,,pptp grab handshake with chap2asleap https://samsclass.info/124/proj14/p10-pptp.htm,
 com5,646b10be47a2eeebef75ead3191ec318sosimple,300,2000,scoreboard.hf,com,Null,chaput,Exclusive,Null,54,-500,Null,Null,grab user and password,,pptp grab handshake with chap2asleap https://samsclass.info/124/proj14/p10-pptp.htm,
 com5,55d67f74a3bfed44e0cb8ac4710dbdb6sorensen,300,2000,scoreboard.hf,com,Null,chaput,Exclusive,Null,55,-500,Null,Null,grab user and password,,pptp grab handshake with chap2asleap https://samsclass.info/124/proj14/p10-pptp.htm,
-com5_testmdube,blablabla,300,2000,scoreboard.hf,com,Null,chaput,Exclusive,Null,102,-500,Null,Null,grab user and password,,pptp grab handshake with chap2asleap https://samsclass.info/124/proj14/p10-pptp.htm,
 cash01,e933abdc3d6a7b12cbc4c4f7bf035d38,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
 cash02,51ca03dbfb98810c8d5fbe63c1ef04e4,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
 cash03,646bc3da08eeec46d8e592b1e3434be2,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
@@ -428,3 +430,227 @@ cash17,2dfd1302355efc9c40796cb971f69860,0,5000,scoreboard.hf,thirdparty,24 hours
 cash18,4a7e7d10c8865a94702704ac426950bd,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
 cash19,bd7fc09a3a52a43fb69c7086a87484b5,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
 cash20,a96ac74db2326634f36c4704d3b614de,0,5000,scoreboard.hf,thirdparty,24 hours,chaput,Standard,Null,Null,Null,Null,Null,argent,$team received 5000$ from Hackfest Crew ,,
+expl1,06e4e508536565a77602d1d9542f33a3,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,1,-500,Null,Null,Get a shell,Null,Null,
+expl1,580ac757a16fe46decc7e7576cdda923,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,1,-500,Null,Null,Get R00T!,Null,Null,
+expl1,63ab0ae69994c49ca00a9299ada1ec7a,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,2,-500,Null,Null,Get a shell,Null,Null,
+expl1,cda8854d047f593a78e19b0548958bea,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,2,-500,Null,Null,Get R00T!,Null,Null,
+expl1,4b15de43d5db0e0f766708df802d1c91,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,3,-500,Null,Null,Get a shell,Null,Null,
+expl1,bfb69a9e018c1d556136d6feb258d319,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,3,-500,Null,Null,Get R00T!,Null,Null,
+expl1,f565e3c064a2fc4e8cfb2966e49f98f7,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,4,-500,Null,Null,Get a shell,Null,Null,
+expl1,2b8b15a5d5af4a573e3b0e4594b7ba1c,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,4,-500,Null,Null,Get R00T!,Null,Null,
+expl1,903a02434e127d5bd87817857e8aae91,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,5,-500,Null,Null,Get a shell,Null,Null,
+expl1,ad5c04c5a02d49994ce98c8a28607659,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,5,-500,Null,Null,Get R00T!,Null,Null,
+expl1,847e8f357d56efb1ec860394583ac528,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,6,-500,Null,Null,Get a shell,Null,Null,
+expl1,ef5fab81116a4019f34833e314ef3d4c,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,6,-500,Null,Null,Get R00T!,Null,Null,
+expl1,a22bceac9d1c9fd1e9cc6377f76d2fdf,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,7,-500,Null,Null,Get a shell,Null,Null,
+expl1,4a028a2208966632de0d6d61e5c79c26,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,7,-500,Null,Null,Get R00T!,Null,Null,
+expl1,e14dff5809ad390cc941f86760ef236d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,8,-500,Null,Null,Get a shell,Null,Null,
+expl1,7eddd94316035e8d83421d5f3c43cdcc,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,8,-500,Null,Null,Get R00T!,Null,Null,
+expl1,68e7383e4d2c6363cccb66c707f6180b,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,9,-500,Null,Null,Get a shell,Null,Null,
+expl1,adac0aa73c9bee8bec35b07ff1f7abb2,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,9,-500,Null,Null,Get R00T!,Null,Null,
+expl1,60d3afc930772a39920d54fdb3d37be8,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,10,-500,Null,Null,Get a shell,Null,Null,
+expl1,fa1b29fd62052aaa80b018a32f8fac12,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,10,-500,Null,Null,Get R00T!,Null,Null,
+expl1,d9d4eb58bbe2566a12547f3593f35c9d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,11,-500,Null,Null,Get a shell,Null,Null,
+expl1,8b0c26c8e5a1e86a5de0ca075a943765,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,11,-500,Null,Null,Get R00T!,Null,Null,
+expl1,20d064248d1386cba232532ffa511314,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,12,-500,Null,Null,Get a shell,Null,Null,
+expl1,a9fbbb072127cd3820dd26525ce4e102,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,12,-500,Null,Null,Get R00T!,Null,Null,
+expl1,ed63e1b2bb532e6807261a34c025524a,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,13,-500,Null,Null,Get a shell,Null,Null,
+expl1,7097eacd4483ae8fee2539050f833470,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,13,-500,Null,Null,Get R00T!,Null,Null,
+expl1,4d8481a2d6b49089c7f68586cf6679e0,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,14,-500,Null,Null,Get a shell,Null,Null,
+expl1,4d76048bafe4d56d32f3d4b5ce90fe62,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,14,-500,Null,Null,Get R00T!,Null,Null,
+expl1,fe9c4674ed0d00f9cdf2bc60d2b1af8d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,15,-500,Null,Null,Get a shell,Null,Null,
+expl1,3d860b96e089ec72602d5f2abc639972,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,15,-500,Null,Null,Get R00T!,Null,Null,
+expl1,d4da68e6e61f113b00cfd1a61e0eb00d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,16,-500,Null,Null,Get a shell,Null,Null,
+expl1,f4ee0d40787beac44b7e4d2fb4835193,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,16,-500,Null,Null,Get R00T!,Null,Null,
+expl1,a46e402f63927b0d6fa76e585cb04246,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,17,-500,Null,Null,Get a shell,Null,Null,
+expl1,91eb3d8923633af81bb0df5cf98fb424,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,17,-500,Null,Null,Get R00T!,Null,Null,
+expl1,7a68f5ef88a004ddaa954d87b7f4862b,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,18,-500,Null,Null,Get a shell,Null,Null,
+expl1,fd3ae203fd69c0085498f12b2ca92c37,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,18,-500,Null,Null,Get R00T!,Null,Null,
+expl1,089d0205f0edc6642e6f4d5f01cee2ce,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,19,-500,Null,Null,Get a shell,Null,Null,
+expl1,4b25da270df10fca467cc65132bf344c,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,19,-500,Null,Null,Get R00T!,Null,Null,
+expl1,c7307b2a5f10dad5c6e9721be08d3720,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,20,-500,Null,Null,Get a shell,Null,Null,
+expl1,af1575f8d231b505f07a005b039d9dd0,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,20,-500,Null,Null,Get R00T!,Null,Null,
+expl1,8bd5917d1cec71e410d013c786bb125f,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,21,-500,Null,Null,Get a shell,Null,Null,
+expl1,642b3396f8b0ac8cdc328e244fd29a0e,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,21,-500,Null,Null,Get R00T!,Null,Null,
+expl1,1b10d78cdfbf94610743de3063df3968,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,22,-500,Null,Null,Get a shell,Null,Null,
+expl1,e1ef3163eadb4635a3ba74837d58b97b,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,22,-500,Null,Null,Get R00T!,Null,Null,
+expl1,da421cfb60f454e8e8571ca84ff9bb05,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,23,-500,Null,Null,Get a shell,Null,Null,
+expl1,340e652184dbf4eafb5378cb4f34b91e,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,23,-500,Null,Null,Get R00T!,Null,Null,
+expl1,dcc1fd93ef3df0b1f4d3a83de0ec218c,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,24,-500,Null,Null,Get a shell,Null,Null,
+expl1,2566e358c098792e2de6ce4773623db1,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,24,-500,Null,Null,Get R00T!,Null,Null,
+expl1,9bd09a84ef838ccbb715097053664b42,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,25,-500,Null,Null,Get a shell,Null,Null,
+expl1,346132f16b56c43354b44074ecd4f9eb,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,25,-500,Null,Null,Get R00T!,Null,Null,
+expl1,8376ad2e3fb18de246e4e28949a51c5b,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,26,-500,Null,Null,Get a shell,Null,Null,
+expl1,261c3c44744e9c8a635a64d7ff5e047b,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,26,-500,Null,Null,Get R00T!,Null,Null,
+expl1,c697a6beb802711c7b639c32a32f85e8,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,27,-500,Null,Null,Get a shell,Null,Null,
+expl1,62bafa86b72e0251eb588b3a065d7430,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,27,-500,Null,Null,Get R00T!,Null,Null,
+expl1,9e57b7277a09e626b92fa616963cee06,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,28,-500,Null,Null,Get a shell,Null,Null,
+expl1,c04c3b439d3052a2c38f11ceab4088a1,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,28,-500,Null,Null,Get R00T!,Null,Null,
+expl1,7a6c9364da50d5b8c5607ecef21e4492,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,29,-500,Null,Null,Get a shell,Null,Null,
+expl1,2fad8441089d078f9225d6917b0ae258,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,29,-500,Null,Null,Get R00T!,Null,Null,
+expl1,bf89496e98be3e959961c67dc799fe6d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,30,-500,Null,Null,Get a shell,Null,Null,
+expl1,151ad5c5c6f6353acdf53594edafac7c,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,30,-500,Null,Null,Get R00T!,Null,Null,
+expl1,78bbfb6584cff74983c72a04fc8213fb,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,31,-500,Null,Null,Get a shell,Null,Null,
+expl1,2fc847d6bca647beeebd3b189bdabf0a,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,31,-500,Null,Null,Get R00T!,Null,Null,
+expl1,455921c3be9c52346d92dc6154e9bac5,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,32,-500,Null,Null,Get a shell,Null,Null,
+expl1,0ae4528996c61cf26906a940cb83c03e,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,32,-500,Null,Null,Get R00T!,Null,Null,
+expl1,b9caf3980c082f9101229469d54a426a,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,33,-500,Null,Null,Get a shell,Null,Null,
+expl1,42f35cd59bcbca6cecf77337878861f7,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,33,-500,Null,Null,Get R00T!,Null,Null,
+expl1,7dcfc673b5aff76943f09d503d1a8bc6,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,34,-500,Null,Null,Get a shell,Null,Null,
+expl1,12a3e520fbaa38226f88c76b968ac819,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,34,-500,Null,Null,Get R00T!,Null,Null,
+expl1,5f57ae9ec52f54bbb6b19e438fe8f24d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,35,-500,Null,Null,Get a shell,Null,Null,
+expl1,48b02a9930c43ad155d34634c729db67,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,35,-500,Null,Null,Get R00T!,Null,Null,
+expl1,ee6425585cefdb70d0d6ea3948ab6ff8,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,36,-500,Null,Null,Get a shell,Null,Null,
+expl1,c86541be3de6c8a44bd5141028d174e5,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,36,-500,Null,Null,Get R00T!,Null,Null,
+expl1,ea9bfa5d0c1fe0ff836d5e8442f01ea5,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,37,-500,Null,Null,Get a shell,Null,Null,
+expl1,6d4b2e4337e2ca51a83f8e210b8d7d34,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,37,-500,Null,Null,Get R00T!,Null,Null,
+expl1,6b345b10c472036ef440558ec6f79d9d,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,38,-500,Null,Null,Get a shell,Null,Null,
+expl1,14397280e305b371aaaee6437b01c218,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,38,-500,Null,Null,Get R00T!,Null,Null,
+expl1,40c2f4e7bafb290d9715534c82eb03a4,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,39,-500,Null,Null,Get a shell,Null,Null,
+expl1,293db2116a4e4efee98c6f979acd98d6,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,39,-500,Null,Null,Get R00T!,Null,Null,
+expl1,f7ee32f061e52aeeb8470c0a49e39309,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,40,-500,Null,Null,Get a shell,Null,Null,
+expl1,5e19aa9a4acf6b786b26170b3c014caf,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,40,-500,Null,Null,Get R00T!,Null,Null,
+expl1,cb2cee68260db34c57d89cbfcb9d0e64,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,41,-500,Null,Null,Get a shell,Null,Null,
+expl1,c2e7e1123ae79fcb34b18661807b1cce,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,41,-500,Null,Null,Get R00T!,Null,Null,
+expl1,9ad351f0561cc84dca756b45dcd8b1ab,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,42,-500,Null,Null,Get a shell,Null,Null,
+expl1,774fe7e8c3651282dd8d240af46912bf,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,42,-500,Null,Null,Get R00T!,Null,Null,
+expl1,f0389ceecff2ba99c740dd0cbfe13ab3,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,43,-500,Null,Null,Get a shell,Null,Null,
+expl1,266eaa881df6dccd4c70e0eb236a02dd,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,43,-500,Null,Null,Get R00T!,Null,Null,
+expl1,e6c8d4108feba7aea0702db445212cb2,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,44,-500,Null,Null,Get a shell,Null,Null,
+expl1,12a7909725abb0442e2dd0dcc674f502,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,44,-500,Null,Null,Get R00T!,Null,Null,
+expl1,0a054ec9268524ebe7069267e9af4e20,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,45,-500,Null,Null,Get a shell,Null,Null,
+expl1,3bfcdce79ccbfd5c7e8772f081c4eddb,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,45,-500,Null,Null,Get R00T!,Null,Null,
+expl1,cb3e149ed6f4d256bcaf03478b3c8f36,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,46,-500,Null,Null,Get a shell,Null,Null,
+expl1,b9f8449f83a2f93dd99fdbc1ae6ccff0,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,46,-500,Null,Null,Get R00T!,Null,Null,
+expl1,6d64d0ccb1b443d5537a3e3e74c91ae0,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,47,-500,Null,Null,Get a shell,Null,Null,
+expl1,4d609dba08d3f23ec5d9576820775e7e,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,47,-500,Null,Null,Get R00T!,Null,Null,
+expl1,6e7d778bcbc73b76a8f5674baf71d7c6,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,48,-500,Null,Null,Get a shell,Null,Null,
+expl1,5e535110460c685fd7d1f0a45181b0d3,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,48,-500,Null,Null,Get R00T!,Null,Null,
+expl1,84d6961f55850dba4fccc17823a7f7d7,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,49,-500,Null,Null,Get a shell,Null,Null,
+expl1,aeb267b1bc49f89dcb0d2a0c24fcd2f5,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,49,-500,Null,Null,Get R00T!,Null,Null,
+expl1,6330f3c02c439c186f961c0bc7148ce3,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,50,-500,Null,Null,Get a shell,Null,Null,
+expl1,7faa6701e263c1b6bab036dcfa0e28c0,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,50,-500,Null,Null,Get R00T!,Null,Null,
+expl1,82644af36eea7d5710c6551bdc64794e,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,51,-500,Null,Null,Get a shell,Null,Null,
+expl1,623bffcb68efbad993c8ce97dbb4ae5b,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,51,-500,Null,Null,Get R00T!,Null,Null,
+expl1,95403d06ca2b07e9facec9b81bfb09bd,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,52,-500,Null,Null,Get a shell,Null,Null,
+expl1,2af39f654dbaabcc6168cb05d625567b,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,52,-500,Null,Null,Get R00T!,Null,Null,
+expl1,31f28ae691e78e4c7dba407af3bdd3d7,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,53,-500,Null,Null,Get a shell,Null,Null,
+expl1,d93b6f39bc10a307f0458318e2095100,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,53,-500,Null,Null,Get R00T!,Null,Null,
+expl1,337de1b7714f76bcbe520ed51e182eae,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,54,-500,Null,Null,Get a shell,Null,Null,
+expl1,82a6aa58061615990523c77adee686f7,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,54,-500,Null,Null,Get R00T!,Null,Null,
+expl1,2aeb4921a89f58e282545d0a470f4763,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,55,-500,Null,Null,Get a shell,Null,Null,
+expl1,8457ad5ee124ae30b29636bda8f5afda,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,55,-500,Null,Null,Get R00T!,Null,Null,
+expl1,4e782865dcfcfe66832cf42e0d8d2252,100,1000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,100,-500,Null,Null,Get a shell,Null,Null,
+expl1,0f7484b502bfbd6d4a8369737c62c329,150,1500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,101,-500,Null,Null,Get R00T!,Null,Null,
+expl2,74a8dfdb2f464a9019d2b8eda9350005,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,1,-500,Null,Null,Get a shell,Null,Null,
+expl2,f3f7281fcdeae4788c4c6b56da5a9d51,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,1,-500,Null,Null,Get R00T!,Null,Null,
+expl2,bf7c08f106f89fd90c9510ec06c1aca4,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,2,-500,Null,Null,Get a shell,Null,Null,
+expl2,b7ec451ce8665e3ddc1748b49b1c6870,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,2,-500,Null,Null,Get R00T!,Null,Null,
+expl2,fc4f255176ddf96143b530f823ec093d,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,3,-500,Null,Null,Get a shell,Null,Null,
+expl2,38cb8bd1f193e2a8d224e4d4b9cf82ad,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,3,-500,Null,Null,Get R00T!,Null,Null,
+expl2,cae06432a3aab71edb3886fdfbb68a96,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,4,-500,Null,Null,Get a shell,Null,Null,
+expl2,ef8e31e6bc648fa832078a06768aca3b,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,4,-500,Null,Null,Get R00T!,Null,Null,
+expl2,8976e722a98ef457a2e365be99e9ca73,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,5,-500,Null,Null,Get a shell,Null,Null,
+expl2,4013d99077ccdc63ada057efb20d41e3,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,5,-500,Null,Null,Get R00T!,Null,Null,
+expl2,bcb5c5dc2346811a160459a5d3036351,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,6,-500,Null,Null,Get a shell,Null,Null,
+expl2,8ff538acaa8ceb077add7e7d3193895f,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,6,-500,Null,Null,Get R00T!,Null,Null,
+expl2,b1c0a6fa0126be8973f111fd8e83cf7d,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,7,-500,Null,Null,Get a shell,Null,Null,
+expl2,fbbc1100e0575150e1f43d01ab4ae63b,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,7,-500,Null,Null,Get R00T!,Null,Null,
+expl2,b72ea3e956774c18cd0432e237534e2d,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,8,-500,Null,Null,Get a shell,Null,Null,
+expl2,b7f2a2921ffd078dfad6fcec5398781c,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,8,-500,Null,Null,Get R00T!,Null,Null,
+expl2,fd6e518b75961f89b830bc7990a43897,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,9,-500,Null,Null,Get a shell,Null,Null,
+expl2,b31f5a01e6b09aacda51d2c6d03a351c,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,9,-500,Null,Null,Get R00T!,Null,Null,
+expl2,f54ab0ecc8b45f0b247971b7fd29c839,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,10,-500,Null,Null,Get a shell,Null,Null,
+expl2,60c6c8e687460885a6947df16bb40386,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,10,-500,Null,Null,Get R00T!,Null,Null,
+expl2,7fcda14fe1b4978e4f07428c466489ea,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,11,-500,Null,Null,Get a shell,Null,Null,
+expl2,f5dee99ce99cc9573cac314702514088,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,11,-500,Null,Null,Get R00T!,Null,Null,
+expl2,fd93d7af65b88f4f6bff9ce2ecbb8f16,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,12,-500,Null,Null,Get a shell,Null,Null,
+expl2,5213b0f789bc8b624ecccfb39a972310,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,12,-500,Null,Null,Get R00T!,Null,Null,
+expl2,8f06520d1f97b808c2fba14ea5e7e1cf,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,13,-500,Null,Null,Get a shell,Null,Null,
+expl2,b70aad156d8bf75ee26740903ac240c6,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,13,-500,Null,Null,Get R00T!,Null,Null,
+expl2,368eb23e379ed410887c3ba369eb1980,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,14,-500,Null,Null,Get a shell,Null,Null,
+expl2,1b6448a8c0a5a0b4754add90f69f781a,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,14,-500,Null,Null,Get R00T!,Null,Null,
+expl2,e07b8c7c01b1f75c4329bf1172c7d1ab,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,15,-500,Null,Null,Get a shell,Null,Null,
+expl2,5f860223f3ef84f787e4f01285566345,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,15,-500,Null,Null,Get R00T!,Null,Null,
+expl2,01a92c28dbf46f1506d39390f4f44408,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,16,-500,Null,Null,Get a shell,Null,Null,
+expl2,ed4c142b42292e0c53f29daadf9220d9,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,16,-500,Null,Null,Get R00T!,Null,Null,
+expl2,78d5528adc720ff6aab5b90a924779c8,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,17,-500,Null,Null,Get a shell,Null,Null,
+expl2,6a6e29e16f1d8e2306311dc7dc43c07d,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,17,-500,Null,Null,Get R00T!,Null,Null,
+expl2,67e6e1e60a287f46481c46e2db2ea318,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,18,-500,Null,Null,Get a shell,Null,Null,
+expl2,c28f82749ebe9595aeac7efca204e2dd,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,18,-500,Null,Null,Get R00T!,Null,Null,
+expl2,b9ac2f98345c87c314e2da08f01c4057,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,19,-500,Null,Null,Get a shell,Null,Null,
+expl2,07f200d73a9aff4a3537812b153395df,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,19,-500,Null,Null,Get R00T!,Null,Null,
+expl2,6b131cfe5bc851a53ed6a7e5f8ee720e,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,20,-500,Null,Null,Get a shell,Null,Null,
+expl2,db674ce8f8e7bb47fd7a6068756e53a0,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,20,-500,Null,Null,Get R00T!,Null,Null,
+expl2,11fbe95312aec22d0a388022e61f4dc4,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,21,-500,Null,Null,Get a shell,Null,Null,
+expl2,bac811d0135c578a2dafbb6e3425450d,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,21,-500,Null,Null,Get R00T!,Null,Null,
+expl2,9a58288f3555bf24bacb72f0fda5fa37,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,22,-500,Null,Null,Get a shell,Null,Null,
+expl2,11917ef7fcc3e89d5ff89e71c38fbbf6,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,22,-500,Null,Null,Get R00T!,Null,Null,
+expl2,8159428df28e02b0811dad329d198732,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,23,-500,Null,Null,Get a shell,Null,Null,
+expl2,2ad5311051726087a14f61659afb3a33,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,23,-500,Null,Null,Get R00T!,Null,Null,
+expl2,e55628f8c7b4bbd5bfe47dac529efef6,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,24,-500,Null,Null,Get a shell,Null,Null,
+expl2,d3b92f97747d54134d64f8640ea42d1e,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,24,-500,Null,Null,Get R00T!,Null,Null,
+expl2,286436c39167e8a9c687f2509b27285a,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,25,-500,Null,Null,Get a shell,Null,Null,
+expl2,6e88a669056239024642ad8d373036ea,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,25,-500,Null,Null,Get R00T!,Null,Null,
+expl2,fc52fd6cf4aefbdd9f0a23f22e2aac0c,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,26,-500,Null,Null,Get a shell,Null,Null,
+expl2,6226b55e28cb32d8c2ad233eb8b49ead,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,26,-500,Null,Null,Get R00T!,Null,Null,
+expl2,0bddeca82697153b83080c326d606eb6,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,27,-500,Null,Null,Get a shell,Null,Null,
+expl2,0b42ab228352b40238621a4af2c5239c,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,27,-500,Null,Null,Get R00T!,Null,Null,
+expl2,ff0f09b3f50854b25f26db038b448ddf,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,28,-500,Null,Null,Get a shell,Null,Null,
+expl2,035cb199769e80d31d763796d12e9f6b,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,28,-500,Null,Null,Get R00T!,Null,Null,
+expl2,7042382664592592c99d33d663b02a02,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,29,-500,Null,Null,Get a shell,Null,Null,
+expl2,10ea0dd7184e18b1e8e3589636b43340,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,29,-500,Null,Null,Get R00T!,Null,Null,
+expl2,72cc2cd7d6b51779b117f5d890f95bae,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,30,-500,Null,Null,Get a shell,Null,Null,
+expl2,ced8fcfa0f243d3cc3b34f4bf0a63d67,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,30,-500,Null,Null,Get R00T!,Null,Null,
+expl2,db76bedb4ac6754a6c5bee3e0bc3a735,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,31,-500,Null,Null,Get a shell,Null,Null,
+expl2,75b37ae60a7c4f7a349eca1730ad51f9,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,31,-500,Null,Null,Get R00T!,Null,Null,
+expl2,2aed95e933313c9c638d0b3ab0399d31,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,32,-500,Null,Null,Get a shell,Null,Null,
+expl2,dad12238ea26e84121bbdda94a3c3812,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,32,-500,Null,Null,Get R00T!,Null,Null,
+expl2,2bb7b375a6861115c17dfb0bdca2f220,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,33,-500,Null,Null,Get a shell,Null,Null,
+expl2,d6c7aa07d139ffdc1a96e4ab2218c91e,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,33,-500,Null,Null,Get R00T!,Null,Null,
+expl2,d85ee7cb7fb8f533e2917ee633ae3ed5,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,34,-500,Null,Null,Get a shell,Null,Null,
+expl2,6e44a454ed30346d5c013f4392124add,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,34,-500,Null,Null,Get R00T!,Null,Null,
+expl2,a22dbc24cca88b864bfdc3a270745824,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,35,-500,Null,Null,Get a shell,Null,Null,
+expl2,fddfb63b59a4c40e382082aa38e492b4,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,35,-500,Null,Null,Get R00T!,Null,Null,
+expl2,902cf710bb15779fd4e4828595f6fc3f,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,36,-500,Null,Null,Get a shell,Null,Null,
+expl2,5173496df34988ba21e28e69de0f1c72,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,36,-500,Null,Null,Get R00T!,Null,Null,
+expl2,b4e3bda30b8c39ecadbe5f7493f35556,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,37,-500,Null,Null,Get a shell,Null,Null,
+expl2,4b7163100535aa84cacc7312bab893da,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,37,-500,Null,Null,Get R00T!,Null,Null,
+expl2,4a6b588cf44b5a17a0c360f46edb3bf3,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,38,-500,Null,Null,Get a shell,Null,Null,
+expl2,6c4cc277ee37438cb78893238660d248,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,38,-500,Null,Null,Get R00T!,Null,Null,
+expl2,9a05fa84bbb757a00c2baf76c89dff96,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,39,-500,Null,Null,Get a shell,Null,Null,
+expl2,fc069dbf2d4972346c82cde61f86be2b,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,39,-500,Null,Null,Get R00T!,Null,Null,
+expl2,8781fb7661a325f6333a87ae012ebbfa,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,40,-500,Null,Null,Get a shell,Null,Null,
+expl2,c58919cda094f7d2cbf702c8354fbb0d,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,40,-500,Null,Null,Get R00T!,Null,Null,
+expl2,557330579c7f812bc50d668d8ade00cb,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,41,-500,Null,Null,Get a shell,Null,Null,
+expl2,e585c03283c04c6176543b77ba02d1ff,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,41,-500,Null,Null,Get R00T!,Null,Null,
+expl2,19733dacda71a6689494f096c49d1904,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,42,-500,Null,Null,Get a shell,Null,Null,
+expl2,ea75327824ca19115e07222fad1aac2f,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,42,-500,Null,Null,Get R00T!,Null,Null,
+expl2,3deab1b18bac71591077f9fcc664977f,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,43,-500,Null,Null,Get a shell,Null,Null,
+expl2,482566371348c3b59776bd4597f1196b,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,43,-500,Null,Null,Get R00T!,Null,Null,
+expl2,2caafea60c582272fedc1f3d1aa438a5,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,44,-500,Null,Null,Get a shell,Null,Null,
+expl2,832693a01fca9509f367b3ad7203de52,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,44,-500,Null,Null,Get R00T!,Null,Null,
+expl2,f303a72178210e72097680fc835e81c9,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,45,-500,Null,Null,Get a shell,Null,Null,
+expl2,400bf10e1484654c8f8782bc042f76e4,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,45,-500,Null,Null,Get R00T!,Null,Null,
+expl2,a4ac1cd71ca1993d4dfcb0b2dcf5de7d,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,46,-500,Null,Null,Get a shell,Null,Null,
+expl2,35afce0b339c967e2a10d2789592a4fb,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,46,-500,Null,Null,Get R00T!,Null,Null,
+expl2,41c08309a9365ec2861070d1a2f4c3a6,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,47,-500,Null,Null,Get a shell,Null,Null,
+expl2,ca15736448bf076276b8c9f4cb1cbdf7,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,47,-500,Null,Null,Get R00T!,Null,Null,
+expl2,b44b65956678f83d8cae20220430c14f,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,48,-500,Null,Null,Get a shell,Null,Null,
+expl2,04bf79b86ec2052911063657b41bffec,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,48,-500,Null,Null,Get R00T!,Null,Null,
+expl2,bebcc9fa0706c1861a44c440f275a090,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,49,-500,Null,Null,Get a shell,Null,Null,
+expl2,84fc5e6242430e3d8cdc3be2d7ba7eab,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,49,-500,Null,Null,Get R00T!,Null,Null,
+expl2,91ce895ffc4070acf1d1a416c377f6c0,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,50,-500,Null,Null,Get a shell,Null,Null,
+expl2,8c848b12afe0e5cb5b7a473dfdafe7a4,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,50,-500,Null,Null,Get R00T!,Null,Null,
+expl2,f6471d46675d24f12ecf98bd994acc66,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,51,-500,Null,Null,Get a shell,Null,Null,
+expl2,5f0b034bdeb61ad310433e587e65017c,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,51,-500,Null,Null,Get R00T!,Null,Null,
+expl2,dbc5495076d59db266d2da16f8adbc76,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,52,-500,Null,Null,Get a shell,Null,Null,
+expl2,11431fb80bfbe2803003904b0fc3f533,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,52,-500,Null,Null,Get R00T!,Null,Null,
+expl2,a845e4f3e7763625b15384a7886781dc,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,53,-500,Null,Null,Get a shell,Null,Null,
+expl2,bd16adb96528530c701819a9790090bb,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,53,-500,Null,Null,Get R00T!,Null,Null,
+expl2,c553cda7b18bbf5077be48c95f7797e0,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,54,-500,Null,Null,Get a shell,Null,Null,
+expl2,23ec016e37474608dd431214fc740286,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,54,-500,Null,Null,Get R00T!,Null,Null,
+expl2,628d4f505dae7df3ed2b69cd9ab6f0e9,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,55,-500,Null,Null,Get a shell,Null,Null,
+expl2,bba9915c48c2d55d2064d762c65c7745,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,55,-500,Null,Null,Get R00T!,Null,Null,
+expl2,39620543cad00320d524585db1a2a5eb,200,2000,scoreboard.hf,perseid,Null,viper,Exclusive,Null,100,-500,Null,Null,Get a shell,Null,Null,
+expl2,14085a5955d8b549d336e21006d1ed88,250,2500,scoreboard.hf,perseid,Null,viper,Exclusive,Null,101,-500,Null,Null,Get R00T!,Null,Null,
