@@ -110,7 +110,7 @@ class Application(tornado.web.Application):
         sponsors_imgs_path = os.path.join(os.path.dirname(__file__),
                                           "static/sponsors")
         self._sponsors = ["/static/sponsors/" +
-                         f for f in os.listdir(sponsors_imgs_path)
+                         f for f in sorted(os.listdir(sponsors_imgs_path))
                          if os.path.isfile(os.path.join(sponsors_imgs_path, f))]
     
         self._client = None
@@ -144,7 +144,7 @@ class Application(tornado.web.Application):
             #(r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
-            #(r"/projector/3/?", SponsorsProjectorHandler),
+            (r"/projector/3/?", SponsorsProjectorHandler),
             (r"/auth/register", AuthRegisterHandler),
             (r"/auth/login", AuthLoginHandler),
             (r"/auth/logout", AuthLogoutHandler),
