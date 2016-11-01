@@ -16,6 +16,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ## apps
 echo [$app01] Uploading
+ssh root@$app01 "rm -rf /home/sb/scoreboard/{static,public,blackmarketitems}/*"
 git archive --format=tar origin/master | gzip -9c | ssh root@$app01 "tar -C /home/sb/scoreboard -xzvf -" > /dev/null
 echo [$app01] Applying security
 ssh root@$app01 "chown -R sb:sb /home/sb/scoreboard"
@@ -26,7 +27,7 @@ ssh root@$app01 "supervisorctl restart all"
 #
 ## web
 echo [$web01] Deleting old files
-ssh root@$web01 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/* /var/www/htdocs/blackmarket/*"
+ssh root@$web01 "rm -r /var/www/htdocs/{static,public,blackmarketitems}/*"
 echo [$web01] Uploading
 scp -rq $DIR'/../static/'* root@$web01:/var/www/htdocs/static/
 scp -rq $DIR'/../public/'* root@$web01:/var/www/htdocs/public/
