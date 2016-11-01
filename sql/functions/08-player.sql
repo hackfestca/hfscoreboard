@@ -417,7 +417,7 @@ RETURNS TABLE (
                          GROUP BY f2.category
                         ) AS tft3 ON c.id = tft3.category
                      WHERE c.hidden = False
-                     ORDER BY c.name;
+                     ORDER BY c.id;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
