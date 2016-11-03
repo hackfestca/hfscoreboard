@@ -19,7 +19,6 @@ signal2,Second signal analysis by a MIB scientist,chaput,4000,Null,Null,2016/sig
 signal3,Third signal analysis by a MIB scientist,chaput,6000,Null,Null,2016/signal/signal3,Null
 signal4,Fourth signal analysis by a MIB scientist,chaput,12000,Null,Null,2016/signal/signal4,Null
 signal5,Fifth signal analysis by a MIB scientist,chaput,24000,Null,Null,2016/signal/signal5,Null
-exploit1,Exchange between 2 admin's of Sedna (Adding ChkRootKit) Protection,viper,10000,Null,Null,2016/exploit1.txt,Null
 sgacro,Stargate Leak - List of used acronyms,stackfault,10000,Null,Null,2016/Stargate/acronyms.txt,Null
 sgdigests,Stargate Leak - List of used Digests,stackfault,10000,Null,Null,2016/Stargate/digests.txt,Null
 sgleet,Stargate Leak - Leet translation table,stackfault,5000,Null,Null,2016/Stargate/leet.txt,Null
@@ -29,3 +28,8 @@ sgwordlist,Stargate Leak - Wordlist used,stackfault,10000,Null,Null,2016/Stargat
 sgglyphs,Stargate Leak - Glyphs,stackfault,10000,Null,Null,2016/Stargate/glyphs.txt,Null
 sgcoords,Stargate Leak - 5/6 deciphered coords list from SGC database,stackfault,40000,Null,Null,2016/Stargate/coords.txt,Null
 sgintel,Stargate Leak - Security measures Intelligence data for each tracks,stackfault,40000,Null,Null,2016/Stargate/intel-tracks.txt,Null
+bsgdiff,Cylonnet - Additional intelligence to find the botnet operator,gp,6000,Null,Null,2016/bsg/intel.txt,Null
+sednamail,Sedna's Admin Email Leak talking about a server configuration,viper,5000,Null,Null,2016/Exploitation/admin-email.txt,Null
+orcusdbleak,"A Script Kiddy has an old version of the database of Orcus and he is wanting to give it to you, for a price!",viper,2500,Null,Null,2016/Exploitation/dbdump.txt,Null
+quaoarhint,A hint on the philosophy of the admin of Quaoar,viper,1500,Null,Null,2016/Exploitation/QuaoarHint.txt,Null
+postsedna,A hint for the a post exploitation on sedna,viper,2000,Null,Null,2016/Exploitation/crackmehint.txt,Null
