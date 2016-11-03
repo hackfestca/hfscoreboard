@@ -27,18 +27,18 @@ ssh root@$app01 "supervisorctl restart all"
 #
 ## web
 echo [$web01] Deleting old files
-ssh root@$web01 "rm -r /var/www/htdocs/{static,public,blackmarketitems}/*"
+ssh root@$web01 "rm -r /var/www/htdocs/{static,public,blackmarketitemsitems}/*"
 echo [$web01] Uploading
 scp -rq $DIR'/../static/'* root@$web01:/var/www/htdocs/static/
 scp -rq $DIR'/../public/'* root@$web01:/var/www/htdocs/public/
 echo [$web01] Applying security
-ssh root@$web01 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
-ssh root@$web01 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 775 {} \;"
-ssh root@$web01 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 664 {} \;"
+ssh root@$web01 "chown -R root:sb /var/www/htdocs/{public,static,blackmarketitems}"
+ssh root@$web01 "find /var/www/htdocs/{public,static,blackmarketitems} -type d -exec chmod 775 {} \;"
+ssh root@$web01 "find /var/www/htdocs/{public,static,blackmarketitems} -type f -exec chmod 664 {} \;"
 #echo Uploading on $scoreboard4
 #ssh root@$scoreboard4 "rm -r /var/www/htdocs/static/* /var/www/htdocs/public/*"
 #scp -rq static/* root@$scoreboard4:/var/www/htdocs/static/
 #scp -rq public/* root@$scoreboard4:/var/www/htdocs/public/
-#ssh root@$scoreboard4 "chown -R root:sb /var/www/htdocs/{public,static,blackmarket}"
-#ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type d -exec chmod 775 {} \;"
-#ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarket} -type f -exec chmod 664 {} \;"
+#ssh root@$scoreboard4 "chown -R root:sb /var/www/htdocs/{public,static,blackmarketitems}"
+#ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarketitems} -type d -exec chmod 775 {} \;"
+#ssh root@$scoreboard4 "find /var/www/htdocs/{public,static,blackmarketitems} -type f -exec chmod 664 {} \;"

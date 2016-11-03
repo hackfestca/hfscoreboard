@@ -184,7 +184,6 @@ CREATE TABLE flagTypeExt(
     ptsStep integer default null,    
     trapCmd text default null,                              -- For trap flags only
     updateCmd text default null,                            -- For king flags only
-    teamNum integer not null references registration(num),  -- For exclusive flags only
     flagIds integer[] default null,                         -- For bonus and group bonus only to store bonus flags
     ts timestamp not null default current_timestamp,
     constraint valid_flagTypeExt_name check (name != ''),
@@ -199,7 +198,7 @@ CREATE TABLE flagTypeExt(
 CREATE TABLE flag(
     id serial primary key,
     name varchar(50) not null,          -- Was unique but was removed to support Exclusive flags.
-    value varchar(64) not null unique,
+    value varchar(96) not null unique,
     pts integer not null,
     cash NUMERIC(10,2) not null,
     host integer not null references host(id),
@@ -271,7 +270,7 @@ CREATE TABLE submit_history(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
     playerIp inet not null,
-    value varchar(64) not null,
+    value varchar(96) not null,
     ts timestamp not null default current_timestamp
     );
 
@@ -449,7 +448,7 @@ CREATE TABLE event(
 */
 CREATE TABLE news(
     id serial primary key,
-    title text not null unique,
+    title text not null,
     displayTs timestamp not null default current_timestamp,
     ts timestamp not null default current_timestamp,
     constraint valid_title_name check (title != '')

@@ -119,7 +119,7 @@ RETURNS bmItem.id%TYPE AS $$
         _privateId bmItem.privateId%TYPE;
         _dlLink bmItem.dlLink%TYPE;
         -- DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/bmi/?privateId=%s';
-        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarket/%s%s';
+        DL_LINK bmItem.dlLink%TYPE := 'https://scoreboard.hf/blackmarketitems/%s%s';
     BEGIN
         -- Logging
         raise notice 'addBMItem(%,%,%,%,%,%,%,%,%,%,%)',$1,$2,$3,$4,$5,$6,$7,$8,$9,'data',$11;

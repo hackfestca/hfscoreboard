@@ -141,7 +141,7 @@ class Application(tornado.web.Application):
             (r"/challenges/", ChallengesHandler),
             (r"/scoreboard/", ScoreHandler),
             (r"/dashboard/", DashboardHandler),
-            #(r"/bmi/?", BlackMarketItemHandler, args),
+            (r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
             (r"/projector/3/?", SponsorsProjectorHandler),

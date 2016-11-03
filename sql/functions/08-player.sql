@@ -140,6 +140,11 @@ RETURNS text AS $$
                     FROM processNonStandardFlag(_flagRec.id,_teamRec.id,_playerIp)
                     INTO _pts,_ret;
                     _retEvent := _ret;
+
+                    -- Give cash if flag contains cash
+                    if _flagRec.cash is not NULL and _flagRec.cash <> 0 then
+                        PERFORM transferCashFlag(_flagRec.id,_teamRec.id);
+                    end if;
                 end if;
 
                 -- Get number of time it was submitted
