@@ -29,7 +29,14 @@ sgglyphs,Stargate Leak - Glyphs,stackfault,10000,Null,Null,2016/Stargate/glyphs.
 sgcoords,Stargate Leak - 5/6 deciphered coords list from SGC database,stackfault,40000,Null,Null,2016/Stargate/coords.txt,Null
 sgintel,Stargate Leak - Security measures Intelligence data for each tracks,stackfault,40000,Null,Null,2016/Stargate/intel-tracks.txt,Null
 bsgdiff,Cylonnet - Additional intelligence to find the botnet operator,gp,6000,Null,Null,2016/bsg/intel.txt,Null
-sednamail,Sedna's Admin Email Leak talking about a server configuration,viper,5000,Null,Null,2016/Exploitation/admin-email.txt,Null
-orcusdbleak,"A Script Kiddy has an old version of the database of Orcus and he is wanting to give it to you, for a price!",viper,2500,Null,Null,2016/Exploitation/dbdump.txt,Null
-quaoarhint,A hint on the philosophy of the admin of Quaoar,viper,1500,Null,Null,2016/Exploitation/QuaoarHint.txt,Null
-postsedna,A hint for the a post exploitation on sedna,viper,2000,Null,Null,2016/Exploitation/crackmehint.txt,Null
+sednamail,Sedna's Admin Email Leak talking about a server configuration,viper,10000,Null,Null,2016/Exploitation/admin-email.txt,Null
+orcusdbleak,"A Script Kiddy has an old version of the database of Orcus and he is wanting to give it to you, for a price!",viper,7500,Null,Null,2016/Exploitation/dbdump.txt,Null
+quaoarhint,A hint on the philosophy of the admin of Quaoar,viper,5000,Null,Null,2016/Exploitation/QuaoarHint.txt,Null
+sednapost1,A hint for the a post exploitation on sedna,viper,2000,Null,Null,2016/Exploitation/crackmehint.txt,Null
+quaoartools,All the tools you need to get a shell on this machine,viper,1000,Null,Null,2016/Exploitation/quaoartools.txt,Null
+orcusroothint,A hint to get you on the right track to root Orcus,viper,10000,Null,Null,2016/Exploitation/orcusroothint.txt,Null
+sednapost2,A hint to get the 2nd post exploitation on Sedna,viper,5000,Null,Null,2016/Exploitation/sednapost2.txt,Null
+orcuspost1,A hint to get the first post exploitation on Orcus,viper,5000,Null,Null,2016/Exploitation/orcuspost1.txt,Null
+orcuspost2,A hint to get the second post exploiation on Orcus,viper,5000,Null,Null,2016/Exploitation/orcuspost2.txt,Null
+quaoarpost,A hint to put you on right track to find the post exploitation flag on Quaoar,viper,2000,Null,Null,2016/Exploitation/quaoarpost.txt,Null
+donation,Give 2000$ to chaput charity,chaput,2000,Null,Null,2016/rand/thankyou.txt,Null

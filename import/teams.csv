@@ -1,60 +1,60 @@
-TeamNum,TeamName,IpRange,SG_AuthKey,Phenix?,Perseid_Sedna,Perseid_Quaor,Perseid_Orcus
-1,_TMIH_,172.28.101.0/24,Mhu5aldnD4X,https://path_to_azure_1,sedna1.ctf.hf,quaoar1.ctf.hf,orcus1.ctf.hf
-2,...et_le_gin_aussi...,172.28.102.0/24,NXYf47tr,https://path_to_azure_2,sedna2.ctf.hf,quaoar2.ctf.hf,orcus2.ctf.hf
-3,...la_biere_est_trop_chere...,172.28.103.0/24,cOlWiIB7DI,https://path_to_azure_3,sedna3.ctf.hf,quaoar3.ctf.hf,orcus3.ctf.hf
-4,(   -̥᷄◞ω◟-̥᷅ ),172.28.104.0/24,cyn82ZV6P3z,https://path_to_azure_4,sedna4.ctf.hf,quaoar4.ctf.hf,orcus4.ctf.hf
-5,0-bae,172.28.105.0/24,BaYpHLcp,https://path_to_azure_5,sedna5.ctf.hf,quaoar5.ctf.hf,orcus5.ctf.hf
-6,4NIM4L5,172.28.106.0/24,Fg5qC4mWIZ,https://path_to_azure_6,sedna6.ctf.hf,quaoar6.ctf.hf,orcus6.ctf.hf
-7,AGEEI-UQAM-1,172.28.107.0/24,btVBu4gQ0IK,https://path_to_azure_7,sedna7.ctf.hf,quaoar7.ctf.hf,orcus7.ctf.hf
-8,AGEEI-UQAM-2,172.28.108.0/24,qoSAynfAlSt,https://path_to_azure_8,sedna8.ctf.hf,quaoar8.ctf.hf,orcus8.ctf.hf
-9,AGEEI-UQAM-3,172.28.109.0/24,uzVojepJ,https://path_to_azure_9,sedna9.ctf.hf,quaoar9.ctf.hf,orcus9.ctf.hf
-10,Belette du nord,172.28.110.0/24,KIF8ApNp,https://path_to_azure_10,sedna10.ctf.hf,quaoar10.ctf.hf,orcus10.ctf.hf
-11,Black Rat,172.28.111.0/24,1YN6L5HB,https://path_to_azure_11,sedna11.ctf.hf,quaoar11.ctf.hf,orcus11.ctf.hf
-12,BonziBuddy,172.28.112.0/24,kl6oLI9jD10,https://path_to_azure_12,sedna12.ctf.hf,quaoar12.ctf.hf,orcus12.ctf.hf
-13,C'est quoi un flag?,172.28.113.0/24,WEEuq3FQ0,https://path_to_azure_13,sedna13.ctf.hf,quaoar13.ctf.hf,orcus13.ctf.hf
-14,chuki,172.28.114.0/24,ehz7Eay3,https://path_to_azure_14,sedna14.ctf.hf,quaoar14.ctf.hf,orcus14.ctf.hf
-15,CrunchyCroquant,172.28.115.0/24,FbLCmzrdX,https://path_to_azure_15,sedna15.ctf.hf,quaoar15.ctf.hf,orcus15.ctf.hf
-16,dotHack//,172.28.116.0/24,ALF9XPkPsOZ,https://path_to_azure_16,sedna16.ctf.hf,quaoar16.ctf.hf,orcus16.ctf.hf
-17,Électrochoc,172.28.117.0/24,mLjNCOBJbq,https://path_to_azure_17,sedna17.ctf.hf,quaoar17.ctf.hf,orcus17.ctf.hf
-18,EPICBANANA,172.28.118.0/24,xlNWL9HiXAr,https://path_to_azure_18,sedna18.ctf.hf,quaoar18.ctf.hf,orcus18.ctf.hf
-19,ForkBomb,172.28.119.0/24,oiGPx9vYIfk,https://path_to_azure_19,sedna19.ctf.hf,quaoar19.ctf.hf,orcus19.ctf.hf
-20,GIRLZ,172.28.120.0/24,kA4FIIpl,https://path_to_azure_20,sedna20.ctf.hf,quaoar20.ctf.hf,orcus20.ctf.hf
-21,Gliderous Tigers,172.28.121.0/24,CcxJBlxV,https://path_to_azure_21,sedna21.ctf.hf,quaoar21.ctf.hf,orcus21.ctf.hf
-22,Granulaire,172.28.122.0/24,gAVSfPWoPM,https://path_to_azure_22,sedna22.ctf.hf,quaoar22.ctf.hf,orcus22.ctf.hf
-23,GroupsGrepWheel,172.28.123.0/24,ezuxRHG9VZe,https://path_to_azure_23,sedna23.ctf.hf,quaoar23.ctf.hf,orcus23.ctf.hf
-24,Hack'N'Run,172.28.124.0/24,2okSObAd,https://path_to_azure_24,sedna24.ctf.hf,quaoar24.ctf.hf,orcus24.ctf.hf
-25,Hackable Team,172.28.125.0/24,iN7LSHWt8uX,https://path_to_azure_25,sedna25.ctf.hf,quaoar25.ctf.hf,orcus25.ctf.hf
-26,HACKPANTOUTE-1,172.28.126.0/24,nH5x4drEV8,https://path_to_azure_26,sedna26.ctf.hf,quaoar26.ctf.hf,orcus26.ctf.hf
-27,HACKPANTOUTE-2,172.28.127.0/24,W1HynlZN,https://path_to_azure_27,sedna27.ctf.hf,quaoar27.ctf.hf,orcus27.ctf.hf
-28,HackUnPeu,172.28.128.0/24,OffS76n9rFg,https://path_to_azure_28,sedna28.ctf.hf,quaoar28.ctf.hf,orcus28.ctf.hf
-29,Hopeless,172.28.129.0/24,OvEG5UiqEwO,https://path_to_azure_29,sedna29.ctf.hf,quaoar29.ctf.hf,orcus29.ctf.hf
-30,Individual,172.28.130.0/24,wtnrRDXPbn8,https://path_to_azure_30,sedna30.ctf.hf,quaoar30.ctf.hf,orcus30.ctf.hf
-31,It was China,172.28.131.0/24,mJlLMLG3SUI,https://path_to_azure_31,sedna31.ctf.hf,quaoar31.ctf.hf,orcus31.ctf.hf
-32,Jive-1,172.28.132.0/24,0BnzfSX2,https://path_to_azure_32,sedna32.ctf.hf,quaoar32.ctf.hf,orcus32.ctf.hf
-33,Jive-2,172.28.133.0/24,uoTn40Eb,https://path_to_azure_33,sedna33.ctf.hf,quaoar33.ctf.hf,orcus33.ctf.hf
-34,HackfÉTS,172.28.134.0/24,xf8gRl3Moi,https://path_to_azure_34,sedna34.ctf.hf,quaoar34.ctf.hf,orcus34.ctf.hf
-35,On ÉTS pas chaud,172.28.135.0/24,7r0inTMVl,https://path_to_azure_35,sedna35.ctf.hf,quaoar35.ctf.hf,orcus35.ctf.hf
-36,N00b4lyfe,172.28.136.0/24,1ERIicTo,https://path_to_azure_36,sedna36.ctf.hf,quaoar36.ctf.hf,orcus36.ctf.hf
-37,LES FLAGS ICI SONT LOUD,172.28.137.0/24,Tw33BLe5,https://path_to_azure_37,sedna37.ctf.hf,quaoar37.ctf.hf,orcus37.ctf.hf
-38,LesPtitsGarsDeShawi,172.28.138.0/24,GPcu7BBH5f,https://path_to_azure_38,sedna38.ctf.hf,quaoar38.ctf.hf,orcus38.ctf.hf
-39,lorem ipsum,172.28.139.0/24,3Y1PKhmOYxA,https://path_to_azure_39,sedna39.ctf.hf,quaoar39.ctf.hf,orcus39.ctf.hf
-40,low_privs_high_hopes,172.28.140.0/24,5B3JevlMb,https://path_to_azure_40,sedna40.ctf.hf,quaoar40.ctf.hf,orcus40.ctf.hf
-41,mycatbox,172.28.141.0/24,pip2lRwrMR,https://path_to_azure_41,sedna41.ctf.hf,quaoar41.ctf.hf,orcus41.ctf.hf
-42,noTeamNameException,172.28.142.0/24,E8tjwMzbpQ,https://path_to_azure_42,sedna42.ctf.hf,quaoar42.ctf.hf,orcus42.ctf.hf
-43,NSAinside,172.28.143.0/24,H9hgb88K,https://path_to_azure_43,sedna43.ctf.hf,quaoar43.ctf.hf,orcus43.ctf.hf
-44,Objectif_up,172.28.144.0/24,p2ERO4OlL,https://path_to_azure_44,sedna44.ctf.hf,quaoar44.ctf.hf,orcus44.ctf.hf
-45,P1080FPS_OP,172.28.145.0/24,rkktuA0i,https://path_to_azure_45,sedna45.ctf.hf,quaoar45.ctf.hf,orcus45.ctf.hf
-46,PolyHack-1,172.28.146.0/24,o1WVtWPkK,https://path_to_azure_46,sedna46.ctf.hf,quaoar46.ctf.hf,orcus46.ctf.hf
-47,PolyHack-2,172.28.147.0/24,2DpJUZS7hgy,https://path_to_azure_47,sedna47.ctf.hf,quaoar47.ctf.hf,orcus47.ctf.hf
-48,Raven,172.28.148.0/24,hFIq8xcNW,https://path_to_azure_48,sedna48.ctf.hf,quaoar48.ctf.hf,orcus48.ctf.hf
-49,Spy vs Cat5,172.28.149.0/24,k8SF3XNtqQ,https://path_to_azure_49,sedna49.ctf.hf,quaoar49.ctf.hf,orcus49.ctf.hf
-50,Team Power,172.28.150.0/24,A0XHGRMTGI,https://path_to_azure_50,sedna50.ctf.hf,quaoar50.ctf.hf,orcus50.ctf.hf
-51,The Benchwarmers,172.28.151.0/24,nehEldSmXf,https://path_to_azure_51,sedna51.ctf.hf,quaoar51.ctf.hf,orcus51.ctf.hf
-52,Unicorn as a service,172.28.152.0/24,PhehOpBiYq5,https://path_to_azure_52,sedna52.ctf.hf,quaoar52.ctf.hf,orcus52.ctf.hf
-53,Unicorn as a Software,172.28.153.0/24,RRBQlfKLs,https://path_to_azure_53,sedna53.ctf.hf,quaoar53.ctf.hf,orcus53.ctf.hf
-54,usedoils,172.28.154.0/24,ogDtqSMxoK,https://path_to_azure_54,sedna54.ctf.hf,quaoar54.ctf.hf,orcus54.ctf.hf
-55,yellow submarine,172.28.155.0/24,PU9LnoeqROo,https://path_to_azure_55,sedna55.ctf.hf,quaoar55.ctf.hf,orcus55.ctf.hf
-100,Team HF Crew,172.28.66.0/24,test1,https://path_to_azure_100,sedna100.ctf.hf,quaoar100.ctf.hf,orcus100.ctf.hf
-101,Team HF VPN,172.22.0.192/27,test2,https://path_to_azure_101,sedna101.ctf.hf,quaoar101.ctf.hf,orcus101.ctf.hf
-102,mdube,172.22.0.0/28,test3,https://path_to_azure_102,sedna102.ctf.hf,quaoar102.ctf.hf,orcus102.ctf.hf
-103,mdube_dev,127.0.0.1/8,test4,https://path_to_azure_103,sedna103.ctf.hf,quaoar103.ctf.hf,orcus103.ctf.hf
+TeamNum,TeamName,IpRange,SG_AuthKey,Phenix_User,Phenix_Pass,Phenix_Host_Rdp,Phenix_Port,Perseid_Sedna,Perseid_Quaor,Perseid_Orcus
+1,_TMIH_,172.28.101.0/24,Mhu5aldnD4X,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53334,sedna1.ctf.hf,quaoar1.ctf.hf,orcus1.ctf.hf
+2,...et_le_gin_aussi...,172.28.102.0/24,NXYf47tr,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,63334,sedna2.ctf.hf,quaoar2.ctf.hf,orcus2.ctf.hf
+3,...la_biere_est_trop_chere...,172.28.103.0/24,cOlWiIB7DI,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,48752,sedna3.ctf.hf,quaoar3.ctf.hf,orcus3.ctf.hf
+4,(   -̥᷄◞ω◟-̥᷅ ),172.28.104.0/24,cyn82ZV6P3z,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,47852,sedna4.ctf.hf,quaoar4.ctf.hf,orcus4.ctf.hf
+5,0-bae,172.28.105.0/24,BaYpHLcp,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,54322,sedna5.ctf.hf,quaoar5.ctf.hf,orcus5.ctf.hf
+6,4NIM4L5,172.28.106.0/24,Fg5qC4mWIZ,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,56333,sedna6.ctf.hf,quaoar6.ctf.hf,orcus6.ctf.hf
+7,AGEEI-UQAM-1,172.28.107.0/24,btVBu4gQ0IK,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,57444,sedna7.ctf.hf,quaoar7.ctf.hf,orcus7.ctf.hf
+8,AGEEI-UQAM-2,172.28.108.0/24,qoSAynfAlSt,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,58289,sedna8.ctf.hf,quaoar8.ctf.hf,orcus8.ctf.hf
+9,AGEEI-UQAM-3,172.28.109.0/24,uzVojepJ,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,59123,sedna9.ctf.hf,quaoar9.ctf.hf,orcus9.ctf.hf
+10,Belette du nord,172.28.110.0/24,KIF8ApNp,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,60322,sedna10.ctf.hf,quaoar10.ctf.hf,orcus10.ctf.hf
+11,Black Rat,172.28.111.0/24,1YN6L5HB,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,61245,sedna11.ctf.hf,quaoar11.ctf.hf,orcus11.ctf.hf
+12,BonziBuddy,172.28.112.0/24,kl6oLI9jD10,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,63254,sedna12.ctf.hf,quaoar12.ctf.hf,orcus12.ctf.hf
+13,C'est quoi un flag?,172.28.113.0/24,WEEuq3FQ0,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,54899,sedna13.ctf.hf,quaoar13.ctf.hf,orcus13.ctf.hf
+14,chuki,172.28.114.0/24,ehz7Eay3,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,58478,sedna14.ctf.hf,quaoar14.ctf.hf,orcus14.ctf.hf
+15,CrunchyCroquant,172.28.115.0/24,FbLCmzrdX,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,62852,sedna15.ctf.hf,quaoar15.ctf.hf,orcus15.ctf.hf
+16,dotHack//,172.28.116.0/24,ALF9XPkPsOZ,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,62456,sedna16.ctf.hf,quaoar16.ctf.hf,orcus16.ctf.hf
+17,Électrochoc,172.28.117.0/24,mLjNCOBJbq,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,62954,sedna17.ctf.hf,quaoar17.ctf.hf,orcus17.ctf.hf
+18,EPICBANANA,172.28.118.0/24,xlNWL9HiXAr,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,61741,sedna18.ctf.hf,quaoar18.ctf.hf,orcus18.ctf.hf
+19,ForkBomb,172.28.119.0/24,oiGPx9vYIfk,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,61789,sedna19.ctf.hf,quaoar19.ctf.hf,orcus19.ctf.hf
+20,GIRLZ,172.28.120.0/24,kA4FIIpl,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,61963,sedna20.ctf.hf,quaoar20.ctf.hf,orcus20.ctf.hf
+21,Gliderous Tigers,172.28.121.0/24,CcxJBlxV,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,61258,sedna21.ctf.hf,quaoar21.ctf.hf,orcus21.ctf.hf
+22,Granulaire,172.28.122.0/24,gAVSfPWoPM,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,54963,sedna22.ctf.hf,quaoar22.ctf.hf,orcus22.ctf.hf
+23,GroupsGrepWheel,172.28.123.0/24,ezuxRHG9VZe,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53258,sedna23.ctf.hf,quaoar23.ctf.hf,orcus23.ctf.hf
+24,Hack'N'Run,172.28.124.0/24,2okSObAd,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53456,sedna24.ctf.hf,quaoar24.ctf.hf,orcus24.ctf.hf
+25,Hackable Team,172.28.125.0/24,iN7LSHWt8uX,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53897,sedna25.ctf.hf,quaoar25.ctf.hf,orcus25.ctf.hf
+26,HACKPANTOUTE-1,172.28.126.0/24,nH5x4drEV8,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53951,sedna26.ctf.hf,quaoar26.ctf.hf,orcus26.ctf.hf
+27,HACKPANTOUTE-2,172.28.127.0/24,W1HynlZN,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,53159,sedna27.ctf.hf,quaoar27.ctf.hf,orcus27.ctf.hf
+28,HackUnPeu,172.28.128.0/24,OffS76n9rFg,hfinfinity,Infinity2016,hackfestquebec2016a.cloudapp.net,51951,sedna28.ctf.hf,quaoar28.ctf.hf,orcus28.ctf.hf
+29,Hopeless,172.28.129.0/24,OvEG5UiqEwO,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,52951,sedna29.ctf.hf,quaoar29.ctf.hf,orcus29.ctf.hf
+30,Individual,172.28.130.0/24,wtnrRDXPbn8,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,52159,sedna30.ctf.hf,quaoar30.ctf.hf,orcus30.ctf.hf
+31,It was China,172.28.131.0/24,mJlLMLG3SUI,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,52789,sedna31.ctf.hf,quaoar31.ctf.hf,orcus31.ctf.hf
+32,Jive-1,172.28.132.0/24,0BnzfSX2,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,51753,sedna32.ctf.hf,quaoar32.ctf.hf,orcus32.ctf.hf
+33,Jive-2,172.28.133.0/24,uoTn40Eb,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,51357,sedna33.ctf.hf,quaoar33.ctf.hf,orcus33.ctf.hf
+34,HackfÉTS,172.28.134.0/24,xf8gRl3Moi,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,51654,sedna34.ctf.hf,quaoar34.ctf.hf,orcus34.ctf.hf
+35,On ÉTS pas chaud,172.28.135.0/24,7r0inTMVl,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,51456,sedna35.ctf.hf,quaoar35.ctf.hf,orcus35.ctf.hf
+36,N00b4lyfe,172.28.136.0/24,1ERIicTo,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58753,sedna36.ctf.hf,quaoar36.ctf.hf,orcus36.ctf.hf
+37,LES FLAGS ICI SONT LOUD,172.28.137.0/24,Tw33BLe5,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58357,sedna37.ctf.hf,quaoar37.ctf.hf,orcus37.ctf.hf
+38,LesPtitsGarsDeShawi,172.28.138.0/24,GPcu7BBH5f,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58789,sedna38.ctf.hf,quaoar38.ctf.hf,orcus38.ctf.hf
+39,lorem ipsum,172.28.139.0/24,3Y1PKhmOYxA,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58123,sedna39.ctf.hf,quaoar39.ctf.hf,orcus39.ctf.hf
+40,low_privs_high_hopes,172.28.140.0/24,5B3JevlMb,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,63753,sedna40.ctf.hf,quaoar40.ctf.hf,orcus40.ctf.hf
+41,mycatbox,172.28.141.0/24,pip2lRwrMR,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,63357,sedna41.ctf.hf,quaoar41.ctf.hf,orcus41.ctf.hf
+42,noTeamNameException,172.28.142.0/24,E8tjwMzbpQ,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,63951,sedna42.ctf.hf,quaoar42.ctf.hf,orcus42.ctf.hf
+43,NSAinside,172.28.143.0/24,H9hgb88K,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,63159,sedna43.ctf.hf,quaoar43.ctf.hf,orcus43.ctf.hf
+44,Objectif_up,172.28.144.0/24,p2ERO4OlL,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,62546,sedna44.ctf.hf,quaoar44.ctf.hf,orcus44.ctf.hf
+45,P1080FPS_OP,172.28.145.0/24,rkktuA0i,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,62951,sedna45.ctf.hf,quaoar45.ctf.hf,orcus45.ctf.hf
+46,PolyHack-1,172.28.146.0/24,o1WVtWPkK,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,62789,sedna46.ctf.hf,quaoar46.ctf.hf,orcus46.ctf.hf
+47,PolyHack-2,172.28.147.0/24,2DpJUZS7hgy,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,62852,sedna47.ctf.hf,quaoar47.ctf.hf,orcus47.ctf.hf
+48,Raven,172.28.148.0/24,hFIq8xcNW,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58519,sedna48.ctf.hf,quaoar48.ctf.hf,orcus48.ctf.hf
+49,Spy vs Cat5,172.28.149.0/24,k8SF3XNtqQ,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58456,sedna49.ctf.hf,quaoar49.ctf.hf,orcus49.ctf.hf
+50,Team Power,172.28.150.0/24,A0XHGRMTGI,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58987,sedna50.ctf.hf,quaoar50.ctf.hf,orcus50.ctf.hf
+51,The Benchwarmers,172.28.151.0/24,nehEldSmXf,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,58321,sedna51.ctf.hf,quaoar51.ctf.hf,orcus51.ctf.hf
+52,Unicorn as a service,172.28.152.0/24,PhehOpBiYq5,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,54951,sedna52.ctf.hf,quaoar52.ctf.hf,orcus52.ctf.hf
+53,Unicorn as a Software,172.28.153.0/24,RRBQlfKLs,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,54582,sedna53.ctf.hf,quaoar53.ctf.hf,orcus53.ctf.hf
+54,usedoils,172.28.154.0/24,ogDtqSMxoK,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,54753,sedna54.ctf.hf,quaoar54.ctf.hf,orcus54.ctf.hf
+55,yellow submarine,172.28.155.0/24,PU9LnoeqROo,hfinfinity,Infinity2016,hackfestquebec2016b.cloudapp.net,54321,sedna55.ctf.hf,quaoar55.ctf.hf,orcus55.ctf.hf
+100,Team HF Crew,172.28.66.0/24,test1,https://path_to_azure_100,Infinity2016,hackfestquebec2016b.cloudapp.net,nop,sedna100.ctf.hf,quaoar100.ctf.hf,orcus100.ctf.hf
+101,Team HF VPN,172.22.0.192/27,test2,https://path_to_azure_101,Infinity2016,hackfestquebec2016b.cloudapp.net,nop,sedna101.ctf.hf,quaoar101.ctf.hf,orcus101.ctf.hf
+102,mdube,172.22.0.0/28,test3,https://path_to_azure_102,Infinity2016,hackfestquebec2016b.cloudapp.net,nop,sedna102.ctf.hf,quaoar102.ctf.hf,orcus102.ctf.hf
+103,mdube_dev,127.0.0.1/8,test4,https://path_to_azure_103,Infinity2016,hackfestquebec2016b.cloudapp.net,nop,sedna103.ctf.hf,quaoar103.ctf.hf,orcus103.ctf.hf
