@@ -249,7 +249,7 @@ class InitController(UpdaterController.UpdaterController):
                                            self._sanitize(bmiQty,'int'), \
                                            self._sanitize(bmiDispInt,'str'), \
                                            self._sanitize(bmiDesc,'str'), \
-                                           self._sanitize(bmiImportName,'str'), \
+                                           self._sanitize(bmiImportName.replace('/','_'),'str'), \
                                            bmiData, \
                                            self._sanitize(bmiUpdateCmd,'str'))
 

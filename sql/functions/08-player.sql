@@ -52,7 +52,7 @@ RETURNS text AS $$
         ANTI_BF_INT interval := '20 second';
         ANTI_BF_LIMIT integer := 20;
         STATUS_CODE_OK integer := 1;
-        FLAG_MAX_LENGTH integer := 64;
+        FLAG_MAX_LENGTH integer := 96;
         FLAG_TYPE_STANDARD flagType.code%TYPE := 1;
         FLAG_TYPE_KING flagType.code%TYPE := 11;
     BEGIN

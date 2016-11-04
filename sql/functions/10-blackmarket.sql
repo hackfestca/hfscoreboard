@@ -157,7 +157,7 @@ RETURNS bmItem.id%TYPE AS $$
         _privateId := random_64();
 
         -- Set download link
-        _dlLink := format(DL_LINK,_privateId,_importName);
+        _dlLink := format(DL_LINK,replace(_privateId, '/', '_'),replace(_importName, '/', '_'));
 
         -- Insert a new row
         INSERT INTO bmItem(name,category,statusCode,ownerWallet,amount,

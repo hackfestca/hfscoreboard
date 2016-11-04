@@ -467,6 +467,7 @@ try:
                 # Download item
                 data = b''
                 try:
+                    print(link)
                     f = urlopen(link,cafile=config.PLAYER_API_SSL_ROOT_CA)
                     data = f.read()
                 except URLError as e:

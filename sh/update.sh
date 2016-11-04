@@ -27,7 +27,7 @@ ssh root@$app01 "supervisorctl restart all"
 #
 ## web
 echo [$web01] Deleting old files
-ssh root@$web01 "rm -r /var/www/htdocs/{static,public,blackmarketitemsitems}/*"
+ssh root@$web01 "rm -r /var/www/htdocs/{static,public,blackmarketitems}/*"
 echo [$web01] Uploading
 scp -rq $DIR'/../static/'* root@$web01:/var/www/htdocs/static/
 scp -rq $DIR'/../public/'* root@$web01:/var/www/htdocs/public/
