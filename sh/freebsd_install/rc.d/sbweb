@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# PROVIDE: sbweb
+# REQUIRE: postgresql
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# sbweb_enable (bool):  Set to NO by default.
+#                       Set it to YES to enable it.
+# sbweb_user:   The user account sbweb daemon runs as what
+#               you want it to be. It uses 'sb' user by
+#               default. Do not sets it as empty or it will run
+#               as root.
+# sbweb_chdir:    Directory where sbweb lives.
+#               Default: /home/sb/scoreboard
+# sbweb_pid:    The name of the pidfile to create.
+#               Default is sbweb.pid in /var/run/sb/.
+#
+#
+# Prerequisites
+# mkdir /var/log/sb
+# chown root:sb /var/log/sb
+# chmod 770 /var/log/sb
+
+. /etc/rc.subr
+
+name="sbweb"
+rcvar=${name}_enable
+load_rc_config ${name}
+
+: ${sbweb_enable:="NO"}
+: ${sbweb_user:="sb"}
+: ${sbweb_chdir:="/home/sb/scoreboard"}
+: ${sbweb_pid:="/var/run/sb/sbweb.pid"}
+: ${sbweb_log:="/var/log/sb/sbweb.log"}
+: ${sbweb_conf_dir="${sbweb_chdir}"}
+
+command_interpreter="/usr/local/bin/python3"
+command=${sbweb_chdir}/web.py
+command_args=" > ${sbweb_log} 2>&1 &"
+
+# Pid files should only be used if created by the process.
+#pidfile=${sbweb_pid}
+
+run_rc_command "$1"

@@ -47,7 +47,7 @@ PLAYER_API_URI_OLD = 'http://scoreboard.hf'   # python < 3.4.0
 #PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
 PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
 
-DB_HOST = 'db.hf'
+DB_HOST = '/tmp'
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
 DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
@@ -59,7 +59,7 @@ DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
 DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
 
 DB_ADMIN_USER = 'admin'
-DB_ADMIN_PASS = 'ZJnznoG48yJsQrEFVSZ5aNkjvYhcap3X'
+DB_ADMIN_PASS = 'mo7hgthtX3kXqiH7nrd52BcfCMVHSN5wurbYPJsGjEPzyFwnpF'
 DB_ADMIN_CRT_FILE = None
 DB_ADMIN_KEY_FILE = None
 

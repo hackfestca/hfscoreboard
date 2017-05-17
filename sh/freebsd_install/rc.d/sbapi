@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# PROVIDE: sbapi
+# REQUIRE: postgresql
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# sbapi_enable (bool):  Set to NO by default.
+#                       Set it to YES to enable it.
+# sbapi_user:   The user account sbapi daemon runs as what
+#               you want it to be. It uses 'sb' user by
+#               default. Do not sets it as empty or it will run
+#               as root.
+# sbapi_chdir:    Directory where sbapi lives.
+#               Default: /home/sb/scoreboard
+# sbapi_pid:    The name of the pidfile to create.
+#               Default is sbapi.pid in /var/run/sb/.
+#
+#
+# Prerequisites
+# mkdir /var/log/sb
+# chown root:sb /var/log/sb
+# chmod 770 /var/log/sb
+
+. /etc/rc.subr
+
+name="sbapi"
+rcvar=${name}_enable
+load_rc_config ${name}
+
+: ${sbapi_enable:="NO"}
+: ${sbapi_user:="sb"}
+: ${sbapi_chdir:="/home/sb/scoreboard"}
+: ${sbapi_pid:="/var/run/sb/sbapi.pid"}
+: ${sbapi_log:="/var/log/sb/sbapi.log"}
+: ${sbapi_conf_dir="${sbapi_chdir}"}
+
+command_interpreter="/usr/local/bin/python3"
+command=${sbapi_chdir}/player-api.py
+command_args=" -s > ${sbapi_log} 2>&1 &"
+
+# Pid files should only be used if created by the process.
+#pidfile=${sbapi_pid}
+
+run_rc_command "$1"

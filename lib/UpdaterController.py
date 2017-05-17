@@ -38,9 +38,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import config
 import ClientController
 import socket
-import libssh2
 import os
 from subprocess import call
+
+try:
+    import libssh2
+except ImportError:
+    print('Warning: libssh2 is not installed.')
 
 class UpdaterController(ClientController.ClientController):
     """
