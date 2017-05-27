@@ -1,7 +1,7 @@
 hi to you, 
 i'm mr spy cat.
 
-I dump the admin hash of hash.poptheshell.com
+I dump the admin hash of hash.poptheshell.com/hash01.php
 
 hash to crack : ab80d1ef1e9f2de101a9f000bcba2e809f675e84
 
@@ -9,7 +9,7 @@ I check the hashing function that was used. Not sure that the dev know what is s
 
 he used 256 time sha1 ! 
 
-You should be able to crack this hash 
+You should be able to crack this hash by doing custom hashing function :) 
 
 Miaouw 
 
