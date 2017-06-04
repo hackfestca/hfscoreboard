@@ -1,16 +1,11 @@
 Name,Title,Description,Hidden,Authors
-signal,Signal,[Communication Grabbing] Communication from outer space ! You are receiving communications on the 172.28.1{teamID}.5 of your radio. Tune your radio on this frequency and try to decode the traffic.,FALSE,chaput
-inject,Sisyphus,"[Injection track] (Regex, JCR SQL2, SOLR, MongoDB). Choose your difficulty level so that your are able to submit flags of a FLR track this year. Do the injection once or many times. To have details about the flags, please read track instructions at <a href=""http://sisyphus.ctf.hf"">sisyphus.ctf.hf</a>",FALSE,flr
-sgcomplex,Stargate Complex,"[Exploration/Scripting Track] An old man gave you the secret coordinates and his <a href=""https://scoreboard.hf/secrets/"">access code</a> to the hidden location of the Giza StarGate, venture to this top-secret complex to discover then defeat the security mechanisms protecting the StarGate in order to travel to other worlds. Rumors says a status page can be found at <a href=""http://stargate.ctf.hf"">http://stargate.ctf.hf</a>",FALSE,stackfault
-sgwormhole,Stargate Wormholes,"[Bruteforce/Scripting] Once the StarGate is operational, find the correct coordinates to other StarGates all around the Milky Way. There is another rumor the other StarGates are broadcasting their coordinates thru the universe, however this has never been confirmed nor denied.",FALSE,stackfault
-sgmisc,Stargate Miscellaneous,Miscellaneous flags for the StarGate challenge,FALSE,stackfault
-perseid,Perseid,"[Exploit Track] Some planets are gonna be in scope for the next 10 hours. Find their IP <a href=""https://scoreboard.hf/secrets/"">here</a> and pop some shells!",FALSE,viper
-galaxy7,Galaxy 7,"[Electronics Track] Galaxy7 is a dangerous reactor, named after Samsung's fail in 2016. Hack the board and discover its feature. Attempt to activate the reactor for even more.",FALSE,lei&mdube
-et,ET Phone Home,[VOIP Track] It's like a POV but you got to str.reverse().remove('I'); A beginner one.,FALSE,js
-bsg,Battlestar Galactica Cylonnet,"[Logic/IRC] The cylons are using weird techniques to gather up and communicate. Infiltrate their network, identify the operatives and attempt to take it down! Additional instructions will be delivered at your table. ",FALSE,gp
-epsilon,Epsilon,"Welcome to Epsislon Universe !<br/><br/>This is a universe of Windows planets managed by the AD Galactic Empire !!!!<br/>You must respect track order to succeed!<br/><br/>General rule : if you find flag users, your prize is <b>UPPERCASE NTLM part only</b> of the password hash.<br/>:00000000000000_LM_0000000000000:<b>9B806FDD0F2_NTLM_0EB4C65E9C6612D</b>:::<br/><br/>You will have great power so don't mess with servers/tracks configurations plz ... it's a game. ",FALSE,sigs
-phenixcorp,Phenix Corp Vega,"Dynamic Attack, CrackMe, ReverseMe, RussianDoll, Entertainment plateform .... or not ;)",FALSE,phenix
-misc,Miscellaneous,"Flags all around the room, on the leach or else",FALSE,HFCrew
+web,Web,TBD,FALSE,chaput
+misc,Miscellaneous,"Flags all around the room, on the leach or else.",FALSE,chaput
+trivia,Interactive Trivia,ncat to wizardtower.poptheshell.com 4400 to stat the aventure ! ,FALSE,chaput
+inject,Sisyphus,"[Injection track] (Regex, JCR SQL2, SOLR, MongoDB). Do the injection once or many times. To have details about the flags, please read track instructions at <a href=""http://sisyphus.poptheshell.com"">http://sisyphus.poptheshell.com</a>",FALSE,chaput
+phenix,Phenix,TBD,FALSE,phenix
+pentest,viper,TBD,FALSE,viper
+hash,Hash,TBD,FALSE,chaput
+recon,Recon,TBD,FALSE,ramsexy
 bug,Bug Bounty,Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.,FALSE,HFCrew
-thirdparty,Third Party,"LockPick, babyfoot, surprise ",TRUE,HFCrew
 bonus,Bonus,"Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team",TRUE,HFCrew

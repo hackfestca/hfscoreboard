@@ -73,11 +73,18 @@ CREATE OR REPLACE FUNCTION registerTeam(_name team.name%TYPE,
 RETURNS team.id%TYPE AS $$
     DECLARE
         NAME_MAX_LENGTH integer := 40;     -- TODO: Get length from table.
+        _teamNum team.num%TYPE;
     BEGIN
         -- Logging
         raise notice 'registerTeam(%,pwd,%)',$1,$2;
 
         -- Some validations
+        SELECT num INTO _teamNum FROM team ORDER BY num DESC LIMIT 1;
+        if FOUND then
+            _teamNum := _teamNum + 1;
+        else
+            _teamNum := 1;
+        end if;
         if length(_name) > NAME_MAX_LENGTH then
             PERFORM raise_p(format('Name cannot be longer than %',NAME_MAX_LENGTH));
         end if;
@@ -96,7 +103,7 @@ RETURNS team.id%TYPE AS $$
             PERFORM raise_p('Team name already choosen.');
         end if;
 
-        RETURN addTeam(_name, Null, _pwd1, _loc);
+        RETURN addTeam(_teamNum, _name, Null, _pwd1, _loc);
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

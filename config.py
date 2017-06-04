@@ -41,11 +41,11 @@ PGSQL_ERRCODE = 'T3GA0'
 
 PLAYER_API_LISTEN_ADDR = '0.0.0.0'
 PLAYER_API_LISTEN_PORT = 8000
-PLAYER_API_URI = 'https://sb.hf.h0m3.lan'
+PLAYER_API_URI = 'https://scoreboard.poptheshell.com'
 #PLAYER_API_URI = 'http://127.0.0.1:8000'
-PLAYER_API_URI_OLD = 'http://sb.hf.h0m3.lan'   # python < 3.4.0
+PLAYER_API_URI_OLD = 'http://scoreboard.poptheshell.com'   # python < 3.4.0
 #PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
-PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.ctf.chain.crt'
+PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.letsencrypt2.crt'
 
 DB_HOST = 'sb.hf.h0m3.lan'
 DB_SCHEMA = 'scoreboard'
@@ -53,10 +53,15 @@ DB_NAME = 'scoreboard'
 DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
 DB_CONNECT_TIMEOUT = 10
 
+#DB_INIT_USER = 'owner'
+#DB_INIT_PASS = None
+#DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
+#DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
+
 DB_INIT_USER = 'owner'
-DB_INIT_PASS = None
-DB_INIT_CRT_FILE = 'certs/hf.cli.db.owner.crt'
-DB_INIT_KEY_FILE = 'certs/hf.cli.db.owner.key'
+DB_INIT_PASS = '79YXyF8uVPAVDpeVLj8wY6G79iNRGhL7'
+DB_INIT_CRT_FILE = None
+DB_INIT_KEY_FILE = None
 
 DB_ADMIN_USER = 'admin'
 DB_ADMIN_PASS = 'mo7hgthtX3kXqiH7nrd52BcfCMVHSN5wurbYPJsGjEPzyFwnpF'

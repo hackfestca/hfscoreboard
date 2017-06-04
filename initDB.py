@@ -78,8 +78,8 @@ actGrp.add_argument('--black-market','-b', action='store_true', dest='blackmarke
               help='Import black market items (from csv file: import/blackmarket.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
-#actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
-#              help='Import all')
+actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
+              help='Import all')
 
 args = parser.parse_args()
 
@@ -123,9 +123,9 @@ try:
     elif args.security:
         print('[+] Importing database security')
         c.importSecurity()
-#    elif args.all:
-#        print('[+] Importing all (struct + data + security)')
-#        c.importAll()
+    elif args.all:
+        print('[+] Importing all (struct + data + security)')
+        c.importAll()
     else:
         parser.print_help()
 except psycopg2.Warning as e:

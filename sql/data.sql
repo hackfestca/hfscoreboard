@@ -56,17 +56,19 @@ SELECT addHost('scoreboard.hf', 'OpenBSD6.0 x64', 'Scoreboard');
 --SELECT addAuthor('@mrvaughan', '@mrvaughan');
 SELECT addAuthor('Cedrick Chaput', 'chaput');
 SELECT addAuthor('Dave Cloutier', 'stackfault');
-SELECT addAuthor('Stephane Sigmen', 'sigs');
-SELECT addAuthor('Jean-Sebastien Grenon', 'js');
+--SELECT addAuthor('Stephane Sigmen', 'sigs');
+--SELECT addAuthor('Jean-Sebastien Grenon', 'js');
 SELECT addAuthor('François Lajeunesse-Robert', 'flr');
 SELECT addAuthor('Franck Desert','phenix');
 SELECT addAuthor('Viper', 'viper');
 SELECT addAuthor('Guillaume Parent','gp');
+SELECT addAuthor('Corb3nik','corb3nik');
+SELECT addAuthor('Ramsexy','ramsexy');
 --SELECT addAuthor('Patrick Mathieu','patoff');
 SELECT addAuthor('HF Crew', 'HFCrew');
 --SELECT addAuthor('Scoreboard', 'Scoreboard');
 --SELECT addAuthor('Lei He', 'lei');
-SELECT addAuthor('Lei and Martin', 'lei&mdube');
+--SELECT addAuthor('Lei and Martin', 'lei&mdube');
 
 /* 
     Create flag type definitions
@@ -101,7 +103,7 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to Hackfest 2016!', NOW()::timestamp);
+SELECT addNews('Welcome to iHack 2017!', NOW()::timestamp);
 
 /*
     Add transaction types
@@ -122,6 +124,10 @@ SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering
     Team Locations
 */
 SELECT addTeamLocation('Quebec');
+SELECT addTeamLocation('Ottawa');
+SELECT addTeamLocation('Sherbrooke');
+SELECT addTeamLocation('Montreal');
+SELECT addTeamLocation('Columbia');
 
 /*
     fake teams for tests
@@ -131,14 +137,14 @@ SELECT addTeamLocation('Quebec');
 --SELECT addTeam(101, 'Team HF VPN', '172.22.0.192/27', Null, Null);
 --SELECT addTeam(102, 'mdube', '172.22.0.0/28', Null, Null);
 --SELECT addTeam(103, 'mdube_dev', '127.0.0.1/8', Null, Null);
-SELECT addTeam(200, 'Monitoring', '172.28.70.34/31', Null, Null);
+--SELECT addTeam(200, 'Monitoring', '172.28.70.34/31', Null, Null);
 --SELECT addTeam('mdube1', '172.22.0.0/28', Null, Null);
 --SELECT addTeam('Team HF DMZ', '192.168.6.0/24');
 --SELECT addTeam('Team VPN', '192.168.9.0/24');
 --SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
 --SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
---SELECT addTeam('hf', Null, 'hf', Null);
+SELECT addTeam(200, 'hf', Null, 'hf', Null);
 UPDATE team set hide=true WHERE num=200;   -- Hide Monitoring
 
 /*
