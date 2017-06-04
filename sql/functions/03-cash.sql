@@ -13,12 +13,12 @@ RETURNS integer AS $$
         -- Some checks
         PERFORM id FROM wallet WHERE id = _srcWalletId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find the source wallet "%"',_srcWalletId));
+            PERFORM raise_p(format('Could not find the source wallet "%s"',_srcWalletId));
         end if;
 
         PERFORM id FROM wallet WHERE id = _dstWalletId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find the destination wallet "%"',_dstWalletId));
+            PERFORM raise_p(format('Could not find the destination wallet "%s"',_dstWalletId));
         end if;
 
         if _amount < 0.01 then
@@ -35,7 +35,7 @@ RETURNS integer AS $$
 
         PERFORM code FROM transactionType WHERE code = _transactionTypeCode;
         if not FOUND then
-            PERFORM raise_p(format('Could not find transaction type "%"',_transactionTypeCode));
+            PERFORM raise_p(format('Could not find transaction type "%s"',_transactionTypeCode));
         end if;
 
         -- Verify source wallet has enough money to transfer the amount

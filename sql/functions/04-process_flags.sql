@@ -43,7 +43,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Contextualize the flag pts based on flag types
@@ -84,7 +84,7 @@ RETURNS TABLE (
             -- Calculate new value
             RETURN QUERY SELECT _flagRec.pts,'trap';
         else
-            PERFORM raise_p(format('Unsupported flag type "%"',_flagRec.type));
+            PERFORM raise_p(format('Unsupported flag type "%s"',_flagRec.type));
         end if;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -134,7 +134,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get count() of this flag's last submission
@@ -203,7 +203,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get count() of this flag's last submission
@@ -272,7 +272,7 @@ RETURNS TABLE (
         ) AS ft ON f.type = ft.code
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get team num
@@ -363,7 +363,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
         
         -- Get a list of all flags with the same type extension
@@ -459,7 +459,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get a list of all flags with the same type extension
@@ -562,7 +562,7 @@ RETURNS TABLE (
         ) AS fte ON f.typeExt = fte.id
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get a list of all flags with the same type extension
@@ -656,7 +656,7 @@ RETURNS TABLE (
         ) AS ft ON f.type = ft.code
         WHERE f.id = _flagId;
         if not FOUND then
-            PERFORM raise_p(format('Could not find flag "%"',_flagId));
+            PERFORM raise_p(format('Could not find flag "%s"',_flagId));
         end if;
 
         -- Get a list of all flags with the same group
@@ -680,6 +680,7 @@ RETURNS TABLE (
                 FROM flag AS f
             ) AS f ON f.id = tf.flagId
             WHERE tf.flagId = ANY(_aFlagGroupIds)
+              and tf.teamId = _teamId
             LIMIT 1
         ) AS a
         INTO _subGroup;

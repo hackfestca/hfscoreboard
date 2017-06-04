@@ -261,7 +261,7 @@ RETURNS integer AS $$
         -- Generate flag
         _flagName := 'Bug Bounty'||current_timestamp::varchar;
         _flagId := addRandomFlag(_flagName, _pts, NULL, 'scoreboard.hf', 'bug', 1, 
-                                 NULL, 'HF Crew', 'Standard', NULL, _desc);
+                                 NULL, 'HFCrew', 'Standard', NULL, NULL, NULL, NULL, NULL, NULL, _desc);
 
         -- Assign flag
         raise notice 'team net: %s',_teamNet+1;

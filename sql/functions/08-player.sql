@@ -66,13 +66,13 @@ RETURNS text AS $$
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
         -- Get team from teamId
         SELECT id,num,name,net INTO _teamRec FROM team where _teamId = id ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team "%" not found',_teamId));
+            PERFORM raise_p(format('Team "%s" not found',_teamId));
         end if;
 
         -- Validate flag max length
@@ -96,7 +96,7 @@ RETURNS text AS $$
                 AND ts + ANTI_BF_INT > current_timestamp
             ) as hist;
         if _rowCount > ANTI_BF_LIMIT then
-            PERFORM raise_p(format('Anti-Bruteforce: Limit reached! (% attempts per team every %)',ANTI_BF_LIMIT,ANTI_BF_INT::text));
+            PERFORM raise_p(format('Anti-Bruteforce: Limit reached! (%s attempts per team every %s)',ANTI_BF_LIMIT,ANTI_BF_INT::text));
         end if;
 
         -- Search for the flag in flag and kingFlag tables
@@ -194,7 +194,7 @@ RETURNS text AS $$
         -- Get team from teamId
         SELECT id INTO _teamId FROM team where _playerIp << net ORDER BY id DESC LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for IP %',_playerIp));
+            PERFORM raise_p(format('Team not found for IP %s',_playerIp));
         end if;
 
         RETURN submitFlag(_flagValue,_teamId,_playerIpStr);
@@ -370,7 +370,7 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
         -- Get team number
@@ -450,7 +450,7 @@ RETURNS TABLE (
         _iPlayerIp := _playerIp::inet;
         SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
+            PERFORM raise_p(format('Team not found for %s.',_iPlayerIp));
         end if;
 
         RETURN QUERY SELECT * FROM getCatProgress(_teamId);
@@ -491,7 +491,7 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
         -- Get team number
@@ -567,7 +567,7 @@ RETURNS TABLE (
         _iPlayerIp := _playerIp::inet;
         SELECT team.id INTO _teamId FROM team WHERE _iPlayerIp << net LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %.',_iPlayerIp));
+            PERFORM raise_p(format('Team not found for %s.',_iPlayerIp));
         end if;
 
         return QUERY SELECT * from getFlagProgress(_teamId);
@@ -594,7 +594,7 @@ RETURNS TABLE (
 
         -- Check time. Players can submit only if game is started
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %',_settings.gameStartTs));
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
         RETURN QUERY SELECT news.id,
@@ -814,9 +814,19 @@ RETURNS TABLE (
                 name teamSecrets.name%TYPE,
                 value teamSecrets.value%TYPE
               ) AS $$
+    DECLARE
+        _settings settings%ROWTYPE;
     BEGIN
         -- Logging
         raise notice 'getTeamSecrets(%)',$1;
+
+        -- Get settings
+        SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
+
+        -- Check time. Players can submit only if game is started
+        if _settings.gameStartTs > current_timestamp then
+            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
+        end if;
 
         -- Get team's settings
         return QUERY SELECT ts.name,
@@ -847,7 +857,7 @@ RETURNS TABLE (
         -- Determine player's team
         SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %',_playerIp));
+            PERFORM raise_p(format('Team not found for %s',_playerIp));
         end if;
 
         -- Get team's settings
@@ -876,7 +886,7 @@ RETURNS text AS $$
         -- Determine player's team
         SELECT id INTO _teamId FROM team where _playerIp << net LIMIT 1;
         if NOT FOUND then
-            PERFORM raise_p(format('Team not found for %',_playerIp));
+            PERFORM raise_p(format('Team not found for %s',_playerIp));
         end if;
 
         -- Determine if IP is already used

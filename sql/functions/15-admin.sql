@@ -219,7 +219,7 @@ RETURNS integer AS $$
                 _flagName := _name || '_' || _i::text;
                 _flagDesc := '';
                 _flagId := addRandomFlag(_flagName, _i, NULL, 'scoreboard.hf', 'bonus', 1,
-                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
                 _flagIds := array_append(_flagIds,_flagId);
             END LOOP;
         elsif _typeCode = 22 then   -- Group Bonus
@@ -229,14 +229,14 @@ RETURNS integer AS $$
                 _flagName := _name || '_' || _i::text;
                 _flagDesc := '';
                 _flagId := addRandomFlag(_flagName, _i, NULL, 'scoreboard.hf', 'bonus', 1,
-                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+                                       DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
                 _flagIds := array_append(_flagIds,_flagId);
             END LOOP;
         elsif _typeCode = 32 then   -- Team Group Pokemon
             _flagName := _name || '_Pokemon';
             _flagDesc := '';
             _flagId := addRandomFlag(_flagName, _pts, NULL, 'scoreboard.hf', 'bonus', 1,
-                                   DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL);
+                                   DISPLAY_INTERVAL, 'Scoreboard', 'Bonus', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
             _flagIds := array_append(_flagIds,_flagId);
         end if;
 
@@ -344,6 +344,21 @@ $$ LANGUAGE plpgsql;
 
 /*
     Stored Proc: addRandomFlag(...);
+                _flagId := addRandomFlag(_flagName, 
+                                        _i, 
+                                        NULL, 
+                                        'scoreboard.hf', 
+                                        'bonus', 
+                                        1,
+                                       DISPLAY_INTERVAL, 
+                                       'Scoreboard',        // author 
+                                       'Bonus',             // type
+                                       NULL, 
+                                       NULL, 
+                                       NULL, 
+                                       NULL, 
+                                       NULL, 
+                                       NULL);
 */
 CREATE OR REPLACE FUNCTION addRandomFlag(_name flag.name%TYPE, 
                                     _pts flag.pts%TYPE,
