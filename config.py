@@ -45,7 +45,7 @@ PLAYER_API_URI = 'https://scoreboard.poptheshell.com'
 #PLAYER_API_URI = 'http://127.0.0.1:8000'
 PLAYER_API_URI_OLD = 'http://scoreboard.poptheshell.com'   # python < 3.4.0
 #PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
-PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.letsencrypt2.crt'
+PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.letsencrypt.crt'
 
 DB_HOST = 'sb.hf.h0m3.lan'
 DB_SCHEMA = 'scoreboard'

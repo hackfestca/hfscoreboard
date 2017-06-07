@@ -913,3 +913,22 @@ RETURNS text AS $$
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+/*
+    Stored Proc: getTeamLocations()
+*/
+CREATE OR REPLACE FUNCTION getTeamLocations()
+RETURNS TABLE (                             
+                id teamLocation.id%TYPE,
+                name teamLocation.name%TYPE
+              ) AS $$
+    BEGIN
+        -- Logging
+        raise notice 'getTeamLocations()';
+
+        -- Get team's settings
+        return QUERY SELECT tl.id,
+                            tl.name
+                     FROM teamLocation AS tl
+                    ORDER BY id;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

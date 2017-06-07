@@ -20,9 +20,10 @@
           <input placeholder="Repeat password" class="form-control" name="team_pwd2"
           type="password"  value="{{ form["pwd2"] }}"/><br>
           <select class="form-control" name="team_loc">
-              <option value="">Choose a location</option>
-              <option value="1">Quebec</option>
-              <option value="2">Sherbrooke</option>
+            <option value="">Choose a location</option>
+      	    {% for row in locations %}
+              <option value="{{ row[0] }}">{{ row[1] }}</option>
+      	    {% end %}
           </select><br/>
           {% module xsrf_form_html() %}
           <input type="submit" class="btn btn-default">

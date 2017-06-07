@@ -1,11 +1,21 @@
 Name,Title,Description,Hidden,Authors
-web,Web,TBD,FALSE,chaput
+web,Web,Hack some websites ;) All you need is a browser and Burpsuite (optional),FALSE,corb3nik
 misc,Miscellaneous,"Flags all around the room, on the leach or else.",FALSE,chaput
 trivia,Interactive Trivia,ncat to wizardtower.poptheshell.com 4400 to stat the aventure ! ,FALSE,chaput
-inject,Sisyphus,"[Injection track] (Regex, JCR SQL2, SOLR, MongoDB). Do the injection once or many times. To have details about the flags, please read track instructions at <a href=""http://sisyphus.poptheshell.com"">http://sisyphus.poptheshell.com</a>",FALSE,chaput
+inject,Sisyphus,"[Injection track] (Regex, JCR SQL2, SOLR, MongoDB). <br/>
+<p>This is a simplified version of the HF2k16 injection track. That is there is no more difficulty selection and less server side validation to mess with your injection attempts. </p>
+<p>You must search for the flags in the different datastore. Each flag have the format specified by the following regex /FLAG-[a-f0-9]{32}/. Still in the scoreboard you <em>ONLY</em> submit the flag value without the ""FLAG-"" prefix</p>
+<p>For each type of injection, there are three stages: <ul><li>Not blind</li><li>Blind</li><li>Blind + filtered</li></ul></p>
+<p>Hints: <ul><li>Use the not blind injection stage to test your payload for the other stages</li><li>JCR SQL2 &lt;&gt; SQL thus SQLmap won't work</li><li>Read the specs of each Query language</li><li>The FLAG- prefix is key to solve some of the injection stages</li></ul></p>
+<a href=""http://sisyphus.poptheshell.com"">http://sisyphus.poptheshell.com</a>",FALSE,chaput
 phenix,Phenix,TBD,FALSE,phenix
-pentest,viper,TBD,FALSE,viper
-hash,Hash,TBD,FALSE,chaput
-recon,Recon,TBD,FALSE,ramsexy
+pentest,Pentest,TBD,FALSE,viper
+recon,Recon,"Hi h4xors! There is a new organisation in town called “La poutine club”. Rumors says that they have created the most extraordinary meal ever, it’s called the “poutine”. However, it seems like this group is hidding something. I need you to recon this club to get as many infos as you can on their website and infrastructure. You can start here https://lapoutine.club/.",FALSE,ramsexy
+bsg,BS:G - CylonNet,"[Logic/IRC] The cylons are using weird techniques to gather up and communicate. Infiltrate their network, identify the operatives and attempt to take it down! Additional instructions <a href=""https://public.20.poptheshell.com/cylon"">here</a>.",FALSE,gp
+password,Password Cracking,TBD ,FALSE,vn
+sgcomplex,Stargate Complex,"[Exploration/Scripting Track] An old man gave you the secret coordinates and his <a href=""https://scoreboard.poptheshell.com/secrets/"">access code</a> to the hidden location of the Giza StarGate, venture to this top-secret complex to discover then defeat the security mechanisms protecting the StarGate in order to travel to other worlds. Rumors says a status page can be found at <a href=""http://stargate.poptheshell.com"">http://stargate.poptheshell.com </a>",FALSE,stackfault
+sgwormhole,Stargate Wormholes,"[Bruteforce/Scripting] Once the StarGate is operational, find the correct coordinates to other StarGates all around the Milky Way. There is another rumor the other StarGates are broadcasting their coordinates thru the universe, however this has never been confirmed nor denied.",FALSE,stackfault
+sgmisc,Stargate Miscellaneous,Miscellaneous flags for the StarGate challenge,FALSE,stackfault
 bug,Bug Bounty,Bug Bounty Policy. Flags given for teams who raise security issues in the infrastructure. These are one timers.,FALSE,HFCrew
 bonus,Bonus,"Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team",TRUE,HFCrew
+breach,Breach,"Hi we need your help. Ours cpanel web server got hack ! You need to help us find who did this and how ! you can dowload a  pcap file and the audit log of the server.  <a href=""https://scoreboard.poptheshell.com/public/breach.zip"">here</a>",FALSE,chaput

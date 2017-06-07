@@ -151,12 +151,12 @@ class Application(tornado.web.Application):
          ]
 
         settings = dict(
-            blog_title=u"Hackfest 2016",
+            blog_title=u"iHack 2017",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             #ui_modules={"Entry": EntryModule},
             xsrf_cookies=True,
-            cookie_secret="%RS9H)zz'VxEm[]~8AyMEE$ED<ZFU*6mpB{3:g%HwWmv/^:.g",
+            cookie_secret="diNWeEcTATKoC4ZEL8wpz77SVmbdYR9Kj7ezbXDjoRw9Nj7koo",
             default_handler_class=Error404Handler,  # 404 Handling
             login_url="/auth/login",
             debug=options.debug,
@@ -586,9 +586,12 @@ class AuthRegisterHandler(BaseHandler):
     def get(self):
         if options.authByIP:
             self.redirect("/")
+        
+        locations = self.client.getTeamLocations()
 
         self.render("register.html", form=self.form,
-                                     submit_message='')
+                                     submit_message='',
+                                     locations=locations)
 
     @gen.coroutine
     def post(self):

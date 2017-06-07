@@ -101,6 +101,9 @@ class WebController(ClientController.ClientController):
     def registerTeam(self,name,pwd1,pwd2,loc):
         return self.exec('registerTeam',name,pwd1,pwd2,loc)
 
+    def getTeamLocations(self):
+        return self.exec('getTeamLocations')
+
     def loginTeam(self,name,pwd):
         return self.exec('loginTeam',name,pwd)
 

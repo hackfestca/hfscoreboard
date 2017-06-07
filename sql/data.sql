@@ -64,6 +64,7 @@ SELECT addAuthor('Viper', 'viper');
 SELECT addAuthor('Guillaume Parent','gp');
 SELECT addAuthor('Corb3nik','corb3nik');
 SELECT addAuthor('Ramsexy','ramsexy');
+SELECT addAuthor('vn','vn');
 --SELECT addAuthor('Patrick Mathieu','patoff');
 SELECT addAuthor('HF Crew', 'HFCrew');
 --SELECT addAuthor('Scoreboard', 'Scoreboard');
