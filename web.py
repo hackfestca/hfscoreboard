@@ -67,6 +67,7 @@ from copy import deepcopy
 
 WEB_ERROR_MESSAGE = 'Oops. Something wrong happened. :)'
 
+define("ip", default="127.0.0.1", help="Run on any given IP", type=str)
 define("port", default=5000, help="run on the given port", type=int)
 define("debug", default=False, help="Enable debug mode", type=bool)
 
@@ -678,7 +679,7 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     server = tornado.httpserver.HTTPServer(Application())
 
-    server.listen(options.port)
+    server.listen(options.port, options.ip)
     tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":
