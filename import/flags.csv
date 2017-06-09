@@ -1,17 +1,17 @@
 Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,FlagArg1,FlagArg2,FlagArg3,FlagArg4,Description,News,How to,
 pentest01,ee1629c1af139a9665c882c43a6fda4f,25,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Enumerate the operating system with this new shell,,,
-pentest02,a64aad0ac748806df12893450dcd27cf,40,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get a user shell on the subsystem,,,
+pentest02,a64aad0ac748806df12893450dcd27cf,40,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get a user shell on the system,,,
 pentest03,20765ab91c6e97a579b1e16828c7b7ff,55,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Enumerate the services running on the system,,,
 pentest04,ded83b5bc749e3c9b6c77de19cb9afd0,85,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get a shell as the root user,,,
-pentest05,33ec428b32f9fe2750240ca21ddffc3a,100,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get highest priviledge on the machine,,,
+pentest05,33ec428b32f9fe2750240ca21ddffc3a,100,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Wait what? Can you get more access than root access?,,,
 EZ Flag,fc1da981e6484662ff45c51000375bb2,100,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Free flag! Just click on the button to get your flag... Oh, but there's a catch ;)
-<a href=""http://159.203.173.168:17000/"" target=""_blank"">Go to challenge</a>",,,
+<a href=""http://web.poptheshell.com:17000/"" target=""_blank"">Go to challenge</a>",,,
 LFI Corp[::-1],acf705e13594f42b237e70faf2458afd,200,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"There is a secret web service running locally... Can you figure out where it is? (Bruteforcing isn't the answer here)
-<a href=""http://159.203.173.168:15000/"" target=""_blank"">Go to challenge</a>",,,
+<a href=""http://web.poptheshell.com15000/"" target=""_blank"">Go to challenge</a>",,,
 Around the Glob,01e29d5e9e44432ea18c6950045afb03,300,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Request  /flag.php to obtain the flag :)
-<a href=""http://159.203.173.168:16000/"" target=""_blank"">Go to challenge</a>",,,
+<a href=""http://web.poptheshell.com:16000/"" target=""_blank"">Go to challenge</a>",,,
 3 != 4,b61d603e3375af6863ff1d4487e5c128,400,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Union injections aren't that easy when you don't know the column names... 
-<a href=""http://159.203.173.168:14000/"" target=""_blank"">Go to challenge</a>",,,
+<a href=""http://web.poptheshell.com:14000/"" target=""_blank"">Go to challenge</a>",,,
 hash01,09e20f183baafb4b99559c7858bac1bd,25,0,scoreboard.hf,password,Null,chaput,Standard,Null,Null,Null,Null,Null,"try to login  <a href=""https://scoreboard.poptheshell.com/public/hash01.txt"">hash01</a>",,,
 hash02,804312ad8c3d7a7cf29c658e819bf170,50,0,scoreboard.hf,password,Null,chaput,Standard,Null,Null,Null,Null,Null,"try to login <a href=""https://scoreboard.poptheshell.com/public/hash02.txt"">hash02</a>",,,
 trivia01,9eb356cc922d14d981e0b64ca00c8564,10,0,scoreboard.hf,misc,Null,chaput,Standard,Null,Null,Null,Null,Null,When you'll see it you'll know ! ,,flag in one pager,
@@ -151,7 +151,7 @@ sg_misc1,4ca7d12654f691359591ae442fac5812,10,0,scoreboard.hf,sgmisc,00:20:00,sta
 sg_misc2,94f2be8a7f78fb92a65e868b723ffcca,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,"Are you of of those who do not read during a CTF, if so you might miss this one",Just learned it pays to read the instructions,Read the manual,Reading
 sg_misc3,okthatwasaneasyonegettotherealworknow,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,Hiding in plain sight is the best way of all,Just figured how to uncover what is hidden in plain sight,Flag hidden in helper web page code,Reading
 sg_misc4,37c9bae0a96fc007208ee3106946ad1c,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,"Make sure you take the time to read everything, there is some hidden treasures",Just learned it pays to read everything carefully,Read the story,Reading
-breach01,494a83080e3784b6e5c46f9a6c1864a3,100,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,md5 of the line of log that show how the hacker enter in the server,,"grep ""Accepted password"" /var/log/auth.log  | md5sum",
+breach01,494a83080e3784b6e5c46f9a6c1864a3,100,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,"md5 of the line of log that show how the hacker enter in the server EX: printf ""Jun  8 00:48:24 webserver001 sshd[5745]: Disconnected from 59.63.188.36 port 51929 [preauth]"" | md5sum ",,"grep ""Accepted password"" /var/log/auth.log  | md5sum",
 breach02,0c63be91ac1e7a2d2b40b91fd5db9988,150,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,find the script that was run on the server ,,in the pcap in http,
 breach03,d4a3ede7fe83e02f00767d499bd24e69,200,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,find the data that was extracted from the server (flag is the information from user adriatic),,in the pcap in dns extraction,
-breach04,soonnnnnnnn,200,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,md5 of the line of log that show the user that hack us ,,soon,
+breach04,febc12ff8e4eba354534f6806f72f6cb,200,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,"md5 of the username that hack us ex: printf ""username"" | md5sum  ",,the ssh key authentification failure,
