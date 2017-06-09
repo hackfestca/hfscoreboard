@@ -70,7 +70,7 @@
 }
 
 .challs > .container > p {
-    font-size: 14px;
+    font-size: 12px;
     text-align: justify;
 }
 
@@ -85,6 +85,16 @@
 
 .score {
     text-align: right;
+}
+
+.chal-desc {
+    font-size: 15px;
+    color: #FFFFFF;
+}
+
+.chal-desc p {
+    font-size: 15px;
+    color: #FFFFFF;
 }
 
 .body > .main-row {
