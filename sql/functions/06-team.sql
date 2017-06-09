@@ -79,6 +79,7 @@ RETURNS team.id%TYPE AS $$
         raise notice 'registerTeam(%,pwd,%)',$1,$2;
 
         -- Some validations
+        -- Team numbers
         SELECT num INTO _teamNum FROM team ORDER BY num DESC LIMIT 1;
         if FOUND then
             _teamNum := _teamNum + 1;
@@ -286,7 +287,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 /*
     Stored Proc: addTeamSecrets(teamId,name,value)
 */
-CREATE OR REPLACE FUNCTION addTeamSecrets(_teamId team.id%TYPE,
+CREATE OR REPLACE FUNCTION addTeamSecrets(_teamNum team.num%TYPE,
                                            _name teamSecrets.value%TYPE,
                                            _value teamSecrets.value%TYPE)
 RETURNS integer AS $$
@@ -300,7 +301,7 @@ RETURNS integer AS $$
         end if;
 
         -- Insert a new row
-        INSERT INTO teamSecrets(teamId,name,value) VALUES(_teamId,_name,_value);
+        INSERT INTO teamSecrets(teamNum,name,value) VALUES(_teamNum,_name,_value);
 
         RETURN 0;
     END;
@@ -326,16 +327,16 @@ RETURNS TABLE (
                             a.name,
                             a.value
                      FROM (
-                         SELECT tv.teamId,
+                         SELECT tv.teamNum,
                                 tv.name,
                                 tv.value,
                                 t.name AS teamName
                          FROM teamSecrets AS tv
                          LEFT OUTER JOIN (
-                            SELECT t.id,
+                            SELECT t.num,
                                    t.name
                             FROM team AS t
-                            ) AS t ON t.id = tv.teamId
+                            ) AS t ON t.num = tv.teamaNum
                          WHERE (_grep IS NULL 
                                 OR t.name LIKE '%'||_grep||'%' 
                                 OR tv.name LIKE '%'||_grep||'%'

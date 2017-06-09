@@ -145,8 +145,8 @@ SELECT addTeamLocation('Columbia');
 --SELECT addTeam('Team VPN Dube', '192.168.10.0/24');
 --SELECT addTeam('Team VPN Pie', '192.168.13.0/24');
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
-SELECT addTeam(200, 'hf', Null, 'hf', Null);
-UPDATE team set hide=true WHERE num=200;   -- Hide Monitoring
+SELECT addTeam(0, 'hf', Null, 'hf', Null);
+UPDATE team set hide=true WHERE num=0;   -- Hide Monitoring
 
 /*
     Identify fake names

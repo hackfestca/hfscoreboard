@@ -49,8 +49,8 @@ RETURNS text AS $$
         _retEvent text := '';
         _news text := '';
         _alreadySubmit team_flag.id%TYPE;
-        ANTI_BF_INT interval := '20 second';
-        ANTI_BF_LIMIT integer := 20;
+        ANTI_BF_INT interval := '60 second';
+        ANTI_BF_LIMIT integer := 5;
         STATUS_CODE_OK integer := 1;
         FLAG_MAX_LENGTH integer := 96;
         FLAG_TYPE_STANDARD flagType.code%TYPE := 1;
@@ -822,6 +822,7 @@ RETURNS TABLE (
                 value teamSecrets.value%TYPE
               ) AS $$
     DECLARE
+        _teamNum team.num%TYPE;
         _settings settings%ROWTYPE;
     BEGIN
         -- Logging
@@ -835,11 +836,17 @@ RETURNS TABLE (
             PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
         end if;
 
+        -- Get team num from id
+        SELECT num INTO _teamNum FROM team WHERE id = _teamid LIMIT 1;
+        if NOT FOUND then
+            PERFORM raise_p(format('Team number %s does not exist',_teamNum)); 
+        end if;
+
         -- Get team's settings
         return QUERY SELECT ts.name,
                             ts.value
                      FROM teamSecrets AS ts
-                     WHERE ts.teamId = _teamId;
+                     WHERE ts.teamNum = _teamNum;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

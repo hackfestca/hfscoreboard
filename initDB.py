@@ -76,6 +76,8 @@ actGrp.add_argument('--teams','-e', action='store_true', dest='teams', default=F
               help='Import teams only (from csv file: import/teams.csv)')
 actGrp.add_argument('--black-market','-b', action='store_true', dest='blackmarket', default=False, \
               help='Import black market items (from csv file: import/blackmarket.csv)')
+actGrp.add_argument('--secrets', action='store_true', dest='secrets', default=False, \
+              help='Import secrets (from csv file: import/secrets.csv)')
 actGrp.add_argument('--security','-s', action='store_true', dest='security', default=False, \
               help='Import security only')
 actGrp.add_argument('--all', '-a', action='store_true', dest='all', default=False, \
@@ -117,6 +119,9 @@ try:
     elif args.teams:
         print('[+] Importing teams')
         c.importTeams()
+    elif args.secrets:
+        print('[+] Importing secrets')
+        c.importSecrets()
     elif args.blackmarket:
         print('[+] Importing black market items')
         c.importBlackMarketItems()

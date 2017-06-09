@@ -54,6 +54,7 @@ class InitController(UpdaterController.UpdaterController):
         self._flagsFile = config.FLAGS_FILE
         self._teamsFile = config.TEAMS_FILE
         self._bmiFile = config.BMI_FILE
+        self._secretsFile = config.SECRETS_FILE
 
         self._sSSHUser = config.SSH_BMU_USER
         self._sSSHPubKey = config.SSH_BMU_PUB_KEY
@@ -194,7 +195,8 @@ class InitController(UpdaterController.UpdaterController):
                 tname = row[1]
                 tnet = row[2]
                 #pwd = row[2]
-                
+               
+                # This is broken.
                 if tname != 'Team Name':
                     teamId = self.exec('addTeam', self._sanitize(tnum,'int'), \
                                      self._sanitize(tname,'str'), \
@@ -205,6 +207,21 @@ class InitController(UpdaterController.UpdaterController):
                         self.exec('addTeamSecrets', teamId,\
                                        self._sanitize(headers[i],'str'),\
                                        self._sanitize(row[i],'str'))
+        self.commit()
+
+    def importSecrets(self):
+        self._oDBCursor.execute('TRUNCATE TABLE teamSecrets CASCADE');
+        with open(self._secretsFile) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            headers = reader.__next__()
+            for row in reader:
+                print('Secrets: %s' % '|'.join(row))
+                teamNum = row[0]
+                
+                for i in range(1,len(headers)):
+                    self.exec('addTeamSecrets', teamNum,\
+                               self._sanitize(headers[i],'str'),\
+                               self._sanitize(row[i],'str'))
         self.commit()
 
     def importBlackMarketItems(self):
@@ -278,6 +295,7 @@ class InitController(UpdaterController.UpdaterController):
         self.importData()
         self.importCategories()
         self.importFlags()
+        self.importSecrets()
         #self.importTeams()
         #self.importBlackMarketItems()
         self.importSecurity()

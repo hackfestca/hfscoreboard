@@ -88,7 +88,7 @@ CREATE TABLE team(
 */
 CREATE TABLE teamSecrets(
     id serial primary key,
-    teamId integer not null references team(id),
+    teamNum integer not null,
     name varchar(100) not null,
     value varchar(100) not null,
     ts timestamp not null default current_timestamp,
@@ -270,7 +270,7 @@ CREATE TABLE submit_history(
     id serial primary key,
     teamId integer not null references team(id) on delete cascade,
     playerIp inet not null,
-    value varchar(96) not null,
+    value text not null,
     ts timestamp not null default current_timestamp
     );
 

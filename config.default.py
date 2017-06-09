@@ -123,4 +123,5 @@ FLAGS_FILE = 'import/flags.csv'
 TEAMS_FILE = 'import/teams.csv'
 BMI_FILE = 'import/blackMarketItems.csv'
 REGISTRATION_FILE = 'import/registration.csv'
+SECRETS_FILE = 'import/secrets.csv'
 
