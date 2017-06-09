@@ -168,7 +168,9 @@ class Application(tornado.web.Application):
 class BaseHandler(tornado.web.RequestHandler):
 
     def initialize(self):
-        self.remote_ip = self.request.headers.get('X-Forwarded-For', self.request.headers.get('X-Real-Ip', self.request.remote_ip))
+        # This is dangerous. A user can alter the X-Forwarded-For field to impersonate another team.
+        #self.remote_ip = self.request.headers.get('X-Forwarded-For', self.request.headers.get('X-Real-Ip', self.request.remote_ip))
+        self.remote_ip = self.request.headers.get('X-Real-Ip', self.request.remote_ip)
 
     def write_error(self, status_code, **kwargs):
         # Handler for all the internals Error (500)
