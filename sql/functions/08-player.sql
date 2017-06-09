@@ -55,6 +55,7 @@ RETURNS text AS $$
         FLAG_MAX_LENGTH integer := 96;
         FLAG_TYPE_STANDARD flagType.code%TYPE := 1;
         FLAG_TYPE_KING flagType.code%TYPE := 11;
+        FLAG_PREFIX text := 'flag-';
     BEGIN
         -- Logging
         raise notice 'submitFlag(%,%,%)',$1,$2,$3;
@@ -97,6 +98,12 @@ RETURNS text AS $$
             ) as hist;
         if _rowCount > ANTI_BF_LIMIT then
             PERFORM raise_p(format('Anti-Bruteforce: Limit reached! (%s attempts per team every %s)',ANTI_BF_LIMIT,ANTI_BF_INT::text));
+        end if;
+
+        -- Remove the flag prefix, if present.
+        if lower(left(_flagValue,length(FLAG_PREFIX))) = FLAG_PREFIX then
+            _flagValue := substring(_flagValue from length(FLAG_PREFIX)+1);   
+            raise notice '%',_flagValue;
         end if;
 
         -- Search for the flag in flag and kingFlag tables
