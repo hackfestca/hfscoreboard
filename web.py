@@ -529,7 +529,6 @@ class Error404Handler(BaseHandler):
 
 
 class IndexProjectorHandler(BaseHandler):
-    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -549,7 +548,6 @@ class IndexProjectorHandler(BaseHandler):
 
 
 class DashboardProjectorHandler(BaseHandler):
-    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -572,7 +570,6 @@ class DashboardProjectorHandler(BaseHandler):
 
 
 class SponsorsProjectorHandler(BaseHandler):
-    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         self.render('projector_sponsors.html',
