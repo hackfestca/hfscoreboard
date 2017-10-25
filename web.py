@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 '''
@@ -83,12 +83,14 @@ class Logger(logging.getLoggerClass()):
         self.logger = logging.getLogger("scoreboard_logger")
         self.logger.setLevel(logging.ERROR)
 
-        error_file = logging.FileHandler("logs/errors.log", encoding="utf-8")
+        error_file = logging.FileHandler("logs/errors_%s.log" % options.port, 
+                    encoding="utf-8")
         error_file.setLevel(logging.ERROR)
         error_formatter = logging.Formatter('%(asctime)s - %(message)s')
         error_file.setFormatter(error_formatter)
 
-        info_file = logging.FileHandler("logs/infos.log", encoding="utf-8")
+        info_file = logging.FileHandler("logs/infos_%s.log" % options.port,
+                    encoding="utf-8")
         info_file.setLevel(logging.INFO)
         info_formatter = logging.Formatter('%(asctime)s - %(message)s')
         info_file.setFormatter(info_formatter)
@@ -137,29 +139,33 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", IndexHandler),
             #(r"/rules/", RulesHandler),
-            (r"/random/", RandomHandler),
-            (r"/secrets/", SecretsHandler),
-            (r"/challenges/", ChallengesHandler),
-            (r"/scoreboard/", ScoreHandler),
-            (r"/dashboard/", DashboardHandler),
+            (r"/random", RandomHandler),
+            (r"/secrets", SecretsHandler),
+            (r"/challenges", ChallengesHandler),
+            (r"/scoreboard", ScoreHandler),
+            (r"/dashboard", DashboardHandler),
 #(r"/bmi/?", BlackMarketItemHandler, args),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
-            (r"/projector/3/?", SponsorsProjectorHandler),
-            (r"/auth/register", AuthRegisterHandler),
-            (r"/auth/login", AuthLoginHandler),
-            (r"/auth/logout", AuthLogoutHandler),
-         ]
+            (r"/projector/3/?", SponsorsProjectorHandler)
+        ]
+
+        if options.authByIP:
+            login_url = "/"
+        else:
+            login_url = "/auth/login"
+            handlers += [(r"/auth/register", AuthRegisterHandler),
+                        (r"/auth/login", AuthLoginHandler),
+                        (r"/auth/logout", AuthLogoutHandler)]
 
         settings = dict(
-            blog_title=u"iHack 2017",
+            blog_title=u"Hackfest 2017",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
-            #ui_modules={"Entry": EntryModule},
             xsrf_cookies=True,
-            cookie_secret="diNWeEcTATKoC4ZEL8wpz77SVmbdYR9Kj7ezbXDjoRw9Nj7koo",
-            default_handler_class=Error404Handler,  # 404 Handling
-            login_url="/auth/login",
+            cookie_secret="an2sRHL36pQLx8xhEN982sztdHDSZxEve5DNJ23FhmhiLin5Eo",
+            default_handler_class=Error404Handler,
+            login_url=login_url,
             debug=options.debug,
             xheaders=True
         )
@@ -206,16 +212,17 @@ class BaseHandler(tornado.web.RequestHandler):
                 self.team_name = team_info[1][1]
                 self.team_ip = team_info[3][1]
                 self.team_score = team_info[7][1]
-            elif self.is_logged():
-                team_id = int(self.get_secure_cookie("team_id"))
-                team_info = self.client.getTeamInfo(team_id)
-                self.team_name = team_info[1][1]
-                self.team_ip = self.remote_ip
-                self.team_score = team_info[7][1]
             else:
-                self.team_name = "None"
-                self.team_ip = "None"
-                self.team_score = "None"
+                if self.is_logged():
+                    team_id = int(self.get_secure_cookie("team_id"))
+                    team_info = self.client.getTeamInfo(team_id)
+                    self.team_name = team_info[1][1]
+                    self.team_ip = self.remote_ip
+                    self.team_score = team_info[7][1]
+                else:
+                    self.team_name = "None"
+                    self.team_ip = "None"
+                    self.team_score = "None"
         except psycopg2.Error as e:
             self.logger.error(e)
             self.renderCriticalFailure()
@@ -240,7 +247,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         if options.authByIP:
-            return self.team_name
+            return self.team_name or 'Unknown'
         else:
             team_id = self.get_secure_cookie("team_id")
             if team_id is None: return None
@@ -584,9 +591,6 @@ class AuthRegisterHandler(BaseHandler):
             'loc': 0}
 
     def get(self):
-        if options.authByIP:
-            self.redirect("/")
-        
         locations = self.client.getTeamLocations()
 
         self.render("register.html", form=self.form,
@@ -595,9 +599,6 @@ class AuthRegisterHandler(BaseHandler):
 
     @gen.coroutine
     def post(self):
-        if options.authByIP:
-            self.redirect("/")
-
         form = deepcopy(self.form)
         try:
             form['name'] = self.get_argument('team_name')
@@ -623,7 +624,7 @@ class AuthRegisterHandler(BaseHandler):
             self.render('error.html', error_msg="Error")
         else:
             self.logger.info('Team %s registered' % form['name'])
-            self.set_secure_cookie("team_id", str(team_id))
+            self.set_secure_cookie("team_id", str(team_id), secure=True, httponly=True)
             self.redirect(self.get_argument("next", "/"))
 
 class AuthLoginHandler(BaseHandler):
@@ -631,15 +632,11 @@ class AuthLoginHandler(BaseHandler):
             'pwd': ''}
 
     def get(self):
-        # Cannot put self.redirect("/") because it makes an infinite loop. TODO: find why.
         self.render("login.html", form=self.form,
                                   submit_message='')
 
     @gen.coroutine
     def post(self):
-        if options.authByIP:
-            self.redirect("/")
-
         if self.is_logged():
             self.clear_cookie("team_id")
 
@@ -660,16 +657,13 @@ class AuthLoginHandler(BaseHandler):
             self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
             self.logger.info('Team %s registered' % form['name'])
-            self.set_secure_cookie("team_id", str(team_id))
+            self.set_secure_cookie("team_id", str(team_id), secure=True, httponly=True)
             form['name'] = ''
             form['pwd'] = ''
             self.redirect(self.get_argument("next", "/"))
 
 class AuthLogoutHandler(BaseHandler):
     def get(self):
-        if options.authByIP:
-            self.redirect("/")
-
         self.clear_cookie("team_id")
         self.redirect(self.get_argument("next", "/"))
 

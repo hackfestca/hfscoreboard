@@ -71,5 +71,5 @@ GRANT hfscore to web;
 --CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD 'ndkfvGPkMsKCDuWsBJWxbzGozoBCrQ2Q';
 
 -- Create yourself a role here. Replace admin by something else on both lines.
-CREATE ROLE admin LOGIN INHERIT PASSWORD 'mo7hgthtX3kXqiH7nrd52BcfCMVHSN5wurbYPJsGjEPzyFwnpF';
+CREATE ROLE admin LOGIN INHERIT PASSWORD 'HwNYuU6HSfG5eVUjEMEgULgZ3VdkWMXC';
 GRANT hfadmins to admin;

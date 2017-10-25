@@ -39,15 +39,16 @@ DEFAULT_TOP_VALUE = 300
 
 PGSQL_ERRCODE = 'T3GA0'
 
-PLAYER_API_LISTEN_ADDR = '0.0.0.0'
+PLAYER_API_LISTEN_ADDR = '127.0.0.1'
 PLAYER_API_LISTEN_PORT = 8000
-PLAYER_API_URI = 'https://scoreboard.poptheshell.com'
+PLAYER_API_URI = 'https://scoreboard.hf'
 #PLAYER_API_URI = 'http://127.0.0.1:8000'
-PLAYER_API_URI_OLD = 'http://scoreboard.poptheshell.com'   # python < 3.4.0
+PLAYER_API_URI_OLD = 'http://scoreboard.hf'   # python < 3.4.0
 #PLAYER_API_URI_OLD = 'http://127.0.0.1:8000'   # python < 3.4.0
 PLAYER_API_SSL_ROOT_CA = 'certs/hf.ca.letsencrypt.crt'
 
-DB_HOST = 'sb.hf.h0m3.lan'
+DB_HOST = '/tmp/.s.PGSQL.5432'
+DB_HOST = None
 DB_SCHEMA = 'scoreboard'
 DB_NAME = 'scoreboard'
 DB_SSL_ROOT_CA = 'certs/hf.ca.sb.chain.crt'
@@ -64,7 +65,7 @@ DB_INIT_CRT_FILE = None
 DB_INIT_KEY_FILE = None
 
 DB_ADMIN_USER = 'admin'
-DB_ADMIN_PASS = 'mo7hgthtX3kXqiH7nrd52BcfCMVHSN5wurbYPJsGjEPzyFwnpF'
+DB_ADMIN_PASS = 'HwNYuU6HSfG5eVUjEMEgULgZ3VdkWMXC'
 DB_ADMIN_CRT_FILE = None
 DB_ADMIN_KEY_FILE = None
 
