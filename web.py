@@ -264,6 +264,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def renderCriticalFailure(self, **kwargs):
         template_name = 'error.html'
         super().render(template_name,
+                       auth_by_ip=options.authByIP,
                        is_logged='None',
                        team_name='None',
                        team_ip='None',
@@ -276,6 +277,7 @@ class BaseHandler(tornado.web.RequestHandler):
         template_name = 'error.html'
         message = self.get_pgsql_error(pgsql_error)
         super().render(template_name,
+                       auth_by_ip=options.authByIP,
                        is_logged=self.is_logged(),
                        team_name=self.team_name,
                        team_ip=self.team_ip,
@@ -286,6 +288,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def render(self, template_name, **kwargs):
         self._getTeamInfo()
         super().render(template_name,
+                       auth_by_ip=options.authByIP,
                        is_logged=self.is_logged(),
                        team_name=self.team_name,
                        team_ip=self.team_ip,

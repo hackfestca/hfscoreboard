@@ -19,15 +19,16 @@
     
     <div class="collapse navbar-collapse menu-collapse">                                                       
       <ul class="nav navbar-nav navbar-right">                                                                 
-       {% if is_logged %} 
 	    <li><a href="/"><i class="fa fa-home fa-2"></i></a></li>
+       {% if is_logged %} 
         <li><a href="/secrets/">Secrets</a></li>
         <li><a href="/challenges/">Challenges</a></li>                                                          
         <li><a href="/scoreboard/">Scoreboard</a></li>                                                          
         <li><a href="/dashboard/">Dashboard</a></li>
+        {% if not auth_by_ip %}
         <li><a href="/auth/logout">Logout</a></li>
+        {% end %}
        {% else %} 
-	    <li><a href="/"><i class="fa fa-home fa-2"></i></a></li>
         <li><a href="/auth/register">Register</a></li>
         <li><a href="/auth/login">Login</a></li>                                                          
        {% end %} 
