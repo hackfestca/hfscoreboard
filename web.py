@@ -138,16 +138,16 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
-            #(r"/rules/", RulesHandler),
-            (r"/random", RandomHandler),
-            (r"/secrets", SecretsHandler),
-            (r"/challenges", ChallengesHandler),
-            (r"/scoreboard", ScoreHandler),
-            (r"/dashboard", DashboardHandler),
-#(r"/bmi/?", BlackMarketItemHandler, args),
+            (r"/random/", RandomHandler),
+            (r"/secrets/", SecretsHandler),
+            (r"/challenges/", ChallengesHandler),
+            (r"/scoreboard/", ScoreHandler),
+            (r"/dashboard/", DashboardHandler),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
             (r"/projector/3/?", SponsorsProjectorHandler)
+            #(r"/rules/", RulesHandler),
+            #(r"/bmi/?", BlackMarketItemHandler, args),
         ]
 
         if options.authByIP:
