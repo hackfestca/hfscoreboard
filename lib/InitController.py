@@ -295,8 +295,8 @@ class InitController(UpdaterController.UpdaterController):
         self.importData()
         self.importCategories()
         self.importFlags()
-        self.importSecrets()
-        #self.importTeams()
+        #self.importSecrets()
+        self.importTeams()
         #self.importBlackMarketItems()
         self.importSecurity()
 

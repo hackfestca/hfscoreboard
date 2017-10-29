@@ -1,1 +1,69 @@
-TeamNum,TeamName
+TeamNum,TeamName,IpRange
+1,Aut agere aut mori,172.28.101.0/24
+2,Bad Hombre,172.28.102.0/24
+3,BeeNest,172.28.103.0/24
+4,BoisEnPlus,172.28.104.0/24
+5,Bro Security,172.28.105.0/24
+6,C'est quoi un flag ?,172.28.106.0/24
+7,Cascading Style Sheeps,172.28.107.0/24
+8,Ced Chaput groupies,172.28.108.0/24
+9,Click here to remove your virus,172.28.109.0/24
+10,daemons,172.28.110.0/24
+11,DCI2,172.28.111.0/24
+12,DCI3,172.28.112.0/24
+13,EGYDE,172.28.113.0/24
+14,ÉTS qui fax,172.28.114.0/24
+15,FireTeam,172.28.115.0/24
+16,Fork Bomb,172.28.116.0/24
+17,Genetec1,172.28.117.0/24
+18,Genetec2,172.28.118.0/24
+19,Genetec3,172.28.119.0/24
+20,Gliderous Tigers,172.28.120.0/24
+21,GoatSecure,172.28.121.0/24
+22,Hack'N'Run,172.28.122.0/24
+23,Hackfesse,172.28.123.0/24
+24,I Can Haz Crax Pls,172.28.124.0/24
+25,I Can Haz Crax Plz,172.28.125.0/24
+26,Laniotte,172.28.126.0/24
+27,Les dragons de Karl Beros,172.28.127.0/24
+28,Les p'tits gars de Shawi,172.28.128.0/24
+29,Les p’tits gars de Shawi,172.28.129.0/24
+30,Les tailleurs de bits,172.28.130.0/24
+31,Les Terribles,172.28.131.0/24
+32,Let’s get logicial !,172.28.132.0/24
+33,LowPrivsHighHopes,172.28.133.0/24
+34,M9,172.28.134.0/24
+35,Magic brainstorm,172.28.135.0/24
+36,markhor,172.28.136.0/24
+37,Mmm...my ding ding dong,172.28.137.0/24
+38,No C# Allowed,172.28.138.0/24
+39,Not Normies,172.28.139.0/24
+40,Novahack,172.28.140.0/24
+41,NSF,172.28.141.0/24
+42,Oh...you touch my tra la la,172.28.142.0/24
+43,P2PP,172.28.143.0/24
+44,Paumd,172.28.144.0/24
+45,Police nationale,172.28.145.0/24
+46,PolyHx1,172.28.146.0/24
+47,PolyHx2,172.28.147.0/24
+48,ROUGHSHOD,172.28.148.0/24
+49,SEND NUDES (514) 589-3009,172.28.149.0/24
+50,Spy vs Cat5,172.28.150.0/24
+51,SSHellSh0ck,172.28.151.0/24
+52,sweet/sucré,172.28.152.0/24
+53,TDB1,172.28.153.0/24
+54,TDB2,172.28.154.0/24
+55,Team KEO,172.28.155.0/24
+56,The 0x00 Goats,172.28.156.0/24
+57,TheManOverTheShell,172.28.157.0/24
+58,TsoPower,172.28.158.0/24
+59,udemforcedelamontagne,172.28.159.0/24
+60,ulaval-changeme,172.28.160.0/24
+61,Unicorn As A Service,172.28.161.0/24
+62,unicorn as a software,172.28.162.0/24
+63,Unicorn as a Software,172.28.163.0/24
+64,Unik,172.28.164.0/24
+65,Usedoils,172.28.165.0/24
+66,Venom,172.28.166.0/24
+67,xXfR33B33rF0rGNUPLzXx,172.28.167.0/24
+68,bob,172.28.168.0/24

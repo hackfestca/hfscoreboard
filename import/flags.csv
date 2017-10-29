@@ -1,157 +1,42 @@
-Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,FlagArg1,FlagArg2,FlagArg3,FlagArg4,Description,News,How to,
-pentest01,ee1629c1af139a9665c882c43a6fda4f,25,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Enumerate the operating system with this new shell,,,
-pentest02,a64aad0ac748806df12893450dcd27cf,40,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get a user shell on the system,,,
-pentest03,20765ab91c6e97a579b1e16828c7b7ff,55,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Enumerate the services running on the system,,,
-pentest04,ded83b5bc749e3c9b6c77de19cb9afd0,85,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Get a shell as the root user,,,
-pentest05,33ec428b32f9fe2750240ca21ddffc3a,100,0,scoreboard.hf,pentest,Null,viper,Standard,Null,Null,Null,Null,Null,Wait what? Can you get more access than root access?,,,
-EZ Flag,fc1da981e6484662ff45c51000375bb2,100,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Free flag! Just click on the button to get your flag... Oh, but there's a catch ;)
-<a href=""http://web.poptheshell.com:17000/"" target=""_blank"">Go to challenge</a>",,,
-LFI Corp[::-1],acf705e13594f42b237e70faf2458afd,200,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"There is a secret web service running locally... Can you figure out where it is? (Bruteforcing isn't the answer here)
-<a href=""http://web.poptheshell.com15000/"" target=""_blank"">Go to challenge</a>",,,
-Around the Glob,01e29d5e9e44432ea18c6950045afb03,300,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Request  /flag.php to obtain the flag :)
-<a href=""http://web.poptheshell.com:16000/"" target=""_blank"">Go to challenge</a>",,,
-3 != 4,b61d603e3375af6863ff1d4487e5c128,400,0,scoreboard.hf,web,Null,corb3nik,Standard,Null,Null,Null,Null,Null,"Union injections aren't that easy when you don't know the column names... 
-<a href=""http://web.poptheshell.com:14000/"" target=""_blank"">Go to challenge</a>",,,
-hash01,09e20f183baafb4b99559c7858bac1bd,25,0,scoreboard.hf,password,Null,chaput,Standard,Null,Null,Null,Null,Null,"try to login  <a href=""https://scoreboard.poptheshell.com/public/hash01.txt"">hash01</a>",,,
-hash02,804312ad8c3d7a7cf29c658e819bf170,50,0,scoreboard.hf,password,Null,chaput,Standard,Null,Null,Null,Null,Null,"try to login <a href=""https://scoreboard.poptheshell.com/public/hash02.txt"">hash02</a>",,,
-trivia01,9eb356cc922d14d981e0b64ca00c8564,10,0,scoreboard.hf,misc,Null,chaput,Standard,Null,Null,Null,Null,Null,When you'll see it you'll know ! ,,flag in one pager,
-trivia02,1bf1d55ab147eedfdd03791c1065001c,10,0,scoreboard.hf,misc,Null,chaput,Standard,Null,Null,Null,Null,Null,When you'll see it you'll know ! ,,flag in slaks ,
-regex01,d094b3a36ad7df6375520b8b377a09e8,50,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Regex injection stage 1 - <em>(Easiest difficulty only)</em></b><br/>
-Regex injection with no constraints.",,,
-regex02,e169f8c93b85d251b0976c35f985954d,100,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Regex injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></b><br/>
-Blind Regex injection.",,,
-regex03,d1eeb7632d5fff9a6121003ce8d5799a,150,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Regex injection stage 3 - <em>(All dificulty levels)</em></b><br/>
-Blind and filtered Regex injection.",,,
-jcr01,c3e0da4f15e14528a9263a9f6eb1ac7c,50,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>JCR SQL2 injection stage 1  - <em>(Easiest difficulty only)</em></b><br/>
-JCR SQL2 injection with no constraints.",,,
-jcr02,0a5f31800b7cf8963b8e99e8d4d070e2,100,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>JCR SQL2 injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></b><br/>
-Blind JCR SQL2 injection",,,
-jcr03,1b18ff845fe865ca9bbd6956bac71008,150,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>JCR SQL2 injection stage 3 - <em>(All dificulty levels)</em></b><br/>
-Blind and filtered JCR SQL2 injection",,,
-mongo01,e91d387d859879fbe7cba5b721bd1a1a,50,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>MongoDB injection stage 1 - <em>(Easiest difficulty only)</em></b><br/>
-MongoDB injection with no constraints.",,,
-mongo02,e97f7e48a69f14a5300b5a40b178b7df,100,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>MongoDB injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></b><br/>
-Blind MongoDB injection",,,
-mongo03,bf422e95806cae67d4b704e0d0fd939c,150,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>MongoDB injection stage 3 - <em>(All dificulty levels)</em></b><br/>
-Blind and filtered MongoDB Solr injection",,,
-solr01,b4c73923e7fb1b7698d6e192267ce310,50,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Apache Solr injection stage 1  - <em>(Easiest difficulty only)</em></b><br/>
-Apache Solr injection with no constraints.",,,
-solr02,bffecee6c6e320cb79fd05769ee97199,100,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Apache Solr injection stage 2 - <em>(Easiest and Intermediate difficulty only)</em></b><br/>
-Blind Apache Solr injection",,,
-solr3,e3aacc7b5ffe7036247db6c7e482fdee,150,0,scoreboard.hf,inject,Null,flr,Standard,Null,Null,Null,Null,Null,"<b>Apache Solr injection stage 3 - <em>(All dificulty levels)</em></b><br/>
-Blind and filtered Apache Solr injection",,,
-phenix01,1531021403fa37dbd33a58747dcc3b6a,25,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix02,e8322aefad8d98beb063091478eb3a0c,125,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix03,4811bb2e4d89e9f76ed21ac57a512293,75,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix04,e4638b63caf9f3be6f6ce6662ac05600,100,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix05,f59858e2113451cf1496a0c5f2e44d8d,100,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix06,3350559b9f9f5c20a8afed0ff151ac30,200,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix07,e50a5190266c89f6f625b30c4b52c7a5,10,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix08,5a6979368b0ea823cefbcf4a9cd27b50,75,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix09,349e867b34d5bd21dc56c583c268590b,100,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix10,3de7e334d81640145f948b7ed28336a6,125,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,TODO,,,
-phenix11,b4e06eb95e41c90fea7d831274f6f5ea,1,0,scoreboard.hf,phenix,Null,phenix,Standard,Null,Null,Null,Null,Null,Pas encore used le cas ou,,,
-recon01,y0uare4r3ally1337h4x0r,1,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon02,th1s1sar0b0ttxtf1l3lel,10,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon03,wh0is4p0ut1nelov3rh3r3,25,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon04,l0ts0finf0s1ndnsr3c0rds,25,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon05,th1s1sn0t4t0p1000p0rtlel,25,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon06,y0ursubd0m41n3numsk1llzare0np0int,50,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon07,d3f4ultcr3dsf0rth3w1n,50,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon08,m3t4d4t41sth3n3wm3t4,50,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon09,b3stp0ut1ne1nth3w0rld,50,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-recon10,0mgw43ks3buck3tsperm1ss1ons,200,0,scoreboard.hf,recon,Null,ramsexy,Standard,Null,Null,Null,Null,Null,Recon me,,,
-bsg0,READTHEFINEMANUAL,100,0,scoreboard.hf,bsg,Null,gp,Standard,Null,Null,Null,Null,Null,Find the operators' channel,,,
-bsg1,READYTOTAKEDOWNSHADOWBROKERS,100,0,scoreboard.hf,bsg,Null,gp,Standard,Null,Null,Null,Null,Null,Find the operators' channel (in a smarter way), ,,
-bsg2,i_dont_want_to_rush_you_but_we_need_to_take_server_230394_down_immediately,200,0,scoreboard.hf,bsg,Null,gp,Standard,Null,Null,Null,Null,Null,Identify and decode chatter from operatives,,,
-bsg3,a468259a70a9877fdaf591671c3813d0,300,0,scoreboard.hf,bsg,Null,gp,Standard,Null,Null,Null,Null,Null,Find the cloaking key,,,
-passE1,317592dd8be6c76b0712877f512cd84c,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE2,77edca611976a68502b1e59599f1f024,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE3,1b6f08df92379728568a64fd9b879160,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE4,48bed746a423bda80c74be9654dc3992,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE5,ee550b5d42e8edbdf0e651f484b7116b,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE6,a3277778956775d4a1b220dc31d2fec8,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE7,cdd6b743bc03a8aaa65646aa463a3934,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE8,1a847d62854e42a30161b221e4676127,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passE9,a6e864740b3c994baa02d79b1b6443d3,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passEX,a80ebabb45802c7a062edcfe064b6f80,25,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passM1,1bd9258b4cecd41c96c9a575ac4279d9,50,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passM2,e48d3800fa3595af2c187d8d0227a6be,50,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passM3,9688d159939182922153f556e74b165e,50,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passM4,78745c989254e102da11dae2fe747dd5,50,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passM5,f0bebff76da585d89b4922bfe4e0ccde,50,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passH1,80c27e7dd907967dcb5d1c4a59e0a364,75,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passH2,d461541bb0bd4d5abb33a7f31ab0a946,75,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passH3,fb72d45b88fea1c9b3ebe04ac88e49cb,75,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passH4,e25e181ec49b1048895c521260d8be2b,75,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-passX1,c3662586f7a137c8d662ffa53dc2dc0a,125,0,scoreboard.hf,password,Null,vn,Standard,Null,Null,Null,Null,Null,Crackme,,,
-sgunum1,5ca0caeff9e8799b648e85da95215afe,100,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the first chevron on the StarGate - There is some beeps coming from the room.,Track first run,Easy
-sgunum2,d05b369d866349ddb25ce1fa0258ebbb,50,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Easy
-sgunum3,873293bd3d0e6b40c25b679c61294c38,25,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Easy
-shunum4,e11b3566b7a4dc181504b13f1de92502,10,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Easy
-sgunum5,35662346779ae3005d1c383af3905e44,5,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Easy
-sgduo1,2f2111e14523b60a61dbd3335c564d20,125,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the second chevron on the StarGate - There is a charging noise coming from the room.,Track first run,Moderate
-sgduo2,f8bccf9c9b394f28703a31bc14abca84,75,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Moderate
-sgduo3,d21eb15d9ef02758cfc22a525e8970f1,40,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Moderate
-sgduo4,a25d218406538ae6670674032d9f031e,20,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Moderate
-sgduo5,07ef19792789f3b2efeb497b373ba7cd,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Moderate
-sgtres1,37ba6884a883ca52db583b68ddb5a05c,150,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the third chevron on the StarGate - We can feel some vibration coming from the room.,Track first run,Intermediate
-sgtres2,18d70d13ad6ee53398d019b9646d5a66,60,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Intermediate
-sgtres3,831ae818a5016fc3030728b991e69591,40,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Intermediate
-sgtres4,8c1c3e6387f2d72f3a2487e6e7b9d17f,20,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Intermediate
-sgtres5,a47d59297e81a666a05f939a054b8db3,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Intermediate
-sgquattuor1,499835d987dbd349a046eb68238222cf,200,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fourth chevron on the StarGate - Some kind of whistling noise is coming from the room.,Track first run,Advanced
-sgquattuor2,2c4d251c9164c704ae1dec3b27f2a964,100,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track rerun,Advanced
-sgquattuor3,fbf5855fcce80115c2a66e6667106e59,50,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track rerun,Advanced
-sgquattuor4,c2b0fe92c19e3605e0f946667c9aa9ea,25,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track rerun,Advanced
-sgquattuor5,e90cc08a7dc66f46679665128cfbe240,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track rerun,Advanced
-sgquinque1,86c561e0d3986a088f8fca74eafe6ba9,250,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the fifth chevron on the StarGate - The Star Gate is warming up.,Track first scripted run,Hard
-sgquinque2,3e68614dd77adc9de687e85005f2f87c,100,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard
-sgquinque3,a81a5b0c6fa97ea422d4ab36751c00af,50,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard
-sgquinque4,3c446f799b628d5eb3249aaa3ba08b0a,25,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard
-sgquinque5,f0dfc2a28f0db61cd865780ddb9343db,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard
-sgsex1,ccac9e3266401fe1b75c04e9bfcfe192,300,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,Team just unlocked the sixth chevron on the StarGate - The Star Gate is almost operational.,Track first scripted run,Very hard
-sgsex2,752680e52db97a1d171890b6effaa95e,100,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Very hard
-sgsex3,6b90ae7777ac3dd2a128b75e63fc7bda,50,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Very hard
-sgsex4,0a1b4cedc3c3995d4f29804db8128d2e,25,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Very hard
-sgsex5,89af17ccff40e7b5b366f213335b2267,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Very hard
-sgseptem1,83bae9c829e255066f8b404011614259,500,0,scoreboard.hf,sgcomplex,Null,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track to get the flag,"Team just unlocked the seventh chevron on the StarGate - The Star Gate is powered up and operational. Congratulations, you made it Jackson! Now where can we go?",Track first scripted run,Hard core
-sgseptem2,98cc4ea9db30cd69b7fbdb59f1433657,100,0,scoreboard.hf,sgcomplex,00:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a second time to get the flag,,Track scripted rerun,Hard core
-sgseptem3,756d5ba38f095af25a475f7dc2fb8f10,50,0,scoreboard.hf,sgcomplex,01:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a third time to get the flag,,Track scripted rerun,Hard core
-sgseptem4,c3b7dabdea7a005aa131ba4784874743,25,0,scoreboard.hf,sgcomplex,01:30:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a fourth time to get the flag,,Track scripted rerun,Hard core
-sgseptem5,50e02f93568d08f843f3095252c043e1,10,0,scoreboard.hf,sgcomplex,02:00:00,stackfault,Standard,Null,Null,Null,Null,Null,Complete the track a ffth time to get the flag,,Track scripted rerun,Hard core
-sg_abydos,b4d5c94f022ee266d81572148dd450c0,500,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Abydos</b>",Team managed to activate the StarGate to reach Abydos,27-7-15-32-12-30 ABYDOS,End game
-sg_apophis,49414d7bf4a907ab9363c23144aab9dd,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Apophis's Base</b>",Team managed to activate the StarGate to reach Apophis's Base,20-18-11-38-10-32 APOPHIS'S BASE,End game
-sg_chulak,82bb97aca9b5828faf0e42ee92d48ec2,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Chulak</b>",Team managed to activate the StarGate to reach Chulak,9-2-23-15-37-20 CHULAK,End game
-sg_edora,26606cdb86a1b4f39cf738223cb05bb5,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Edora</b>",Team managed to activate the StarGate to reach Edora,28-38-35-9-15-3 EDORA,End game
-sg_euronda,7fc93236b3bb95ada283e52023b0d9be,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Euronda</b>",Team managed to activate the StarGate to reach Euronda,30-27-9-7-18-16 EURONDA,End game
-sg_juna,ac008c6a3d9866fa487c34f9335e137c,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Juna</b>",Team managed to activate the StarGate to reach Juna,29-8-18-22-4-25 JUNA,End game
-sg_kallana,f2637291553e49d45223d4b275e86f0b,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Kallana</b>",Team managed to activate the StarGate to reach Kallana,6-16-8-3-26-25 KALLANA,End game
-sg_kheb,1a0e8732ab7df48c7da95b4be4da54fa,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Kheb</b>",Team managed to activate the StarGate to reach Kheb,26-35-6-8-23-14 KHEB,End game
-sg_ktau,ea1dfe6fb30394b9b392dc2cb6b14994,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>K'Tau</b>",Team managed to activate the StarGate to reach K'Tau,18-2-30-12-26-33 KTAU,End game
-sg_martin,f5355bbfe957bc4285a2cbf14470d574,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Martin's Homeworld</b>",Team managed to activate the StarGate to reach Martin's Homeworld,24-12-32-7-11-34 MARTIN'S HOMEWORLD,End game
-sg_othala,5c8fd71993d508e05a91a58b98a970a0,50,0,scoreboard.hf,sgwormhole,03:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Othala</b>",Team managed to activate the StarGate to reach Othala,11-27-23-16-33-3-9 OTHALA,End game
-sg_p2x-555,7db07a0df61df4b3d343132343f35739,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P2X-555</b>",Team managed to activate the StarGate to reach P2X-555,28-8-16-33-13-31 P2X-555,End game
-sg_p34-353j,197785f5ab8ad3fbcb745763fb1d722c,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P34-353J</b>",Team managed to activate the StarGate to reach P34-353J,38-9-28-15-35-3 P34-353J,End game
-sg_p3w-451,da302e5e5aff8593279444b12e5ae6c3,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P3W-451</b>",Team managed to activate the StarGate to reach P3W-451,19-8-4-37-26-16 P3W-451,End game
-sg_p3x-118,f9039e31c13651ab7c7262ad8c7cd0a7,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P3X-118</b>",Team managed to activate the StarGate to reach P3X-118,9-26-34-37-17-21 P3X-118,End game
-sg_p3x-562,2d5a703c53d8ace662f2d577fd6804df,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P3X-562</b>",Team managed to activate the StarGate to reach P3X-562,3-28-9-35-24-15 P3X-562,End game
-sg_p9c-372,f636f5ace9ea6af9e60cb78d9aab667a,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>P9C-372</b>",Team managed to activate the StarGate to reach P9C-372,25-8-18-29-4-22 P9C-372,End game
-sg_pb5-926,5ce61a70b8526f0eeee98a1b34e0c691,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>PB5-926</b>",Team managed to activate the StarGate to reach PB5-926,12-36-23-18-7-27 PB5-926,End game
-sg_praclarush,b29a22150cb95268309e5f39167229c6,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Praclarush Taonas</b>",Team managed to activate the StarGate to reach Praclarush Taonas,35-3-31-29-5-17 PRACLARUSH TAONAS,End game
-sg_sangreal,88e1dde870fe7c62795ce0eb6e58345b,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Sangreal Planet</b>",Team managed to activate the StarGate to reach Sangreal Planet,30-19-34-9-33-18 SANGREAL PLANET,End game
-sg_tartarus,3fa61fc2b3442c912eb52149af370ab1,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Tartarus</b>",Team managed to activate the StarGate to reach Tartarus,33-28-23-26-16-31 TARTARUS,End game
-sg_tollan,814a861a6d5268928b42453455d5e667,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Tollan</b>",Team managed to activate the StarGate to reach Tollan,6-33-27-37-11-18 TOLLAN,End game
-sg_tollana,4daf6f55a1787c32f7536a4ec7eb3bec,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Tollana</b>",Team managed to activate the StarGate to reach Tollana,4-29-8-22-18-25 TOLLANA,End game
-sg_vagon_brei,5142eb576a350065c08babe55d35ba21,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Vagon Brei</b>",Team managed to activate the StarGate to reach Vagon Brei,3-8-2-12-19-30 VAGON BREI,End game
-sg_px1-767,6b80ecfe0f0b1e11a311cb43ede8d6ed,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>PX1-767</b>",Team managed to activate the StarGate to reach PX1-767,20-2-35-8-26-15 PX1-767,End game
-sg_castiana,f3f8d0f28a332bc196f8499bb77b76bb,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Castiana</b>",Team managed to activate the StarGate to reach Castiana,29-3-6-9-12-16 CASTIANA,End game
-sg_sahal,e00fa303d92c4f2cd4befd19a760bff1,50,0,scoreboard.hf,sgwormhole,05:00:00,stackfault,Standard,Null,Null,Null,Null,Null,"If you manage to <u>enable all 7 chevrons</u> of the Star Gate, dial the correct coordinates to reach <b>Sahal</b>",Team managed to activate the StarGate to reach Sahal,29-18-19-20-21-22 SAHAL,End game
-sg_misc1,4ca7d12654f691359591ae442fac5812,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,"Proper recon will give you this one, or maybe not",Went a little bit outside the beaten path and found something interesting,SSH banner,Recon
-sg_misc2,94f2be8a7f78fb92a65e868b723ffcca,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,"Are you of of those who do not read during a CTF, if so you might miss this one",Just learned it pays to read the instructions,Read the manual,Reading
-sg_misc3,okthatwasaneasyonegettotherealworknow,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,Hiding in plain sight is the best way of all,Just figured how to uncover what is hidden in plain sight,Flag hidden in helper web page code,Reading
-sg_misc4,37c9bae0a96fc007208ee3106946ad1c,10,0,scoreboard.hf,sgmisc,00:20:00,stackfault,Standard,Null,Null,Null,Null,Null,"Make sure you take the time to read everything, there is some hidden treasures",Just learned it pays to read everything carefully,Read the story,Reading
-breach01,494a83080e3784b6e5c46f9a6c1864a3,100,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,"md5 of the line of log that show how the hacker enter in the server EX: printf ""Jun  8 00:48:24 webserver001 sshd[5745]: Disconnected from 59.63.188.36 port 51929 [preauth]"" | md5sum ",,"grep ""Accepted password"" /var/log/auth.log  | md5sum",
-breach02,0c63be91ac1e7a2d2b40b91fd5db9988,150,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,find the script that was run on the server ,,in the pcap in http,
-breach03,d4a3ede7fe83e02f00767d499bd24e69,200,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,find the data that was extracted from the server (flag is the information from user adriatic),,in the pcap in dns extraction,
-breach04,febc12ff8e4eba354534f6806f72f6cb,200,0,scoreboard.hf,breach,04:00:00,chaput,Standard,Null,Null,Null,Null,Null,"md5 of the username that hack us ex: printf ""username"" | md5sum  ",,the ssh key authentification failure,
+Flag Name,Flag Value,Pts,Cash,Flag Location,Category,displayInterval,Author,FlagType,FlagTypeExt,FlagArg1,FlagArg2,FlagArg3,FlagArg4,Description,News,How to
+Stegacode-1,HF-3be5831c5c8d4726af7c6489836261c9,50,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Idempotent Semantic</b> <br/> Hiding data by adding code which execution does not affect the behavior of the original code. Get file <a href=""/public/Stegacode/IdempotentSemantic.java"">here</a>.",,
+Stegacode-2,HF-c22229b4b6ae413586a392414e2b97f9,100,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Comments</b><br/> Inserting comments that looks legit but that are used to hide data. Get file <a href=""/public/Stegacode/Comments.erl"">here</a>.",,
+Stegacode-3,Flag-7f2092ce5ad14685ac4df8ae4dc47b45,100,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,<b>Dead code</b> <br /> Developer does not like dead code but you might.,,
+Stegacode-4,HF-52b10bc9d22e4df39b9ba4b7acb15792,200,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Code Format</b> <br/> Using code formating to hide data. Get file <a href=""/public/Stegacode/CodeFormat.php"">here</a>.",,
+Stegacode-5,HF-159a689017c240aeb1c0b3251d01b444,300,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Variable refactoring</b> <br/> Even the refactoring algorithm can be used to hide data. Get file <a href=""/public/Stegacode/Refactoring.js"">here</a>. <br/><br />Hint : You will need escope for this one.",,
+Stegacode-6,HF-fc5080750ada4e89a42ef85a28a7cf17,400,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Strings obfuscation</b> <br /> Like the refactoring algorithm, strings obfuscation algorithm is a good choice to exfiltrate data. Get file <a href=""/public/Stegacode/StringObfuscation.js"">here</a>.
+<br/><br />Hint : You will need the encoding <a href=""/public/Stegacode/StringObfuscationAlgo.js"">algorithm</a> for this one and a modified version of <a href=""/public/Stegacode/estraverse.js"">estraverse</a> that support ArrowFunctionExpression. ",,
+Stegacode-7,Flag-2723448814384e198edd788b217795c0,400,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,<b>Parametric polymorphism</b>,,
+Stegacode-8,HF-df4190a53ed24fef8ad753552c3048da,400,0,scoreboard.hf,stegacode,Null,flr,Standard,Null,,,,,"<b>Mixing up<b> Three of the Code Stegano techniques combined. Get file <a href=""/public/Stegacode/MixinStep3.js"">here</a>. <br /> <br /> Hint : The file is split in three parts. Each part hidden using a different technique.",,
+DS9-01,FLAG-dcaa9fd4f23aaf0c29f540becf35b46f,10,0,scoreboard.hf,ds9,Null,dax,Standard,Null,,,,,<b>Flag #1<b><br />Picard Would Never Have Opened that Port... ; I'm Not Picard.,,Se connecter au service sur le port 34523
+DS9-02,FLAG-2c5b9c6195d4bc2fc0ace4b41b1745d5,20,0,scoreboard.hf,ds9,Null,dax,Standard,Null,,,,,<b>Flag #2<b><br />I'm No More a Spy than You Are.,,tcpdump des paquets syslog quand le service plante
+DS9-03,FLAG-de226282d0c0c96005710370b404210b,100,0,scoreboard.hf,ds9,Null,dax,Standard,Null,,,,,<b>Flag #3<b><br />I Am Sorry I have No Vices for You to Exploit... Or Do I?,,return address et frame address dans le packet syslog. shellcode injection dans le service. Le flag est dans le répertoire de l’usager qui roule le service
+DS9-04,FLAG-e900e40bc91d3f9f7f0a99fed68a2e96,100,0,scoreboard.hf,ds9,Null,dax,Standard,Null,,,,,"<b>Flag #4<b><br />I'm a Doctor, Not a Programmer.",,Overwrite return address du program pour accéder à une fonction qui est disabled. Donne les creds d’un autre usager. Le flag est dans son home.
+DS9-05,FLAG-e35c1f4afd78a6c03bfae8c6dd8c7e05,100,0,scoreboard.hf,ds9,Null,dax,Standard,Null,,,,,<b>Flag #5<b><br />I Hate Prototypes.,,Mettre shellcode dans variable d'environnement et overwrite return address d’un program avec suid bit root. Le flag est dans /root
+Door1,a30c9e665a6f10a15789aff67fff7976,100,0,scoreboard.hf,lockpick,Null,t1v0/huffy,Standard,Null,,,,,Try to open the door,,1. Non-RFID lock bypass using a shim tool or credit card - I can set up one of the doors with a small strike plate that can still be bypassed.
+Door2,09df648578e0d5452ce081ab11b94f6b,100,0,scoreboard.hf,lockpick,Null,t1v0/huffy,Standard,Null,,,,,Try to open the door,,4. Badge snarfing - have them find someone walking around the CTF wearing a badge and perform SE to stealthily clone the badge.
+Door3,4536af4cb479c5f57e93322af35d56d5,100,0,scoreboard.hf,lockpick,Null,t1v0/huffy,Standard,Null,,,,,Try to open the door,,5. Badge brute-forcing. Have them flash a proxmark with the brute force firmware and brute force one of the doors to get access.
+EZ Flag Reloaded,FLAG-4e30753d28058aab0b6f55c393195e9c,25,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,URL encode the flag file in order to access it.
+Repeater,FLAG-722011233aade2887366ab43848521a7,25,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,"Open Burpsuite, intercept a request, and modify it accordingly."
+Simple Blog,FLAG-54f52fd283fc0a82e81856fb7f64fc56,50,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,Set the X-Debug header in a request to view the source code. A specific request can be used to obtain the flag.
+Baby SQLi,FLAG-aca23600d45ffd33a07dddd0668d04b1,10,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,Solve each basic SQLi challenge and obtain the flag.
+I <3 PHP,FLAG-ca724db2d49bb280ca644ed39f09ed65,10,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,"PHP create_function() is basically an eval call of a function declaration. Escape the function declaration and execute code like so ""return;} system(ls) //"""
+RC Life,FLAG-ee704efa99f55aec82cb363dbe3f01ad,10,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,A public git repo and a gitweb instance can be used with a LFI in order to obtain RCE through the gitweb logs.
+PHP Litter Box,FLAG-b7b99dcaac382eb222d555b4869d195e,10,0,scoreboard.hf,catonine,Null,Corb3nik,Standard,Null,,,,,TBD By Corb3nik,,"The API is vulnerable to a limited code injection. Shortest solution is ""(e.xec)($_GET[a])"""
+Initial Shell,FLAG-ed9849446619d99f47db6f2a551de158,150,0,scoreboard.hf,pentestcat,Null,Viper,Standard,Null,,,,,Get code execution on the machine,,
+root shell,FLAG-249ba6341853e100ff609fc6f6fb77b5,300,0,scoreboard.hf,pentestcat,Null,Viper,Standard,Null,,,,,Escalate your privilege to root on the machine,,
+more root?,FLAG-167eca0e4f30b46e1cc1703bc15ec6e7,300,0,scoreboard.hf,pentestcat,Null,Viper,Standard,Null,,,,,Can you get higher privilege on PentestCat? Get a GUI,,
+Post Exploitation,FLAG-554838a8451ac36cb977e719e9d6623c,100,0,scoreboard.hf,pentestcat,Null,Viper,Standard,Null,,,,,Can you get clear text password on the box?,,
+Porta Prima,HF-f4fd31b85b765eeffa3207e66e7ab52a,100,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,That audio tape looks weird...,,Audio tape -> Ogg vorbis comment -> Base64 -> Flag
+Porta Secvnda,HF-597c82c6e56206a72c33e05d48a11cc7,100,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,Looks like there is something strange with this old vinyl...,,Phonograph -> Mp3 oob data -> Base64 -> Flag
+Porta Tertia,HF-bd6608272c0cb0217b3d60a1c9c57b1d,200,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,There is something weird with this vinyl label...,,Phonograph -> Album art -> Qr code -> Base85 -> Flag
+Porta Qvarta,HF-840fecb5e28504b562c114152ea9073f,200,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,This doll really have a weird look...,,RussianDoll -> Jpeg -> Watermarked pass -> Steghide -> Extension-less RAR -> Comment -> Base64 -> Flag
+Porta Qvinta,HF-4beee0a68d391d993f1d5bf4653884e3,300,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,"I wonder why this floppy was hidden, maybe something important has been saved on it...",,Floppydisk -> Images[1..20] -> Author metatag -> Splitted Base64 -> GPG Password -> Extension-less 7zip -> gpg file)
+Porta Sexta,HF-3daa2e179f9d0219f4ab684b695f19b7,300,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,TBD By Stackfault,,
+Porta Septima,HF-63f4eee37d3574f43ee2ea169c97d8f4,300,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,How much stuff can you pack into each other?,,Qvarta -> extension-less ARJ -> Password from RussianDoll Teaser Metatag -> septima.txt -> Flag
+Porta Octava,HF-91da2a041f040febf3a4f22191709682,400,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,"Well, this is what we call embedding...",,Octava -> extension-less bzip2 -> uuencoded -> utf8 Qr code -> Flag
+Porta Nona,HF-5631c579c961d3ebe81e24da078d03d1,500,0,scoreboard.hf,novemportis,Null,stackfault,Standard,Null,,,,,Can you tell me what this audio tape recorded for god sake?,,Analog audio -> Hellschreiber decoder (fldigi) -> Hell-80 -> Message -> Flag
+9planet01,HF-faf3a20a9237c8cfa157fd94470035a4,200,0,scoreboard.hf,novemportis,Null,chaput,Standard,Null,,,,,Extrac the user table content of NANA web site,,SQL map sur le login form
+9planet02,HF-99aa635faefb7dd499b340ac8d5e34c4,300,0,scoreboard.hf,novemportis,Null,chaput,Standard,Null,,,,,Try to bypass the multiOTP,,parler directement à l'API OTP et envoyer le user name pour avoir le OTP 
+9planet03,HF-c095c024b734711ef9efa8300113cc1b,200,0,scoreboard.hf,novemportis,Null,chaput,Standard,Null,,,,,Try to access the special Project Folder ,,Cracker keepass keepass2john et crack avec rockyou 
+9planet04,HF-c2411b74a497d6aa4f92fd075c5034a7,200,0,scoreboard.hf,novemportis,Null,chaput,Standard,Null,,,,,Try to find the old version of the Projet Folder ,,Reverser le script pour comprendre ou sont les fichiers 

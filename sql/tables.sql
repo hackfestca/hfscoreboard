@@ -140,7 +140,7 @@ CREATE TABLE host(
 */
 CREATE TABLE flagCategory(
     id serial primary key,
-    name varchar(10) not null unique,
+    name varchar(12) not null unique,
     displayName varchar(50) not null unique,
     description text,
     hidden boolean not null default false,

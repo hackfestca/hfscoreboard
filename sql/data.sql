@@ -64,11 +64,13 @@ SELECT addAuthor('Stephane Sigmen', 'sigs');
 --SELECT addAuthor('Jean-Sebastien Grenon', 'js');
 SELECT addAuthor('François Lajeunesse-Robert', 'flr');
 SELECT addAuthor('Franck Desert','phenix');
-SELECT addAuthor('Viper', 'viper');
+SELECT addAuthor('Viper', 'Viper');
 SELECT addAuthor('Guillaume Parent','gp');
-SELECT addAuthor('Corb3nik','corb3nik');
+SELECT addAuthor('Corb3nik','Corb3nik');
 SELECT addAuthor('Ramsexy','ramsexy');
 SELECT addAuthor('vn','vn');
+SELECT addAuthor('dax','dax');
+SELECT addAuthor('t1v0/huffy','t1v0/huffy');
 --SELECT addAuthor('Patrick Mathieu','patoff');
 SELECT addAuthor('HF Crew', 'HFCrew');
 --SELECT addAuthor('Scoreboard', 'Scoreboard');
@@ -109,6 +111,8 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
     Add a starting news
 */
 SELECT addNews('Welcome to Hackfest 2017!', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', NOW()::timestamp);
 
 /*
     Add transaction types
