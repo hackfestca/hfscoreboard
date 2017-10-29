@@ -42,8 +42,8 @@
 }
 
 .team-highlight {
-    background-color: #009a00;
-    color: #000000;
+    background-color: #284f28 ;
+    color: #ffffe0;
 }
 
 .table tbody tr.team-highlight:hover td {
@@ -108,7 +108,7 @@
 }
 
 .news, .score_panel {
-    height: 716px;
+    height: 718px;
     overflow: auto;
 }
 
@@ -118,6 +118,10 @@
 
 .secrets-info {
     color: #ec9900;
+}
+
+div.progress {
+  background-color: #4f4f4f;
 }
 
 #challenge-pb {
@@ -194,4 +198,106 @@ a:visited {
     display: inline-block;
     vertical-align: middle;
     float: none;
+	align-items: center;
+}
+
+div.flag-input {
+	margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.flag-input input {
+  background-color: #2f2f2f;
+  color: #999;
+}
+
+.flag-input button {
+  background-color: #2f2f2f;
+  color: #999;
+}
+
+.flag-input button:hover {
+  background-color: #ec9900;
+  color: #2e3330;
+  border-color: #ec9900;
+}
+
+.body {
+	background-color: #000000;
+    background-image: url(/static/background.jpg);
+    font-family: "Courier New", Courier, monospace;
+	color: #dcdccc;
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top; 
+}
+
+.jumbotron {
+    color: #dcdccc;
+    background-color: #1f1f1f;
+    /* border-color: #dfaf8f; */
+    border-color: #999;
+}
+
+.jumbotron .track-name{
+    color: #c3bf9f;
+}
+
+.nav, .navbar {
+    background-color: #1f1f1f;
+    border-color: #999;
+}
+
+a:link {color: #f0dfaf}
+a:visited {color: #e0cf9f}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #dfaf8f;
+}
+
+.chal-desc,
+.chal-desc p {
+  color: #dcdccc;
+}
+
+/* Most tables */
+.table>thead>tr>th {
+    color: #709080;
+}
+
+/* News */
+.jumbotron.news {
+    padding: 5px;
+    font-size: 12px;
+    /* text-align: justify; */
+}
+
+.jumbotron.news dt {
+    color: #709080;
+    background-color: #1f1f1f;
+}
+
+.jumbotron.news dd {
+    padding-bottom: 7px;
+}
+
+/* Some hack for Stackfault */
+@font-face {
+  font-family: 'AncientGeek';
+  src: url('/static/ttf/AncientGeek.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AncientJSL';
+  src: url('/static/ttf/AncientJSL.ttf') format('truetype');
+}
+a.ancientgeek {
+  font-family: 'AncientGeek', Fallback, sans-serif;
+}
+a.ancientjsl {
+  font-family: 'AncientJSL', Fallback, sans-serif;
 }
