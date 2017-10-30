@@ -2,6 +2,7 @@
 config.py
 *__pycache__*
 *.log
+*.swp
 #certs/*.crt
 #certs/*.key
 certs/*.srl
