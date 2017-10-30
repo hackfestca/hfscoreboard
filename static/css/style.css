@@ -330,7 +330,9 @@ h6 {
 }
 a.ancientgeek {
   font-family: 'AncientGeek', Fallback, sans-serif;
+  letter-spacing: 1px;
 }
 span.ancientjsl {
   font-family: 'AncientJSL', Fallback, sans-serif;
+  font-size: 14pt;
 }
