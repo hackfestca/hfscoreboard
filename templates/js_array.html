@@ -2,36 +2,37 @@
   <div class="jumbotron">
     <div class="container">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined-dev.js"></script>
+	  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.js"></script> -->
       <div id="chart_div" style="height: 650px;"></div>
-      <script type="text/javascript" src="/static/js/dashboard.js"></script>
-      <style type="text/css">
-        #chart_div .dygraph-legend {
-	  width: 100px;
-          background-color: transparent !important;
-            left: 80px !important;
-	    top: 40px !important;
-        }
-      </style>
       <script type="text/javascript">
-      
 
 	function data() {
-	return {% raw jsArray %};
+	  return {% raw jsArray %};
 	}
+
+    // determine if we are in projector mode
+    var path = location.pathname;
+    if(path.startsWith('/projector')){
+        var showRangeSelector = false;
+    }else{
+        var showRangeSelector = true;
+    }
 	
 	new Dygraph(
 	    document.getElementById("chart_div"),
 	    data,
 	    {
-	        /*customBars: true,*/
 	        title: '{{ escape(handler.settings["blog_title"]) }}',
 	        ylabel: 'Score',
+	        xlabel: 'Timeline',
 	        axisLabelColor: 'white',
-	        strokeWidth: 2.0,
+	        strokeWidth: 3.0,
 	        legend: 'always',
 	        labelsSeparateLines: true,
-	        //labelsDivStyles: { 'textAlign': 'right' },
-	        showRangeSelector: true
+	        showRangeSelector: showRangeSelector,
+            colors: ["#dca3a3", "7f9f7f", "#f0dfaf", "#ffcfaf", "#709080",
+                    "#80d4aa", "#c0bed1", "#e89393", "#9fafaf", "#8cd0d3",
+                    "#b2b2a0", "#bc8cbc", "#eeeeee"]
 	    });
 
       </script>
