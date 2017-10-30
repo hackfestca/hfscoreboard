@@ -220,7 +220,8 @@ div.flag-input {
   border-color: #ec9900;
 }
 
-.body {
+.body,
+.projector {
 	background-color: #000000;
     background-image: url(/static/background.jpg);
     font-family: "Courier New", Courier, monospace;
@@ -286,6 +287,28 @@ h6 {
 /* Challenges */
 .jumbotron td .flag-name {
     white-space: nowrap;
+}
+
+/* Author popups in the Challenges page */
+.author-popup {
+  max-width:230px;
+  max-height:195px;
+  width: auto;
+  height: auto;
+}
+.tooltip > .tooltip-inner {
+  max-width:230px;
+  max-height:195px;
+  width: auto;
+  height: auto;
+}
+
+.sponsors {
+  max-width:230px;
+  max-height:195px;
+  width: auto;
+  height: auto;
+  opacity: 1;
 }
 
 /* Dashboard */

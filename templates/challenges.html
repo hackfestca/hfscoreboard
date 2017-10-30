@@ -55,8 +55,15 @@
 	    </td>
 	    <td class="flag-name">{{ challenge[1] }}</td>
 	    <td>{{ challenge[4] }}pts</td>
-	    <td>{{ challenge[9] }}</td>
-
+	    <td>
+			<a rel="tooltip" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-html="true" 
+				data-title="<img class='author-popup' src='/static/authors_photos/{{ challenge[9] }}.jpg' />">
+			{{ challenge[9] }}
+            </a>
+            <script>
+              $("a[rel=tooltip]").tooltip();
+            </script>
+		</td>
 	    <td>{% raw challenge[2] %}</td>
 	  </tr>
 	  {% end %}
@@ -71,3 +78,5 @@
 {% end %}
 
 {% end %}
+
+
