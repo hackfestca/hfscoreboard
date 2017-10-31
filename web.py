@@ -138,15 +138,13 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
-            (r"/random/", RandomHandler),
-            (r"/secrets/", SecretsHandler),
+            (r"/rules/", RulesHandler),
             (r"/challenges/", ChallengesHandler),
             (r"/scoreboard/", ScoreHandler),
             (r"/dashboard/", DashboardHandler),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
             (r"/projector/3/?", SponsorsProjectorHandler)
-            #(r"/rules/", RulesHandler),
             #(r"/bmi/?", BlackMarketItemHandler, args),
         ]
 
@@ -402,17 +400,6 @@ class IndexHandler(BaseHandler):
 
 class RulesHandler(BaseHandler):
     @tornado.web.authenticated
-    def get(self):
-        self.render('rules.html')
-
-class RandomHandler(BaseHandler):
-    @tornado.web.authenticated
-    def get(self):
-        self.render('random.html')
-
-
-class SecretsHandler(BaseHandler):
-    @tornado.web.authenticated
     @tornado.web.addslash
     def get(self):
         try:
@@ -429,7 +416,7 @@ class SecretsHandler(BaseHandler):
             self.logger.error(e)
             self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
-            self.render('secrets.html', secrets_table=list(secrets))
+            self.render('rules.html', secrets_table=list(secrets))
 
 
 class ChallengesHandler(BaseHandler):

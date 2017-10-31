@@ -2,42 +2,68 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
 <div class="row main-row">
+
+{% if len(secrets_table) > 0 %}
     <div class="jumbotron" style="overflow:auto;">
       <div class="container">
-    	<h3 class="hf-green">General Informations</h3>
-    	<div class="text-justify">
-            Welcome to Hackfest 2016 CTF. We hope you’ll enjoy!<br/><br/>
-    	</div>
-    	<div class="text-justify">
-    
-    	  Your tasks is to complete the different challenge.
-    	  You will find all challenge on the scoreboard.
-    	  Once you complete a challenge, you’ll find a flag which can be submitted.
-            <ul>
-              <li>Flags are obtained by solving challenges.</li>
-              <li>They can be submitted once.</li>
-            </ul>
-    	</div>
-      </div> <!-- End container -->
+        <h3>Team secrets</h3>
+        <div class="table-responsive table-score">
+          <table class="table table-hover">
+            <thead>
+            	<tr>
+            	  <th>#</th>
+            	  <th>Name</th>
+                  <th>Value</th>
+            	</tr>
+            </thead>
+            <tbody>
+      	{% for index, row in enumerate(secrets_table, start=1) %}
+      	<tr>
+      	  <td>{{ index  }}</td>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+      	</tr>
+      	{% end %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- jumbotron -->
+{% end %}
 
+    <div class="jumbotron" style="overflow:auto;">
       <div class="container">
-    	<h3 class="hf-green">Rules</h3>
-    	<div>
-    	  <ul>
-    	    <li>All challenges are under ctf.hf TLD. (ex: misc01.ctf.hf)</li>
-    	    <li>Never attack hf TLD. (ex: scoreboard.hf, dns.hf, irc.hf)</li>
-    	    <li>Never attack a system outside the environment (ie. not *ctf.hf)</li>
-    	    <li>DOS by saturation & Deleting flags & Sharing flags = Disqualification!</li>
-    	  </ul>
+    	<h3>General Informations</h3>
+    	<div class="text-justify">
+    	  Your tasks is to complete the multiple challenges. You will find all challenges on the scoreboard. Once you complete a challenge, you’ll find a flag which can be submitted.
     	</div>
-    	<h3 class="hf-green">Help?</h3>
+    	<h3>Rules</h3>
+        <ul>
+            <li>All challenges are under the ctf.hf domain.</li>
+            <li>Never attack a system under the rest of .hf TLD or any other domain</li>
+            <li>Modifying or disconnecting cable connections on network devices => Disqualification!</li>
+            <li>Denial of Service => Disqualification!</li>
+            <li>Fork Bombs => Disqualification!</li>
+            <li>Deleting flags => Disqualification!</li>
+            <li>Sharing flags => Disqualification!</li>
+        </ul>
+
+        <h3>Admin’s hints</h3>
+        <ul>
+            <li>Check slack for challenges hint;</li>
+            <li>Don’t hesitate to ask questions to the crew.</li>
+        </ul>
+
+        <h3>Bug Bounty Policy</h3>
+    	<div class="text-justify">We reward players who raise problems.</div>
+
+    	<h3>Help?</h3>
     	<div>
-    	  Join the irc://irc.smashthestack.org, chan: #hackfest
+        Join the <a target="_blank" href="https://hackfestca.slack.com/">hackfest slack</a>, room: <span class="team-info">#Hackfest2k17CTF</span>,
+        registration <a href="http://bit.ly/HFSlack"> link </a>
     	</div>
       </div> <!-- End container -->
     </div> <!-- End jumbotron -->
 </div> <!-- End main-row -->
-
 {% end %}
