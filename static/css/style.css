@@ -1,23 +1,23 @@
-.body {
+.body,
+.projector {
   padding-top: 100px;
   padding-bottom: 30px;
-  background-color: #000000;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  color: #FFFFFF;
+
+  background-color: #000000;
+  background-image: url(/static/background.jpg);
+  font-family: "Courier New", Courier, monospace;
+  color: #dcdccc;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center top; 
 }
 
 .projector {
   padding-top: 2%;
-  //padding-bottom: 2%;
-  background-color: #000000;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  color: #FFFFFF;
 }
 
 .nav, .navbar {
@@ -49,13 +49,37 @@
 }
 
 .jumbotron {
-   background-color: #000000;
+   background-color: rgba(31,31,31,0.87);
    border-style: solid; 
    border-width: 1px;
-   border-color: #FFFFFF;
+   border-color: #999;
    padding-top: 24px;
    padding-bottom: 24px;
-   opacity: 0.87;
+   color: #dcdccc;
+}
+.jumbotron .track-name{
+    color: #c3bf9f;
+}
+
+/* News */
+.jumbotron.news {
+    padding: 5px;
+    font-size: 12px;
+    /* text-align: justify; */
+}
+
+.jumbotron.news dt {
+    color: #709080;
+    background-color: #1f1f1f;
+}
+
+.jumbotron.news dd {
+    padding-bottom: 7px;
+}
+
+/* Challenges */
+.jumbotron td .flag-name {
+    white-space: nowrap;
 }
 
 /* Style for the challenges bages */
@@ -220,27 +244,6 @@ div.flag-input {
   border-color: #ec9900;
 }
 
-.body,
-.projector {
-	background-color: #000000;
-    background-image: url(/static/background.jpg);
-    font-family: "Courier New", Courier, monospace;
-	color: #dcdccc;
-	background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center top; 
-}
-
-.jumbotron {
-    color: #dcdccc;
-    background-color: #1f1f1f;
-    border-color: #999;
-}
-
-.jumbotron .track-name{
-    color: #c3bf9f;
-}
-
 .nav, .navbar {
     background-color: #1f1f1f;
     border-color: #999;
@@ -268,27 +271,6 @@ h6 {
     color: #709080;
 }
 
-/* News */
-.jumbotron.news {
-    padding: 5px;
-    font-size: 12px;
-    /* text-align: justify; */
-}
-
-.jumbotron.news dt {
-    color: #709080;
-    background-color: #1f1f1f;
-}
-
-.jumbotron.news dd {
-    padding-bottom: 7px;
-}
-
-/* Challenges */
-.jumbotron td .flag-name {
-    white-space: nowrap;
-}
-
 /* Author popups in the Challenges page */
 .author-popup {
   max-width:230px;
@@ -308,7 +290,6 @@ h6 {
   max-height:195px;
   width: auto;
   height: auto;
-  opacity: 1;
 }
 
 /* Dashboard */
