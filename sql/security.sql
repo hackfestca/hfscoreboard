@@ -83,6 +83,10 @@ GRANT EXECUTE ON FUNCTION scoreboard.getTeamSecrets(integer) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamSecretsFromIp(varchar) TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.getTeamLocations() TO hfscore;
 GRANT EXECUTE ON FUNCTION scoreboard.submitFlag(varchar,integer,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.submitFeedbacks(integer,text,integer,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.submitFeedbacksFromIp(integer,text,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.submitFeedbacksPerCategory(integer,integer,text,integer,varchar) TO hfscore;
+GRANT EXECUTE ON FUNCTION scoreboard.submitFeedbacksPerCategoryFromIp(integer,integer,text,varchar) TO hfscore;
 
 -- Grants for flagUpdater
 --GRANT EXECUTE ON FUNCTION scoreboard.getAllKingFlags() TO hfflagupdater;

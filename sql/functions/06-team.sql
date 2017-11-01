@@ -272,7 +272,6 @@ RETURNS integer AS $$
                                  NULL, 'HFCrew', 'Standard', NULL, NULL, NULL, NULL, NULL, NULL, _desc);
 
         -- Assign flag
-        raise notice 'team net: %s',_teamNet+1;
         INSERT INTO team_flag(teamId,flagId,pts,playerIp)
                VALUES(_teamId, _flagId,_pts,_teamNet+1);
 

@@ -258,7 +258,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #efef8f;
+    color: #c3bf9f;
 }
 
 .chal-desc,
@@ -284,6 +284,7 @@ h6 {
   width: auto;
   height: auto;
 }
+.tooltip.in{opacity:1!important;}
 
 .sponsors {
   max-width:230px;
@@ -300,6 +301,11 @@ h6 {
 	top: 40px !important;
 }
 
+/* Feedbacks */
+.radio-inline+.radio-inline {
+    margin-left: 2px;
+}
+
 /* Some hack for Stackfault */
 @font-face {
   font-family: 'AncientGeek';
@@ -309,6 +315,7 @@ h6 {
   font-family: 'AncientJSL';
   src: url('/static/ttf/AncientJSL.ttf') format('truetype');
 }
+span.ancientgeek,
 a.ancientgeek {
   font-family: 'AncientGeek', Fallback, sans-serif;
   letter-spacing: 1px;

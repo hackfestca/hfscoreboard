@@ -107,6 +107,18 @@ class WebController(ClientController.ClientController):
     def loginTeam(self,name,pwd):
         return self.exec('loginTeam',name,pwd)
 
+    def submitFeedbacks(self,rate,comments,teamId,playerIp):
+        return self.exec('submitFeedbacks',rate,comments,teamId,playerIp)
+
+    def submitFeedbacksFromIp(self,rate,comments,playerIp):
+        return self.exec('submitFeedbacksFromIp',rate,comments,playerIp)
+
+    def submitFeedbacksPerCategory(self,categoryId,rate,comments,teamId,playerIp):
+        return self.exec('submitFeedbacksPerCategory',categoryId,rate,comments,teamId,playerIp)
+
+    def submitFeedbacksPerCategoryFromIp(self,categoryId,rate,comments,playerIp):
+        return self.exec('submitFeedbacksPerCategoryFromIp',categoryId,rate,comments,playerIp)
+
     def getJsDataScoreProgress(self):
         s = "[\n"
         teams = self.getScore(8)

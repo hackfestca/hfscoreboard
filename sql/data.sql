@@ -63,12 +63,12 @@ SELECT addAuthor('Dave Cloutier', 'stackfault');
 SELECT addAuthor('Stephane Sigmen', 'sigs');
 --SELECT addAuthor('Jean-Sebastien Grenon', 'js');
 SELECT addAuthor('François Lajeunesse-Robert', 'flr');
-SELECT addAuthor('Franck Desert','phenix');
+SELECT addAuthor('Franck Desert','hiddenman');
 SELECT addAuthor('Viper', 'Viper');
 SELECT addAuthor('Guillaume Parent','gp');
 SELECT addAuthor('Corb3nik','Corb3nik');
-SELECT addAuthor('Ramsexy','ramsexy');
-SELECT addAuthor('vn','vn');
+--SELECT addAuthor('Ramsexy','ramsexy');
+--SELECT addAuthor('vn','vn');
 SELECT addAuthor('dax','dax');
 SELECT addAuthor('t1v0/huffy','t1v0/huffy');
 --SELECT addAuthor('Patrick Mathieu','patoff');
@@ -112,7 +112,13 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 */
 SELECT addNews('Welcome to Hackfest 2017!', NOW()::timestamp);
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
+SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', NOW()::timestamp);
+SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time: https://scoreboard.hf/feedbacks/', '2017-11-04 00:30');
 
 /*
     Add transaction types

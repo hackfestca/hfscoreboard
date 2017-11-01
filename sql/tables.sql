@@ -11,6 +11,8 @@ SET search_path TO scoreboard;
 /*
     Some cleanup
 */
+DROP TABLE IF EXISTS feedbacks;
+DROP TABLE IF EXISTS feedbacksPerCategory;
 DROP TABLE IF EXISTS gateKey;
 DROP TABLE IF EXISTS settings CASCADE;
 DROP TABLE IF EXISTS flagStatus_history CASCADE;
@@ -452,6 +454,27 @@ CREATE TABLE news(
     displayTs timestamp not null default current_timestamp,
     ts timestamp not null default current_timestamp,
     constraint valid_title_name check (title != '')
+    );
+
+/*
+    Represent a feedback sent by a player by the end of the CTF
+*/
+CREATE TABLE feedbacks(
+    id serial primary key,
+    rate integer null,
+    comments text null,
+    playerIp inet not null,
+    teamId integer not null references team(id) on delete cascade,
+    ts timestamp not null default current_timestamp
+    );
+CREATE TABLE feedbacksPerCategory(
+    id serial primary key,
+    categoryId integer not null,
+    rate integer null,
+    comments text null,
+    playerIp inet not null,
+    teamId integer not null references team(id) on delete cascade,
+    ts timestamp not null default current_timestamp
     );
 
 /*

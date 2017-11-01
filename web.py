@@ -53,6 +53,7 @@ import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 import tornado.log 
+
 from tornado import gen
 from tornado.options import define, options
 
@@ -144,7 +145,8 @@ class Application(tornado.web.Application):
             (r"/dashboard/", DashboardHandler),
             (r"/projector/1/?", IndexProjectorHandler),
             (r"/projector/2/?", DashboardProjectorHandler),
-            (r"/projector/3/?", SponsorsProjectorHandler)
+            (r"/projector/3/?", SponsorsProjectorHandler),
+            (r"/feedbacks/", FeedbacksHandler)
             #(r"/bmi/?", BlackMarketItemHandler, args),
         ]
 
@@ -573,6 +575,82 @@ class SponsorsProjectorHandler(BaseHandler):
     def get(self):
         self.render('projector_sponsors.html',
                     sponsors=self.sponsors)
+
+
+class FeedbacksHandler(BaseHandler):
+    @tornado.web.authenticated
+    @tornado.web.addslash
+    def get(self):
+        try:
+            if options.authByIP:
+                secrets = self.client.getTeamSecretsFromIp(self.remote_ip)
+                categories = self.client.getCatProgressFromIp(self.remote_ip)
+            else:
+                team_id = self.get_current_user()
+                secrets = self.client.getTeamSecrets(team_id)
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.render_pgsql_error(pgsql_error=e)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            self.render('feedbacks.html',
+                        cat=list(categories))
+
+    @tornado.web.authenticated
+    @tornado.web.addslash
+    def post(self):
+        feedbacks_are_valid = None
+        submit_message = None
+
+        try:
+            rate = self.get_argument("rate")
+        except tornado.web.MissingArgumentError as e:
+            rate = None
+
+        try:
+            comments = self.get_argument("comments")
+        except tornado.web.MissingArgumentError as e:
+            comments = None
+
+        if options.authByIP:
+            categories = self.client.getCatProgressFromIp(self.remote_ip)
+
+        try:
+            if options.authByIP:
+                submit_message = self.client.submitFeedbacksFromIp(rate,comments,self.remote_ip)
+                self._submit_category_feedback(categories)
+            else:
+                team_id = self.get_current_user()
+                submit_message = self.client.submitFeedbacks(rate,comments,team_id,self.remote_ip)
+        except psycopg2.Error as e:  # already submitted, invalid flag = insult
+            self.logger.error(e)
+            submit_message = self.get_pgsql_error(e)
+            feedbacks_are_valid = False
+        except Exception as e:
+            self.logger.error(e)
+            self.set_status(500)
+            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+        else:
+            feedbacks_are_valid = True
+
+        self.render('feedbacks.html',
+                    feedbacks_are_valid=feedbacks_are_valid,
+                    submit_message=submit_message,
+                    cat=list(categories))
+
+    def _submit_category_feedback(self, categories):
+        for cat in categories:
+            catId = cat[0]
+            try:
+                rate = self.get_argument("rate_%s" % catId)
+                comments = self.get_argument("comments_%s" % catId)
+                self.client.submitFeedbacksPerCategoryFromIp(catId,rate,comments,self.remote_ip)
+            except tornado.web.MissingArgumentError as e:
+                pass
+
 
 class AuthRegisterHandler(BaseHandler):
     form = {'name': '',

@@ -1,0 +1,158 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row main-row">
+
+    <div class="jumbotron">
+      <div class="container">
+        {% try %}
+        {% if feedbacks_are_valid %}
+        <div class="alert alert-success" role="alert">{{ submit_message }}</div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">{{ submit_message }}</div>
+        {% end %}
+        {% except %}
+        {% end %}
+
+    	<h3>Feedback Form</h3>
+		We are looking forward for improvements, ideas or any comments to make next Hackfest even better. All fields are optional. 
+    	<h4>Global experience</h4>
+        <form class="form-horizontal" method="POST">
+        {% module xsrf_form_html() %}
+        <fieldset>
+        
+        <!-- Multiple Radios (inline) -->
+        <div class="form-group">
+          <label class="col-md-6 control-label" for="rate">How would you rate your CTF experience?</label>
+          <div class="col-md-6"> 
+            <label class="radio-inline" for="radios-0">
+              <input type="radio" name="rate" id="radios-0" value="1">
+              1
+            </label> 
+            <label class="radio-inline" for="radios-1">
+              <input type="radio" name="rate" id="radios-1" value="2">
+              2
+            </label> 
+            <label class="radio-inline" for="radios-2">
+              <input type="radio" name="rate" id="radios-2" value="3">
+              3
+            </label> 
+            <label class="radio-inline" for="radios-3">
+              <input type="radio" name="rate" id="radios-3" value="4">
+              4
+            </label> 
+            <label class="radio-inline" for="radios-4">
+              <input type="radio" name="rate" id="radios-4" value="5">
+              5
+            </label> 
+            <label class="radio-inline" for="radios-5">
+              <input type="radio" name="rate" id="radios-5" value="6">
+              6
+            </label> 
+            <label class="radio-inline" for="radios-6">
+              <input type="radio" name="rate" id="radios-6" value="7">
+              7
+            </label> 
+            <label class="radio-inline" for="radios-7">
+              <input type="radio" name="rate" id="radios-7" value="8">
+              8
+            </label> 
+            <label class="radio-inline" for="radios-8">
+              <input type="radio" name="rate" id="radios-8" value="9">
+              9
+            </label> 
+            <label class="radio-inline" for="radios-9">
+              <input type="radio" name="rate" id="radios-9" value="10">
+              10
+            </label>
+          </div>
+        </div>
+        
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-6 control-label" for="comments">Would you have any comments for the organizers?</label>
+          <div class="col-md-6">                     
+            <textarea class="form-control" id="comments" name="comments"></textarea>
+          </div>
+        </div>
+        
+        <!-- Track feedbacks -->
+		{% for category in cat %}
+  		  {% if category[5] %}
+        	  {% if category[1] == "novemportis" %}
+    		<h4>Track: <span class="ancientgeek">{{ category[2] }}</span></h4>
+        	  {% else %}
+    		<h4>Track: {{ category[2] }}</h4>
+        	  {% end %}
+            <!-- Multiple Radios (inline) -->
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="rate_{{ category[0] }}">How would you rate this track? </label>
+              <div class="col-md-6"> 
+                <label class="radio-inline" for="radios-0">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-0" value="1">
+                  1
+                </label> 
+                <label class="radio-inline" for="radios-1">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-1" value="2">
+                  2
+                </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-2" value="3">
+                  3
+                </label> 
+                <label class="radio-inline" for="radios-3">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-3" value="4">
+                  4
+                </label> 
+                <label class="radio-inline" for="radios-4">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-4" value="5">
+                  5
+                </label> 
+                <label class="radio-inline" for="radios-5">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-5" value="6">
+                  6
+                </label> 
+                <label class="radio-inline" for="radios-6">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-6" value="7">
+                  7
+                </label> 
+                <label class="radio-inline" for="radios-7">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-7" value="8">
+                  8
+                </label> 
+                <label class="radio-inline" for="radios-8">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-8" value="9">
+                  9
+                </label> 
+                <label class="radio-inline" for="radios-9">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios-9" value="10">
+                  10
+                </label>
+              </div>
+            </div>
+            
+            <!-- Textarea -->
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="comments_{{ category[0] }}">Would you have any comments regarding this track?</label>
+              <div class="col-md-6">                     
+                <textarea class="form-control" id="comments_{{ category[0] }}" name="comments_{{ category[0] }}"></textarea>
+              </div>
+            </div>
+  		  {% end %}
+		{% end %}
+
+        <!-- Button -->
+        <div class="form-group">
+          <label class="col-md-6 control-label" for="submit"></label>
+          <div class="col-md-6">
+            <button id="submit" name="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+        
+        </fieldset>
+        </form>
+      </div> <!-- End container -->
+    </div> <!-- End jumbotron -->
+</div> <!-- End main-row -->
+{% end %}

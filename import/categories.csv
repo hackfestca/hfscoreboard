@@ -3,10 +3,13 @@ stegacode,Code Steganography,"<p>Various <a href=""https://en.wikipedia.org/wiki
 <p>Hint : Try to find the original source code file on the internet</p>",FASLE,FLR
 thirdparty,Third Party,"LockPick, babyfoot, surprise ",TRUE,HFCrew
 bonus,Bonus,"Bonus Flags are used for non-standard flag types. For example, to give a bonus when a track is completed, a bonus flag is created and assigned to the team",TRUE,HFCrew
-ds9,Hack Deep Space Nine,"You managed to connect your computer to DS9 mainframe and you now have access to all of the station's systems. You also got some low access credentials (nog:GrandNagus9).You can thank Quark for that (not that it was free).To gain full control of the station, the ops computer at <b>ds9.ctf.hf</b> seems to be a good place to start.Since it is a pretty old Cardassian station, DS9 shouldn't have any protection against buffer overflows.Also, it probably already has a couple of debugging softwares installed...<br/><br/><b>Hint</b>: That flag format seems familiar... ",TRUE,dax
+ds9,Hack Deep Space Nine,"You managed to connect your computer to DS9 mainframe and you now have access to all of the station's systems. You also got some low access credentials (nog:GrandNagus9).You can thank Quark for that (not that it was free).To gain full control of the station, the ops computer at <b>ds9.ctf.hf</b> seems to be a good place to start.Since it is a pretty old Cardassian station, DS9 shouldn't have any protection against buffer overflows.Also, it probably already has a couple of debugging softwares installed...<br/><br/><b>Hint</b>: That flag format seems familiar... ",FASLE,dax
 novemportis,NOVeM POrTIS,"As you travel to eastern Europe, you happen to stay in a very old manor. It looks like there is a creepy background to this place, and it's former owner... Start your journey at <a href='http://novemportis.ctf.hf'>novemportis.ctf.hf</a>",FALSE,stackfault
 pentestcat,Pentest Track,As a member of the GrumpyCat Cyber Team your goal is to hack the hacker that dumped nudes photo of your cat on the Internet. Your target is located at 172.28.17.251,FALSE,Viper
-9planet,9th planet,You are a member of space9. The advanced rockets and spacecraft company. Elon Nusk put you on a special mission. As you know Pluto is no more a planet. Mr Nusk think the Nana is hiding something and ask you to hack into Nana servers to find what they are hiding. <br/><br/><a link=nana.ctf.hf> Nana web Site</a>,FASLE,chaput
-catonine,Cat o' nine tails,TBD By Corb3nik,FALSE,corb3nik
+9planet,9th planet,"You are a member of space9. The advanced rockets and spacecraft company. Elon Nusk put you on a special mission. As you know Pluto is no more a planet. Mr Nusk think the Nana is hiding something and ask you to hack into Nana servers to find what they are hiding. <br/><br/><a href=""http://nana.ctf.hf""> Nana web Site</a>",FASLE,chaput
+catonine,Cat o' nine tails,Wanna learn how to hack websites?,FALSE,Corb3nik
 DoorPass,Open The door ,Bring your RFID stuff with you. You'll have to open 3 door. Comme see us. ,TRUE,t1v0/huffy
 90s,90s Strike Back,Are you still at ease with IRC? Some hackers are communicating using ways we can't figure out. Help us!,FALSE,gp
+ntcat,NTCat,TBD By n0pm3m,FALSE,sigs
+phenix,9 Phenix to Kill,TBD By Frank,FALSE,hiddenman
+feedbacks,Feedbacks,Flags for completing the feedback forms.,TRUE,HFCrew
