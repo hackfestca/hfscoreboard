@@ -349,6 +349,68 @@ class BaseHandler(tornado.web.RequestHandler):
         self.application._team_score = arg 
 
 
+class BaseProjectorHandler(tornado.web.RequestHandler):
+
+    def initialize(self):
+        pass
+
+    def write_error(self, status_code, **kwargs):
+        self.renderCriticalFailure()
+
+    def _connect(self):
+        try:
+            self.client = WebController()
+        except psycopg2.Error as e:
+            self.logger.error(e)
+            self.render_pgsql_error(pgsql_error=e)
+        except Exception as e:
+            self.set_status(500)
+            self.logger.error(e)
+            self.render('error.html', error_msg="Error")
+
+    def _disconnect(self):
+        try:
+            self.client.close()
+        except Exception as e:
+            self.logger.error('Could not close DB connection.')
+            pass  # The connection was never established
+
+    def prepare(self):
+        self._connect()
+
+    def on_finish(self):
+        self._disconnect()
+
+    def get_pgsql_error(self, pgsql_error):
+        if pgsql_error.pgcode == config.PGSQL_ERRCODE:
+            message = pgsql_error.diag.message_primary
+        else:
+            message = WEB_ERROR_MESSAGE
+        return message
+
+    def renderCriticalFailure(self, **kwargs):
+        template_name = 'projector_error.html'
+        super().render(template_name,
+                       error_msg=WEB_ERROR_MESSAGE,
+                       **kwargs)
+
+    def render_pgsql_error(self, pgsql_error, **kwargs):
+        template_name = 'projector_error.html'
+        message = self.get_pgsql_error(pgsql_error)
+        super().render(template_name,
+                       error_msg=message,
+                       **kwargs)
+
+    def render(self, template_name, **kwargs):
+        super().render(template_name,
+                       team_name='projector',
+                       **kwargs)
+
+    @property
+    def sponsors(self):
+        return self.application._sponsors
+
+
 class IndexHandler(BaseHandler):
     @tornado.web.authenticated
     @tornado.web.addslash
@@ -529,7 +591,7 @@ class Error404Handler(BaseHandler):
         self.redirect('/')
 
 
-class IndexProjectorHandler(BaseHandler):
+class IndexProjectorHandler(BaseProjectorHandler):
     @tornado.web.addslash
     def get(self):
         try:
@@ -537,18 +599,18 @@ class IndexProjectorHandler(BaseHandler):
             valid_news = self.client.getNewsList()
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render_pgsql_error(pgsql_error=e)
+            self.render_pgsql_error(pgsql_error=e,template_name='projector_error.html')
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render('projector_error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
             self.render('projector.html',
                         table=score,
                         news=valid_news)
 
 
-class DashboardProjectorHandler(BaseHandler):
+class DashboardProjectorHandler(BaseProjectorHandler):
     @tornado.web.addslash
     def get(self):
         try:
@@ -560,17 +622,17 @@ class DashboardProjectorHandler(BaseHandler):
             jsArray = jsArray2[:-12]
         except psycopg2.Error as e:
             self.logger.error(e)
-            self.render_pgsql_error(pgsql_error=e)
+            self.render_pgsql_error(pgsql_error=e,template_name='projector_error.html')
         except Exception as e:
             self.set_status(500)
             self.logger.error(e)
-            self.render('error.html', error_msg=WEB_ERROR_MESSAGE)
+            self.render('projector_error.html', error_msg=WEB_ERROR_MESSAGE)
         else:
             self.render('projector_js.html',
                         jsArray=jsArray)
 
 
-class SponsorsProjectorHandler(BaseHandler):
+class SponsorsProjectorHandler(BaseProjectorHandler):
     @tornado.web.addslash
     def get(self):
         self.render('projector_sponsors.html',

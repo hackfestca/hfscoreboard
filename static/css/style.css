@@ -305,6 +305,10 @@ h6 {
 .radio-inline+.radio-inline {
     margin-left: 2px;
 }
+.btn-primary {
+    background-color: #c3bf9f;
+    border-color: #c3bf9f;
+}
 
 /* Some hack for Stackfault */
 @font-face {

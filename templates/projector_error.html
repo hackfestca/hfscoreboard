@@ -10,24 +10,24 @@
     <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
 
+    <meta http-equiv="refresh" content="10; url=/projector/1/">
+
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>                                                                                                                                                    
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>                                                                                               
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>                                                              
     <![endif]-->
 
   </head>
 
-  <body class="body">
-
-    {% include header.html %}
-
-    {% block content %}{% end %}
-
-    <div class="container footer">
-      <i class="fa fa-twitter"></i> <a href="https://twitter.com/hackfest_ca">@hackfest_ca</a>
-      -
-      <i class="fa fa-globe"></i> <a href="http://www.hackfest.ca/">hackfest.ca</a>
+  <body class="projector">
+    <div class="container">
+      <div class="alert alert-danger" role="alert">
+        <strong>
+          <i class="fa fa-times-circle" style="color: red;"></i>
+          {{ error_msg }}
+        </strong>
+      </div>
     </div>
-
   </body>
 </html>
+

@@ -12,7 +12,7 @@ SELECT emptyTables();
     Set game start timestamp and other variables
 */
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2017-10-25 00:30'::timestamp,'2017-11-05 02:00'::timestamp,1000);
+       VALUES('2017-11-01 13:00'::timestamp,'2017-11-04 02:00'::timestamp,1000);
 /*
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
        VALUES('2017-10-04 16:30'::timestamp,'2016-11-05 02:00'::timestamp,1000);
@@ -118,7 +118,7 @@ SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', NOW()::timestamp);
-SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time: https://scoreboard.hf/feedbacks/', '2017-11-04 00:30');
+SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time here: <a href="https://scoreboard.hf/feedbacks/">https://scoreboard.hf/feedbacks/</a>', '2017-11-04 00:01');
 
 /*
     Add transaction types
@@ -156,7 +156,8 @@ SELECT addTeam(103, 'mdube_dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam(0, 'hf', Null, 'hf', Null);
 --UPDATE team set hide=true WHERE num=0;   -- Hide Monitoring
-UPDATE team set hide=true WHERE num=100;   -- Hide Monitoring
+UPDATE team set hide=true WHERE num=100;   -- Hide Crew
+UPDATE team set hide=true WHERE num=103;   -- Hide dev accounts
 
 /*
     Identify fake names

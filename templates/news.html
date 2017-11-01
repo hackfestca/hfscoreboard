@@ -6,7 +6,7 @@
 	<dl>
 	  {% for new in news %}
 	  <dt>{{ new[1].strftime("%Y-%m-%d %H:%M") }}</dt>
-	  <dd>{{ new[2] }}</dd>
+	  <dd>{% raw new[2] %}</dd>
 	  {% end %}
 	</dl>
       </div>
