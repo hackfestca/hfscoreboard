@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS wallet CASCADE;
 CREATE TABLE wallet(
     id serial primary key,
     publicId varchar(64) not null unique,
-    name varchar(50) not null,
+    name varchar(60) not null,
     description text,
     amount NUMERIC(10,2) not null,
     ts timestamp not null default current_timestamp,
@@ -75,7 +75,7 @@ CREATE TABLE teamLocation(
 CREATE TABLE team(
     id serial primary key,
     num integer not null unique,
-    name varchar(40) not null unique,
+    name varchar(60) not null unique,
     net inet null unique,
     pwd varchar(64) null,
     loc integer null references teamLocation(id),
