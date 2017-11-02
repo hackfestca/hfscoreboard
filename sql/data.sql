@@ -120,6 +120,9 @@ SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
 SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', NOW()::timestamp);
 SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time here: <a href="https://scoreboard.hf/feedbacks/">https://scoreboard.hf/feedbacks/</a>', '2017-11-04 00:01');
 
+-- TEMPORARY
+SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time here: <a href="https://scoreboard.hf/feedbacks/">https://scoreboard.hf/feedbacks/</a>', NOW()::timestamp);
+
 /*
     Add transaction types
 */
@@ -149,7 +152,7 @@ SELECT addWallet('HF Bank','Default wallet used for cash flags, money laundering
 */
 
 SELECT addTeam(100, 'Team HF Crew', '172.28.66.0/24', Null, Null);
-SELECT addTeam(101, 'Team HF VPN', '172.22.0.192/27', Null, Null);
+SELECT addTeam(101, 'Team HF VPN', '172.22.0.192/26', Null, Null);
 SELECT addTeam(102, 'mdube', '172.22.0.0/28', Null, Null);
 SELECT addTeam(103, 'mdube_dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam(200, 'Monitoring', '172.28.70.34/31', Null, Null);

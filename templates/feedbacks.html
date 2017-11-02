@@ -16,7 +16,7 @@
         {% end %}
 
     	<h3>Feedback Form</h3>
-		We are looking forward for improvements, ideas or any comments to make next Hackfest even better. All fields are optional. 
+		We are looking forward for improvements, ideas or any comments to make next Hackfest even better. All fields are optional. 1 means poor, 10 means awesome. 
     	<h4>Global experience</h4>
         <form class="form-horizontal" method="POST">
         {% module xsrf_form_html() %}
@@ -66,6 +66,10 @@
               <input type="radio" name="rate" id="radios-9" value="10">
               10
             </label>
+            <label class="radio-inline" for="radios-10">
+              <input type="radio" name="rate" id="radios-10" value="0">
+              N/A
+            </label> 
           </div>
         </div>
         
@@ -89,46 +93,50 @@
             <div class="form-group">
               <label class="col-md-6 control-label" for="rate_{{ category[0] }}">How would you rate this track? </label>
               <div class="col-md-6"> 
-                <label class="radio-inline" for="radios-0">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-0" value="1">
+                <label class="radio-inline" for="radios{{ category[0] }}-0">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-0" value="1">
                   1
                 </label> 
-                <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-1" value="2">
+                <label class="radio-inline" for="radios{{ category[0] }}-1">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-1" value="2">
                   2
                 </label> 
-                <label class="radio-inline" for="radios-2">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-2" value="3">
+                <label class="radio-inline" for="radios{{ category[0] }}-2">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-2" value="3">
                   3
                 </label> 
-                <label class="radio-inline" for="radios-3">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-3" value="4">
+                <label class="radio-inline" for="radios{{ category[0] }}-3">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-3" value="4">
                   4
                 </label> 
-                <label class="radio-inline" for="radios-4">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-4" value="5">
+                <label class="radio-inline" for="radios{{ category[0] }}-4">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-4" value="5">
                   5
                 </label> 
-                <label class="radio-inline" for="radios-5">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-5" value="6">
+                <label class="radio-inline" for="radios{{ category[0] }}-5">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-5" value="6">
                   6
                 </label> 
-                <label class="radio-inline" for="radios-6">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-6" value="7">
+                <label class="radio-inline" for="radios{{ category[0] }}-6">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-6" value="7">
                   7
                 </label> 
-                <label class="radio-inline" for="radios-7">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-7" value="8">
+                <label class="radio-inline" for="radios{{ category[0] }}-7">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-7" value="8">
                   8
                 </label> 
-                <label class="radio-inline" for="radios-8">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-8" value="9">
+                <label class="radio-inline" for="radios{{ category[0] }}-8">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-8" value="9">
                   9
                 </label> 
-                <label class="radio-inline" for="radios-9">
-                  <input type="radio" name="rate_{{ category[0] }}" id="radios-9" value="10">
+                <label class="radio-inline" for="radios{{ category[0] }}-9">
+                  <input type="radio" name="rate_{{ category[0] }}" id="radios{{ category[0] }}-9" value="10">
                   10
                 </label>
+                <label class="radio-inline" for="radios{{ category[0] }}-10">
+                  <input type="radio" name="rate" id="radios{{ category[0] }}-10" value="0">
+                  N/A
+                </label> 
               </div>
             </div>
             

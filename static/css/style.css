@@ -228,20 +228,26 @@ div.flag-input {
     margin-bottom: 10px;
 }
 
-.flag-input input {
+textarea.form-control,
+textarea.form-control:hover,
+textarea.form-control:focus,
+.flag-input input,
+.flag-input input:hover,
+.flag-input input:focus,
+.flag-input button,
+.btn-primary {
   background-color: #2f2f2f;
+  border-color: #dcdccc;
   color: #999;
 }
 
-.flag-input button {
-  background-color: #2f2f2f;
-  color: #999;
-}
-
-.flag-input button:hover {
-  background-color: #ec9900;
-  color: #2e3330;
-  border-color: #ec9900;
+.flag-input button:hover,
+.flag-input button:focus,
+.btn-primary:hover,
+.btn-primary:focus {
+  color: #2f2f2f;
+  border-color: #dcdccc;
+  background-color: #999;
 }
 
 .nav, .navbar {
@@ -305,10 +311,6 @@ h6 {
 .radio-inline+.radio-inline {
     margin-left: 2px;
 }
-.btn-primary {
-    background-color: #c3bf9f;
-    border-color: #c3bf9f;
-}
 
 /* Some hack for Stackfault */
 @font-face {
@@ -327,4 +329,18 @@ a.ancientgeek {
 span.ancientjsl {
   font-family: 'AncientJSL', Fallback, sans-serif;
   font-size: 14pt;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #999;
+}
+::-webkit-scrollbar {
+	width: 12px;
+	background-color: #999;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
 }

@@ -55,7 +55,7 @@ RETURNS text AS $$
         FLAG_MAX_LENGTH integer := 96;
         FLAG_TYPE_STANDARD flagType.code%TYPE := 1;
         FLAG_TYPE_KING flagType.code%TYPE := 11;
-        FLAG_PREFIX text := 'flag-';
+        --FLAG_PREFIX text := 'hf-';
     BEGIN
         -- Logging
         raise notice 'submitFlag(%,%,%)',$1,$2,$3;
@@ -65,9 +65,12 @@ RETURNS text AS $$
         -- Get settings
         SELECT * INTO _settings FROM settings ORDER BY ts DESC LIMIT 1;
 
-        -- Check time. Players can submit only if game is started
+        -- Check time. Players can submit only if game is started and not over
         if _settings.gameStartTs > current_timestamp then
-            PERFORM raise_p(format('Game is not started yet. Game will start at: %s',_settings.gameStartTs));
+            PERFORM raise_p(format('The CTF is not started yet. Game will start at: %s',_settings.gameStartTs));
+        end if;
+        if _settings.gameEndTs < current_timestamp then
+            PERFORM raise_p('The CTF is over. Thank you for participating!');
         end if;
 
         -- Get team from teamId
@@ -101,10 +104,11 @@ RETURNS text AS $$
         end if;
 
         -- Remove the flag prefix, if present.
-        if lower(left(_flagValue,length(FLAG_PREFIX))) = FLAG_PREFIX then
-            _flagValue := substring(_flagValue from length(FLAG_PREFIX)+1);   
-            raise notice '%',_flagValue;
-        end if;
+        -- COMMENTED BECAUSE BUGGY
+        --if lower(left(_flagValue,length(FLAG_PREFIX))) = FLAG_PREFIX then
+        --    _flagValue := substring(_flagValue from length(FLAG_PREFIX)+1);   
+        --    raise notice '%',_flagValue;
+        --end if;
 
         -- Search for the flag in flag and kingFlag tables
         -- Flag statusCode must be equal 1
