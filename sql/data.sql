@@ -145,9 +145,10 @@ SELECT addTeam(103, 'mdube_dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam(200, 'Monitoring', '172.28.70.34/31', Null, Null);
 --SELECT addTeam('Team Dev', '127.0.0.1/8', Null, Null);
 --SELECT addTeam(0, 'hf', Null, 'hf', Null);
---UPDATE team set hide=true WHERE num=0;   -- Hide Monitoring
-UPDATE team set hide=true WHERE num=100;   -- Hide Crew
-UPDATE team set hide=true WHERE num=103;   -- Hide dev accounts
+UPDATE team set hide=true WHERE num=100;
+UPDATE team set hide=true WHERE num=101;
+UPDATE team set hide=true WHERE num=102;
+UPDATE team set hide=true WHERE num=103;
 
 /*
     Identify fake names
