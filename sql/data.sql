@@ -12,11 +12,7 @@ SELECT emptyTables();
     Set game start timestamp and other variables
 */
 INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2017-11-01 13:00'::timestamp,'2017-11-04 02:00'::timestamp,1000);
-/*
-INSERT INTO settings(gameStartTs,gameEndTs,teamStartMoney) 
-       VALUES('2017-10-04 16:30'::timestamp,'2016-11-05 02:00'::timestamp,1000);
-*/
+       VALUES('2017-11-03 16:00'::timestamp,'2017-11-04 02:00'::timestamp,1000);
 
 -- Add EventFacility
 SELECT addEventFacility(0,'global','Global','');
@@ -63,7 +59,7 @@ SELECT addAuthor('Dave Cloutier', 'stackfault');
 SELECT addAuthor('Stephane Sigmen', 'sigs');
 --SELECT addAuthor('Jean-Sebastien Grenon', 'js');
 SELECT addAuthor('François Lajeunesse-Robert', 'flr');
-SELECT addAuthor('Franck Desert','hiddenman');
+SELECT addAuthor('Phenix','phenix');
 SELECT addAuthor('Viper', 'Viper');
 SELECT addAuthor('Guillaume Parent','gp');
 SELECT addAuthor('Corb3nik','Corb3nik');
@@ -110,18 +106,9 @@ SELECT addFlagType(41,'Trap');          -- Complex (trapCmd)
 /*
     Add a starting news
 */
-SELECT addNews('Welcome to Hackfest 2017!', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer enim mi, accumsan convallis lacus a, convallis posuere nisi. Praesent fermentum lorem ac sem mattis, mattis congue lacus molestie.', NOW()::timestamp);
-SELECT addNews('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', NOW()::timestamp);
+SELECT addNews('Welcome to Hackfest 2017! If you need to download ISOs, please check here: <a href="http://distro.hf/">http://distro.hf</a>', NOW()::timestamp);
 SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time here: <a href="https://scoreboard.hf/feedbacks/">https://scoreboard.hf/feedbacks/</a>', '2017-11-04 00:01');
 
--- TEMPORARY
-SELECT addNews('Only 2 hours remaining! Please give us some feedbacks when you have time here: <a href="https://scoreboard.hf/feedbacks/">https://scoreboard.hf/feedbacks/</a>', NOW()::timestamp);
 
 /*
     Add transaction types
