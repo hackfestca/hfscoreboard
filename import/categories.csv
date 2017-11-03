@@ -9,6 +9,15 @@ pentestcat,Pentest Cat,As a member of the GrumpyCat Cyber Team your goal is to h
 catonine,Cat o' nine tails,Traditional CTF <b>web</b> challenges :) Oh and there's a <b>Linux reverse</b> one too...,FALSE,Corb3nik
 DoorPass,Open The door ,Bring your RFID stuff with you. You'll have to open 3 door. Comme see us physicaly :) ,FALSE,t1v0/huffy
 90s,90s Strike Back,Are you still at ease with IRC? Some hackers are communicating using ways we can't figure out. Help us!,FALSE,gp
-ntcat,NTCat,TBD By n0pm3m,FALSE,sigs
-phenix,9 Phenix to Kill,TBD By Frank,FALSE,hiddenman
+ntcat,NTCat,Just pwn some windows and have fun. Some flag are the uppercase NTLM part of user's HASH.,FALSE,sigs
+phenix,9 Phenix to Kill,"[WARNING] We have just been attacked ... Welcome to 9 Phenix To Kill and good hunting. This track focus on: OSINT, Understanding, Digging, Cracking, Reversing, Searching and Stegano. You will discover a whole world during this adventure. You may need to change your mindset sometimes to find the solution. The track starts <a href=""/public/NinePhenixToKill.jpg"">here</a>. Hints: 
+<ul>
+<li>Everything is possible in time</li>
+<li>You have some tutorials files for hints</li>
+<li>Executables can run only on Windows >= 7 and with DotNet >=4.x</li>
+<li>Never forget to look everywhere</li>
+<li>Don't hesitate to contact us at any time</li>
+</ul>
+
+A challenge with the famous 'Hololens' is available as well near the admin table. Come see us for more details!",FALSE,phenix
 feedbacks,Feedbacks,Flags for completing the feedback forms.,TRUE,HFCrew
