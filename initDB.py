@@ -88,6 +88,10 @@ args = parser.parse_args()
 if args.debug:
     print('[-] Arguments: ' + str(args))
 
+if config.COMPETITION_MODE:
+    print('Competition mode. Exiting.')
+    exit(1)
+
 # Step 1: Connect to database
 try:
     c = InitController.InitController()
