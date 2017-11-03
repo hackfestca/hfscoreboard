@@ -1104,7 +1104,7 @@ RETURNS TABLE (
         CREATE TEMPORARY TABLE scoreProgress(
             ts timestamp,
             id integer,
-            name varchar(50),
+            name varchar(60),
             total integer) ON COMMIT DROP;
 
         -- Get top 15 teams
