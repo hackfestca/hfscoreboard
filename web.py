@@ -410,6 +410,15 @@ class BaseProjectorHandler(tornado.web.RequestHandler):
     def sponsors(self):
         return self.application._sponsors
 
+    @property
+    def logger(self):
+        return self.application.logger
+
+    @logger.setter
+    def logger(self, arg):
+        self.application.logger = arg
+
+
 
 class IndexHandler(BaseHandler):
     @tornado.web.authenticated
