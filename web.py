@@ -708,11 +708,16 @@ class FeedbacksHandler(BaseHandler):
             catId = cat[0]
             try:
                 rate = self.get_argument("rate_%s" % catId)
-                comments = self.get_argument("comments_%s" % catId)
-                self.client.submitFeedbacksPerCategoryFromIp(catId,rate,comments,self.remote_ip)
             except tornado.web.MissingArgumentError as e:
-                pass
+                rate = 0
 
+            try:
+                comments = self.get_argument("comments_%s" % catId)
+            except tornado.web.MissingArgumentError as e:
+                comments = ''
+            
+            if rate != 0 or comments != '':
+                self.client.submitFeedbacksPerCategoryFromIp(catId,rate,comments,self.remote_ip)
 
 class AuthRegisterHandler(BaseHandler):
     form = {'name': '',
