@@ -193,7 +193,7 @@ RETURNS TABLE (
         if _top <= 0 then
             raise exception '_top argument cannot be a negative value. _top=%',_top;
         end if;
-        return QUERY SELECT t.id AS id,
+        return QUERY SELECT t.num AS num,
                             t.name AS team,
                             t.net::varchar AS net,
                             coalesce(tf3.sum::integer,0) AS flagPts,
@@ -239,7 +239,7 @@ RETURNS TABLE (
                         GROUP BY tfi2.teamId
                         ) AS tfi3 ON t.id = tfi3.teamId
                      WHERE (_grep IS NULL OR t.name LIKE '%'||_grep||'%' OR t.net::text LIKE '%'||_grep||'%')
-                     ORDER BY t.id 
+                     ORDER BY t.num 
                      LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
