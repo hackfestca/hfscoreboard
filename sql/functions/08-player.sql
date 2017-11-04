@@ -613,7 +613,7 @@ RETURNS TABLE (
                             news.title
                      FROM news
                      WHERE news.displayTs < current_timestamp
-                     ORDER BY news.id DESC;
+                     ORDER BY news.displayTs DESC;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
