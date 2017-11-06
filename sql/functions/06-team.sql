@@ -179,6 +179,7 @@ CREATE OR REPLACE FUNCTION listTeams(_grep varchar(30) DEFAULT NULL,
                                      _top integer default 30) 
 RETURNS TABLE (
                 id team.id%TYPE,
+                num team.num%TYPE,
                 team team.name%TYPE,
                 net varchar(20),
                 flagPts flag.pts%TYPE,
@@ -193,7 +194,8 @@ RETURNS TABLE (
         if _top <= 0 then
             raise exception '_top argument cannot be a negative value. _top=%',_top;
         end if;
-        return QUERY SELECT t.num AS num,
+        return QUERY SELECT t.id AS id,
+                            t.num AS num,
                             t.name AS team,
                             t.net::varchar AS net,
                             coalesce(tf3.sum::integer,0) AS flagPts,

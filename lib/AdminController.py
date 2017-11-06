@@ -231,7 +231,7 @@ class AdminController(ClientController.ClientController):
                             lastUpdate,facility,severity,grep,top)
 
     def getFormatTeamList(self,grep=None,top=config.DEFAULT_TOP_VALUE):
-        title = ['Num','Name','Net','FlagPts','KFlagPts','Total','Cash'] 
+        title = ['ID', 'Num','Name','Net','FlagPts','KFlagPts','Total','Cash'] 
         score = self.getTeamList(grep,top)
         x = PrettyTable(title)
         x.align['Name'] = 'l'
