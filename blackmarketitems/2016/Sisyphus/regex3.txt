@@ -1,1 +1,0 @@
-first,tel,addr,zip,dist,city,planet,last,desc

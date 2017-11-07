@@ -1,2 +1,0 @@
-		searchParams.first = searchParams.first.replace("\\", "\\\\").replace("|","\\|").replace("*","\\*").replace("+","\\+");
-		searchParams.last = searchParams.last.replace("\\", "\\\\").replace("|","\\|").replace("*","\\*").replace("+","\\+");

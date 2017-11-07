@@ -1,1 +1,0 @@
-suppressOps = ["$where", "$text", "$regex", "$mod"];

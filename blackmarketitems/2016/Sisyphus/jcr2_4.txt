@@ -1,6 +1,0 @@
-const keywords = ["LIKE","ISSAMENODE","ISCHILDNODE","ISDESCENDANTNODE", "NAME", "LENGTH", "LOCALNAME", "PATH", "DEPTH", "SCORE"];
-keywords.forEach(function (keyword) {
-			if(searchParams.tel.indexOf(keyword) !== -1) {
-				searchParams.tel = "";
-			}
-		});
