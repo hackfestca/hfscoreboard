@@ -10,7 +10,7 @@ table creations, apply security, etc.)
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2015, Hackfest Communications
+Copyright (c) 2017, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,7 @@ import psycopg2
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard database initialization script. Use this tool to create db structure, apply security and import data'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2017-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 

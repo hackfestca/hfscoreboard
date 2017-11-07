@@ -9,7 +9,7 @@ This script is the main interface for players to submit flags and display score
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2015, Hackfest Communications
+Copyright (c) 2017, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@ from urllib.parse import urlparse
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard player client. Use this tool to submit flags, display score, buy loto tickets and use the black market.'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2015-11-07)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.1 (2017-11-07)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 subparsers = parser.add_subparsers(dest='action')

@@ -9,7 +9,7 @@ This script reads the database and update the loto hf by processing a winner eve
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2015, Hackfest Communications
+Copyright (c) 2017, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,7 @@ import psycopg2
 usage = 'usage: %prog action [options]'
 description = 'HF Scoreboard loto updater. Use this tool to trigger a loto HF win.'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2015-11-04)')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0 (2017-11-04)')
 parser.add_argument('--debug', action='store_true', dest='debug', default=False, \
                     help='Run the tool in debug mode')
 

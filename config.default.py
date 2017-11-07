@@ -9,7 +9,7 @@ Scripts config file
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2015, Hackfest Communications
+Copyright (c) 2017, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -88,13 +88,13 @@ SQL_TABLE_FILE = 'sql/tables.sql'
 SQL_SEC_FILE = 'sql/security.sql'
 
 SSH_FU_USER = 'root'
-SSH_FU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
-SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_FU_PUB_KEY = 'certs/id_rsa.hf2017.pub'
+SSH_FU_PRIV_KEY = 'certs/id_rsa.hf2017'
 SSH_FU_PRIV_PWD = ''
 
 SSH_BMU_USER = 'sb'
-SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2015.pub'
-SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2015'
+SSH_BMU_PUB_KEY = 'certs/id_rsa.hf2017.pub'
+SSH_BMU_PRIV_KEY = 'certs/id_rsa.hf2017'
 SSH_BMU_PRIV_PWD = ''
 
 BMI_HOSTS = ['sb-web01.hf','sb-web02.hf']
