@@ -40,6 +40,35 @@ RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 /*
+    Stored Proc: listCategories(top)
+*/
+CREATE OR REPLACE FUNCTION listCategories(_showHidden boolean = False,
+                                          _top integer DEFAULT 30) 
+RETURNS TABLE (
+                id flagCategory.id%TYPE,
+                name flagCategory.name%TYPE,
+                displayName flagCategory.displayName%TYPE,
+                description flagCategory.description%TYPE,
+                hidden flagCategory.hidden%TYPE,
+                ts flagCategory.ts%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT fc.id,
+                            fc.name,
+                            fc.displayName,
+                            fc.description,
+                            fc.hidden,
+                            fc.ts
+                    FROM flagCategory AS fc
+                    WHERE fc.hidden = _showHidden
+                    ORDER BY fc.id
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+/*
     Stored Proc: addNews(title,displayTs)
 */
 CREATE OR REPLACE FUNCTION addNews(_title news.title%TYPE, 
@@ -1167,6 +1196,118 @@ RETURNS TABLE (
                         t14_score integer
                         );
                         
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getGlobalFeedbacks()
+*/
+CREATE OR REPLACE FUNCTION getGlobalFeedbacks(_top integer DEFAULT 1000) 
+RETURNS TABLE (
+                rate text,
+                comments feedbacks.comments%TYPE,
+                team team.name%TYPE,
+                playerIP inet,
+                ts feedbacks.ts%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT fb.rate::text || '/10' AS rate,
+                            fb.comments AS comments,
+                            format('%s (%s)', t.name, t.num)::varchar AS team,
+                            fb.playerIP AS playerIP,
+                            fb.ts AS ts
+                     FROM feedbacks AS fb
+                     LEFT OUTER JOIN (
+                        SELECT t.id,
+                               t.num,
+                               t.name
+                        FROM team AS t
+                        ) AS t ON t.id = fb.teamId
+                    WHERE fb.rate <> 0 OR fb.comments <> ''
+                    ORDER BY fb.playerIP
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTrackFeedbacks(categoryId)
+*/
+CREATE OR REPLACE FUNCTION getTrackFeedbacks(_categoryId integer,
+                                              _top integer DEFAULT 30) 
+RETURNS TABLE (
+                rate text,
+                comments feedbacks.comments%TYPE,
+                team team.name%TYPE,
+                playerIP inet,
+                ts feedbacks.ts%TYPE
+              ) AS $$
+
+    BEGIN
+        return QUERY SELECT fb.rate::text || '/10' AS rate,
+                            fb.comments AS comments,
+                            format('%s (%s)', t.name, t.num)::varchar AS team,
+                            fb.playerIP AS playerIP,
+                            fb.ts AS ts
+                     FROM feedbacksPerCategory AS fb
+                     LEFT OUTER JOIN (
+                        SELECT t.id,
+                               t.num,
+                               t.name
+                        FROM team AS t
+                        ) AS t ON t.id = fb.teamId
+                    WHERE categoryId = _categoryId 
+                        AND (fb.rate <> 0 OR fb.comments <> '')
+                    ORDER BY fb.playerIP
+                    LIMIT _top;
+    END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+/*
+    Stored Proc: getTrackFeedbacksStats(categoryId)
+*/
+/*
+                rateCount integer,
+                commentsCount integer,
+                teamCount integer
+                */
+CREATE OR REPLACE FUNCTION getTrackFeedbacksStats(_top integer DEFAULT 30) 
+RETURNS TABLE (
+                name flagCategory.displayName%TYPE,
+                average numeric,
+                TotalRateCount integer,
+                TotalCommentsCount integer
+              ) AS $$
+    BEGIN
+        return QUERY SELECT fc.displayName,
+                            fb.average,
+                            fb2.totalRateCount,
+                            fb3.totalCommentsCount
+                    FROM flagCategory AS fc
+                    LEFT OUTER JOIN (
+                        SELECT categoryid,
+                               round(AVG(rate),2) AS average
+                        FROM feedbacksPerCategory AS fb
+                        WHERE fb.rate <> 0
+                        GROUP BY categoryId
+                    ) AS fb ON fb.categoryId = fc.id
+                    LEFT OUTER JOIN (
+                        SELECT categoryid,
+                               COUNT(rate)::integer AS totalRateCount
+                        FROM feedbacksPerCategory AS fb2
+                        WHERE fb2.rate <> 0
+                        GROUP BY categoryId
+                    ) AS fb2 ON fb2.categoryId = fc.id
+                    LEFT OUTER JOIN (
+                        SELECT categoryid,
+                               COUNT(comments)::integer AS totalCommentsCount
+                        FROM feedbacksPerCategory AS fb3
+                        WHERE fb3.comments <> ''
+                        GROUP BY categoryId
+                    ) AS fb3 ON fb3.categoryId = fc.id
+                    WHERE fb.average IS NOT NULL
+                    ORDER BY fb.average DESC
+                    LIMIT _top;
     END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

@@ -211,6 +211,21 @@ class AdminController(ClientController.ClientController):
     def getGameStats(self):
         return self.exec('getGameStats')
 
+    def getGlobalFeedbacks(self):
+        return self.exec('getGlobalFeedbacks')
+
+    def getTrackFeedbacks(self, categoryId):
+        return self.exec('getTrackFeedbacks', categoryId)
+
+    def getTracksFeedbacksStats(self):
+        return self.exec('getTrackFeedbacksStats')
+
+    def getFeedbacksAnalysis(self):
+        return self.exec('getFeedbacksAnalysis')
+
+    def listCategories(self):
+        return self.exec('listCategories')
+
     def getTeamProgress(self,teamId):
         return self.exec('getTeamProgress',teamId)
 
@@ -450,3 +465,57 @@ class AdminController(ClientController.ClientController):
                                        colors.reset,row[0]))
                     lastUpdate = datetime.now()
             sleep(refresh)
+
+    def getFormatGlobalFeedbacks(self):
+        title = ['Rate','Comments','Team', 'Player IP', 'TS']
+        info = self.getGlobalFeedbacks()
+        x = PrettyTable(title)
+        x.align['Comments'] = 'l'
+        x.align['Team'] = 'l'
+        x.padding_width = 1
+        x.max_width = 40
+        for row in info:
+            x.add_row(row)
+        return x.get_string()
+
+    def getFormatTracksFeedbacks(self):
+        category_list = self.listCategories()
+        title = ['Rate','Comments','Team', 'Player IP', 'TS']
+        ret = ''
+
+        for cat in category_list:
+            category_id = cat[0]
+            category_displayName = cat[2]
+
+            ret += '=================================\n'
+            ret += 'Track: %s\n' % category_displayName
+            ret += '=================================\n'
+
+            info = self.getTrackFeedbacks(category_id)
+            x = PrettyTable(title)
+            x.align['Comments'] = 'l'
+            x.align['Team'] = 'l'
+            x.padding_width = 1
+            x.max_width = 40
+            for row in info:
+                x.add_row(row)
+            ret += x.get_string()
+            ret += '\n\n'
+
+        return ret
+
+    def getFormatTracksFeedbacksStats(self):
+        title = ['Name','Average', 'Total Rate Count', 'Total Comments Count']
+        info = self.getTracksFeedbacksStats()
+        x = PrettyTable(title)
+        x.align['Name'] = 'l'
+        x.padding_width = 1
+        x.max_width = 40
+        for row in info:
+            x.add_row(row)
+        return x.get_string()
+
+    def getFormatFeedbacksAnalysis(self):
+        return self.getFormatTracksFeedbacksStats()
+
+

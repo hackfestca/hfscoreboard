@@ -9,7 +9,7 @@ This script is the main interface for admins to manage CTF
 @license: Modified BSD License
 @contact: martin.dube@hackfest.ca
 
-Copyright (c) 2015, Hackfest Communications
+Copyright (c) 2017, Hackfest Communications
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -277,6 +277,21 @@ pstats_a.add_argument('--flagProgress', action='store', dest='flagProgress',\
                       help='Print all teams who successfuly submitted a specific flag.')
 pstats_a.add_argument('--list', '-l', action='store_true', dest='general', default=False, \
                       help='Print general stats about the game (flags qty, submit attempts, etc.)')
+
+pfeedbackDesc = '''\
+'''
+pfeedbackEpi = '''\
+'''
+pfeedbacks = subparsers.add_parser('feedbacks', description=pfeedbackDesc, epilog=pfeedbackEpi,
+                               formatter_class=argparse.RawDescriptionHelpFormatter,
+                               help='Display feedbacks from players.')
+pfeedbacks_o = pfeedbacks.add_argument_group("option")
+pfeedbacks_o.add_argument('--list-global', action='store_true', dest='listGlobal', default=False,\
+                      help='Print Global Feedbacks.')
+pfeedbacks_o.add_argument('--list-tracks', action='store_true', dest='listTracks',\
+                      help='Print Feedbacks for each tracks.')
+pfeedbacks_o.add_argument('--analysis', action='store_true', dest='analysis',\
+                      help='Print an analysis of the feedbacks.')
 
 pevents = subparsers.add_parser('events', help='Display game events.')
 pevents_a = pevents.add_argument_group("action")
@@ -577,6 +592,19 @@ try:
         else:
             print("[+] Displaying stats")
             print(c.getFormatGameStats())
+    elif args.action == 'feedbacks':
+        if args.listGlobal:
+            print("[+] Listing global feedbacks")
+            print(c.getFormatGlobalFeedbacks())
+            print("\n")
+        if args.listTracks:
+            print("[+] Listing feedbacks per track")
+            print(c.getFormatTracksFeedbacks())
+            print("\n")
+        if args.analysis:
+            print("[+] Displaying the feedbacks analysis")
+            print(c.getFormatFeedbacksAnalysis())
+            print("\n")
     elif args.action == 'events':
         if args.list:
             print("[+] Displaying events")
