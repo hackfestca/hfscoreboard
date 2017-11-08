@@ -35,35 +35,36 @@ By design, all components except the player script are considered "trusted" and 
 The command line interface let players submit and display scores from a shell. 
 
 ```
-$ ./player.py score
-[-] Displaying score
-+-----+----+---------------------------------------+-------------+-----------+
-| Pos | ID | TeamName                              |     Cash    | Notoriety |
-+-----+----+---------------------------------------+-------------+-----------+
-|  1  | 6  | BAISSEZ LE VOLUME!                    |  73000.00 $ |    5650   |
-|  2  | 36 | Les amateurs de sécurité informatique |  31000.00 $ |    5250   |
-|  3  | 10 | Catch Me If You Scan                  | 104000.00 $ |    4850   |
-|  4  | 23 | Gentlemen en fête                     |  51000.00 $ |    4250   |
-|  5  | 9  | Cascading Style Sheeps                |  81000.00 $ |    3350   |
-|  6  | 13 | DCI1                                  |  54000.00 $ |    3350   |
-|  7  | 24 | Gliderous Tigers                      |  19000.00 $ |    3350   |
-|  8  | 32 | Hopeless                              |  66000.00 $ |    3250   |
-|  9  | 45 | Shell Hero                            |  54000.00 $ |    3250   |
-|  10 | 53 | Unicorn as a Software                 |  67000.00 $ |    3150   |
-|  11 | 19 | error404                              |  1000.00 $  |    3150   |
-|  12 | 2  | 0-bae                                 |  67000.00 $ |    3100   |
-|  13 | 29 | Hackable Team                         |  66000.00 $ |    3050   |
-|  14 | 44 | Rootmont                              |  60000.00 $ |    2950   |
-|  15 | 54 | Usedoils                              |  21000.00 $ |    2450   |
-|  16 | 1  | _TMIH_                                |  3000.00 $  |    2350   |
-|  17 | 51 | tinker^or^die                         |  45000.00 $ |    2250   |
-|  18 | 52 | Unicorn as a Service                  |  57000.00 $ |    2200   |
+$ ./admin.py score
+[+] Displaying score (top 300)
++-----+----+-----------------------------------------------------------+-------+
+| Pos | ID | TeamName                                                  | Flags |
++-----+----+-----------------------------------------------------------+-------+
+|  1  | 23 | Full Stack Deep Learning AI Cloud Blockchain as a Service | 6425  |
+|  2  | 66 | unicorn as a software                                     | 3675  |
+|  3  | 27 | Gliderous Tigers                                          | 3545  |
+|  4  | 20 | ÉTS qui fax                                               | 2770  |
+|  5  | 29 | Golden Ticket or GTFO                                     | 2700  |
+|  6  | 10 | Bro Security                                              | 2625  |
+|  7  | 65 | Unicorn As A Service                                      | 2150  |
+|  8  | 51 | Paumd                                                     | 2100  |
+|  9  | 53 | PolyHx1                                                   | 1810  |
+|  10 | 15 | Click here to remove your virus                           | 1800  |
+|  11 | 67 | Unik                                                      | 1720  |
+|  12 | 13 | Ced Chaput groupies                                       | 1655  |
+|  13 | 31 | Hackfesse                                                 | 1650  |
+|  14 | 14 | CFIni_on_a_tous_les_flags                                 | 1640  |
+|  15 | 9  | BoisEnPlus                                                | 1630  |
+|  16 | 45 | No C# Allowed                                             | 1370  |
+|  17 | 52 | Police nationale                                          | 1360  |
+|  18 | 42 | Magic brainstorm                                          | 1325  |
+|  19 | 59 | sweet/sucré                                               | 1300  | 
 ...
 ```
 
 The web interface let players submit and display scores but also shows live progression, which can be useful for projectors.
 
-![dashboard](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/dashboard2015.png)
+![dashboard](https://github.com/hackfestca/hfscoreboard/raw/master/docs/img/dashboard2017.png)
 
 
 ## Install
