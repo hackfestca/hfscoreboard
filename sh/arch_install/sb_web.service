@@ -1,0 +1,15 @@
+[Unit]
+Description=HF Scoreboard Web app
+After=syslog.target
+
+[Service]
+Type=simple
+User=sb
+Group=sb
+WorkingDirectory=/home/sb/scoreboard
+ExecStart=/home/sb/scoreboard/web.py --authByIP --port=5000 --debug >> /var/log/sb_web.log
+StandardOutput=syslog+console
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

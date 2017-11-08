@@ -1,0 +1,15 @@
+[Unit]
+Description=HF Scoreboard Web API
+After=syslog.target
+
+[Service]
+Type=simple
+User=sb
+Group=sb
+WorkingDirectory=/home/sb/scoreboard
+ExecStart=/home/sb/scoreboard/player-api.py -s --behind-proxy
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
