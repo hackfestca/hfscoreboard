@@ -81,6 +81,7 @@ Indeed, you can change DNS names and IPs as you wish.
  Then customize `sql/install.sql` file and copy/paste in this shell.
 
  Edit `/var/postgresql/data/pg_hba.conf` to configure database access. 
+
     ```
     host scoreboard  owner       172.28.70.21/32            trust
     host scoreboard  flagupdater 172.28.70.21/32            trust
@@ -143,20 +144,21 @@ Indeed, you can change DNS names and IPs as you wish.
     ssl_ca = '/etc/pgpool/hf.ca.sb.crt'          # (change requires restart)
     ```
 
- Configure database access: `/etc/pool_hba.conf`
-    ```
-    hostssl scoreboard  owner       172.16.66.0/24          cert clientcert=1
-    hostssl scoreboard  flagupdater 172.16.66.0/24          cert clientcert=1
-    hostssl scoreboard  flagupdater 172.28.70.22/32         cert clientcert=1
-    hostssl scoreboard  flagupdater 172.28.70.23/32         cert clientcert=1
-    hostssl scoreboard  player      172.16.66.0/24          cert clientcert=1
-    hostssl scoreboard  player      172.28.70.22/32         cert clientcert=1
-    hostssl scoreboard  player      172.28.70.23/32         cert clientcert=1
-    hostssl scoreboard  web         172.16.66.0/24          cert clientcert=1
-    hostssl scoreboard  web         172.28.70.22/32         cert clientcert=1
-    hostssl scoreboard  web         172.28.70.23/32         cert clientcert=1
-    hostssl scoreboard  admin       172.16.66.0/24          md5
-    ```
+Configure database access: `/etc/pool_hba.conf`
+
+```
+hostssl scoreboard  owner       172.16.66.0/24          cert clientcert=1
+hostssl scoreboard  flagupdater 172.16.66.0/24          cert clientcert=1
+hostssl scoreboard  flagupdater 172.28.70.22/32         cert clientcert=1
+hostssl scoreboard  flagupdater 172.28.70.23/32         cert clientcert=1
+hostssl scoreboard  player      172.16.66.0/24          cert clientcert=1
+hostssl scoreboard  player      172.28.70.22/32         cert clientcert=1
+hostssl scoreboard  player      172.28.70.23/32         cert clientcert=1
+hostssl scoreboard  web         172.16.66.0/24          cert clientcert=1
+hostssl scoreboard  web         172.28.70.22/32         cert clientcert=1
+hostssl scoreboard  web         172.28.70.23/32         cert clientcert=1
+hostssl scoreboard  admin       172.16.66.0/24          md5
+```
 
  Enable load balancing mode. Whitelisted patterns will be load balanced between the master and the slaves. This means that these functions must only read data, not write. 
     ```
@@ -180,70 +182,84 @@ Indeed, you can change DNS names and IPs as you wish.
 
 5. [On sb-app] Install python dependencies
 
-    ```bash
-    pkg_add py3-pip py3-psycopg2
-    ln -sf /usr/local/bin/pip3.4 /usr/local/bin/pip
-    pip install --upgrade pip
-    pip install tornado
-    ```
- Download the code from git
-    ```bash
-    cd /var/www
-    git clone https://github.com/hackfestca/hfscoreboard scoreboard
-    chown -R sb:sb scoreboard
-    cd scoreboard
-    mkdir logs
-    chmod g+w /home/sb/scoreboard/logs
-    ```
- Download and install supervisor. This will be used to run the process as a service.
+```bash
+pkg_add py3-pip py3-psycopg2
+ln -sf /usr/local/bin/pip3.4 /usr/local/bin/pip
+pip install --upgrade pip
+pip install tornado
+```
+
+Download the code from git
+
+```bash
+cd /var/www
+git clone https://github.com/hackfestca/hfscoreboard scoreboard
+chown -R sb:sb scoreboard
+cd scoreboard
+mkdir logs
+chmod g+w /home/sb/scoreboard/logs
+```
+
+Download and install supervisor. This will be used to run the process as a service.
+
     ```bash
     pkg_add py-pip
     pip2.7 install --upgrade pip
     pkg_add supervisor
     ```
- Download, compile and install ssh4py
-    ```bash
-    git clone https://github.com/wallunit/ssh4py.git
-    pkg_add libssh2
-    cd /usr/local/include/python3.4m/
-    ln -s ../libssh2.h libssh2.h 
-    ln -s ../libssh2_sftp.h libssh2_sftp.h 
-    ln -s ../libssh2_publickey.h libssh2_publickey.h 
-    cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
-    ```
- Uncomment the last two lines of `/etc/supervisord.conf`
-   ```
-   [include]
-   files = supervisord.d/*.ini
-   ```
- Setup a supervisor program for the player API in `/etc/supervisord.d/playerApi.ini`
-    ```
-    [program:playerApi]
-    directory=/var/www/scoreboard
-    command=python3.4 player-api.py --start --behind-proxy
-    user=sb
-    stdout_logfile=/var/log/scoreboard.player.log
-    redirect_stderr=true
-    autostart=true
-    autorestart=true
-    ```
- Setup a supervisor program for the web application in `/etc/supervisord.d/web.ini`
-    ```
-    [program:web]
-    directory=/var/www/scoreboard
-    command=python3.4 web.py
-    user=sb
-    stdout_logfile=/var/log/scoreboard.web.log
-    redirect_stderr=true
-    autostart=true
-    autorestart=true
-    ```
+
+Download, compile and install ssh4py
+
+```bash
+git clone https://github.com/wallunit/ssh4py.git
+pkg_add libssh2
+cd /usr/local/include/python3.4m/
+ln -s ../libssh2.h libssh2.h 
+ln -s ../libssh2_sftp.h libssh2_sftp.h 
+ln -s ../libssh2_publickey.h libssh2_publickey.h 
+cd /root/ssh4py; python3.4 ./setup.py build; python3.4 ./setup.py install
+```
+
+Uncomment the last two lines of `/etc/supervisord.conf`
+
+```
+[include]
+files = supervisord.d/*.ini
+```
+
+Setup a supervisor program for the player API in `/etc/supervisord.d/playerApi.ini`
+
+```
+[program:playerApi]
+directory=/var/www/scoreboard
+command=python3.4 player-api.py --start --behind-proxy
+user=sb
+stdout_logfile=/var/log/scoreboard.player.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+```
+
+Setup a supervisor program for the web application in `/etc/supervisord.d/web.ini`
+
+```
+[program:web]
+directory=/var/www/scoreboard
+command=python3.4 web.py
+user=sb
+stdout_logfile=/var/log/scoreboard.web.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+```
+
  Make a copy of config.default.py, name it config.py and customize it. Most important settings are `PLAYER_API_URI` and `DB_HOST`
-    ```bash
-    cd /var/www/scoreboard
-    cp config.default.py config.py
-    vim config.py
-    ```
+
+```bash
+cd /var/www/scoreboard
+cp config.default.py config.py
+vim config.py
+```
 
 6. [On scoreboard.hf] Install nginx
 
@@ -251,7 +267,9 @@ Indeed, you can change DNS names and IPs as you wish.
     pkg_add nginx
     mkdir /var/www/htdocs/{public,static,blackmarket}
     ```
+
  Then configure the web server to do reverse proxy to sb-app. You can also configure TLS, caching and static files handling (see below). Note that caching was removed this year.
+
     ```
     upstream web{
      server 172.28.70.22:5000;
@@ -380,6 +398,7 @@ Indeed, you can change DNS names and IPs as you wish.
         #ssl_prefer_server_ciphers   on;
     }
     ```
+
 7. Several certificates are required for database authentication or TLS on the web server.
 
  Overview:

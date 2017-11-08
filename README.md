@@ -68,8 +68,8 @@ The web interface let players submit and display scores but also shows live prog
 
 ## Install
 
-* [OpenBSD](https://github.com/hackfestca/hfscoreboard/sh/openbsd_install/README.md)
-* [Arch Linux](https://github.com/hackfestca/hfscoreboard/sh/arch_install/README.md)
+* [OpenBSD](https://github.com/hackfestca/hfscoreboard/tree/master/sh/openbsd_install)
+* [Arch Linux](https://github.com/hackfestca/hfscoreboard/tree/master/sh/arch_install)
 
 
 ## How to use
